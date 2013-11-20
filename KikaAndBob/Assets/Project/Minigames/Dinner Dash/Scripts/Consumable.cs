@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using Lugus;
 
 namespace Lugus
 {
-	public enum ConsumableState
+	// a consumable is either unprocessed (raw food), processed (cooked food) or consumed (food is gone, only platter or empty glass is left)
+	public enum ConsumableState 
 	{
 		Unprocessed = 0,
 		Processed = 1,
@@ -13,10 +16,23 @@ namespace Lugus
 	}
 }
 
+// Most often: a piece of food or ingredient of a larger food platter
 public class Consumable : MonoBehaviour
 {
 	public ConsumableDefinition definition = null;
-	public Lugus.ConsumableState state = Lugus.ConsumableState.Unprocessed;
+
+	[SerializeField]
+	protected Lugus.ConsumableState _state =  Lugus.ConsumableState.Unprocessed;
+
+	public Lugus.ConsumableState State
+	{
+		get{ return _state; }
+		set
+		{
+			_state = value;
+			UpdateSprite();
+		}
+	}
 
 	protected SpriteRenderer spriteRenderer = null;
 
@@ -40,31 +56,18 @@ public class Consumable : MonoBehaviour
 
 	protected void UpdateSprite()
 	{
-		if( state == Lugus.ConsumableState.Unprocessed )
-		{
-			spriteRenderer.sprite = definition.textureUnprocessed;
-		}
-		else if( state == Lugus.ConsumableState.Processed )
-		{
-			spriteRenderer.sprite = definition.textureProcessed;
-		}
-		else if( state == Lugus.ConsumableState.Consumed )
-		{
-			spriteRenderer.sprite = definition.textureConsumed;
-		}
+		spriteRenderer.sprite = definition.TextureForState(this.State);
 	}
 
+	/*
 	public void Process()
 	{
-		state = Lugus.ConsumableState.Processed;
-
-		UpdateSprite ();
+		State = Lugus.ConsumableState.Processed;
 	}
 
 	public void Consume()
 	{
-		state = Lugus.ConsumableState.Consumed;
-		
-		UpdateSprite ();
+		State = Lugus.ConsumableState.Consumed;
 	}
+	*/
 }
