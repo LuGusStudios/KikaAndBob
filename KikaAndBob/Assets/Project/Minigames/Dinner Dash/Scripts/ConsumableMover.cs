@@ -62,6 +62,7 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		
 		// TODO: UPDATE GRAPHICS in a decent way
 		item.transform.parent = this.transform; 
+		item.renderer.sortingOrder = this.renderer.sortingOrder;
 		item.transform.position = this.transform.position + new Vector3(10, 10, 0);
 	}
 

@@ -78,6 +78,7 @@ public class ConsumableProcessor : IConsumableUser
 		currentConsumable = subject;
 
 		subject.transform.parent = this.transform.parent;
+		subject.renderer.sortingOrder = this.renderer.sortingOrder;
 		subject.transform.position = this.transform.position + new Vector3(10,10, 0);
 
 		subject.renderer.enabled = false;

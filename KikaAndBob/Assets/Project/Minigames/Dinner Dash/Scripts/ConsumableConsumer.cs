@@ -88,7 +88,7 @@ public class ConsumableConsumer : IConsumableUser
 			
 			//2. client leaves
 			// TODO: decently move
-			this.gameObject.MoveTo( Vector3.left * 1000 ).Speed ( 200.0f ).Execute();
+			this.gameObject.MoveTo( Vector3.left * 3000 ).Speed ( 200.0f ).Execute();
 			
 			return true;
 		}
@@ -130,6 +130,7 @@ public class ConsumableConsumer : IConsumableUser
 		currentConsumable = subject;
 		
 		subject.transform.parent = this.transform.parent;
+		subject.renderer.sortingOrder = this.renderer.sortingOrder;
 		subject.transform.position = this.transform.position + new Vector3(10,10,0);
 		subject.transform.localScale *= 0.5f;
 
