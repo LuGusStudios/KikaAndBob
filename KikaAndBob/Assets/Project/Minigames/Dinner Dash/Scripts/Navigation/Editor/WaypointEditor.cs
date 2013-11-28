@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(Waypoint))]
+[CanEditMultipleObjects]
 public class WaypointEditor : Editor 
 {
 	protected bool showDefault = true;

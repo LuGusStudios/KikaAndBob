@@ -149,7 +149,12 @@ public class Waypoint : MonoBehaviour
 			colors[6] = Color.magenta;
 			colors[7] = Color.yellow;
 
-			Gizmos.color = colors[ layerOrder ].a (0.5f); //new Color (layerOrder / 5.0f, 0, 0, 0.5f); 
+			DataRange zRange = new DataRange(500, -500);
+			DataRange colorIndexRange = new DataRange(0, 7);
+
+			float percentageZ = zRange.PercentageInInterval( transform.position.z /*layerOrder*/ );
+
+			Gizmos.color = colors[ (int) colorIndexRange.ValueFromPercentage(percentageZ) ].a (0.5f); //new Color (layerOrder / 5.0f, 0, 0, 0.5f); 
 		}
 		else
 			Gizmos.color = new Color(0,1,0,1.0f);

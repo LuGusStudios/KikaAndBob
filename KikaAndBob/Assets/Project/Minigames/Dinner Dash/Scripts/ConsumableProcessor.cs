@@ -97,26 +97,36 @@ public class ConsumableProcessor : IConsumableUser
 		// TODO: indicate food is ready for pickup (graphically!)
 	}
 
-	protected void Awake()
+	public void SetupLocal()
 	{
 		if( fromState == Lugus.ConsumableState.NONE || toState == Lugus.ConsumableState.NONE )
 		{
 			Debug.LogError(name + " : fromState " + fromState + " or toState " + toState + " is NONE!");
 		}
-
+		
 		if( consumables.Length == 0 )
 		{
 			Debug.LogError(name + " : no consumables found that can be processed here!");
 		}
 	}
-
-	// Use this for initialization
-	void Start () {
 	
+	public void SetupGlobal()
+	{
+		// lookup references to objects / scripts outside of this script
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	protected void Awake()
+	{
+		SetupLocal();
+	}
 	
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
+	
+	protected void Update () 
+	{
+		
 	}
 }

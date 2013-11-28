@@ -22,24 +22,58 @@ public abstract class IDinnerDashManager : MonoBehaviour
 			return _mover;
 		}
 	}
+
+	public ConsumableConsumerManager consumerManager = null;
+
+	public abstract void StartGame();
+	public abstract void StopGame();
 }
 
 public class DinnerDashManagerDefault : IDinnerDashManager
 {
 
-	protected void Awake()
-	{
 
+	public void SetupLocal()
+	{
+		if( consumerManager == null )
+			consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+	}
+	
+	public void SetupGlobal()
+	{
+		// lookup references to objects / scripts outside of this script
+	}
+
+	public override void StartGame()
+	{
+		StopGame ();
+		Debug.Log ("Starting dinner dash");
+
+
+		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
+
+		consumerManager.StartConsumerGeneration();
+	}
+
+	public override void StopGame()
+	{
+		Debug.Log ("Stopping dinner dash");
+
+		if( queueRoutineHandle != null )
+		{
+			queueRoutineHandle.StopRoutine();
+			queueRoutineHandle = null;
+		}
+
+		if( consumerManager != null )
+		{
+			consumerManager.StopConsumerGeneration();
+		}
 	}
 
 	public List<IConsumableUser> queue = new List<IConsumableUser>();
 
 	protected ILugusCoroutineHandle queueRoutineHandle = null;
-
-	protected void Start()
-	{
-		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
-	}
 
 	protected void Update()
 	{
@@ -54,6 +88,9 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 			queue.Add(user);
 		}
 	}
+
+
+
 
 	//protected bool processing = false;
 
@@ -77,7 +114,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	protected ILugusCoroutineHandle processHandle = null;
 	protected IEnumerator Process(IConsumableUser user)
 	{
-		Debug.Log ("Processing next item in queue : " + user.name );
+		//Debug.Log ("Processing next item in queue : " + user.name );
 		
 		queue.Remove (user);
 		
@@ -110,7 +147,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		while( pathIndex > -1 )
 		{
 			Mover.gameObject.StopTweens();
-			Mover.gameObject.MoveTo( path[pathIndex].transform.position ).Speed( 600.0f ).Execute();
+			Mover.gameObject.MoveTo( path[pathIndex].transform.position.z(Mover.transform.position.z) ).Speed( 600.0f ).Execute();
 			
 			float maxDistance = 5.0f; // units (in this setup = pixels)
 			bool reachedTarget = false;
@@ -122,7 +159,8 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 				reachedTarget = (Vector2.Distance( Mover.transform.position.v2 (), path[pathIndex].transform.position.v2 () ) < maxDistance);
 			}
 
-			Mover.renderer.sortingOrder = path[pathIndex].layerOrder;
+			//Mover.renderer.sortingOrder = path[pathIndex].layerOrder;
+			Mover.transform.position = Mover.transform.position.z( /*path[pathIndex].layerOrder*/ path[pathIndex].transform.position.z );
 
 			pathIndex--;
 		}
@@ -292,12 +330,15 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		return path;
 	}
 
-
-
-
-
-
-
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start()
+	{
+		SetupGlobal();
+	}
 
 	protected bool debugAutoProcessing = true;
 	protected void OnGUI()
