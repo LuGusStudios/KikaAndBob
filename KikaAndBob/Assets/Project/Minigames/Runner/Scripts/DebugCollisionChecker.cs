@@ -1,0 +1,38 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class DebugCollisionChecker : MonoBehaviour 
+{
+	void OnTriggerEnter2D(Collider2D other) 
+	{
+		Debug.Log ("Trigger " + name + " collided with " + other.transform.name);
+
+		transform.position = LugusUtil.OFFSCREEN;
+	}
+
+	public void SetupLocal()
+	{
+		// assign variables that have to do with this class only
+	}
+	
+	public void SetupGlobal()
+	{
+		// lookup references to objects / scripts outside of this script
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
+	
+	protected void Update () 
+	{
+	
+	}
+}

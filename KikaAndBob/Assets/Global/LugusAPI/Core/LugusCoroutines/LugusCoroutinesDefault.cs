@@ -18,7 +18,7 @@ public class LugusCoroutines
 			}
 			
 			
-			return _instance; 
+			return _instance;
 		}
 	}
 	
