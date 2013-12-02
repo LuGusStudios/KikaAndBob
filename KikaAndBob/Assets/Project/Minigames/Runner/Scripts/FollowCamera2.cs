@@ -63,5 +63,7 @@ public class FollowCamera2 : MonoBehaviour
 		
 		// Set the camera's position to the target position with the same z component.
 		transform.position = new Vector3(targetX, targetY, transform.position.z);
+
+		//transform.position = Vector3.SmoothDamp(transform.position, destination, velocity, dampTime);
 	}
 }

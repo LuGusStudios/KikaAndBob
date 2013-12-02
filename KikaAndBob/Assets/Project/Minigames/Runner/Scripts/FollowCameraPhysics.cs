@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class FollowCamera : MonoBehaviour 
+public class FollowCameraPhysics : MonoBehaviour 
 {
 	public GameObject character = null;
 	public float speed = 100.0f;
@@ -18,6 +18,13 @@ public class FollowCamera : MonoBehaviour
 		if( character == null )
 		{
 			Debug.LogError(name + " : no CharacterController found!");
+		}
+
+		if( this.rigidbody2D == null )
+		{
+			gameObject.AddComponent<Rigidbody2D>();
+
+			rigidbody2D.isKinematic = true;
 		}
 	}
 	
@@ -44,7 +51,9 @@ public class FollowCamera : MonoBehaviour
 	
 	protected void FixedUpdate () 
 	{
-		transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x + xOffset, Time.deltaTime * speed) );
+		this.rigidbody2D.velocity = Vector2.Lerp(this.rigidbody2D.velocity, character.rigidbody2D.velocity, Time.deltaTime * speed);
+
+		//transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x + xOffset, Time.deltaTime * speed) );
 
 		//transform.position = transform.position.x( character.transform.position.x );
 	}

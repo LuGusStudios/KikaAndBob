@@ -31,7 +31,18 @@ public class CharacterController : MonoBehaviour
 
 		//this.rigidbody2D.AddForce(Vector2.right * speed * 10 * Time.fixedDeltaTime);
 
-		this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed );
+		//this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed );
+
+
+
+		rigidbody2D.AddForce(Vector2.right * speed * 10);
+		
+		// If the player's horizontal velocity is greater than the maxSpeed...
+		if(Mathf.Abs(rigidbody2D.velocity.x) > 13)
+			// ... set the player's velocity to the maxSpeed in the x axis.
+			rigidbody2D.velocity = new Vector2(13, rigidbody2D.velocity.y);
+
+
 
 		if( jump )
 		{
