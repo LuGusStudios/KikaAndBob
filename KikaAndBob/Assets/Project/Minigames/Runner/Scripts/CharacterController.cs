@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class CharacterController : MonoBehaviour 
 {
-	public float speed = 100.0f;
+	public float speed = 13.0f;
+	public float jumpForce = 10.0f;
 
 	public void SetupLocal()
 	{
@@ -35,19 +36,19 @@ public class CharacterController : MonoBehaviour
 
 
 
-		rigidbody2D.AddForce(Vector2.right * speed * 10);
+		//rigidbody2D.AddForce(Vector2.right * speed * 10);
 		
 		// If the player's horizontal velocity is greater than the maxSpeed...
-		if(Mathf.Abs(rigidbody2D.velocity.x) > 13)
+		//if(Mathf.Abs(rigidbody2D.velocity.x) > speed)
 			// ... set the player's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2(13, rigidbody2D.velocity.y);
+			rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y);
 
 
 
 		if( jump )
 		{
 			//this.rigidbody2D.AddForce(Vector2.up * speed * Time.fixedDeltaTime);
-			this.rigidbody2D.velocity += Vector2.up * speed; 
+			this.rigidbody2D.velocity += Vector2.up * jumpForce; 
 
 			jump = false; 
 		}

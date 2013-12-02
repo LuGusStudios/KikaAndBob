@@ -17,7 +17,7 @@ public class RunnerManagerDefault : MonoBehaviour
 	{
 		Debug.Log ("Shifting level " + units + " units");
 
-		FollowCamera camera = LugusCamera.game.GetComponent<FollowCamera>();
+		FollowCameraContinuous camera = LugusCamera.game.GetComponent<FollowCameraContinuous>();
 		Vector3 cameraOriginal = camera.transform.position;
 		float xOffset = camera.character.transform.position.x - camera.transform.position.x;
 
