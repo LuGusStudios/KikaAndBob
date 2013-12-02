@@ -6,12 +6,12 @@ public class LugusUtil
 {
 	public static int UIWidth
 	{
-		get{ return 1280; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 2048; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
 	
 	public static int UIHeight
 	{
-		get{ return 720; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 1536; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
 	
 	public static int ScreenWidth
@@ -56,6 +56,7 @@ public class LugusUtil
 	}
 	
 	public static Vector3 DEFAULTVECTOR = new Vector3( float.MaxValue, float.MaxValue, float.MaxValue ); 
+	public static Vector3 OFFSCREEN = new Vector3( -9999.0f, -9999.0f, -9999.0f ); 
 }
 
 public static class VectorExtensions
@@ -75,6 +76,18 @@ public static class VectorExtensions
 	{
 		return new Vector3(v.x, v.y, val);
 	}
+
+
+	public static Vector2 x(this Vector2 v, float val)
+	{
+		return new Vector2(val, v.y);
+	}
+	
+	public static Vector2 y(this Vector2 v, float val)
+	{
+		return new Vector2(v.x, val);
+	}
+
 
 	public static Vector2 v2(this Vector3 v)
 	{
@@ -147,7 +160,7 @@ public static class ColorExtensions
 
 public static class TransformExtensions
 {
-	public static List<Transform> FindChildRecursively(this Transform root, string name)
+	public static List<Transform> FindChildrenRecursively(this Transform root, string name)
 	{
 		List<Transform> output = new List<Transform>();
 		
@@ -160,6 +173,19 @@ public static class TransformExtensions
 		}
 		
 		return output;
+	}
+	
+	public static Transform FindChildRecursively(this Transform root, string name)
+	{
+		Component[] transforms = root.GetComponentsInChildren( typeof( Transform ), true );
+		
+		foreach( Transform t in transforms )
+		{
+			if( t.name == name )
+				return t;
+		}
+
+		return null;
 	}
 	
 	public static string Path(this Transform root)
