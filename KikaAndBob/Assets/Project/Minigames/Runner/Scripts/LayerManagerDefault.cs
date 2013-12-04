@@ -98,7 +98,7 @@ public class LayerManagerDefault : MonoBehaviour
 		skyLayer.detailLayer = themeTransitions[ currentThemeIndex ].skyDetails;
 	}
 
-	protected void OnSkyLayerTransitioned(GameObject currentSection, GameObject nextSection)
+	protected void OnSkyLayerTransitioned(LayerSection currentSection, LayerSection nextSection)
 	{
 		Debug.Log ("SkyLayer transitioned");
 
@@ -109,7 +109,7 @@ public class LayerManagerDefault : MonoBehaviour
 		LugusCoroutines.use.StartRoutine( GroundTransitionRoutine(nextSection) );
 	}
 
-	protected IEnumerator GroundTransitionRoutine(GameObject transitionSection)
+	protected IEnumerator GroundTransitionRoutine(LayerSection transitionSection)
 	{
 		//yield return new WaitForSeconds( timeBetweenSkyAndGroundTransitions );
 
@@ -137,7 +137,7 @@ public class LayerManagerDefault : MonoBehaviour
 		frontLayer.detailLayer = themeTransitions[ currentThemeIndex ].frontDetails;
 	}
 
-	protected void OnGroundLayerTransitioned(GameObject currentSection, GameObject nextSection)
+	protected void OnGroundLayerTransitioned(LayerSection currentSection, LayerSection nextSection)
 	{
 		Debug.Log ("GroundLayer transitioned");
 		
