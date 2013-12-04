@@ -18,7 +18,7 @@ public class WaypointEditor : Editor
 	{
 		Waypoint subject = (Waypoint) target;
 		
-		EditorGUIUtility.LookLikeInspector();
+		EditorGUIUtility.LookLikeInspector(); 
 		
 		showDefault = EditorGUILayout.Foldout(showDefault, "Show original");
 		if( showDefault )
