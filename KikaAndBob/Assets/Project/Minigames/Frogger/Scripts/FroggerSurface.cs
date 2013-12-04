@@ -2,21 +2,37 @@
 using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
-public class FroggerSurface : MonoBehaviour {
+public abstract class FroggerSurface : MonoBehaviour {
+
+	private bool onSurface = false;
+
+	public void Enter(FroggerCharacter character)
+	{
+		if (onSurface)
+			return;
+		
+		onSurface = true;
+
+		EnterSurfaceEffect(character);
+	}
+
+	public void Leave(FroggerCharacter character)
+	{
+		if (!onSurface)
+			return;
+		
+		onSurface = false;
+
+		LeaveSurfaceEffect(character);
+	}
 	
-	void Start () {
-	}
-
-	void Update () {
-	}
-
-	public virtual void EnterSurfaceEffect()
+	protected virtual void EnterSurfaceEffect(FroggerCharacter character)
 	{
 
 	}
 
-	public virtual void LeaveSurfaceEffect()
+	protected virtual void LeaveSurfaceEffect(FroggerCharacter character)
 	{
-
+	
 	}
 }

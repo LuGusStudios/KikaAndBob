@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FroggerLaneItem : FroggerSurface
 {
-	public float speed = 10;
+	public float speed = 2;
 	public bool goRight = true;
 
 	void Update()

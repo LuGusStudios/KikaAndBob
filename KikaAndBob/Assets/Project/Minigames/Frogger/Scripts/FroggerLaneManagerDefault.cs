@@ -10,7 +10,7 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 {
 	List<FroggerLane> lanes = new List<FroggerLane>();
 
-	void Awake()
+	public void FindLanes()
 	{
 		FroggerLane[] lanesInScene = (FroggerLane[]) FindObjectsOfType(typeof(FroggerLane));
 		lanes = OrderLanes(new List<FroggerLane>(lanesInScene));

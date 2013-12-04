@@ -25,5 +25,9 @@ public class FroggerPlayer : FroggerCharacter {
 		{
 			MoveSideways(true);
 		}
+
+	
+		ClampToScreen();
+
 	} 
 }
