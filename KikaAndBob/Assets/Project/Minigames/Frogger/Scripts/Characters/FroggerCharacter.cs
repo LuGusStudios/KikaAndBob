@@ -4,21 +4,25 @@ using System.Collections;
 public class FroggerCharacter : MonoBehaviour {
 
 	public float speed = 100;
+	public Vector3 maxScale = new Vector3(1f, 1f, 1f);
+	public Vector3 minScale = new Vector3(0.4f, 0.4f, 0.4f);
 
 	protected FroggerLane currentLane = null;
 	protected FroggerLaneItem currentLaneItem = null;
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
+	protected Vector3 originalScale = Vector3.one;
 
-	void Start () 
+	void Start()
 	{
-		//Reset();
+		originalScale = transform.localScale;
 	}
-	
+
 	void Update () 
 	{
 		CheckSurface();
 		UpdatePosition();
+		ScaleByDistanceHorizontal();
 	}
 
 	public virtual void Reset()
@@ -29,6 +33,11 @@ public class FroggerCharacter : MonoBehaviour {
 
 		currentLane = FroggerLaneManager.use.GetLane(0);
 		transform.position = currentLane.transform.position.z(transform.position.z);
+	}
+
+	protected void ScaleByDistanceHorizontal()
+	{
+		transform.localScale = Vector3.Lerp(maxScale, minScale, (transform.position.v2() - FroggerLaneManager.use.GetBottomLaneCenter()).y / FroggerLaneManager.use.GetLevelLengthLaneCenters());
 	}
 
 	protected void MoveSideways(bool right)

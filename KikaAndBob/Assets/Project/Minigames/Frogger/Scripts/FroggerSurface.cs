@@ -25,6 +25,11 @@ public abstract class FroggerSurface : MonoBehaviour {
 
 		LeaveSurfaceEffect(character);
 	}
+
+	public Vector2 GetSurfaceSize()
+	{
+		return GetComponent<BoxCollider2D>().size;
+	}
 	
 	protected virtual void EnterSurfaceEffect(FroggerCharacter character)
 	{
