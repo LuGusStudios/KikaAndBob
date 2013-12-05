@@ -73,6 +73,7 @@ public class ConsumableConsumer : IConsumableUser
 			}
 			else
 			{
+				Debug.LogError(name + " : Consumer could nog consume what the mover is carrying");
 				return false;
 			} 
 		}

@@ -12,7 +12,7 @@ public class GoDummyPathEditor : Editor
 {
 	private GoDummyPath _target;
 	private GUIStyle _labelStyle;
-	private GUIStyle _indexStyle;
+	private GUIStyle _indexStyle; 
 	
 	private int _insertIndex = 0;
 	private float _snapDistance = 5f;

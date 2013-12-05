@@ -27,6 +27,7 @@ public class ConsumableRemover : IConsumableUser
 			// TODO: decrement score
 		}
 		mover.unprocessedItems.Clear();
+		mover.unprocessedVisualizer.Hide ();
 
 		foreach( Consumable consumable in mover.processedItems )
 		{
@@ -34,6 +35,7 @@ public class ConsumableRemover : IConsumableUser
 			// TODO: decrement score
 		}
 		mover.processedItems.Clear();
+		mover.processedVisualizer.Hide();
 		
 		return true;
 	}

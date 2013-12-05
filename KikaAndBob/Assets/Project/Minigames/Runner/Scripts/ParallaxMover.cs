@@ -17,7 +17,7 @@ public class ParallaxMover : MonoBehaviour
 	}
 	
 	protected void Awake()
-	{
+	{ 
 		SetupLocal();
 	}
 
@@ -26,9 +26,8 @@ public class ParallaxMover : MonoBehaviour
 		SetupGlobal();
 	}
 	
-	protected void FixedUpdate () 
+	protected void Update () 
 	{
-		
 		transform.position += transform.right * speed * Time.deltaTime;
 	}
 }

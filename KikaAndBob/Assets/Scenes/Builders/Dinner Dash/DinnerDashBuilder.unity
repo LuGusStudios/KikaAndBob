@@ -103,10 +103,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aac850d62f70437a83314babec050ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumables:
-  - {fileID: 11400000, guid: d13382b8b62ac41d6a5c0f7e191966e2, type: 2}
+  order: []
   state: 2
   currentConsumable: {fileID: 0}
+  place: {fileID: 0}
 --- !u!61 &98686904
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -247,6 +247,8 @@ MonoBehaviour:
   processedItems: []
   unprocessedItems: []
   consumedItems: []
+  processedVisualizer: {fileID: 0}
+  unprocessedVisualizer: {fileID: 0}
 --- !u!212 &192627045
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -344,10 +346,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aac850d62f70437a83314babec050ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumables:
-  - {fileID: 11400000, guid: d29ca16fcff81447386ccfbed9b52f0d, type: 2}
+  order: []
   state: 2
   currentConsumable: {fileID: 0}
+  place: {fileID: 0}
 --- !u!61 &306939496
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -542,6 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44964cd0a9c9a47fd9f724a6676f886d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  consumerManager: {fileID: 0}
   queue: []
 --- !u!4 &1515581489
 Transform:

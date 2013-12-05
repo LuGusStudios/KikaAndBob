@@ -29,14 +29,12 @@ public class ConsumableConsumerPlace : MonoBehaviour
 		if( orderVisualizer == null )
 			Debug.LogError (name + " : OrderVisualizer not found for this ConsumerPlace");
 
-		orderVisualizer.Hide ();
 
 	}
 	
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
-		
+		orderVisualizer.Hide ();
 	}
 	
 	protected void Awake()
