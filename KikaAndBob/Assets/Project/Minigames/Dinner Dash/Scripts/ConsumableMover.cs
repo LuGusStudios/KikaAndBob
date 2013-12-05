@@ -357,7 +357,6 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		if( processedVisualizer == null )
 			Debug.LogError(name + " : no processed visualizer found!");  
 
-		processedVisualizer.Hide();
 
 		
 		if( unprocessedVisualizer == null )
@@ -365,8 +364,7 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		
 		if( unprocessedVisualizer == null )
 			Debug.LogError(name + " : no unprocessed visualizer found!");
-		
-		unprocessedVisualizer.Hide();
+
 
 		moving = false;
 		movementDirection = Vector3.zero;
@@ -374,7 +372,8 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 	
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
+		processedVisualizer.Hide();
+		unprocessedVisualizer.Hide();
 	}
 	
 	protected void Awake()
