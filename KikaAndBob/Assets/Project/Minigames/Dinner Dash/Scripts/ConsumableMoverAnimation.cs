@@ -118,23 +118,23 @@ public class ConsumableMoverAnimation : MonoBehaviour
 
 		// 1. Map the quadrant to the correct AnimationClip name
 		
-		// we only have animations for the right side of the quadrants (up, right_up, right, right_down and down)
+		// we only have animations for the left side of the quadrants (up, left_up, left, left_down and down)
 		// the other side is achieved by mirroring the animations by changing localScale.x
 		KikaAndBob.MovementQuadrant quadrantAnimation = quadrantReal;
 		bool movingLeft = false;
-		if( (quadrantReal & KikaAndBob.MovementQuadrant.LEFT) == KikaAndBob.MovementQuadrant.LEFT )
+		if( (quadrantReal & KikaAndBob.MovementQuadrant.RIGHT) == KikaAndBob.MovementQuadrant.RIGHT )
 		{
 			movingLeft = true;
 			
-			// use bitwise NOT operator to remove LEFT, then add RIGHT with OR operator 
+			// use bitwise NOT operator to remove RIGHT, then add LEFT with OR operator 
 			// http://stackoverflow.com/questions/750240/how-do-i-set-or-clear-the-first-3-bits-using-bitwise-operations
-			quadrantAnimation = quadrantAnimation & (~KikaAndBob.MovementQuadrant.LEFT);
-			quadrantAnimation = quadrantAnimation | KikaAndBob.MovementQuadrant.RIGHT;
+			quadrantAnimation = quadrantAnimation & (~KikaAndBob.MovementQuadrant.RIGHT);
+			quadrantAnimation = quadrantAnimation | KikaAndBob.MovementQuadrant.LEFT;
 		}
 
-		// we have no UP_RIGHT and UP_DOWN here
-		// so just use the RIGHT for the diagonal movement by removing both UP and DOWN
-		if( (quadrantAnimation & KikaAndBob.MovementQuadrant.RIGHT) == KikaAndBob.MovementQuadrant.RIGHT )
+		// we have no LEFT_UP and LEFT_DOWN here
+		// so just use the LEFT for the diagonal movement by removing both UP and DOWN
+		if( (quadrantAnimation & KikaAndBob.MovementQuadrant.LEFT) == KikaAndBob.MovementQuadrant.LEFT )
 		{
 			quadrantAnimation = quadrantAnimation & (~KikaAndBob.MovementQuadrant.UP);
 			quadrantAnimation = quadrantAnimation & (~KikaAndBob.MovementQuadrant.DOWN);

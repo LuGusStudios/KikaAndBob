@@ -8,6 +8,9 @@ public class ConsumableListVisualizer : MonoBehaviour
 
 	public List<SpriteRenderer> renderers = new List<SpriteRenderer>();
 
+	public float targetSpriteWidth = 150.0f; // we want the sprites to be this wide
+
+
 	public void Visualize(List<Consumable> consumables)
 	{
 		if( consumables == null || consumables.Count == 0 )
@@ -42,27 +45,52 @@ public class ConsumableListVisualizer : MonoBehaviour
 
 
 		// assumptions:
-		// - all sprites are of equal width
 		// - all sprites have their pivot in the center
 		// - the parent object(s) have a scale of 1
 
 		float padding = 10.0f;// extra padding of 5 px between items
+		//float targetSpriteWidth = 100.0f; 
 
-		float spriteWidth = definitions[0].textureProcessed.bounds.size.x;
-		float totalWidth = (spriteWidth * definitions.Count) + ((definitions.Count - 1) * padding); 
-		float leftStart = transform.position.x - (totalWidth / 2.0f ) + (spriteWidth / 2.0f);
+		float totalWidth = 0.0f;
+		float firstWidth = -1.0f;
+
+		// pass 1 : calculate scales and widths per sprite to determine totalWidth
+		for( int i = 0; i < definitions.Count; ++i )
+		{
+			renderers[i].sprite = definitions[i].TextureForState( state );
+
+			float scale = targetSpriteWidth / renderers[i].sprite.bounds.size.x;
+			renderers[i].transform.localScale = new Vector3(scale, scale, scale);
+
+			if( firstWidth == -1.0f )
+			{
+				firstWidth = renderers[i].sprite.bounds.size.x * scale;
+			}
+
+			totalWidth += renderers[i].sprite.bounds.size.x * scale;
+		}
+
+		totalWidth += ((definitions.Count - 1) * padding);
+
+		float leftStart = transform.position.x - (totalWidth / 2.0f ) + (firstWidth / 2.0f);
+
+		// pass 2 : position the elements
 
 		for( int i = 0; i < definitions.Count; ++i )
 		{
+			float spriteWidth = renderers[i].sprite.bounds.size.x * renderers[i].transform.localScale.x;
 			renderers[i].transform.position = renderers[i].transform.position.x ( leftStart + (i * spriteWidth) + ( i * padding ) );
-			renderers[i].sprite = definitions[i].TextureForState( state );
 		}
 	}
 
 	public void Hide()
 	{
 		if( background != null )
+		{
 			background.renderer.enabled = false;
+		}
+		else
+			Debug.LogError (name + " : Renderer was null!!");
 
 		for( int i = 0; i < renderers.Count; ++i )
 		{
