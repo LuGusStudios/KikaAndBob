@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class FollowCamera : MonoBehaviour 
 {
-	public CharacterController character = null;
+	public GameObject character = null;
 	public float speed = 100.0f;
 	public float xOffset = 0.0f;
 
@@ -12,7 +12,7 @@ public class FollowCamera : MonoBehaviour
 	{
 		if( character == null )
 		{
-			character = GameObject.Find("Character").GetComponent<CharacterController>();
+			character = GameObject.Find("Character");//.GetComponent<CharacterController>();
 		}
 
 		if( character == null )

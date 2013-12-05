@@ -11,13 +11,13 @@ public class RunnerManagerDefault : MonoBehaviour
 {
 	// if the camera reaches this x value, the whole level is shifted to the left again
 	// this is to prevent reaching very high x values (which float precision does not like)
-	public float shiftXValue = 50.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
+	protected float shiftXTreshold = 1000.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
 
 	public void ShiftLevel(float units)
 	{
 		Debug.Log ("Shifting level " + units + " units");
 
-		FollowCamera camera = LugusCamera.game.GetComponent<FollowCamera>();
+		FollowCameraContinuous camera = LugusCamera.game.GetComponent<FollowCameraContinuous>();
 		Vector3 cameraOriginal = camera.transform.position;
 		float xOffset = camera.character.transform.position.x - camera.transform.position.x;
 
@@ -47,7 +47,7 @@ public class RunnerManagerDefault : MonoBehaviour
 
 	protected void LateUpdate()
 	{
-		if( LugusCamera.game.transform.position.x > 50.0f || LugusInput.use.KeyDown(KeyCode.R) )
+		if( LugusCamera.game.transform.position.x > shiftXTreshold || LugusInput.use.KeyDown(KeyCode.R) )
 		{
 			ShiftLevel( -1 * LugusCamera.game.transform.transform.position.x ); // shift back to 0.0f
 		}
