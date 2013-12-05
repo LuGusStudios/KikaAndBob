@@ -15,8 +15,8 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(burger, orange, burger, orange) );
-		orders.Add( CreateOrder(burger, orange, orange) );
+		//orders.Add( CreateOrder(burger, orange, burger, orange) );
+		//orders.Add( CreateOrder(burger, orange, orange) );
 		orders.Add( CreateOrder(burger, orange) );
 		orders.Add( CreateOrder(orange) );
 		//orders.Add( CreateOrder(burger, burger) ); // NOT GOOD: system cannot handle multiple consuambles of the same type in 1 order at this time
