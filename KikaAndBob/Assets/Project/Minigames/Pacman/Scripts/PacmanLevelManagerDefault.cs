@@ -317,27 +317,27 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return levelTiles[x, y];
 	}
 
-	public GameTile GetTileInDirection(GameTile startTile, Character.CharacterDirections direction)
+	public GameTile GetTileInDirection(GameTile startTile, PacmanCharacter.CharacterDirections direction)
 	{
-		if (direction == Character.CharacterDirections.Undefined)
+		if (direction == PacmanCharacter.CharacterDirections.Undefined)
 		{
 			Debug.LogError("Direction was undefined.");
 			return null;
 		}
 
-		if (direction == Character.CharacterDirections.Up)
+		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			return GetTile(startTile.gridIndices + new Vector2(0, 1), false);
 		}
-		else if (direction == Character.CharacterDirections.Right)
+		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			return GetTile(startTile.gridIndices + new Vector2(1, 0), false);
 		}
-		else if (direction == Character.CharacterDirections.Down)
+		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			return GetTile(startTile.gridIndices + new Vector2(0, -1), false);
 		}
-		else if (direction == Character.CharacterDirections.Left)
+		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			return GetTile(startTile.gridIndices + new Vector2(-1, 0), false);
 		}
@@ -345,46 +345,46 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return null;
 	}
 	
-	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, Character.CharacterDirections direction)
+	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, PacmanCharacter.CharacterDirections direction)
 	{
 		return GetTilesInDirection(startTile, amount, direction, false);
 	}
 
-	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, Character.CharacterDirections direction, bool clamp)
+	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp)
 	{
 		List<GameTile> tileList = new List<GameTile>();
 		
 		int xStart = (int)startTile.gridIndices.x;
 		int yStart = (int)startTile.gridIndices.y;
 		
-		if (direction == Character.CharacterDirections.Undefined)
+		if (direction == PacmanCharacter.CharacterDirections.Undefined)
 		{	
 			Debug.LogError("Direction is undefined.");
 			return null;
 		}
 		
-		if (direction == Character.CharacterDirections.Up)
+		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			for (int y = yStart; y < yStart + amount; y++) 
 			{
 				tileList.Add(GetTile(xStart, y, clamp));
 			}
 		}
-		else if (direction == Character.CharacterDirections.Right)
+		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			for (int x = xStart; x < xStart + amount; x++) 
 			{
 				tileList.Add(GetTile(x, yStart, clamp));
 			}
 		}
-		else if (direction == Character.CharacterDirections.Down)
+		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			for (int y = yStart; y > yStart - amount; y--) 
 			{
 				tileList.Add(GetTile(xStart, y, clamp));
 			}
 		}
-		else if (direction == Character.CharacterDirections.Left)
+		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			for (int x = xStart; x > xStart - amount; x--) 
 			{
@@ -399,9 +399,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		List<GameTile> result = new List<GameTile>();
 
-		foreach(Character.CharacterDirections direction in System.Enum.GetValues(typeof(Character.CharacterDirections)))
+		foreach(PacmanCharacter.CharacterDirections direction in System.Enum.GetValues(typeof(PacmanCharacter.CharacterDirections)))
 		{
-			if (direction == Character.CharacterDirections.Undefined)
+			if (direction == PacmanCharacter.CharacterDirections.Undefined)
 				continue;
 
 			if (GetTileInDirection(tile, direction) != null)

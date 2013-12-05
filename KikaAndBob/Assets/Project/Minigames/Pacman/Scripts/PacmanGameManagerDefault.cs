@@ -14,7 +14,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	protected int lives = 3;
 	protected bool gameDone = false;
 	protected List<EnemyCharacter> enemies = new List<EnemyCharacter>();
-	protected PlayerCharacter player;
+	protected PacmanPlayerCharacter player;
 	
 	void Awake () 
 	{
@@ -25,7 +25,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 			enemies.Add(enemy);
 		}
 
-		player = (PlayerCharacter) FindObjectOfType(typeof(PlayerCharacter));
+		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
 		StartNewGame();
 	}
