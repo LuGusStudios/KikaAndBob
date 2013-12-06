@@ -7,6 +7,10 @@ public class DanceHeroLane : MonoBehaviour
 {
 	public List<DanceHeroLaneItem> items = new List<DanceHeroLaneItem>();
 
+	public Transform actionPoint = null;
+
+	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
+
 	// public GameObject character = null;
 
 	public void Hide()
@@ -19,9 +23,14 @@ public class DanceHeroLane : MonoBehaviour
 		this.gameObject.SetActive( true );
 	}
 
-	public void AddItem(float delay, KikaAndBob.LaneItemType type, float duration)
+	public void AddItem(float delay, KikaAndBob.LaneItemActionType type, float duration = DanceHeroLaneItem.singleDuration)
 	{
-		items.Add( new DanceHeroLaneItem(delay, type, duration) );
+		items.Add( new DanceHeroLaneItem(this, delay, type, duration) );
+	}
+
+	public void AddItem(float delay, float duration = DanceHeroLaneItem.singleDuration )
+	{
+		items.Add( new DanceHeroLaneItem(this, delay, defaultActionType, duration) );
 	}
 
 	public void Begin()
@@ -34,15 +43,33 @@ public class DanceHeroLane : MonoBehaviour
 		int currentItemIndex = 0;
 		while( currentItemIndex < items.Count )
 		{
-			DanceHeroLaneItem item = null;
+			DanceHeroLaneItem item = items[currentItemIndex];
 
 			yield return new WaitForSeconds( item.delay );
+
+			SpawnItem( item );
+
+
+			++currentItemIndex;
 		}
+	}
+
+	protected void SpawnItem(DanceHeroLaneItem item)
+	{
+		DanceHeroLaneItemRenderer.Create( item );
 	}
 
 	public void SetupLocal()
 	{
-		// assign variables that have to do with this class only
+		if( actionPoint == null )
+		{
+			actionPoint = transform.FindChild("ActionPoint");
+		}
+
+		if( actionPoint == null )
+		{
+			Debug.LogError(name + " : no ActionPoint known for this lane!");
+		}
 	}
 	
 	public void SetupGlobal()
