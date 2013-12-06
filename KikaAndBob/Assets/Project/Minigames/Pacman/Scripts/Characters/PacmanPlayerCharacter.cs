@@ -48,8 +48,6 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 
 		UpdatePosition();
-
-		ChangeSpriteDirection (nextDirection);
 	}
 	
 	public override void DestinationReached()
@@ -76,6 +74,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 				MoveTo(nextTile);
 			}
 		}
+
+		ChangeSpriteDirection(currentDirection);
 	}
 	
 	protected void TryMoveInDirection(CharacterDirections direction)

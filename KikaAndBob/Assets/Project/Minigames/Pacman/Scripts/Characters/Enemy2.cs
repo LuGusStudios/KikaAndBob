@@ -20,13 +20,13 @@ public class Enemy2 : EnemyCharacter {
 		if (player.currentTile != null)
 		{
 			GameTile favoredTile = null;
-			Character.CharacterDirections heading = player.GetDirection();
+			PacmanCharacter.CharacterDirections heading = player.GetDirection();
 			
 			int playerX = (int)player.currentTile.gridIndices.x;
 			int playerY = (int)player.currentTile.gridIndices.y;
 			
 			// check four tiles ahead in player's current direction; try fewer tiles if this is not a valid tile; find player if all else fails
-			if (heading == Character.CharacterDirections.Up)
+			if (heading == PacmanCharacter.CharacterDirections.Up)
 			{
 				for (int i = 4; i >= 0; i--)
 				{
@@ -35,7 +35,7 @@ public class Enemy2 : EnemyCharacter {
 						break;
 				}
 			}
-			else if (heading == Character.CharacterDirections.Right)
+			else if (heading == PacmanCharacter.CharacterDirections.Right)
 			{
 				for (int i = 4; i >= 0; i--)
 				{
@@ -44,7 +44,7 @@ public class Enemy2 : EnemyCharacter {
 						break;
 				}
 			}
-			else if (heading == Character.CharacterDirections.Down)
+			else if (heading == PacmanCharacter.CharacterDirections.Down)
 			{
 				for (int i = 4; i >= 0; i--)
 				{
@@ -53,7 +53,7 @@ public class Enemy2 : EnemyCharacter {
 						break;
 				}
 			}
-			else if (heading == Character.CharacterDirections.Left)
+			else if (heading == PacmanCharacter.CharacterDirections.Left)
 			{
 				for (int i = 4; i >= 0; i--)
 				{

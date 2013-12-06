@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using SmoothMoves;
+using System.Collections.Generic;
 
 public abstract class PacmanCharacter : MonoBehaviour {
 	
@@ -38,8 +39,29 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	void FindAnimations()
 	{
-		if (boneAnimations == null)
-			boneAnimations = (BoneAnimation[])FindObjectsOfType(typeof(BoneAnimation));
+		// this only needs to be done once, but it's handy to be able to call from various places to ensure these are always assigned
+		if (boneAnimations == null || boneAnimations.Length <= 0)
+		{
+			// since switching between animations relies on setting child objects non-active, we can't rely on getcomponentsinchildren or something similar
+			// instead, make sure they're all active and and turn them off again if needed
+			List<BoneAnimation> foundAnimations = new List<BoneAnimation>();
+			foreach(Transform t in transform)
+			{
+				bool objectActive = t.gameObject.activeSelf;
+				if (!objectActive)
+					t.gameObject.SetActive(true);
+
+				BoneAnimation found = t.gameObject.GetComponent<BoneAnimation>();
+
+				if (found != null)
+					foundAnimations.Add(found);
+
+				if (objectActive != t.gameObject.activeSelf)
+					t.gameObject.SetActive(objectActive);
+			}
+
+			boneAnimations = foundAnimations.ToArray();
+		}
 	}
 
 	// does actual moving and calls appropriate methods when destination was reached
@@ -79,29 +101,30 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		UpdatePosition();	// needs to be called again, or character will pause for one frame
 	}
 	
-	public void ChangeSpriteDirection(bool faceRight)
+	public virtual void ChangeSpriteDirection(bool faceRight)
 	{
 		if (faceRight)
 			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
 		else
 			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
-
-
-
 	}
 
-	public void ChangeSpriteDirection(CharacterDirections direction)
+	public virtual void ChangeSpriteDirection(CharacterDirections direction)
 	{
-		FindAnimations();
-
 		CharacterDirections adjustedDirection = direction;
 
+		// Right facing = left flipped on x axis
 		if (direction == CharacterDirections.Undefined || direction == CharacterDirections.Right)
 		{
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		string clipName = "" + adjustedDirection.ToString(); 
+		PlayAnimation("" + adjustedDirection.ToString(), direction);
+	}
+
+	public void PlayAnimation(string clipName, CharacterDirections direction)
+	{
+		FindAnimations();
 
 		currentAnimation = null;
 		foreach( BoneAnimation animation in boneAnimations )
@@ -119,10 +142,10 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			Debug.LogError(name + " : No animation found for name " + clipName);
 			currentAnimation = boneAnimations[0];
 		}
-		
-		currentAnimation.Stop();
-	//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
 
+		currentAnimation.Stop();
+		//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
+		
 		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
 		
 		if( direction == CharacterDirections.Right )
@@ -141,13 +164,11 @@ public abstract class PacmanCharacter : MonoBehaviour {
 				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
 			}
 		}
-
 	}
 
 
 	public virtual void ResetMovement()
 	{
-		ChangeSpriteDirection (CharacterDirections.Right);
 		movementTimer = 0;
 	 	movementDuration = 0;
 	}

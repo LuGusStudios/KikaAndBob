@@ -127,7 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems: []
 --- !u!212 &93465421
 SpriteRenderer:
@@ -206,7 +210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems: []
 --- !u!212 &121483172
 SpriteRenderer:
@@ -342,7 +350,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems: []
 --- !u!1 &383593797
 GameObject:
@@ -731,7 +743,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems: []
 --- !u!212 &1496713004
 SpriteRenderer:
@@ -797,6 +813,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  maxScale: {x: 1, y: 1, z: 1}
+  minScale: {x: .400000006, y: .400000006, z: .400000006}
 --- !u!212 &1588910106
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -873,7 +891,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems: []
 --- !u!212 &1617230565
 SpriteRenderer:
@@ -1020,7 +1042,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems:
   - {fileID: 11400000, guid: 2cbdbe0d7298ede46997743ee0b4dabe, type: 2}
 --- !u!212 &1804963783
@@ -1089,7 +1115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6285a14357abf2449b4d3e4b0f66a840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goRight: 1
   spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
   spawnItems:
   - {fileID: 11400000, guid: 41a5672666191d64e9a4177ad8b1644d, type: 2}
 --- !u!212 &1877770949
@@ -1139,6 +1169,7 @@ GameObject:
   - 92: {fileID: 2022030889}
   - 124: {fileID: 2022030888}
   - 81: {fileID: 2022030887}
+  - 114: {fileID: 2022030892}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1211,6 +1242,17 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &2022030892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2022030886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb8aab83d035ea4baac4edb586cc439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2042815861
 Prefab:
   m_ObjectHideFlags: 0

@@ -80,6 +80,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// puts the player in the start location and resets their movement
 	protected void ResetPlayer()
 	{
+		player.PlayAnimation("Idle", PacmanCharacter.CharacterDirections.Undefined);
 		player.transform.localPosition = PacmanLevelManager.use.GetTile(2,1).location;
 		player.DetectCurrentTile();
 		player.ResetMovement();
@@ -103,14 +104,32 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	
 	protected void DisableEnemy(EnemyCharacter target)
 	{
-		target.renderer.enabled = false;
+		foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = false;
+		}
+
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in (SkinnedMeshRenderer[])target.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = false;
+		}
+
 		target.enabled = false;
 		target.Reset(enemySpawnLocation);
 	}
 
 	void EnableEnemy(EnemyCharacter target)
 	{
-		target.renderer.enabled = true;
+		foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = true;
+		}
+
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in (SkinnedMeshRenderer[])target.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = true;
+		}
+
 		target.enabled = true;
 	}
 	

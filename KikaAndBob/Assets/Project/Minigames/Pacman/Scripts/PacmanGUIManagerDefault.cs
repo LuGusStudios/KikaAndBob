@@ -29,16 +29,42 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	
 	public void ShowGameOverMessage()
 	{
-		Debug.Log("Add game over GUI action here.");
+		LugusCoroutines.use.StartRoutine(PlaceholderGameOver());
+		Debug.Log("Add game over GUI action here. Just restarting for now.");
 	}
-	
-	
+
+	IEnumerator PlaceholderGameOver()
+	{
+		GameObject gui = GameObject.Find("GUI");
+		Transform child = gui.transform.FindChild("YouLose");
+
+		child.gameObject.SetActive(true);
+		yield return new WaitForSeconds(1f);
+
+		child.gameObject.SetActive(false);
+
+		PacmanGameManager.use.StartNewGame();
+	}
+
 	public void ShowWinMessage()
 	{
-		Debug.Log("Add win GUI action here.");
+		LugusCoroutines.use.StartRoutine(PlaceholderWin());
+		Debug.Log("Add win GUI action here.Just restarting for now.");
 	}
 
+	IEnumerator PlaceholderWin()
+	{
+		GameObject gui = GameObject.Find("GUI");
+		Transform child = gui.transform.FindChild("YouWin");
 
+		child.gameObject.SetActive(true);
+		yield return new WaitForSeconds(1f);
+
+		child.gameObject.SetActive(false);
+
+		PacmanGameManager.use.StartNewGame();
+	}
+	
 	public void UpdateDoors(List<GameTile> doors)
 	{
 		foreach(GameTile door in doors)
