@@ -2,9 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DanceHeroLevel : MonoBehaviour 
+public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel> 
 {
+	public enum TimeProgressionMode
+	{
+		NONE = -1,
+
+		PER_LANE = 1,
+		GLOBAL_CUMULATIVE = 2
+	}
+
+	public TimeProgressionMode mode = TimeProgressionMode.PER_LANE;
+
 	public List<DanceHeroLane> lanes = new List<DanceHeroLane>();
+
+	public float cumulativeDelay = 0.0f;
 
 	public void SetupLocal()
 	{
@@ -77,6 +89,7 @@ public class DanceHeroLevel : MonoBehaviour
 
 	protected void LoadLevelMetallica()
 	{
+
 		DanceHeroLane lane1 = GetLane("Lane1");
 		DanceHeroLane lane2 = GetLane("Lane2");
 		DanceHeroLane lane3 = GetLane("Lane3");
@@ -85,21 +98,35 @@ public class DanceHeroLevel : MonoBehaviour
 		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
 		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
 
-		// TODO: option to have the lanes add their delays as one
-		// without, this wouldn't work for metallica one, but we want it to:
-		/*
-		 * 
+		
+		// GLOBAL_CUMULATIVE
+		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
 		lane1.AddItem( 0.0f );
-		lane2.AddItem( 0.6f );
-		lane3.AddItem( 0.4f );
-		lane1.AddItem( 0.4f ); 
-		 * 
-		 */ 
+		lane2.AddItem( 0.2f );
+		lane3.AddItem( 0.2f );
+		lane1.AddItem( 0.3f ); 
+		
+		lane1.AddItem( 1.6f );
+		lane2.AddItem( 0.2f );
+		lane3.AddItem( 0.2f );
+		lane1.AddItem( 0.3f ); 
 
+		
+		lane3.AddItem( 0.6f, 0.8f  ); 
+
+		
+		lane1.AddItem( 3.6f );
+		lane2.AddItem( 0.2f );
+		lane3.AddItem( 0.2f );
+		lane1.AddItem( 0.3f ); 
+
+		/*
+        // PER_LANE
 		lane1.AddItem( 0.1f );
 		lane2.AddItem( 0.3f );
 		lane3.AddItem( 0.5f );
 		lane1.AddItem( 0.7f );
+		*/
 
 		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT );
 		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT, 1.2f );

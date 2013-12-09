@@ -159,7 +159,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			
 			GameObject.Destroy( actionPoints[currentActionPointIndex].gameObject );
 
-			currentActionPointIndex++;
+			currentActionPointIndex++; 
 		}
 
 		if( currentActionPointIndex == 1 && !keyDown ) // keyUp
@@ -173,8 +173,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		if( !LugusDebug.debug )
 			return;
 
-		Vector2 screenPoint = LugusCamera.game.WorldToScreenPoint(this.transform.position);
+		//Vector2 screenPoint = LugusCamera.game.WorldToScreenPoint(this.transform.position);
 
-		GUI.TextField( new Rect(screenPoint.x, Screen.height - screenPoint.y, 50, 50), "" + Vector2.Distance(this.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()));
+		//GUI.TextField( new Rect(screenPoint.x, Screen.height - screenPoint.y, 50, 50), "" + Vector2.Distance(this.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()));
 	}
 }

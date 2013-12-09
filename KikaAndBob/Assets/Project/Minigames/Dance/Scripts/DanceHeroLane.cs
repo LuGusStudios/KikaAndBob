@@ -13,6 +13,8 @@ public class DanceHeroLane : MonoBehaviour
 
 	// public GameObject character = null;
 
+	protected float totalDelay = 0.0f;
+
 	public void Hide()
 	{
 		this.gameObject.SetActive( false );
@@ -25,12 +27,28 @@ public class DanceHeroLane : MonoBehaviour
 
 	public void AddItem(float delay, KikaAndBob.LaneItemActionType type, float duration = DanceHeroLaneItem.singleDuration)
 	{
+		if( DanceHeroLevel.use.mode == DanceHeroLevel.TimeProgressionMode.GLOBAL_CUMULATIVE )
+		{
+			// put the total delay for the full level up with the delay for this item
+			DanceHeroLevel.use.cumulativeDelay += delay;
+			
+			// delays for the current item are always in relation to the previous item (Always "per lane" so to speak)
+			delay = DanceHeroLevel.use.cumulativeDelay - this.totalDelay;
+		}	
+
+		Debug.Log (name + " : AddItem : " + DanceHeroLevel.use.mode + " @ " + DanceHeroLevel.use.cumulativeDelay + ", lane = " + this.totalDelay + " / " + delay);
+
+
+		this.totalDelay += delay;
+
 		items.Add( new DanceHeroLaneItem(this, delay, type, duration) );
+
 	}
 
 	public void AddItem(float delay, float duration = DanceHeroLaneItem.singleDuration )
 	{
-		items.Add( new DanceHeroLaneItem(this, delay, defaultActionType, duration) );
+		AddItem( delay, defaultActionType, duration );
+		//items.Add( new DanceHeroLaneItem(this, delay, defaultActionType, duration) );
 	}
 
 	public void Begin()
@@ -45,7 +63,10 @@ public class DanceHeroLane : MonoBehaviour
 		{
 			DanceHeroLaneItem item = items[currentItemIndex];
 
+			//Debug.LogError(Time.frameCount + " Lane " + this.name + " waiting for " + item.delay + " seconds");
 			yield return new WaitForSeconds( item.delay );
+			
+			//Debug.LogError(Time.frameCount + " Lane " + this.name + " waited for " + item.delay + " seconds");
 
 			SpawnItem( item );
 
