@@ -595,8 +595,40 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return GetTileByLocation(pointOnLevel.x, pointOnLevel.y);
 	}
 
+	public float GetDistanceBetweenTiles(GameTile tile1, GameTile tile2)
+	{
+		if (tile1 == null)
+		{
+			Debug.LogError("Tile 1 was null.");
+			return 0;
+		}
 
-	
+		if (tile2 == null)
+		{
+			Debug.LogError("Tile 2 was null.");
+			return 0;
+		}
+
+		return Vector2.Distance(tile1.location, tile2.location);
+	}
+
+	public Vector2 GetTileDistanceBetweenTiles(GameTile tile1, GameTile tile2)
+	{
+		if (tile1 == null)
+		{
+			Debug.LogError("Tile 1 was null.");
+			return Vector2.zero;
+		}
+		
+		if (tile2 == null)
+		{
+			Debug.LogError("Tile 2 was null.");
+			return Vector2.zero;
+		}
+
+		return new Vector2(Mathf.Abs(tile1.gridIndices.x - tile2.gridIndices.x),  Mathf.Abs(tile1.gridIndices.y - tile2.gridIndices.y));
+	}
+
 	public void IncreasePickUpCount()
 	{
 		itemsPickedUp++;
