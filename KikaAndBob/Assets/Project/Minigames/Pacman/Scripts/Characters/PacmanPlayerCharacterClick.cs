@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCharacterClick : PlayerCharacter {
+public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 
 	protected GameTile clickedTile = null;
 
@@ -23,25 +23,63 @@ public class PlayerCharacterClick : PlayerCharacter {
 
 				if (clickedTile != null)
 				{
+					// player can click tiles that are not directly reachable 
+					// in this case, the player will move in a generally right direction
+					// the direction is selected based on distance: the direction with the largest distance wins out
+
+					float largestDistance = 0;
+					float currentDistance = 0;
+					Vector2 tileDifference = PacmanLevelManager.use.GetTileDistanceBetweenTiles(currentTile, clickedTile);
+
 					if (clickedTile.gridIndices.x > currentTile.gridIndices.x)
-						nextDirection =  CharacterDirections.Right;
+					{
+						currentDistance = tileDifference.x;
+						if (currentDistance > largestDistance)
+						{
+							nextDirection = CharacterDirections.Right;
+							largestDistance = currentDistance;
+						}
+					}
 					else if (clickedTile.gridIndices.x < currentTile.gridIndices.x)
-						nextDirection =  CharacterDirections.Left;
-					else if (clickedTile.gridIndices.y < currentTile.gridIndices.y)
-						nextDirection =  CharacterDirections.Down;
-					else if (clickedTile.gridIndices.y > currentTile.gridIndices.y)
-						nextDirection =  CharacterDirections.Up;
+					{
+						currentDistance = tileDifference.x;
+						if (currentDistance > largestDistance)
+						{
+							nextDirection = CharacterDirections.Left;
+							largestDistance = currentDistance;
+						}
+					}
+
+					if (clickedTile.gridIndices.y < currentTile.gridIndices.y)
+					{
+						currentDistance = tileDifference.y;
+						if (currentDistance > largestDistance)
+						{
+							nextDirection = CharacterDirections.Down;
+							largestDistance = currentDistance;
+						}
+					}
+
+					if (clickedTile.gridIndices.y > currentTile.gridIndices.y)
+					{
+						currentDistance = tileDifference.y;
+						if (currentDistance > largestDistance)
+						{
+							nextDirection = CharacterDirections.Up;
+							largestDistance = currentDistance;
+						}
+					}
 
 					// if we're mot moving, start moving again
 					if (!moving)
 						DestinationReached();
+
+					ChangeSpriteDirection (nextDirection);
 				}
 			}
 		}
 		
 		UpdatePosition();
-		
-		ChangeSpriteDirection (nextDirection);
 	}
 
 	public override void DestinationReached ()
@@ -54,6 +92,7 @@ public class PlayerCharacterClick : PlayerCharacter {
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)
 		{
+			PlayAnimation("Idle", CharacterDirections.Undefined);
 			return;
 		}
 		// if clicked tile was reached, success
@@ -95,6 +134,10 @@ public class PlayerCharacterClick : PlayerCharacter {
 			{
 				MoveTo(nextTile);
 			}
+//			else
+//			{
+//				PlayAnimation("Idle", CharacterDirections.Undefined);
+//			}
 		}
 	}
 }

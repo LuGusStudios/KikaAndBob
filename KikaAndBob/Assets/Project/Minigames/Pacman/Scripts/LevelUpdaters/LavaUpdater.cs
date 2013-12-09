@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -73,7 +73,7 @@ public class LavaUpdater : PacmanLevelUpdater {
 		// stream first descends to cross entire level
 		while (streamYLocation <= PacmanLevelManager.use.height)
 		{
-			foreach(GameTile tile in PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, Character.CharacterDirections.Down))
+			foreach(GameTile tile in PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Down))
 			{
 				if (tile == null)
 					continue;
@@ -114,7 +114,7 @@ public class LavaUpdater : PacmanLevelUpdater {
 		// then have top of stream descend
 		while (streamYLocation > 0)
 		{
-			List<GameTile> currentLavaTiles = new List<GameTile>(PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, Character.CharacterDirections.Up));
+			List<GameTile> currentLavaTiles = new List<GameTile>(PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Up));
 			List<GameTile> deleteList = new List<GameTile>();	// we can't delete things while iterating over the dictionary directly, so we add them a list of things to be deleted
 
 			foreach (GameTile tile in lavaTiles.Keys)

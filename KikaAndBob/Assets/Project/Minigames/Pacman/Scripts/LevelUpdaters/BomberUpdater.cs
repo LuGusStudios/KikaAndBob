@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ public class BomberUpdater : PacmanLevelUpdater {
 	protected GameObject bombPrefab = null;
 	protected bool running = false;
 	protected List<ChargedTile> chargedTiles = new List<ChargedTile>();
-	protected PlayerCharacter player = null;
+	protected PacmanPlayerCharacter player = null;
 
 	protected class ChargedTile
 	{
@@ -41,7 +41,7 @@ public class BomberUpdater : PacmanLevelUpdater {
 
 	public override void Activate()
 	{
-		player = (PlayerCharacter) FindObjectOfType(typeof(PlayerCharacter));
+		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		explosionEffect = PacmanLevelManager.use.GetPrefab("Explosion").GetComponent<ParticleSystem>();
 		bombPrefab = PacmanLevelManager.use.GetPrefab("Bomb");
 		running = true;

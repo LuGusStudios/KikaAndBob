@@ -11,18 +11,30 @@ public class EnemyPatrol : EnemyCharacter {
 	
 	protected override void SetDefaultTargetTiles()
 	{
-		patrolPath.Add(PacmanLevelManager.use.GetTile(2,1));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(2,10));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(22,10));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(22,1));
+		patrolPath.Add(PacmanLevelManager.use.GetTile(1,1));
+		patrolPath.Add(PacmanLevelManager.use.GetTile(1,11));
+		patrolPath.Add(PacmanLevelManager.use.GetTile(11,11));
+		patrolPath.Add(PacmanLevelManager.use.GetTile(11,1));
 
 		defaultTargetTile = patrolPath[0];
+	}
+
+	public override void Reset(Vector2 enemySpawnLocation)
+	{
+		patrolIndex = 0;
+		playerFound = false;
+		SetDefaultTargetTiles();
+		targetTile = defaultTargetTile;
+		transform.localPosition = PacmanLevelManager.use.GetTile(enemySpawnLocation).location;
+		enemyState = EnemyState.Neutral;
+		DetectCurrentTile();
+		DestinationReached(); // calling DestinationReached will set enemies moving again
 	}
 
 	public override void DestinationReached()
 	{
 		if (player == null)
-			player = (PlayerCharacter) FindObjectOfType(typeof(PlayerCharacter));
+			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
 		if (player.enemiesFlee)
 		{
@@ -35,7 +47,7 @@ public class EnemyPatrol : EnemyCharacter {
 
 			targetTile = tiles[Random.Range(0, tiles.Length - 1)];
 
-			allowUTurns = false;		// don't allow u turns now; could run head first into the player
+			allowUTurns = false;		// don't allow u-turns now; could run head first into the player
 		}
 		else
 		{

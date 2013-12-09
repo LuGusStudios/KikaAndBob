@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerCharacter : Character {
+public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public bool enemiesFlee = false;
 	public float powerupDuration = 10;
 	protected bool allowControl = true;
 	protected bool cutScene = false;
-	protected Character.CharacterDirections nextDirection = CharacterDirections.Undefined;
+	protected PacmanCharacter.CharacterDirections nextDirection = CharacterDirections.Undefined;
 
 	private void Update () 
 	{
@@ -23,33 +23,31 @@ public class PlayerCharacter : Character {
 		{
 			if (PacmanInput.use.GetUp())
 			{
-				nextDirection = Character.CharacterDirections.Up;
+				nextDirection = PacmanCharacter.CharacterDirections.Up;
 				if (!moving)
 					DestinationReached();
 			}
 			else if (PacmanInput.use.GetDown())
 			{
-				nextDirection = Character.CharacterDirections.Down;
+				nextDirection = PacmanCharacter.CharacterDirections.Down;
 				if (!moving)
 					DestinationReached();
 			}
 			else if (PacmanInput.use.GetLeft())
 			{
-				nextDirection = Character.CharacterDirections.Left;
+				nextDirection = PacmanCharacter.CharacterDirections.Left;
 				if (!moving)
 					DestinationReached();
 			}
 			else if (PacmanInput.use.GetRight())
 			{
-				nextDirection = Character.CharacterDirections.Right;
+				nextDirection = PacmanCharacter.CharacterDirections.Right;
 				if (!moving)
 					DestinationReached();
 			}
 		}
 
 		UpdatePosition();
-
-		ChangeSpriteDirection (nextDirection);
 	}
 	
 	public override void DestinationReached()
@@ -76,6 +74,8 @@ public class PlayerCharacter : Character {
 				MoveTo(nextTile);
 			}
 		}
+
+		ChangeSpriteDirection(currentDirection);
 	}
 	
 	protected void TryMoveInDirection(CharacterDirections direction)
@@ -135,7 +135,7 @@ public class PlayerCharacter : Character {
 		int yIndex = (int)currentTile.gridIndices.y;
 		GameTile inspectedTile = null;
 		
-		if (direction == Character.CharacterDirections.Up)
+		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex+1);
 			if (inspectedTile != null)
@@ -144,7 +144,7 @@ public class PlayerCharacter : Character {
 					return inspectedTile;
 			}
 		}
-		else if (direction == Character.CharacterDirections.Right)
+		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex+1, yIndex);
 			if (inspectedTile != null)
@@ -153,7 +153,7 @@ public class PlayerCharacter : Character {
 					return inspectedTile;
 			}
 		}
-		else if (direction == Character.CharacterDirections.Down)
+		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex-1);
 			if (inspectedTile != null)
@@ -162,7 +162,7 @@ public class PlayerCharacter : Character {
 					return inspectedTile;
 			}
 		}
-		else if (direction == Character.CharacterDirections.Left)
+		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex-1, yIndex);
 			if (inspectedTile != null)
@@ -212,7 +212,7 @@ public class PlayerCharacter : Character {
 		if (exitLeft)
 		{
 			transform.localPosition = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 7).location;			// put player on other side of level
-			currentDirection = Character.CharacterDirections.Left;
+			currentDirection = PacmanCharacter.CharacterDirections.Left;
 			DetectCurrentTile();
 			DestinationReached();
 			//MoveTo(PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-4, 7));									// initiate movement to first tile next to teleporter
@@ -221,7 +221,7 @@ public class PlayerCharacter : Character {
 		else // exiting on the right
 		{
 			transform.localPosition = PacmanLevelManager.use.GetTile(0, 7).location;								// put player on other side of level
-			currentDirection = Character.CharacterDirections.Right;
+			currentDirection = PacmanCharacter.CharacterDirections.Right;
 			DetectCurrentTile();
 			DestinationReached();
 			//MoveTo(PacmanLevelManager.use.GetTile(3, 7));														// initiate movement to first tile next to teleporter
@@ -234,7 +234,7 @@ public class PlayerCharacter : Character {
 		allowControl = true;
 	}
 	
-	public Character.CharacterDirections GetDirection()
+	public PacmanCharacter.CharacterDirections GetDirection()
 	{
 		return currentDirection;
 	}

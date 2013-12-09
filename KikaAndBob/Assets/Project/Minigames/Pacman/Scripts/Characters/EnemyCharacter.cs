@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemyCharacter : Character {
+public class EnemyCharacter : PacmanCharacter {
 
 	public bool allowUTurns = true;
 	public int forwardDetectDistance = 5;
@@ -12,10 +12,10 @@ public class EnemyCharacter : Character {
 	protected GameTile defaultTargetTile;	// a default tile that the character moves if a target tile was not calculated
 	protected GameTile lastTile;
 	protected GameTile targetTile;			// the target tile is the tile we're trying to get to (i.e. different from moveTargetTile)
-	protected PlayerCharacter player = null;
+	protected PacmanPlayerCharacter player = null;
 	protected iTweener playerDetectedItweener = null;
 	protected iTweener frightenedItweener = null;
-	private bool debugPathFinding = true;
+	private bool debugPathFinding = false;		// set true to mark targetTile in game (Debugging)
 
 	protected Transform targetMarker = null;
 
@@ -31,7 +31,7 @@ public class EnemyCharacter : Character {
 	void Start()
 	{
 		if (player == null)
-			player = (PlayerCharacter) FindObjectOfType(typeof(PlayerCharacter));
+			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
 		if (debugPathFinding)
 		{
@@ -75,7 +75,7 @@ public class EnemyCharacter : Character {
 		}
 	}
 	
-	public void Reset(Vector2 enemySpawnLocation)
+	public virtual void Reset(Vector2 enemySpawnLocation)
 	{
 		playerFound = false;
 		SetDefaultTargetTiles();
@@ -128,7 +128,7 @@ public class EnemyCharacter : Character {
 		iTween.Stop(gameObject);
 		transform.localScale = originalScale;
 
-		renderer.material.color = Color.white;
+		//renderer.material.color = Color.white;
 
 		enemyState = EnemyState.Neutral;
 	}
@@ -153,14 +153,19 @@ public class EnemyCharacter : Character {
 //		playerDetectedItweener.Execute();
 
 		iTween.ScaleTo(gameObject, iTween.Hash(
-			"scale", Vector3.one * 0.7f,
+			"scale", Vector3.one * 1.1f,
 			"time", 0.5f,
 			"easetype", iTween.EaseType.easeInOutQuad,
 			"looptype", iTween.LoopType.pingPong));
 
-		renderer.material.color = Color.red;
+		//renderer.material.color = Color.red;
 
 		enemyState = EnemyState.Chasing;
+	}
+
+	public override void ChangeSpriteDirection (CharacterDirections direction)
+	{
+		PlayAnimation("" + CharacterDirections.Left.ToString(), direction);
 	}
 
 	// override for custom effect when the enemy runs away from the player
@@ -182,12 +187,12 @@ public class EnemyCharacter : Character {
 //		frightenedItweener.Execute();
 
 		iTween.ScaleTo(gameObject, iTween.Hash(
-			"scale", Vector3.one * 0.6f,
+			"scale", Vector3.one * 0.9f,
 			"time", 0.5f,
 			"easetype", iTween.EaseType.easeInOutQuad,
 			"looptype", iTween.LoopType.pingPong));
 
-		renderer.material.color = Color.blue;
+		//renderer.material.color = Color.blue;
 
 		enemyState = EnemyState.Frightened;
 	}
@@ -245,11 +250,15 @@ public class EnemyCharacter : Character {
 				ChangeSpriteDirection(CharacterDirections.Up);
 		}
 	}
+
 	
 	// UpdateTargetTile runs every frame to decide where the enemy is trying to get to (random tile, player, etc.)
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
 	{
+		if (targetTile != null)
+			return;
+
 		// detect if it is more efficient to use a teleport than to find target tile directly
 		// if target is more than half a level away
 		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if player is (more than) half a level away in x distance
@@ -273,7 +282,7 @@ public class EnemyCharacter : Character {
 		GameTile closestTile = null;
 		GameTile inspectedTile;
 		float closestDistance = Mathf.Infinity;
-		Character.CharacterDirections proposedDirection = Character.CharacterDirections.Undefined;
+		PacmanCharacter.CharacterDirections proposedDirection = PacmanCharacter.CharacterDirections.Undefined;
 		
 		int xCoord = (int)currentTile.gridIndices.x;
 		int yCoord = (int)currentTile.gridIndices.y;
@@ -289,11 +298,11 @@ public class EnemyCharacter : Character {
 			{
 				//print (targetTile);
 				float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
-				if (distance < closestDistance && (allowUTurns || currentDirection != Character.CharacterDirections.Down || currentTile.exitCount <= 1))
+				if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Down || currentTile.exitCount <= 1))
 				{
 					closestDistance = distance;
 					closestTile = inspectedTile;
-					proposedDirection = Character.CharacterDirections.Up;
+					proposedDirection = PacmanCharacter.CharacterDirections.Up;
 				}
 			}
 		}
@@ -305,11 +314,11 @@ public class EnemyCharacter : Character {
 			if (IsEnemyWalkable(inspectedTile))
 			{
 				float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
-				if (distance < closestDistance && (allowUTurns || currentDirection != Character.CharacterDirections.Right || currentTile.exitCount <= 1))
+				if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Right || currentTile.exitCount <= 1))
 				{
 					closestDistance = distance;
 					closestTile = inspectedTile;
-					proposedDirection = Character.CharacterDirections.Left;
+					proposedDirection = PacmanCharacter.CharacterDirections.Left;
 				}
 			}
 		}
@@ -321,11 +330,11 @@ public class EnemyCharacter : Character {
 			if (IsEnemyWalkable(inspectedTile))
 			{
 				float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
-				if (distance < closestDistance && (allowUTurns || currentDirection != Character.CharacterDirections.Up || currentTile.exitCount <= 1))
+				if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Up || currentTile.exitCount <= 1))
 				{	
 					closestDistance = distance;
 					closestTile = inspectedTile;
-					proposedDirection = Character.CharacterDirections.Down;
+					proposedDirection = PacmanCharacter.CharacterDirections.Down;
 				}
 			}
 		}
@@ -337,16 +346,16 @@ public class EnemyCharacter : Character {
 			if (IsEnemyWalkable(inspectedTile))
 			{
 				float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
-				if (distance < closestDistance && (allowUTurns || currentDirection != Character.CharacterDirections.Left || currentTile.exitCount <= 1))
+				if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Left || currentTile.exitCount <= 1))
 				{
 					closestDistance = distance;
 					closestTile = inspectedTile;
-					proposedDirection = Character.CharacterDirections.Right;
+					proposedDirection = PacmanCharacter.CharacterDirections.Right;
 				}
 			}
 		}
 		
-		if (proposedDirection != Character.CharacterDirections.Undefined)
+		if (proposedDirection != PacmanCharacter.CharacterDirections.Undefined)
 			currentDirection = proposedDirection;
 		
 		return closestTile;
@@ -364,19 +373,6 @@ public class EnemyCharacter : Character {
 		
 		return true;
 	}
-	
-//	public void SetChasePlayer(bool chase)
-//	{
-//		chasePlayer = chase;
-//		
-//		if(chasePlayer == false)
-//		{
-//			if (Time.frameCount > 1)	// does nothing except to prevent this message from being shown in the first frame, before the main menu comes up
-//				Debug.Log(gameObject.name + " went into scatter mode.");
-//			targetTile = defaultTargetTile;
-//			StartCoroutine(EndScatterMode());
-//		}
-//	}
 	
 	IEnumerator TeleportRoutine(bool exitLeft)
 	{				
@@ -406,12 +402,4 @@ public class EnemyCharacter : Character {
 		
 		runBehavior = true;
 	}
-	
-//	IEnumerator EndScatterMode()
-//	{
-//		yield return new WaitForSeconds(scatterModeDuration);
-//			
-//		chasePlayer = true;
-//		Debug.Log(gameObject.name + " stopped scattering.");
-//	}
 }
