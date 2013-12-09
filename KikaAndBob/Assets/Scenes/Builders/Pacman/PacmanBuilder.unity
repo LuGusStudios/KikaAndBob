@@ -46576,7 +46576,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1991318446}
-  - 114: {fileID: 1991318447}
+  - 114: {fileID: 1991318445}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -46584,6 +46584,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1991318445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1991318444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a4d8253088dff40805f6fa17c8032f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 200
+  enemiesFlee: 0
+  powerupDuration: 10
 --- !u!4 &1991318446
 Transform:
   m_ObjectHideFlags: 0
@@ -46600,20 +46614,6 @@ Transform:
   - {fileID: 1472246323}
   - {fileID: 816044508}
   m_Father: {fileID: 727219367}
---- !u!114 &1991318447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1991318444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 555b4f3af87e2414aa36749e4bf84738, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 200
-  enemiesFlee: 0
-  powerupDuration: 10
 --- !u!1 &1991957294
 GameObject:
   m_ObjectHideFlags: 0
