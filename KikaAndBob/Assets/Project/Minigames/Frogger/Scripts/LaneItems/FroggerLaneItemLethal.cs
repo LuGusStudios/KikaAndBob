@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FroggerLethal : FroggerLaneItem 
+public class FroggerLaneItemLethal : FroggerLaneItem 
 {
 
 	protected override void EnterSurfaceEffect(FroggerCharacter character)

@@ -24,8 +24,10 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 
 		// NOTE: Bounds of a Sprite (not SpriteRenderer) are in local coordinates, despite what Unity docs claim
 		levelLengthInPixels = 
-			LugusCamera.game.WorldToScreenPoint(lanes[lanes.Count - 1].transform.position + lastSpriteBounds.max).y	-
-			LugusCamera.game.WorldToScreenPoint(lanes[0].transform.position + firstSpriteBounds.min).y;
+			FroggerLaneManager.use.GetLevelLengthLanePixels();
+
+//			LugusCamera.game.WorldToScreenPoint(lanes[lanes.Count - 1].transform.position + lastSpriteBounds.max).y	-
+//			LugusCamera.game.WorldToScreenPoint(lanes[0].transform.position + firstSpriteBounds.min).y;
 
 		CalculateOffset();
 	}

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FroggerLaneItem : FroggerSurface
 {
-	public bool goRight = true;
+	public bool behindPlayer = false;
 
 	void Update()
 	{

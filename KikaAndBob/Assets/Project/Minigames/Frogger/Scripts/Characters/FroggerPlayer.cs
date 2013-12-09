@@ -27,6 +27,6 @@ public class FroggerPlayer : FroggerCharacter {
 			ClampToScreen();
 		}
 
-	//	FroggerCameraController.use.UpdateCameraFollow(this);
+		//FroggerCameraController.use.UpdateCameraFollow(this);
 	} 
 }

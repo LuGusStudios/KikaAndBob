@@ -17,7 +17,7 @@ public abstract class FroggerLane : FroggerSurface
 	protected float nextInterval = 0;
 	public List<FroggerLaneItem> spawnItems = new List<FroggerLaneItem>();
 
-	protected float spawnTimer = 0;
+	protected float spawnDistance = 0;
 
 	private void Awake()
 	{
@@ -38,9 +38,9 @@ public abstract class FroggerLane : FroggerSurface
 			return;
 
 		float laneCompletion = 0;
+		bool lastItem = false;
 
-		DataRange range = new DataRange(minGapDistance, maxGapDistance);
-
+		// keep spawning item until the lane is completely full (then make one more to ensure there can also be logs halfway off the screen towards the end)
 		while(laneCompletion < laneSize.x)
 		{
 			GameObject newItem = SpawnLaneItem();
@@ -55,7 +55,18 @@ public abstract class FroggerLane : FroggerSurface
 			}
 
 			laneCompletion += newItem.GetComponent<FroggerLaneItem>().GetSurfaceSize().x;
+
+			print (newItem.name);
+			print(newItem.transform.localPosition.x);
+			print (newItem.GetComponent<FroggerLaneItem>().GetSurfaceSize().x);
+
+
 			laneCompletion += Random.Range(minGapDistance, maxGapDistance);
+
+
+
+			if (laneCompletion >= laneSize.x)
+				lastItem = true;
 		}
 	}
 
@@ -78,15 +89,15 @@ public abstract class FroggerLane : FroggerSurface
 			return;
 		}
 	
-		if (spawnTimer >= nextInterval)
+		if (spawnDistance >= nextInterval)
 		{
 			GameObject spawned = SpawnLaneItem();
-			spawnTimer = 0;
+			spawnDistance = 0;
 			nextInterval = Random.Range(minGapDistance, maxGapDistance) + spawned.GetComponent<FroggerSurface>().GetSurfaceSize().x;
 		}
 
 		float displacement = speed * Time.deltaTime;
-		spawnTimer += displacement;
+		spawnDistance += displacement;
 
 		foreach(Transform t in transform)
 		{
@@ -103,27 +114,36 @@ public abstract class FroggerLane : FroggerSurface
 		int index = Random.Range(0, spawnItems.Count);
 		GameObject spawnedItem = (GameObject)Instantiate(spawnItems[index].gameObject);
 
+		FroggerLaneItem itemScript = spawnedItem.GetComponent<FroggerLaneItem>();
+
 		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane
 		BoxCollider2D itemCollider = spawnedItem.GetComponent<BoxCollider2D>();
-		itemCollider.size = itemCollider.size.y(height);
+		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for sprite scaling
 		itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
 	
 		spawnedItem.transform.parent = this.transform;
+		spawnedItem.transform.localPosition = Vector3.zero;
+		spawnedItem.transform.localRotation = Quaternion.identity;
 
 		// place item just past edge of the lane: get edge of lane and add half of the sprite's size
 		if (goRight)
 		{
-			spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemCollider.size.x * 0.5f), 0, -1);
+			if (itemScript.behindPlayer)
+				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
+			else
+				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+
+
+			if (spawnedItem.GetComponent<FlippedIncorrectly>() == null)
+				spawnedItem.transform.localScale = spawnedItem.transform.localScale.x(spawnedItem.transform.localScale.x * -1f);
 		}
 		else
 		{
-			spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemCollider.size.x * 0.5f), 0, -1);
+			if (itemScript.behindPlayer)
+				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
+			else
+				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
 		}
-
-		FroggerLaneItem itemScript = spawnedItem.GetComponent<FroggerLaneItem>();
-		itemScript.goRight = goRight;
-
-		spawnedItem.transform.localRotation = Quaternion.identity;
 
 		return spawnedItem;
 	}
