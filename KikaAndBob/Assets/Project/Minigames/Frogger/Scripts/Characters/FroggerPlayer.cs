@@ -6,7 +6,7 @@ public class FroggerPlayer : FroggerCharacter {
 
 	protected override void UpdatePosition ()
 	{
-		if (!movingToLane)
+		if (!movingToLane && FroggerGameManager.use.gameRunning)
 		{
 			if (Input.GetKeyDown(KeyCode.UpArrow))
 			{
