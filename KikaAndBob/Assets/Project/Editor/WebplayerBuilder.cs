@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class WebplayerBuilder : MonoBehaviour 
 {
@@ -10,22 +11,31 @@ public class WebplayerBuilder : MonoBehaviour
 	{
 		// Get filename.
 		string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "KikaAndBob");
-		
-		// Build player.
 
-		List<string> levels = new List<string>();
+		// Application.datapath is /Assets in the editor
+		File.Copy(Application.dataPath + "/Project/Editor/index.php", path + "/index.php");
+
+		// Build players
+
+		List<string> levels = new List<string>();  
 		levels.Add( "Assets/Scenes/Builders/Dance/DanceBuilder.unity" );
 		levels.Add( "Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity" ); 
-		//levels.Add( "Assets/Scenes/Builders/Frogger/FroggerBuilder.unity" );
-		//levels.Add( "Assets/Scenes/Builders/Pacman/PacmanBuilder.unity" );
-		//levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" ); 
+		levels.Add( "Assets/Scenes/Builders/Frogger/FroggerBuilder.unity" );
+		levels.Add( "Assets/Scenes/Builders/Pacman/PacmanBuilder.unity" );
+		levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" );  
 
-		foreach( string level in levels )
+		foreach( string currentLevel in levels ) 
 		{
+			string level = currentLevel;
+			level = level.Substring(level.LastIndexOf("/") + 1);
+			level = level.Replace(".unity", "");
+
 			string[] lvl = new string[1];
-			lvl[0] = level;
+			lvl[0] = currentLevel;
 			BuildPipeline.BuildPlayer(lvl, path + "/" + level, BuildTarget.WebPlayer, BuildOptions.None);
 		}
+
+
 
 		/*
 		// Copy a file from the project folder to the build folder, alongside the built game.
