@@ -9,14 +9,14 @@ public abstract class FroggerLane : FroggerSurface
 	public float speed = 2;
 	public float minGapDistance = 2;
 	public float maxGapDistance = 4;
-
+	public float repeatAllowFactor = 0.5f;
 
 	protected float height = 200;
 	protected Vector2 laneSize = Vector3.one;
 	protected BoxCollider2D boxCollider2D = null;
 	protected float nextInterval = 0;
+	protected int lastItemIndex = -1;
 	public List<FroggerLaneItem> spawnItems = new List<FroggerLaneItem>();
-
 	protected float spawnDistance = 0;
 
 	private void Awake()
@@ -38,7 +38,7 @@ public abstract class FroggerLane : FroggerSurface
 			return;
 
 		float laneCompletion = 0;
-		bool lastItem = false;
+		float lastItemWidth = 0;
 
 		// keep spawning item until the lane is completely full (then make one more to ensure there can also be logs halfway off the screen towards the end)
 		while(laneCompletion < laneSize.x)
@@ -54,20 +54,13 @@ public abstract class FroggerLane : FroggerSurface
 				newItem.transform.Translate(new Vector3(-laneCompletion, 0, 0), Space.World);
 			}
 
-			laneCompletion += newItem.GetComponent<FroggerLaneItem>().GetSurfaceSize().x;
+			lastItemWidth = newItem.GetComponent<FroggerLaneItem>().GetSurfaceSize().x;
+			lastItemWidth += Random.Range(minGapDistance, maxGapDistance);
 
-			print (newItem.name);
-			print(newItem.transform.localPosition.x);
-			print (newItem.GetComponent<FroggerLaneItem>().GetSurfaceSize().x);
-
-
-			laneCompletion += Random.Range(minGapDistance, maxGapDistance);
-
-
-
-			if (laneCompletion >= laneSize.x)
-				lastItem = true;
+			laneCompletion += lastItemWidth;
 		}
+
+		nextInterval = lastItemWidth;
 	}
 
 	public float GetHeight()
@@ -112,13 +105,22 @@ public abstract class FroggerLane : FroggerSurface
 	{
 		// create random item
 		int index = Random.Range(0, spawnItems.Count);
+
+		// prevent repetitions with some factor
+		while (index == lastItemIndex && Random.value > repeatAllowFactor)
+		{
+			index = Random.Range(0, spawnItems.Count);
+		}
+
+		lastItemIndex = index;
+
 		GameObject spawnedItem = (GameObject)Instantiate(spawnItems[index].gameObject);
 
 		FroggerLaneItem itemScript = spawnedItem.GetComponent<FroggerLaneItem>();
-
+	
 		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane
 		BoxCollider2D itemCollider = spawnedItem.GetComponent<BoxCollider2D>();
-		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for sprite scaling
+		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for sprite scaling !
 		itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
 	
 		spawnedItem.transform.parent = this.transform;
