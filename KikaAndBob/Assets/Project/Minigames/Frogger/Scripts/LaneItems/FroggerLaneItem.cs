@@ -14,9 +14,9 @@ public class FroggerLaneItem : FroggerSurface
 	public void UpdateLaneItem(float displacement)
 	{
 		if (goRight)
-			transform.Translate(transform.right.normalized * displacement);
+			transform.Translate(transform.right.normalized * displacement, Space.World);
 		else
-			transform.Translate(-1 * transform.right.normalized * displacement);
+			transform.Translate(-1 * transform.right.normalized * displacement, Space.World);
 
 		coveredDistance += displacement;
 	}

@@ -167,6 +167,9 @@ public abstract class FroggerLane : FroggerSurface
 				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
 			else
 				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+
+			if (spawnedItem.GetComponent<FlippedIncorrectly>() != null)
+				spawnedItem.transform.localScale = spawnedItem.transform.localScale.x(spawnedItem.transform.localScale.x * -1f);
 		}
 
 		spawnedItems.Add(itemScript);

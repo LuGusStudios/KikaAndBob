@@ -1,11 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace KikaAndBobFrogger
+{
+	public enum CharacterType
+	{
+		None,
+		Kika,
+		Bob,
+		Enemy
+	}
+}
+
 public class FroggerCharacter : MonoBehaviour {
 
 	public float speed = 100;
 	public Vector3 maxScale = new Vector3(1f, 1f, 1f);
 	public Vector3 minScale = new Vector3(0.4f, 0.4f, 0.4f);
+	public KikaAndBobFrogger.CharacterType characterType = KikaAndBobFrogger.CharacterType.None;
 
 	protected FroggerLane currentLane = null;
 	protected FroggerLaneItem currentLaneItem = null;

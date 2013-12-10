@@ -3,7 +3,6 @@ using System.Collections;
 
 public class FroggerPlayer : FroggerCharacter {
 
-
 	protected override void UpdatePosition ()
 	{
 		if (!movingToLane && FroggerGameManager.use.gameRunning)
