@@ -385,7 +385,7 @@ MonoBehaviour:
   speed: 2
   minGapDistance: 2
   maxGapDistance: 4
-  repeatAllowFactor: .5
+  repeatAllowFactor: .200000003
   spawnItems: []
 --- !u!1 &383593797
 GameObject:
@@ -880,6 +880,10 @@ Prefab:
     - target: {fileID: 400000, guid: 67da1ed029cfcb44188b0cf30b7a0831, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 67da1ed029cfcb44188b0cf30b7a0831, type: 2}
+      propertyPath: repeatAllowFactor
+      value: .200000003
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 67da1ed029cfcb44188b0cf30b7a0831, type: 2}
