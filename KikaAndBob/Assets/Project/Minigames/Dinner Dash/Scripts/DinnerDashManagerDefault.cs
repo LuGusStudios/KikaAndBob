@@ -166,6 +166,9 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	protected bool debugAutoProcessing = true;
 	protected void OnGUI()
 	{
+		if( !LugusDebug.debug )
+			return;
+
 		GUILayout.BeginArea( new Rect(0, 0, 200, 400) );
 		GUILayout.BeginVertical();
 

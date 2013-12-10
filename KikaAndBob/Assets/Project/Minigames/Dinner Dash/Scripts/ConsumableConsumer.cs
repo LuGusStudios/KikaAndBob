@@ -99,7 +99,7 @@ public class ConsumableConsumer : IConsumableUser
 			
 			//2. client leaves
 			// TODO: decently move
-			this.gameObject.MoveTo( Vector3.left * 3000 ).Speed ( 200.0f ).Execute();
+			this.gameObject.MoveTo( Vector3.left * 3000 ).Speed ( 999999.0f ).Execute();
 			place.consumer = null;
 			this.place = null;
 			LugusCoroutines.use.StartRoutine( SetStateDelayed(5.0f, State.NONE) );
@@ -162,7 +162,7 @@ public class ConsumableConsumer : IConsumableUser
 		currentConsumable = subject;
 		
 		subject.transform.parent = this.transform.parent;
-		subject.renderer.sortingOrder = this.renderer.sortingOrder;
+		//subject.renderer.sortingOrder = this.renderer.sortingOrder;
 		subject.transform.position = place.consumableLocation.position; 
 		subject.transform.localScale *= 0.5f;
 

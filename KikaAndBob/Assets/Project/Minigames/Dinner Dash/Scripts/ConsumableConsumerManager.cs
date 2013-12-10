@@ -93,23 +93,41 @@ public class ConsumableConsumerManager : MonoBehaviour
 			
 			if( GetActiveConsumerCount() < maxConcurrentConsumers && currentOrderIndex < orders.Count )
 			{
-				// 1. pick a random consumer prefab and spawn a new consumer
+				// 1. spawn a new consumer
 				// TODO: add pooling mechanism that re-uses inactive spawned consumers?
 
-				ConsumableConsumer newConsumer = (ConsumableConsumer) GameObject.Instantiate( consumerPrefabs[ Random.Range(0, consumerPrefabs.Count)] );
-				newConsumer.state = ConsumableConsumer.State.Seated; // directly seated now, maybe later add waiting for places to gameplay
-				newConsumer.OnSeated();
 				
 				ConsumableConsumerPlace seat = NextConsumerPlace();
-				newConsumer.transform.position = seat.transform.position;
-				newConsumer.name = /*"Consumer" +*/ seat.transform.name; // necessary for pathfinding to work! See IConsumableUser.GetTarget()
-				seat.consumer = newConsumer;
-				newConsumer.place = seat;
+				// consumeras are named the same as the seats
+				ConsumableConsumer newConsumer = null;
+				foreach( ConsumableConsumer prefab in consumerPrefabs )
+				{
+					if( prefab.name == seat.name )
+					{
+						newConsumer = (ConsumableConsumer) GameObject.Instantiate( prefab );
+						break;
+					}
+				}
 
-				newConsumer.order = orders[currentOrderIndex];
-				currentOrderIndex++;
+				if( newConsumer == null )
+				{
+					Debug.LogError(name + " : no consumer prefab found for seat " + seat.name);
+				}
+				else
+				{
+					newConsumer.state = ConsumableConsumer.State.Seated; // directly seated now, maybe later add waiting for places to gameplay
+					newConsumer.OnSeated();
 
-				consumers.Add( newConsumer );
+					newConsumer.transform.position = seat.transform.position;
+					newConsumer.name = /*"Consumer" +*/ seat.transform.name; // necessary for pathfinding to work! See IConsumableUser.GetTarget()
+					seat.consumer = newConsumer;
+					newConsumer.place = seat;
+
+					newConsumer.order = orders[currentOrderIndex];
+					currentOrderIndex++;
+
+					consumers.Add( newConsumer );
+				}
 			}
 			
 			yield return new WaitForSeconds( timeBetweenConsumers.Random() );
