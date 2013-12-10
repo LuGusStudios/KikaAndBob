@@ -3,7 +3,8 @@ using System.Collections;
 
 public class FroggerLaneItem : FroggerSurface
 {
-	public bool goRight = true;
+	public bool behindPlayer = false;			// if true, item is placed behind player (e.g. "logs", platforms etc.)
+												// if false, item ends up before player (e.g. "cars", obstacles)
 
 	void Update()
 	{
