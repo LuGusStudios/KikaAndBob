@@ -138,4 +138,19 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 		return lanes[lanes.Count - 1].GetCenterPoint();
 	}
 
+	public float GetBottomLaneBottomPixel()
+	{
+		if (lanes.Count < 1)
+			return 0;
+
+		return (lanes[0].transform.position + lanes[0].GetComponent<SpriteRenderer>().sprite.bounds.min).y;
+	}
+
+	public float GetTopLaneTopPixel()
+	{
+		if (lanes.Count < 1)
+			return 0;
+		
+		return (lanes[lanes.Count - 1].transform.position + lanes[lanes.Count - 1].GetComponent<SpriteRenderer>().sprite.bounds.max).y;
+	}
 }

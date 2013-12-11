@@ -7,6 +7,14 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 	protected FroggerPlayer target = null;
 	protected Vector3 cameraOffset = Vector3.zero;
 	protected float levelLengthInPixels = Screen.height;
+	protected float halfScreenHeight = 0;
+
+	void Awake()
+	{
+		halfScreenHeight = Vector3.Distance(
+			LugusCamera.game.ViewportToWorldPoint(new Vector3(0.5f, 0, 0)),
+			LugusCamera.game.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)));
+	}
 
 	public void FocusOn(FroggerPlayer targetPlayer)
 	{
@@ -44,7 +52,13 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 		if (target == null || sender != target || levelLengthInPixels <= Screen.height)
 			return;
 
-		transform.position = new Vector3(transform.position.x, target.transform.position.y + cameraOffset.y, transform.position.z);
+		float yPos = sender.transform.position.y;
+
+		yPos = Mathf.Clamp(yPos, 
+		                  FroggerLaneManager.use.GetBottomLaneBottomPixel() + halfScreenHeight,
+		                  FroggerLaneManager.use.GetTopLaneTopPixel() - halfScreenHeight);
+
+		transform.position = transform.position.y(yPos);
 	}
 
 }
