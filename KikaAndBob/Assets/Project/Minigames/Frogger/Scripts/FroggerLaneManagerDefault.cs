@@ -31,6 +31,7 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 		List<FroggerLane> ordered = new List<FroggerLane>();
 		int listCount = unordered.Count;
 
+		// order lanes in list
 		while (ordered.Count < listCount)
 		{
 			int currentlyLowestIndex = -1;
@@ -49,6 +50,13 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 			unordered.Remove(toBeMoved);
 			ordered.Add(toBeMoved);
 		}
+
+		// automatically depth-sort lanes
+		for (int i = 0; i < ordered.Count; i++) 
+		{
+			ordered[i].transform.position = ordered[i].transform.position.z(i * 10);
+		}
+
 
 		return ordered;
 	}

@@ -49,7 +49,7 @@ public class FroggerCharacter : MonoBehaviour {
 			laneMoveRoutine.StopRoutine();
 
 		currentLane = FroggerLaneManager.use.GetLane(0);
-		transform.position = currentLane.transform.position.z(transform.position.z);
+		transform.position = currentLane.transform.position + new Vector3(0, 0, -5);
 	}
 
 	protected void ScaleByDistanceHorizontal()
@@ -144,6 +144,9 @@ public class FroggerCharacter : MonoBehaviour {
 		float coveredDistance = 0;
 		Vector3 lastPosition = transform.position;
 
+		float startZ = currentLane.transform.position.z;
+		float targetZ = targetLane.transform.position.z - 5;
+
 		while(coveredDistance < targetDistance)
 		{
 			float nextMoveDistance = speed * Time.deltaTime;
@@ -164,7 +167,12 @@ public class FroggerCharacter : MonoBehaviour {
 				transform.Translate(-1 * transform.up.normalized * nextMoveDistance, Space.World);
 			}
 
-			coveredDistance += Vector3.Distance(lastPosition, transform.position);
+			// lerp between lane z positions
+			transform.position = transform.position.z(Mathf.Lerp(startZ, targetZ, targetDistance / coveredDistance));
+
+			// measure distance since last frame - this way we can track progress in whichever direction instead of just one
+			// !!!: Make sure to ignore z movement here (so set z distance for the two comparison points to be identical)
+			coveredDistance += Vector3.Distance(lastPosition, transform.position.z(lastPosition.z));
 			lastPosition = transform.position;
 
 		//	ScaleByDistanceHorizontal();
@@ -213,10 +221,13 @@ public class FroggerCharacter : MonoBehaviour {
 
 	protected virtual void CheckSurface()
 	{
+		if (movingToLane)
+			return;
+
 		FroggerLaneItem laneItemUnderMe = null;
 
 		// check all raycast hits
-		RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, this.transform.forward);
+		RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position + new Vector3(0, 0, -1000), this.transform.forward);
 		bool laneItemFound = false;
 		foreach(RaycastHit2D hit in hits)
 		{

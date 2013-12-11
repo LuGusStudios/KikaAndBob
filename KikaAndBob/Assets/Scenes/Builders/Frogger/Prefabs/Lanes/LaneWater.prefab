@@ -9,10 +9,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 212: {fileID: 21200000}
-  - 61: {fileID: 6100000}
   - 114: {fileID: 11400000}
+  - 61: {fileID: 6100000}
   m_Layer: 0
-  m_Name: TestLaneItemPlatform
+  m_Name: LaneWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -147.393478, y: 250.926697, z: -1}
+  m_LocalPosition: {x: 0, y: 13.8962803, z: 1.48857999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -38,8 +38,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 5.24452925, y: .991664648}
-  m_Center: {x: .00762939453, y: -.0674438477}
+  m_Size: {x: 20.4799995, y: 1.74952507}
+  m_Center: {x: 0, y: -.138521671}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -48,10 +48,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354f3615594b9e246a296ca4eb6eca46, type: 3}
+  m_Script: {fileID: 11500000, guid: 6285a14357abf2449b4d3e4b0f66a840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  behindPlayer: 1
+  goRight: 1
+  spawnPerSecond: .200000003
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
+  repeatAllowFactor: 0
+  spawnItems: []
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -73,7 +79,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 09d6320cf9466e9408c01ab1d28a6b72, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 04e3fdc668ad8cb458a4c2cd865bf09c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

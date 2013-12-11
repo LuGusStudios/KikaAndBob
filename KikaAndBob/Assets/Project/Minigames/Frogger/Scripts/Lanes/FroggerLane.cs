@@ -140,9 +140,9 @@ public abstract class FroggerLane : FroggerSurface
 		itemScript.goRight = goRight;
 		itemScript.SetLaneDistance(GetSurfaceSize().x + itemScript.GetSurfaceSize().x * 2);
 
-		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane
+		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
 		BoxCollider2D itemCollider = spawnedItem.GetComponent<BoxCollider2D>();
-		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for sprite scaling !
+		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
 		itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
 	
 		spawnedItem.transform.parent = this.transform;
@@ -155,7 +155,7 @@ public abstract class FroggerLane : FroggerSurface
 			if (itemScript.behindPlayer)
 				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
 			else
-				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -10);
 
 
 			if (spawnedItem.GetComponent<FlippedIncorrectly>() == null)
@@ -166,7 +166,7 @@ public abstract class FroggerLane : FroggerSurface
 			if (itemScript.behindPlayer)
 				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
 			else
-				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -10);
 
 			if (spawnedItem.GetComponent<FlippedIncorrectly>() != null)
 				spawnedItem.transform.localScale = spawnedItem.transform.localScale.x(spawnedItem.transform.localScale.x * -1f);

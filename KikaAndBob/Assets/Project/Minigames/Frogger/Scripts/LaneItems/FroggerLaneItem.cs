@@ -19,6 +19,8 @@ public class FroggerLaneItem : FroggerSurface
 			transform.Translate(-1 * transform.right.normalized * displacement, Space.World);
 
 		coveredDistance += displacement;
+
+		AfterMovedEffect();
 	}
 
 	public bool CrossedLevel()
@@ -29,5 +31,9 @@ public class FroggerLaneItem : FroggerSurface
 	public void SetLaneDistance(float _laneLength)
 	{
 		laneLength = _laneLength;
+	}
+
+	protected virtual void AfterMovedEffect()
+	{
 	}
 }
