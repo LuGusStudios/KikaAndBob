@@ -23,6 +23,10 @@ public class FroggerPlayer : FroggerCharacter {
 			{
 				MoveSideways(true);
 			}
+			else
+			{
+				PlayAnimation("Idle");
+			}
 			ClampToScreen();
 		}
 

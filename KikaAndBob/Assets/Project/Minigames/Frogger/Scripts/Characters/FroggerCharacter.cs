@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SmoothMoves;
+using System.Collections.Generic;
 
 namespace KikaAndBobFrogger
 {
@@ -15,8 +17,8 @@ namespace KikaAndBobFrogger
 public class FroggerCharacter : MonoBehaviour {
 
 	public float speed = 100;
-	public Vector3 maxScale = new Vector3(1f, 1f, 1f);
-	public Vector3 minScale = new Vector3(0.4f, 0.4f, 0.4f);
+	public float maxScale = 1f;
+	public float minScale = 0.4f;
 	public KikaAndBobFrogger.CharacterType characterType = KikaAndBobFrogger.CharacterType.None;
 
 	protected FroggerLane currentLane = null;
@@ -24,17 +26,20 @@ public class FroggerCharacter : MonoBehaviour {
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
 	protected Vector3 originalScale = Vector3.one;
+	protected BoneAnimation[] boneAnimations;
 
 	void Start()
 	{
+		boneAnimations = GetComponentsInChildren<BoneAnimation>();
 		originalScale = transform.localScale;
+
+		PlayAnimation("Idle");
 	}
 
 	void Update () 
 	{
 		CheckSurface();
 		UpdatePosition();
-		ScaleByDistanceHorizontal();
 	}
 
 	public virtual void Reset()
@@ -49,15 +54,30 @@ public class FroggerCharacter : MonoBehaviour {
 
 	protected void ScaleByDistanceHorizontal()
 	{
-		transform.localScale = Vector3.Lerp(maxScale, minScale, (transform.position.v2() - FroggerLaneManager.use.GetBottomLaneCenter()).y / FroggerLaneManager.use.GetLevelLengthLaneCenters());
+
+		transform.localScale = Vector3.one * Mathf.Lerp(maxScale, minScale, (transform.position.v2() - FroggerLaneManager.use.GetBottomLaneCenter()).y / FroggerLaneManager.use.GetLevelLengthLaneCenters());
 	}
 
 	protected void MoveSideways(bool right)
 	{
 		if (right)
+		{
+			PlayAnimation("Left");
+
+			if (transform.localScale.x > 0)
+				transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
+
 			transform.Translate(transform.right.normalized * speed * Time.deltaTime, Space.World);
+		}
 		else
+		{
+			PlayAnimation("Left");
+
+			if (transform.localScale.x < 0)
+				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+
 			transform.Translate(-1 * transform.right.normalized * speed * Time.deltaTime, Space.World);
+		}
 	}
 
 	protected void MoveToLane(FroggerLane targetLane)
@@ -77,16 +97,37 @@ public class FroggerCharacter : MonoBehaviour {
 
 		if (targetLaneIndex > currentLaneIndex)
 		{
+			PlayAnimation("Up");
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, true));
+
 		}
 		else if (targetLaneIndex < currentLaneIndex)
-		{
+		{	
+			PlayAnimation("Down");
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, false));
 		}
 		else
 		{
 			Debug.Log("Character is trying to move to the lane: " + targetLaneIndex + " and it is already on that lane! Stopping.");
 			return;
+		}
+	}
+
+	private string currentAnimation;
+	protected void PlayAnimation(string animName)
+	{
+		if (animName == currentAnimation)
+			return;
+
+		foreach(BoneAnimation ba in boneAnimations)
+		{
+			ba.gameObject.SetActive(false);
+
+			if (ba.gameObject.name == animName)
+			{
+				currentAnimation = animName;
+				ba.gameObject.SetActive(true);
+			}
 		}
 	}
 
@@ -126,8 +167,12 @@ public class FroggerCharacter : MonoBehaviour {
 			coveredDistance += Vector3.Distance(lastPosition, transform.position);
 			lastPosition = transform.position;
 
+		//	ScaleByDistanceHorizontal();
+
 			yield return new WaitForEndOfFrame();
 		}
+
+		PlayAnimation("Idle");
 
 		movingToLane = false;
 	}
