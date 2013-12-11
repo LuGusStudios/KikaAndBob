@@ -99,7 +99,7 @@ public class DartsShooter : MonoBehaviour
 			hitable = hit.GetComponent<IDartsHitable>();
 
 
-		if( hit == null || hitable == null )
+		if( hit == null || hitable == null || !hitable.Shown )
 		{
 			
 			//Debug.Log (Time.frameCount + " MISSED ");

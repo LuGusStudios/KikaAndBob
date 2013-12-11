@@ -2,22 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DartsDragon : IDartsHitable 
+public class DartsHider : IDartsHitable 
 {
+	public Vector3 hiddenPosition = Vector3.zero;
+	public Vector3 shownPosition = Vector3.zero;
+
 	public override void OnHit()
 	{
-		LugusCoroutines.use.StartRoutine( HitRoutine() );
+		hitCount++;
+		Hide();
+
+		//LugusCoroutines.use.StartRoutine( HitRoutine() );
 	}
 
+	/*
 	protected IEnumerator HitRoutine()
 	{
 		Vector3 originalPos = this.transform.position;
-
+		
 		this.transform.position = LugusUtil.OFFSCREEN;
-
+		
 		yield return new WaitForSeconds(1.0f);
-
+		
 		this.transform.position = originalPos;
+	}
+	*/
+
+	public override void Show()
+	{
+		this.Shown = true;
+		gameObject.MoveTo( shownPosition ).Time ( 0.1f /*TODO*/).Execute();
+	}
+
+	public override void Hide()
+	{
+		this.Shown = false;
+		gameObject.MoveTo( hiddenPosition ).Time ( 0.1f /*TODO*/).Execute();
 	}
 
 	public void SetupLocal()
