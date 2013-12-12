@@ -167,7 +167,7 @@ public class ConsumableMoverAnimation : MonoBehaviour
 		}
 		
 		currentAnimation.Stop();
-		Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
+		//Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
 		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
 		
 		if( moveRight )

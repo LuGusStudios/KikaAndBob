@@ -9,7 +9,7 @@ public class DartsHider : IDartsHitable
 
 	public override void OnHit()
 	{
-		hitCount++;
+		HitCount++;
 		Hide();
 
 		//LugusCoroutines.use.StartRoutine( HitRoutine() );

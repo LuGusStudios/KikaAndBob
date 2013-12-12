@@ -9,7 +9,21 @@ public abstract class IDartsHitable : MonoBehaviour
 
 	public DartsFunctionalityGroup group = null;
 
-	public int hitCount = 0;
+	protected int _hitCount = 0;
+	public int HitCount
+	{
+		get
+		{
+			return _hitCount;
+		}
+		set 
+		{
+			_hitCount = value;
+
+			if( group != null )
+				group.HitableHit(this);
+		}
+	}
 
 	protected bool _shown = false;
 	public bool Shown

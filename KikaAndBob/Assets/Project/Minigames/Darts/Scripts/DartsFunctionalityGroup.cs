@@ -39,6 +39,12 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	public int shownCount = 0;
 
+	public void HitableHit(IDartsHitable hitable)
+	{
+		Debug.Log ("HIT POSITION " + hitable.transform.position);
+		DartsScoreManager.use.ShowScore(100, hitable.transform.position, 1.0f, null, Color.red);
+	}
+
 	public void HitableHidden(IDartsHitable hitable)
 	{
 		shownCount--;
@@ -93,6 +99,9 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	{
 		while( true )
 		{
+			//TODO: werk met geheel deel en na de komma deel van itemsOnScreen (ipv enkel > 1 en < 1 daarvoor) bijv. 2.5 on screen
+			// bijv. (int) itemsOnScreen is geheel deel. als shownCount tussen dat en dat + 1 (kleiner dan) ligt doen we random afweging
+			// dat werkt dan ook direct als < 1 (als showncount minder dan 1 moeten we beslissen)
 			bool spawn = (shownCount < itemsOnScreen);
 
 			if( itemsOnScreen < 1.0f )

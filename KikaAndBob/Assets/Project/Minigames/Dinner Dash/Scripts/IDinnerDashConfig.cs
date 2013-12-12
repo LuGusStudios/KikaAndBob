@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class IDinnerDashConfig : MonoBehaviour 
+public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig> 
 {
 
 	public List<ConsumableDefinition> CreateOrder(ConsumableDefinition one)

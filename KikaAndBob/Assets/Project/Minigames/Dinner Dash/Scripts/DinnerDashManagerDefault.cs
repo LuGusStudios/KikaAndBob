@@ -31,8 +31,6 @@ public abstract class IDinnerDashManager : MonoBehaviour
 
 public class DinnerDashManagerDefault : IDinnerDashManager
 {
-
-
 	public void SetupLocal()
 	{
 		if( consumerManager == null )

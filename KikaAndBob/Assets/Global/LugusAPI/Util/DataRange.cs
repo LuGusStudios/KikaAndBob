@@ -4,6 +4,7 @@ using System.Collections;
 // Used to define a range of data between 2 numbers
 // afterwards, we can work with percentages to get the corresponding real value within the interval (ex. 75% of the way in the interval [1,10] is 7.5)
 // the other way around works too: find out to which percentage a certain value maps (ex. how far in the interval [1,10] is 5? )
+[System.Serializable]
 public class DataRange 
 {
 	public float from = 0.0f;
