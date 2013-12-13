@@ -8,11 +8,16 @@ public class FroggerGameManagerDefault : MonoBehaviour
 {
 	public bool gameRunning = false;
 	private bool firstFrame = true;
+	private int pickupCount = 0;
 
 	public void StartNewGame()
 	{
 		Debug.Log ("Starting new game.");
-		FroggerLaneManager.use.FindLanes();
+
+		FroggerLevelManager.use.LoadLevel(0);
+		//FroggerLaneManager.use.FindLanes();
+
+		pickupCount = 0;
 
 		FroggerPlayer lastPlayer = null;
 		foreach(FroggerPlayer player in (FroggerPlayer[]) FindObjectsOfType(typeof(FroggerPlayer)))
@@ -48,10 +53,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		gameRunning = false;
 
 		FroggerGUIManager.use.GameLost();
+	}
 
-		foreach(FroggerCharacter character in (FroggerCharacter[]) FindObjectsOfType(typeof(FroggerCharacter)))
-		{
-			character.Reset();
-		}
+	public void IncreasePickupCount(int amount)
+	{
+		pickupCount ++;
+		Debug.Log("Increased pickup count to " + pickupCount);
 	}
 }

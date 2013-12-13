@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public abstract class FroggerLane : FroggerSurface 
 {
 	public bool goRight = true;
-	public float spawnPerSecond = 0.2f;
 	public float speed = 2;
 	public float minGapDistance = 2;
 	public float maxGapDistance = 4;

@@ -10,7 +10,7 @@ public abstract class FroggerSurface : MonoBehaviour {
 	{
 		if (onSurface)
 			return;
-		
+
 		onSurface = true;
 
 		EnterSurfaceEffect(character);

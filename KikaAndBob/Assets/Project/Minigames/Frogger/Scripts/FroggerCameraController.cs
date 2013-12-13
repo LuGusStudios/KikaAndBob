@@ -9,15 +9,12 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 	protected float levelLengthInPixels = Screen.height;
 	protected float halfScreenHeight = 0;
 
-	void Awake()
+	public void FocusOn(FroggerPlayer targetPlayer)
 	{
 		halfScreenHeight = Vector3.Distance(
 			LugusCamera.game.ViewportToWorldPoint(new Vector3(0.5f, 0, 0)),
 			LugusCamera.game.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)));
-	}
 
-	public void FocusOn(FroggerPlayer targetPlayer)
-	{
 		if (targetPlayer == null)
 		{
 			Debug.LogError("Player was null.");
@@ -49,7 +46,7 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 	// we send along the FroggerPlayer to check if it is in fact the right player we want to track
 	public void UpdateCameraFollow (FroggerPlayer sender)
 	{
-		if (target == null || sender != target || levelLengthInPixels <= Screen.height)
+		if (target == null || sender != target /*|| levelLengthInPixels <= Screen.height*/)
 			return;
 
 		float yPos = sender.transform.position.y;

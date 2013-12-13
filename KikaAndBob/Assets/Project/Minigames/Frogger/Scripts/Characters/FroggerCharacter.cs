@@ -50,11 +50,11 @@ public class FroggerCharacter : MonoBehaviour {
 
 		currentLane = FroggerLaneManager.use.GetLane(0);
 		transform.position = currentLane.transform.position + new Vector3(0, 0, -5);
+		transform.localScale = Vector3.one * maxScale;
 	}
 
 	protected void ScaleByDistanceHorizontal()
 	{
-
 		transform.localScale = Vector3.one * Mathf.Lerp(maxScale, minScale, (transform.position.v2() - FroggerLaneManager.use.GetBottomLaneCenter()).y / FroggerLaneManager.use.GetLevelLengthLaneCenters());
 	}
 
@@ -67,6 +67,9 @@ public class FroggerCharacter : MonoBehaviour {
 			if (transform.localScale.x > 0)
 				transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
 
+			if (GetCollisionHorizontal(right))
+				return;
+
 			transform.Translate(transform.right.normalized * speed * Time.deltaTime, Space.World);
 		}
 		else
@@ -75,6 +78,9 @@ public class FroggerCharacter : MonoBehaviour {
 
 			if (transform.localScale.x < 0)
 				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+
+			if (GetCollisionHorizontal(right))
+				return;
 
 			transform.Translate(-1 * transform.right.normalized * speed * Time.deltaTime, Space.World);
 		}
@@ -95,6 +101,10 @@ public class FroggerCharacter : MonoBehaviour {
 		int currentLaneIndex = FroggerLaneManager.use.GetLaneIndex(currentLane);
 		int targetLaneIndex = FroggerLaneManager.use.GetLaneIndex(targetLane);
 
+		// don't move if there is a collision item on the target lane
+		if (GetCollisionVertical(targetLane))
+		    return;
+
 		if (targetLaneIndex > currentLaneIndex)
 		{
 			PlayAnimation("Up");
@@ -111,6 +121,45 @@ public class FroggerCharacter : MonoBehaviour {
 			Debug.Log("Character is trying to move to the lane: " + targetLaneIndex + " and it is already on that lane! Stopping.");
 			return;
 		}
+	}
+
+	protected bool GetCollisionVertical(FroggerLane lane)
+	{
+		Vector2 checkLocation = new Vector2(transform.position.x, lane.transform.position.y);
+
+		RaycastHit2D[] hits = Physics2D.RaycastAll(checkLocation, this.transform.forward);
+		foreach(RaycastHit2D hit in hits)
+		{
+			if (hit.transform != null && hit.transform.GetComponent<FroggerCollider>() != null)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected bool GetCollisionHorizontal(bool right)
+	{
+		Vector2 checkLocation;
+		if (right)
+		{
+			checkLocation = new Vector2(transform.position.x + GetComponent<SpriteRenderer>().bounds.extents.x, transform.position.y);
+		}
+		else
+		{
+			checkLocation = new Vector2(transform.position.x - GetComponent<SpriteRenderer>().bounds.extents.x, transform.position.y);
+		}
+
+		RaycastHit2D[] hits = Physics2D.RaycastAll(checkLocation, this.transform.forward);
+		foreach(RaycastHit2D hit in hits)
+		{
+			if (hit.transform != null && hit.transform.GetComponent<FroggerCollider>() != null)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private string currentAnimation;
@@ -175,7 +224,7 @@ public class FroggerCharacter : MonoBehaviour {
 			coveredDistance += Vector3.Distance(lastPosition, transform.position.z(lastPosition.z));
 			lastPosition = transform.position;
 
-		//	ScaleByDistanceHorizontal();
+			ScaleByDistanceHorizontal();
 
 			yield return new WaitForEndOfFrame();
 		}
@@ -221,8 +270,8 @@ public class FroggerCharacter : MonoBehaviour {
 
 	protected virtual void CheckSurface()
 	{
-		if (movingToLane)
-			return;
+//		if (movingToLane)
+//			return;
 
 		FroggerLaneItem laneItemUnderMe = null;
 
@@ -239,6 +288,7 @@ public class FroggerCharacter : MonoBehaviour {
 					laneItemUnderMe = hit.transform.GetComponent<FroggerLaneItem>();
 					if (laneItemUnderMe != null)
 					{
+						Debug.Log (laneItemUnderMe.name, laneItemUnderMe.gameObject);
 						laneItemFound = true;
 						continue;
 					}
@@ -247,6 +297,7 @@ public class FroggerCharacter : MonoBehaviour {
 				// then check if we're over a lane; if yes set current lane
 				// MIND: ONLY apply EnterSurfaceEffect if we didn't yet detect a lane item that we're on (e.g. floating log)
 				FroggerLane lane = hit.transform.GetComponent<FroggerLane>();
+
 				if (lane != null && !movingToLane)	// only check this when the character has arrived on a lane; 
 													// it's only really relevant then and helps prevent glitches with slightly overlapping colliders
 				{
