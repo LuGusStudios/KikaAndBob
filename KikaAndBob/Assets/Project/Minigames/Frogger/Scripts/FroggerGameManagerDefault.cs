@@ -13,9 +13,8 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public void StartNewGame()
 	{
 		Debug.Log ("Starting new game.");
-
+		// TO DO: Give some sort of progression system!
 		FroggerLevelManager.use.LoadLevel(0);
-		//FroggerLaneManager.use.FindLanes();
 
 		pickupCount = 0;
 

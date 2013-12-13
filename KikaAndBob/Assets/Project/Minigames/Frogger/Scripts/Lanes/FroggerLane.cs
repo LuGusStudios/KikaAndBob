@@ -28,11 +28,9 @@ public abstract class FroggerLane : FroggerSurface
 			laneSize = boxCollider2D.size;
 			height = laneSize.y;
 		}
-
-		FillLane();
 	}
 
-	private void FillLane()
+	public void FillLane()
 	{
 		if (spawnItems.Count < 1)
 			return;
@@ -77,7 +75,7 @@ public abstract class FroggerLane : FroggerSurface
 
 	private void Update()
 	{
-		if (spawnItems.Count < 1)
+		if (spawnItems.Count < 1 || speed <= 0)
 		{
 			return;
 		}
@@ -126,9 +124,12 @@ public abstract class FroggerLane : FroggerSurface
 		int index = Random.Range(0, spawnItems.Count);
 
 		// prevent repetitions with some factor
-		while (index == lastItemIndex && Random.value > repeatAllowFactor)
+		if (spawnItems.Count > 1)
 		{
-			index = Random.Range(0, spawnItems.Count);
+			while (index == lastItemIndex && Random.value > repeatAllowFactor)
+			{
+				index = Random.Range(0, spawnItems.Count);
+			}
 		}
 
 		lastItemIndex = index;

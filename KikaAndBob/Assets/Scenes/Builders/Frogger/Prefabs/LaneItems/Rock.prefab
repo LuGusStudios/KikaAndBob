@@ -12,7 +12,7 @@ GameObject:
   - 61: {fileID: 6100000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: TestLaneItemLethal
+  m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,8 +25,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -140.20932, y: 250.926697, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -.546759844, y: .273380756, z: 0}
+  m_LocalScale: {x: .712050021, y: .712049365, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!61 &6100000
@@ -38,8 +38,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 7.49692249, y: .991664648}
-  m_Center: {x: .0738677979, y: -.0674438477}
+  m_Size: {x: 3.13488889, y: 1.56438661}
+  m_Center: {x: -.175262839, y: -.00941688102}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -48,10 +48,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ee93452ee9bc7147822c6121c4f6274, type: 3}
+  m_Script: {fileID: 11500000, guid: ac275d4046c4cc743969871b8ce5875b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goRight: 1
+  behindPlayer: 0
+  goRight: 0
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -73,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 3979c21aac0d7be4fa8f3717790cc8ef, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f680bc1dd9564454b9aed9333ba38371, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

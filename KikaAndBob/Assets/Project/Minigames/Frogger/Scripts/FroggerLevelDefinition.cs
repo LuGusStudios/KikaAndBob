@@ -12,7 +12,7 @@ public class FroggerLevelDefinition : ScriptableObject {
 		public float minGapDistance = 4;
 		public float maxGapDistance = 6;
 		public float repeatAllowFactor = 0.2f;
-		public string[] laneItems = new string[0];
+		public string[] spawnItems = new string[0];
 
 		public LaneDefinition()
 		{
@@ -22,7 +22,7 @@ public class FroggerLevelDefinition : ScriptableObject {
 			minGapDistance = 4;
 			maxGapDistance = 6;
 			repeatAllowFactor = 0.2f;
-			laneItems = new string[0];
+			spawnItems = new string[0];
 		}
 	}
 
