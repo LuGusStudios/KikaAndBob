@@ -36,7 +36,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 
 		if( skyLayer == null )
 		{
-			Debug.LogError(name + " : no LayerSky found!");
+			Debug.LogError(name + " : no LayerSky found!"); 
 		}
 		
 		if( groundLayer == null )
