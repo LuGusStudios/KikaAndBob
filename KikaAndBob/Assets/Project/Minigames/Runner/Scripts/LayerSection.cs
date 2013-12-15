@@ -35,6 +35,12 @@ public class LayerSection : MonoBehaviour
 			GameObject.Destroy( detail );
 		}
 
+		RunnerInteractionZone[] zones = transform.GetComponentsInChildren<RunnerInteractionZone>();
+		foreach( RunnerInteractionZone zone in zones )
+		{
+			GameObject.Destroy( zone.gameObject );
+		}
+
 		// details
 		if( spawner.detailLayer.Length > 0 )
 		{

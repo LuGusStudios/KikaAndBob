@@ -84,11 +84,6 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		{
 			Debug.LogError(name + " : LaneItem is null!");
 		}
-
-
-#if UNITY_IPHONE || UNITY_ANDROID
-		item.type = KikaAndBob.LaneItemType.BUTTON;
-#endif
 	}
 	
 	protected void Awake()
