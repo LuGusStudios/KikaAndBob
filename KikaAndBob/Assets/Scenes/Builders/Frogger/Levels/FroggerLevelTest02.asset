@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
+  m_Name: FroggerLevelTest02
+  m_EditorClassIdentifier: 
+  lanes:
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    spawnItems: []
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 10
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Rock
+      positioning: .25
+    - spawnID: Rock
+      positioning: .75
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 5
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Zebra
+      positioning: 0
+  - laneID: LaneMud
+    goRight: 0
+    speed: 3
+    minGapDistance: 6
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Zebra
+      positioning: 0
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: SpikyShrub
+      positioning: .25
+    - spawnID: SpikyShrub
+      positioning: .5
+    - spawnID: SpikyShrub
+      positioning: .75
+  - laneID: LaneMud
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Car
+      positioning: 0
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems: []
+  - laneID: LaneWater
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Log01
+      positioning: 0
+    - spawnID: Log02
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Log03
+      positioning: 0
+    - spawnID: Crocodile01
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Log01
+      positioning: 0
+    - spawnID: Crocodile02
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Log03
+      positioning: 0
+    - spawnID: Crocodile01
+      positioning: 0
+  - laneID: LaneWaterEnd
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Log01
+      positioning: 0
+    - spawnID: Log02
+      positioning: 0
+    - spawnID: Crocodile01
+      positioning: 0
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: PlayerSlotKika
+      positioning: .5
+  - laneID: LaneEnd
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems: []

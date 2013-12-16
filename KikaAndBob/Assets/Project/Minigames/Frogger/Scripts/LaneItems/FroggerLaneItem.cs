@@ -7,9 +7,12 @@ public class FroggerLaneItem : FroggerSurface
 												// if false, item ends up before player (e.g. "cars", obstacles)
 	public bool goRight = false;
 
+	public AudioClip lanePresenceSound = null;
+
 	protected float coveredDistance = 0;
 	protected float laneLength = 0;
 	protected int location = 0; // 0: off screen first, 1: on screen
+	protected float positioning  = -1; // if -1, will be placed randomly and spawned, otherwise is placed fixed
 	
 	public void UpdateLaneItem(float displacement)
 	{
@@ -31,6 +34,16 @@ public class FroggerLaneItem : FroggerSurface
 	public void SetLaneDistance(float _laneLength)
 	{
 		laneLength = _laneLength;
+	}
+
+	public void SetPositioning(float _positioning)
+	{
+		positioning = _positioning;
+	}
+
+	public float GetPositioning()
+	{
+		return positioning;
 	}
 
 	protected virtual void AfterMovedEffect()

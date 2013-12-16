@@ -9,6 +9,7 @@ public class FroggerLevelManager : LugusSingletonExisting<FroggerLevelManagerDef
 public class FroggerLevelManagerDefault : MonoBehaviour
 {
 	public FroggerLevelDefinition[] levels;
+	public GameObject foreground = null;
 	public GameObject[] lanePrefabs;
 	public GameObject[] laneItemPrefabs;
 
@@ -50,7 +51,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		}
 
 		// set up new level
-		foreach (FroggerLevelDefinition.LaneDefinition laneDefinition in level.lanes) 
+		foreach (FroggerLaneDefinition laneDefinition in level.lanes) 
 		{
 			GameObject prefab = FindLane(laneDefinition.laneID);
 
@@ -86,7 +87,18 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			laneScript.minGapDistance = laneDefinition.minGapDistance;
 			laneScript.maxGapDistance = laneDefinition.maxGapDistance;
 			laneScript.repeatAllowFactor = laneDefinition.repeatAllowFactor;
-			laneScript.spawnItems = FindLaneItems(laneDefinition.spawnItems);
+			laneScript.spawnItems = FindMovingLaneItems(laneDefinition.spawnItems);
+			laneScript.staticItems = FindStaticLaneItems(laneDefinition.spawnItems);
+
+			// we can't link lane item sounds to lanes directly, since we can't predict what sort of lane items will be placed on which lane
+			// instead, LaneItems have a lanePresenceSound property which, if not null, will be added to the lane's enter sounds
+			foreach(FroggerLaneItem laneItem in laneScript.spawnItems)
+			{
+				if (laneItem.lanePresenceSound != null && !laneScript.enterSounds.Contains(laneItem.lanePresenceSound))
+				{
+					laneScript.enterSounds.Add(laneItem.lanePresenceSound);
+				}
+			}
 	
 			// initially fill lane with lane items
 			laneScript.FillLane();
@@ -101,10 +113,20 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 		FroggerLaneManager.use.SetLanes(lanes);
 
+		// finally create a fake lane to cover up any room between the bottom lane's collider and the bottom of the sprite (which is what the camera will clamp to)
+		// there is no easy way to calculate the overlap needed here, so just add a bit of customizable overlap
+
+		if (lanes.Count > 0)
+		{
+			float overlap = 0.1f;
+			GameObject foregroundObject = (GameObject)Instantiate(foreground);
+			foregroundObject.transform.parent = lanesRoot;
+			foregroundObject.transform.localPosition = new Vector3(0, lanes[0].transform.localPosition.y - lanes[0].GetComponent<SpriteRenderer>().bounds.extents.y + overlap, -10);
+		}
+
 		Debug.Log("Finished building level.");
 	}
-
-
+	
 	protected GameObject FindLane(string laneID)
 	{
 		if (string.IsNullOrEmpty(laneID))
@@ -124,12 +146,15 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		return null;
 	}
 
-	protected List<FroggerLaneItem> FindLaneItems(string[] ids)
+	protected List<FroggerLaneItem> FindMovingLaneItems(FroggerLaneItemDefinition[] ids)
 	{
 		List<FroggerLaneItem> laneItems = new List<FroggerLaneItem>();
-		foreach(string id in ids)
+		foreach(FroggerLaneItemDefinition laneItemDefinition in ids)
 		{
-			if (string.IsNullOrEmpty(id))
+			if (laneItemDefinition.positioning > 0)
+				continue;
+
+			if (string.IsNullOrEmpty(laneItemDefinition.spawnID))
 			{
 				Debug.LogError("Lane item ID was empty or null!");
 				continue;
@@ -138,7 +163,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			GameObject foundPrefab = null;
 			foreach(GameObject go in laneItemPrefabs)
 			{
-				if (go.name == id)
+				if (go.name == laneItemDefinition.spawnID)
 				{
 					foundPrefab = go;
 					break;
@@ -147,7 +172,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 			if (foundPrefab == null)
 			{
-				Debug.LogError(id + " was not found as a lane item prefab.");
+				Debug.LogError(laneItemDefinition + " was not found as a lane item prefab.");
 				continue;
 			}
 
@@ -156,6 +181,42 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 		return laneItems;
 	}
-	
+
+	protected Dictionary<float, FroggerLaneItem> FindStaticLaneItems(FroggerLaneItemDefinition[] ids)
+	{
+		Dictionary<float, FroggerLaneItem> laneItems = new Dictionary<float, FroggerLaneItem>();
+
+		foreach(FroggerLaneItemDefinition laneItemDefinition in ids)
+		{
+			if (laneItemDefinition.positioning <= 0)
+				continue;
+			
+			if (string.IsNullOrEmpty(laneItemDefinition.spawnID))
+			{
+				Debug.LogError("Lane item ID was empty or null!");
+				continue;
+			}
+			
+			GameObject foundPrefab = null;
+			foreach(GameObject go in laneItemPrefabs)
+			{
+				if (go.name == laneItemDefinition.spawnID)
+				{
+					foundPrefab = go;
+					break;
+				}
+			}
+			
+			if (foundPrefab == null)
+			{
+				Debug.LogError(laneItemDefinition.spawnID + " was not found as a lane item prefab.");
+				continue;
+			}
+
+			laneItems.Add(Mathf.Clamp(laneItemDefinition.positioning, 0, 1), foundPrefab.GetComponent<FroggerLaneItem>());
+		}
+		
+		return laneItems;
+	}
 }
 

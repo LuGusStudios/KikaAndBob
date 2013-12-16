@@ -1,31 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class FroggerLevelDefinition : ScriptableObject {
 
-	[System.Serializable]
-	public class LaneDefinition
-	{
-		public string laneID = "";
-		public bool goRight = true;
-		public float speed = 4;
-		public float minGapDistance = 4;
-		public float maxGapDistance = 6;
-		public float repeatAllowFactor = 0.2f;
-		public string[] spawnItems = new string[0];
+	public FroggerLaneDefinition[] lanes;
 
-		public LaneDefinition()
+	// Arrays of serialized classes are not created with default values
+	// Instead, initialize values once in OnEnable (which runs AFTER deserialization), checking for null / zero value
+	// http://forum.unity3d.com/threads/155352-Serialization-Best-Practices-Megapost
+	void OnEnable()
+	{
+		if (lanes == null || lanes.Length < 1)
 		{
-			laneID = "";
-			goRight = true;
-			speed = 4;
-			minGapDistance = 4;
-			maxGapDistance = 6;
-			repeatAllowFactor = 0.2f;
-			spawnItems = new string[0];
+			// Since we always want at least one lane in the Frogger games, it makes sense to initially provide one lane already.
+			// This way, the constructor for the array's type will get called, which sets the default values.
+			// Further array entries are always copied from the last entry anyway, so any default values are copied.
+			Debug.Log("Initializing FroggerLevelDefinition");
+			lanes = new FroggerLaneDefinition[1];
 		}
 	}
-
-	public LaneDefinition[] lanes;
-
 }

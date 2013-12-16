@@ -50,7 +50,10 @@ public class FroggerCharacter : MonoBehaviour {
 
 		currentLane = FroggerLaneManager.use.GetLane(0);
 		transform.position = currentLane.transform.position + new Vector3(0, 0, -5);
+
 		transform.localScale = Vector3.one * maxScale;
+
+		Debug.Log("Reset character: " + gameObject.name);
 	}
 
 	protected void ScaleByDistanceHorizontal()
@@ -236,6 +239,9 @@ public class FroggerCharacter : MonoBehaviour {
 
 	protected void ClampToScreen()
 	{
+		if (!FroggerGameManager.use.gameRunning)
+			return;
+
 		// clamp character to the screen in all directions (in traditional Frogger, only X clamping would be relevant, but we are trying to make everything possible in every direction)
 		Vector3 screenPos = LugusCamera.game.WorldToScreenPoint(transform.position);
 		Bounds spriteBounds = GetComponent<SpriteRenderer>().sprite.bounds;	// size of sprite is added to / subtracted from screen edges ! Not spriterenderer.bounds, because those are in world coordinates
@@ -270,8 +276,8 @@ public class FroggerCharacter : MonoBehaviour {
 
 	protected virtual void CheckSurface()
 	{
-//		if (movingToLane)
-//			return;
+		if (!FroggerGameManager.use.gameRunning)
+			return;
 
 		FroggerLaneItem laneItemUnderMe = null;
 
@@ -288,7 +294,6 @@ public class FroggerCharacter : MonoBehaviour {
 					laneItemUnderMe = hit.transform.GetComponent<FroggerLaneItem>();
 					if (laneItemUnderMe != null)
 					{
-						Debug.Log (laneItemUnderMe.name, laneItemUnderMe.gameObject);
 						laneItemFound = true;
 						continue;
 					}

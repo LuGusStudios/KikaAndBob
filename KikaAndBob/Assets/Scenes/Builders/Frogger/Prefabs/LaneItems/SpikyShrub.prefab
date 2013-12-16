@@ -24,10 +24,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400002}
-  - 61: {fileID: 6100000}
   - 114: {fileID: 11400000}
+  - 61: {fileID: 6100000}
   m_Layer: 0
-  m_Name: Log01
+  m_Name: SpikyShrub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -.213025093, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -51,7 +51,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.6799822, y: 10.6220207, z: -3.54980469}
+  m_LocalPosition: {x: 0, y: -2.0455277, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
@@ -65,8 +65,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 5.62326908, y: .968071342}
-  m_Center: {x: -.0182952881, y: -.225128174}
+  m_Size: {x: 1.94899535, y: 1.13198471}
+  m_Center: {x: .00679385662, y: -.0659921169}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -75,14 +75,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354f3615594b9e246a296ca4eb6eca46, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ee93452ee9bc7147822c6121c4f6274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterSounds: []
+  enterSounds:
+  - {fileID: 8300000, guid: cab1be438ed302c4aad059941c687ce2, type: 3}
   behindPlayer: 1
   goRight: 0
   lanePresenceSound: {fileID: 0}
-  maxMovement: {x: 0, y: .100000001, z: 0}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -104,7 +104,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: ad07b751760a78c47a9cc3c28272ac1c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbd8b0a43f4b24d4e873d4c95ec9cf69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

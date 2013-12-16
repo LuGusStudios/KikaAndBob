@@ -10,6 +10,7 @@ public abstract class FroggerLane : FroggerSurface
 	public float maxGapDistance = 4;
 	public float repeatAllowFactor = 0.5f;
 	public List<FroggerLaneItem> spawnItems = new List<FroggerLaneItem>();
+	public Dictionary<float, FroggerLaneItem> staticItems = new Dictionary<float, FroggerLaneItem>();
 
 	protected float height = 200;
 	protected Vector2 laneSize = Vector3.one;
@@ -17,7 +18,8 @@ public abstract class FroggerLane : FroggerSurface
 	protected float nextInterval = 0;
 	protected int lastItemIndex = -1;
 	protected float spawnDistance = 0;
-	protected List<FroggerLaneItem> spawnedItems = new List<FroggerLaneItem>();
+	protected List<FroggerLaneItem> movingItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
+
 
 	private void Awake()
 	{
@@ -29,9 +31,16 @@ public abstract class FroggerLane : FroggerSurface
 			height = laneSize.y;
 		}
 	}
-
+	
 	public void FillLane()
 	{
+		FillStaticItems();
+
+		if (spawnItems.Count < 1)
+			return;
+
+		// now create spawnable dynamic items
+
 		if (spawnItems.Count < 1)
 			return;
 
@@ -61,6 +70,27 @@ public abstract class FroggerLane : FroggerSurface
 		nextInterval = lastItemWidth;
 	}
 
+	void FillStaticItems()
+	{
+		if (staticItems.Count < 1)
+			return;
+
+		foreach(KeyValuePair<float, FroggerLaneItem> item in staticItems)
+		{
+			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
+			
+			spawned.transform.parent = this.transform;
+			spawned.transform.localPosition = Vector3.zero;
+			spawned.transform.localRotation = Quaternion.identity;
+			
+			if (item.Value.behindPlayer) // center transform, so first subtract half the lane size, then position between 0 - 1 lane Length
+				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -1);
+			else
+				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -10);
+		}
+	}
+
+
 	public float GetHeight()
 	{
 		return height;
@@ -76,9 +106,7 @@ public abstract class FroggerLane : FroggerSurface
 	private void Update()
 	{
 		if (spawnItems.Count < 1 || speed <= 0)
-		{
 			return;
-		}
 	
 		if (spawnDistance >= nextInterval)
 		{
@@ -90,14 +118,14 @@ public abstract class FroggerLane : FroggerSurface
 		float displacement = speed * Time.deltaTime;
 		spawnDistance += displacement;
 
-		for (int i = spawnedItems.Count - 1; i >= 0; i--) 
+		for (int i = movingItems.Count - 1; i >= 0; i--) 
 		{
-			FroggerLaneItem currentItem = spawnedItems[i];
+			FroggerLaneItem currentItem = movingItems[i];
 			currentItem.UpdateLaneItem(displacement);
 
 			if (currentItem.CrossedLevel())
 			{
-				spawnedItems.Remove(currentItem);
+				movingItems.Remove(currentItem);
 				Destroy(currentItem.gameObject);
 			}
 		}
@@ -172,7 +200,7 @@ public abstract class FroggerLane : FroggerSurface
 				spawnedItem.transform.localScale = spawnedItem.transform.localScale.x(spawnedItem.transform.localScale.x * -1f);
 		}
 
-		spawnedItems.Add(itemScript);
+		movingItems.Add(itemScript);
 
 		return spawnedItem;
 	}

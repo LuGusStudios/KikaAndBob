@@ -44,9 +44,9 @@ public class FroggerCameraController : LugusSingletonExisting<FroggerCameraContr
 
 	// called from player movement script to prevent jitter due to incorrect ordering of update loops
 	// we send along the FroggerPlayer to check if it is in fact the right player we want to track
-	public void UpdateCameraFollow (FroggerPlayer sender)
+	public void UpdateCameraFollow (FroggerCharacter sender)
 	{
-		if (target == null || sender != target || levelLengthInPixels <= Screen.height)
+		if (target == null || sender != target || levelLengthInPixels <= Screen.height || !FroggerGameManager.use.gameRunning)
 			return;
 
 		float yPos = sender.transform.position.y;
