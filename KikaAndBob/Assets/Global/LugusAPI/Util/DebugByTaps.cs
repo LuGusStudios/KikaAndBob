@@ -129,17 +129,21 @@ public class DebugByTaps : MonoBehaviour
 	
 	void Start()
 	{
-		#if !UNITY_EDITOR
-		Application.targetFrameRate = 60;  
-		Debug.LogError("Set the framerate to 60");
-		#endif
+		//#if !UNITY_EDITOR  
+		QualitySettings.vSyncCount = 1;
+		//Time.fixedDeltaTime = 0.0333333f;
+		//Application.targetFrameRate = 30;
+		//Debug.LogError("Set the framerate to 30");
+		//#endif
+
+
 		timeleft = updateInterval;  
 	}
 	
 	void CalculateFPS()
 	{
 		#if UNITY_EDITOR
-		Application.targetFrameRate = -1;  
+		//Application.targetFrameRate = -1;  
 		#endif
 		
 		timeleft -= Time.deltaTime;

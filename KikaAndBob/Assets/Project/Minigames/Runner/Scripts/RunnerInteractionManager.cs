@@ -11,7 +11,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public void OnSectionSwitch(LayerSection currentSection, LayerSection newSection)
 	{
-		Debug.LogError("SECTION SWITCH ACCEPTED");
+		//Debug.LogError("SECTION SWITCH ACCEPTED");
 
 		--nextZoneCountdown;
 		if( nextZoneCountdown < 0 )
