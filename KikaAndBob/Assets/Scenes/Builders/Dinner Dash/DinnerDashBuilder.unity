@@ -104,9 +104,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   order: []
+  eatingTime:
+    from: 2
+    to: 4
+  orderTime:
+    from: 2
+    to: 4
   state: 2
   currentConsumable: {fileID: 0}
   place: {fileID: 0}
+  moneyPrefab: {fileID: 0}
 --- !u!61 &98686904
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -249,6 +256,8 @@ MonoBehaviour:
   consumedItems: []
   processedVisualizer: {fileID: 0}
   unprocessedVisualizer: {fileID: 0}
+  moving: 0
+  movementDirection: {x: 0, y: 0, z: 0}
 --- !u!212 &192627045
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -347,9 +356,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   order: []
+  eatingTime:
+    from: 2
+    to: 4
+  orderTime:
+    from: 2
+    to: 4
   state: 2
   currentConsumable: {fileID: 0}
   place: {fileID: 0}
+  moneyPrefab: {fileID: 0}
 --- !u!61 &306939496
 BoxCollider2D:
   m_ObjectHideFlags: 0

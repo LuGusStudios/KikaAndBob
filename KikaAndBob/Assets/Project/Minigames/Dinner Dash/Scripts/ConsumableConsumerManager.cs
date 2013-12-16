@@ -47,7 +47,7 @@ public class ConsumableConsumerManager : MonoBehaviour
 		
 		foreach( ConsumableConsumer consumer in consumers )
 		{
-			if( !consumer.IsActive() )
+			if( consumer.IsActive() )
 			{
 				++count;
 			}

@@ -11,7 +11,7 @@ public class RunnerManagerDefault : MonoBehaviour
 {
 	// if the camera reaches this x value, the whole level is shifted to the left again
 	// this is to prevent reaching very high x values (which float precision does not like)
-	protected float shiftXTreshold = 1000.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
+	protected float shiftXTreshold = 500.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
 
 	public void ShiftLevel(float units)
 	{

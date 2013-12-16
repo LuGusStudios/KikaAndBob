@@ -315,6 +315,12 @@ public class LugusInputDefault : MonoBehaviour
 	{
 		return Input.GetKey(key);
 	}
+
+	void Awake()
+	{
+		if( GetComponent<DebugByTaps>() == null )
+			this.gameObject.AddComponent<DebugByTaps>();
+	}
 	
 	
 	void OnGUI()

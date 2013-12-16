@@ -8,7 +8,7 @@ public class LayerManager : LugusSingletonExisting<LayerManagerDefault>
 }
 
 
-public class LayerManagerDefault : MonoBehaviour 
+public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault> 
 {
 	public LayerSpawner skyLayer = null;
 	public LayerSpawner groundLayer = null;
@@ -17,6 +17,11 @@ public class LayerManagerDefault : MonoBehaviour
 	public int currentThemeIndex = 0;
 	public BackgroundTheme[] themes;
 	public BackgroundTheme[] themeTransitions;
+
+	public BackgroundTheme CurrentTheme
+	{
+		get{ return themes[currentThemeIndex]; }
+	}
 
 	// if camera is this many units from the center of the sky transition, it will transition the ground as well
 	// in testing, 20.0f was a good value
@@ -31,7 +36,7 @@ public class LayerManagerDefault : MonoBehaviour
 
 		if( skyLayer == null )
 		{
-			Debug.LogError(name + " : no LayerSky found!");
+			Debug.LogError(name + " : no LayerSky found!"); 
 		}
 		
 		if( groundLayer == null )

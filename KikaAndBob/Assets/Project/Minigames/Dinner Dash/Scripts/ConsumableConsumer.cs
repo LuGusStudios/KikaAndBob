@@ -31,7 +31,7 @@ public class ConsumableConsumer : IConsumableUser
 	// place (chair) the consumer is currently taking in
 	public ConsumableConsumerPlace place = null;
 
-
+	public Consumable moneyPrefab = null;
 
 	public override bool Use()
 	{
@@ -81,7 +81,10 @@ public class ConsumableConsumer : IConsumableUser
 		if( state == State.Done )
 		{
 			// 1. transfer currentConsumable (which is consumed now) over to the Mover
+
 			
+			GameObject.Destroy( currentConsumable.gameObject.GetComponent<ConsumableHighlight>() );
+
 			currentConsumable.transform.localScale *= 1.5f;
 			DinnerDashManager.use.Mover.AddConsumable( currentConsumable );
 			
@@ -92,10 +95,17 @@ public class ConsumableConsumer : IConsumableUser
 			return true; 
 		}
 		
-		if( state == State.Paying )
+		if( state == State.Paying ) 
 		{
+			// we can be in state paying, but no money on the table yet. If we are hit then, just ignore it for now
+			if( currentConsumable == null )
+				return false;
+
 			// 1. add score (money)
 			// TODO:
+			// currentConsumable is now the money. The Mover will process this accordingly
+			GameObject.Destroy( currentConsumable.gameObject.GetComponent<ConsumableHighlight>() );
+			DinnerDashManager.use.Mover.AddConsumable( currentConsumable );
 			
 			//2. client leaves
 			// TODO: decently move
@@ -130,12 +140,27 @@ public class ConsumableConsumer : IConsumableUser
 		// TODO: order yet another food item (ex. desert)
 
 		state = State.Paying;
+		
+		LugusCoroutines.use.StartRoutine( PaymentRoutine() );
+	}
+
+	protected IEnumerator PaymentRoutine() 
+	{
+		yield return new WaitForSeconds( orderTime.Random() );
+		
+		Consumable money = (Consumable) GameObject.Instantiate( moneyPrefab );
+		
+		currentConsumable = money;
+		
+		currentConsumable.transform.parent = this.transform.parent;
+		currentConsumable.transform.position = place.consumableLocation.position;
+		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
 	}
 
 	// TODO: now this is called from the outside
 	// should be refactored so that it's called every time we set state = State.Seated?
 	public void OnSeated()
-	{
+	{ 
 		LugusCoroutines.use.StartRoutine( OrderRoutine() );
 	}
 
@@ -164,19 +189,39 @@ public class ConsumableConsumer : IConsumableUser
 		subject.transform.parent = this.transform.parent;
 		//subject.renderer.sortingOrder = this.renderer.sortingOrder;
 		subject.transform.position = place.consumableLocation.position; 
-		subject.transform.localScale *= 0.5f;
+		//subject.transform.localScale *= 0.5f;
 
 		
 		yield return new WaitForSeconds( eatingTime.Random () ); 
 		
 		currentConsumable.State = Lugus.ConsumableState.Consumed;
 		state = State.Done;
+
+		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
 		
 		// TODO: graphical indication client is ready?
 	}
 	
+	public void SetupLocal()
+	{
+		if( moneyPrefab == null )
+		{
+			GameObject moneyGO = GameObject.Find ("Money");
+			if( moneyGO != null )
+			{
+				moneyPrefab = moneyGO.GetComponent<Consumable>();
+			}
+		}
+
+		if( moneyPrefab == null )
+		{
+			Debug.LogError(name + " : no money prefab found!");
+		}
+	}
+	
 	protected void Awake()
 	{
+		SetupLocal();
 	}
 	
 	// Use this for initialization
