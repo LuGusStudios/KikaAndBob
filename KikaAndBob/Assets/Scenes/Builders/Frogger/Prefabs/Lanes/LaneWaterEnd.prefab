@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 212: {fileID: 21200000}
   - 114: {fileID: 11400000}
-  - 61: {fileID: 6100000}
+  - 61: {fileID: 6100002}
   m_Layer: 0
   m_Name: LaneWaterEnd
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!61 &6100000
+--- !u!61 &6100002
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -38,8 +38,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 20.4799995, y: 1.74952507}
-  m_Center: {x: 0, y: -.138521671}
+  m_Size: {x: 20.4799995, y: 1.48555601}
+  m_Center: {x: 0, y: -.157959938}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -51,7 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6285a14357abf2449b4d3e4b0f66a840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPerSecond: .200000003
+  goRight: 1
+  speed: 2
+  minGapDistance: 2
+  maxGapDistance: 4
+  repeatAllowFactor: .5
   spawnItems: []
 --- !u!212 &21200000
 SpriteRenderer:
