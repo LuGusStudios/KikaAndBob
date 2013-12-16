@@ -5,19 +5,21 @@ using System.Collections.Generic;
 public abstract class FroggerLane : FroggerSurface 
 {
 	public bool goRight = true;
-	public float spawnPerSecond = 0.2f;
 	public float speed = 2;
 	public float minGapDistance = 2;
 	public float maxGapDistance = 4;
 	public float repeatAllowFactor = 0.5f;
+	public List<FroggerLaneItem> spawnItems = new List<FroggerLaneItem>();
+	public Dictionary<float, FroggerLaneItem> staticItems = new Dictionary<float, FroggerLaneItem>();
 
 	protected float height = 200;
 	protected Vector2 laneSize = Vector3.one;
 	protected BoxCollider2D boxCollider2D = null;
 	protected float nextInterval = 0;
 	protected int lastItemIndex = -1;
-	public List<FroggerLaneItem> spawnItems = new List<FroggerLaneItem>();
 	protected float spawnDistance = 0;
+	protected List<FroggerLaneItem> movingItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
+
 
 	private void Awake()
 	{
@@ -28,12 +30,17 @@ public abstract class FroggerLane : FroggerSurface
 			laneSize = boxCollider2D.size;
 			height = laneSize.y;
 		}
-
-		FillLane();
 	}
-
-	private void FillLane()
+	
+	public void FillLane()
 	{
+		FillStaticItems();
+
+		if (spawnItems.Count < 1)
+			return;
+
+		// now create spawnable dynamic items
+
 		if (spawnItems.Count < 1)
 			return;
 
@@ -63,6 +70,27 @@ public abstract class FroggerLane : FroggerSurface
 		nextInterval = lastItemWidth;
 	}
 
+	void FillStaticItems()
+	{
+		if (staticItems.Count < 1)
+			return;
+
+		foreach(KeyValuePair<float, FroggerLaneItem> item in staticItems)
+		{
+			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
+			
+			spawned.transform.parent = this.transform;
+			spawned.transform.localPosition = Vector3.zero;
+			spawned.transform.localRotation = Quaternion.identity;
+			
+			if (item.Value.behindPlayer) // center transform, so first subtract half the lane size, then position between 0 - 1 lane Length
+				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -1);
+			else
+				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -10);
+		}
+	}
+
+
 	public float GetHeight()
 	{
 		return height;
@@ -77,10 +105,8 @@ public abstract class FroggerLane : FroggerSurface
 
 	private void Update()
 	{
-		if (spawnItems.Count < 1)
-		{
+		if (spawnItems.Count < 1 || speed <= 0)
 			return;
-		}
 	
 		if (spawnDistance >= nextInterval)
 		{
@@ -92,13 +118,32 @@ public abstract class FroggerLane : FroggerSurface
 		float displacement = speed * Time.deltaTime;
 		spawnDistance += displacement;
 
-		foreach(Transform t in transform)
+		for (int i = movingItems.Count - 1; i >= 0; i--) 
 		{
-			if (goRight)
-				t.Translate(t.right.normalized * displacement);
-			else
-				t.Translate(-1 * t.right.normalized * displacement);
+			FroggerLaneItem currentItem = movingItems[i];
+			currentItem.UpdateLaneItem(displacement);
+
+			if (currentItem.CrossedLevel())
+			{
+				movingItems.Remove(currentItem);
+				Destroy(currentItem.gameObject);
+			}
 		}
+
+//		foreach(FroggerLaneItem item in spawnedItems)
+//		{
+//			item.UpdateLaneItem(displacement);
+//		}
+
+//		foreach(Transform t in transform)
+//		{
+//			if (goRight)
+//				t.Translate(t.right.normalized * displacement);
+//			else
+//				t.Translate(-1 * t.right.normalized * displacement);
+//
+//			t.GetComponent<FroggerLaneItem>().UpdateLaneItem();
+//		}
 	}
 
 	private GameObject SpawnLaneItem()
@@ -107,9 +152,12 @@ public abstract class FroggerLane : FroggerSurface
 		int index = Random.Range(0, spawnItems.Count);
 
 		// prevent repetitions with some factor
-		while (index == lastItemIndex && Random.value > repeatAllowFactor)
+		if (spawnItems.Count > 1)
 		{
-			index = Random.Range(0, spawnItems.Count);
+			while (index == lastItemIndex && Random.value > repeatAllowFactor)
+			{
+				index = Random.Range(0, spawnItems.Count);
+			}
 		}
 
 		lastItemIndex = index;
@@ -117,10 +165,12 @@ public abstract class FroggerLane : FroggerSurface
 		GameObject spawnedItem = (GameObject)Instantiate(spawnItems[index].gameObject);
 
 		FroggerLaneItem itemScript = spawnedItem.GetComponent<FroggerLaneItem>();
-	
-		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane
+		itemScript.goRight = goRight;
+		itemScript.SetLaneDistance(GetSurfaceSize().x + itemScript.GetSurfaceSize().x * 2);
+
+		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
 		BoxCollider2D itemCollider = spawnedItem.GetComponent<BoxCollider2D>();
-		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for sprite scaling !
+		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
 		itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
 	
 		spawnedItem.transform.parent = this.transform;
@@ -133,7 +183,7 @@ public abstract class FroggerLane : FroggerSurface
 			if (itemScript.behindPlayer)
 				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
 			else
-				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+				spawnedItem.transform.localPosition = new Vector3(-((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -10);
 
 
 			if (spawnedItem.GetComponent<FlippedIncorrectly>() == null)
@@ -144,10 +194,14 @@ public abstract class FroggerLane : FroggerSurface
 			if (itemScript.behindPlayer)
 				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -1);
 			else
-				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -20);
+				spawnedItem.transform.localPosition = new Vector3(((laneSize.x * 0.5f) + itemScript.GetSurfaceSize().x * 0.5f), 0, -10);
+
+			if (spawnedItem.GetComponent<FlippedIncorrectly>() != null)
+				spawnedItem.transform.localScale = spawnedItem.transform.localScale.x(spawnedItem.transform.localScale.x * -1f);
 		}
+
+		movingItems.Add(itemScript);
 
 		return spawnedItem;
 	}
-	
 }

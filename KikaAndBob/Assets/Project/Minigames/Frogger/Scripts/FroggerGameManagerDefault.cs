@@ -8,11 +8,22 @@ public class FroggerGameManagerDefault : MonoBehaviour
 {
 	public bool gameRunning = false;
 	private bool firstFrame = true;
+	private int pickupCount = 0;
+	private int currentIndex = 0;
 
 	public void StartNewGame()
 	{
+		StartNewGame(currentIndex);
+	}
+
+	public void StartNewGame(int levelIndex)
+	{
+		currentIndex = levelIndex;
 		Debug.Log ("Starting new game.");
-		FroggerLaneManager.use.FindLanes();
+		// TO DO: Give some sort of progression system!
+		FroggerLevelManager.use.LoadLevel(levelIndex);
+
+		pickupCount = 0;
 
 		FroggerPlayer lastPlayer = null;
 		foreach(FroggerPlayer player in (FroggerPlayer[]) FindObjectsOfType(typeof(FroggerPlayer)))
@@ -46,12 +57,26 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public void LoseGame()
 	{
 		gameRunning = false;
-
 		FroggerGUIManager.use.GameLost();
+	}
 
-		foreach(FroggerCharacter character in (FroggerCharacter[]) FindObjectsOfType(typeof(FroggerCharacter)))
+	public void IncreasePickupCount(int amount)
+	{
+		pickupCount ++;
+		Debug.Log("Increased pickup count to " + pickupCount);
+	}
+
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+
+		for (int i = 0; i < FroggerLevelManager.use.levels.Length; i++) 
 		{
-			character.Reset();
+			if (GUILayout.Button("Start Level " + i))
+			{
+				StartNewGame(i);
+			}
 		}
 	}
 }
