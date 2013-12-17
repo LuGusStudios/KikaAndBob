@@ -237,7 +237,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			
 			if (foundPrefab == null)
 			{
-				Debug.LogError(laneItemDefinition.spawnID + " was not found as a lane item prefab.");
+				Debug.LogError("Lane: " + parentLane.name + ". " +  laneItemDefinition.spawnID + " was not found as a lane item prefab.");
 				continue;
 			}
 

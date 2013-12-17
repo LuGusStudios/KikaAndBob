@@ -20,7 +20,7 @@ public class FroggerLaneLionAmbush : FroggerLane {
 	{
 		windFromLeft = Random.value > 0.5f ? true : false;
 		delayTime = new DataRange(minimumSwitchTime, maximumSwitchTime);
-		LugusCoroutines.use.StartRoutine(SwitchDirection());
+		StartCoroutine(SwitchDirection());
 	}
 
 	protected IEnumerator SwitchDirection()
@@ -42,6 +42,9 @@ public class FroggerLaneLionAmbush : FroggerLane {
 
 		foreach(FroggerLaneItem item in staticSpawnedItems)
 		{
+			if (item == null)
+				continue;
+
 			if (windFromLeft)
 			{
 				if (item.transform.localScale.x > 0)
