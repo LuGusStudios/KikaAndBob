@@ -13,14 +13,11 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 	public GameObject[] lanePrefabs;
 	public GameObject[] laneItemPrefabs;
 	protected LugusAudioTrackSettings musicSettings = null;
-	protected LugusAudioSource backgroundAudio = null;
 
 	void Awake()
 	{
 		musicSettings = new LugusAudioTrackSettings();
-		musicSettings.Loop(true);
-
-		backgroundAudio = GameObject.Find("BackgroundMusic").GetComponent<LugusAudioSource>();
+		musicSettings.Loop(true).Volume(0.2f);
 	}
 
 	public void LoadLevel(string levelName)
@@ -42,10 +39,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 		if (!string.IsNullOrEmpty(levels[levelIndex].backgroundMusicName))
 		{
-			backgroundAudio.key = levels[levelIndex].backgroundMusicName;
-			backgroundAudio.Play();
-
-			//LugusAudio.use.Music().Play(LugusResources.use.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
+			LugusAudio.use.Music().Play(LugusResources.use.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
 		}
 		else
 		{
