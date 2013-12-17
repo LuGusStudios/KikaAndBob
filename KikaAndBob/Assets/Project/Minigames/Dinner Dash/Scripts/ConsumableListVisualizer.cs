@@ -9,7 +9,32 @@ public class ConsumableListVisualizer : MonoBehaviour
 	public List<SpriteRenderer> renderers = new List<SpriteRenderer>();
 
 	public float targetSpriteWidth = 150.0f; // we want the sprites to be this wide
+	
+	protected ILugusCoroutineHandle flashHandle = null;
+	public void Flash(Color color, float duration = 0.5f)
+	{
+		if( flashHandle != null && flashHandle.Running )
+		{
+			flashHandle.StopRoutine();
+			flashHandle = null;
+		}
 
+		flashHandle = LugusCoroutines.use.StartRoutine( FlashColorRoutine(color, duration) ); 
+	}
+
+	protected IEnumerator FlashColorRoutine(Color color, float duration)
+	{
+		Color originalColor = Color.white;
+
+		iTween.ColorTo(this.background.gameObject, color, duration / 2.0f );
+
+		yield return new WaitForSeconds( duration / 2.0f );
+		
+		iTween.ColorTo(this.background.gameObject, originalColor, duration / 2.0f );
+
+			
+		//background.GetComponent<SpriteRenderer>().color = Color.red;
+	}
 
 	public void Visualize(List<Consumable> consumables)
 	{

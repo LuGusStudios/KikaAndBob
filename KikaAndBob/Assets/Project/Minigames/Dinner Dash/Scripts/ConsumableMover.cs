@@ -308,6 +308,44 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		return null;
 	}
 
+	public bool CanCarry(Consumable item)
+	{
+		if( item.definition.isPayment )
+			return true;
+
+		List<Consumable> items = null;
+		if( item.State == Lugus.ConsumableState.Unprocessed )
+		{
+			items = unprocessedItems;
+		}
+		else if( item.State == Lugus.ConsumableState.Processed )
+		{
+			items = processedItems;
+		}
+		else
+		{
+			return true; // can always carry consumed items
+		}
+
+		if( items.Count < 3 )
+		{
+			return true;
+		}
+		else
+		{
+			if( item.State == Lugus.ConsumableState.Unprocessed )
+			{
+				unprocessedVisualizer.Flash(Color.red);
+			}
+			else if( item.State == Lugus.ConsumableState.Processed )
+			{
+				processedVisualizer.Flash(Color.red);
+			}
+
+			return false;
+		}
+	}
+
 	public void AddConsumable(Consumable item)
 	{
 		if( item.definition.isPayment )

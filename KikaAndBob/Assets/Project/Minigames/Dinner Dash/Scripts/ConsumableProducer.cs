@@ -17,7 +17,9 @@ public class ConsumableProducer : IConsumableUser
 
 	public override bool Use()
 	{
-		// TODO: put "produces" onto the Mover
+		if( !DinnerDashManager.use.Mover.CanCarry(produces) )
+			return false; 
+
 
 		// in cooking dash, mover has 2 plateaus: 1 for cooked food, 1 for uncooked. Can carry both at once
 		// also: some producers don't move anything to the tray (example when granny needs to make a sandwich, you just click on the sandwich and she begins)
@@ -31,6 +33,6 @@ public class ConsumableProducer : IConsumableUser
 
 		DinnerDashManager.use.Mover.AddConsumable(newProduct);
 
-		return false;
+		return true;
 	}
 }

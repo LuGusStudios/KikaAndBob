@@ -65,6 +65,9 @@ public class ConsumableProcessor : IConsumableUser
 
 		if( state == State.Done )
 		{
+			if( !DinnerDashManager.use.Mover.CanCarry(currentConsumable) )
+			   return false; // TODO: highlight 
+
 			
 			GameObject.Destroy( currentConsumable.gameObject.GetComponent<ConsumableHighlight>() );
 
