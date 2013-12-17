@@ -21,6 +21,7 @@ public class ConsumableProcessor : IConsumableUser
 	public Lugus.ConsumableState toState = Lugus.ConsumableState.NONE;
 
 	public float processingTime = 3.0f;
+	public string processingSound = "";
 
 	public ConsumableProcessor.State state = ConsumableProcessor.State.Idle;
 	public Consumable currentConsumable = null;
@@ -29,6 +30,7 @@ public class ConsumableProcessor : IConsumableUser
 
 	public OnProcessing onProcessingStart;
 	public OnProcessing onProcessingEnd;
+
 
 
 	public override bool Use()
@@ -110,6 +112,8 @@ public class ConsumableProcessor : IConsumableUser
 
 		if( onProcessingStart != null )
 			onProcessingStart( subject );
+
+		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(processingSound) );
 
 		yield return new WaitForSeconds( processingTime );
 		

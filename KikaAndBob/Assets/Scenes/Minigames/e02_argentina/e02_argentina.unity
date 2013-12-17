@@ -5544,6 +5544,7 @@ MonoBehaviour:
   fromState: 0
   toState: 1
   processingTime: 3
+  processingSound: Blender01
   state: 1
   currentConsumable: {fileID: 0}
 --- !u!1 &297303107
@@ -14104,6 +14105,7 @@ GameObject:
   - 4: {fileID: 616618172}
   - 114: {fileID: 616618171}
   - 114: {fileID: 616618173}
+  - 114: {fileID: 616618174}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -14154,6 +14156,19 @@ MonoBehaviour:
   iceCream: {fileID: 11400000, guid: eb6445cc0cd8447d983d1a1457f17308, type: 2}
   stew: {fileID: 11400000, guid: a0f75ab7cf03b4a3c93ebc8f8ff30537, type: 2}
   started: 0
+--- !u!114 &616618174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 616618170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 223b8f2e9c18b434e99ff7f70115f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  errorTexture: {fileID: 0}
+  errorAudio: {fileID: 0}
 --- !u!1 &618492503
 GameObject:
   m_ObjectHideFlags: 0
@@ -23168,6 +23183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 416711612}
+  producingSound: Blob01
 --- !u!212 &731191480
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23457,6 +23473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 1471010960}
+  producingSound: Blob01
 --- !u!212 &774769340
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23663,6 +23680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 1033872562}
+  producingSound: Blob01
 --- !u!212 &828114746
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24530,6 +24548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 1819583702}
+  producingSound: Blob01
 --- !u!212 &842426942
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31222,6 +31241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ac4af1ffdb0048a19d444611e825484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  removeSound: Dish02
 --- !u!1 &1396820087
 GameObject:
   m_ObjectHideFlags: 0
@@ -33964,6 +33984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 962309639}
+  producingSound: Blob01
 --- !u!61 &1542359806
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -38802,6 +38823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   produces: {fileID: 483094421}
+  producingSound: Blob01
 --- !u!4 &1840854655
 Transform:
   m_ObjectHideFlags: 0
@@ -39221,6 +39243,7 @@ MonoBehaviour:
   fromState: 0
   toState: 1
   processingTime: 3
+  processingSound: 
   state: 1
   currentConsumable: {fileID: 0}
 --- !u!61 &1923563257

@@ -5,7 +5,8 @@ using System.Collections;
 // example: fruit in a basket
 public class ConsumableProducer : IConsumableUser
 {
-	public Consumable produces = null; 
+	public Consumable produces = null;
+	public string producingSound = "";
 
 	protected void Awake()
 	{
@@ -31,7 +32,9 @@ public class ConsumableProducer : IConsumableUser
 
 		newProduct.State = produces.State;
 
-		DinnerDashManager.use.Mover.AddConsumable(newProduct);
+		DinnerDashManager.use.Mover.AddConsumable(newProduct); 
+
+		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(producingSound) );
 
 		return true;
 	}

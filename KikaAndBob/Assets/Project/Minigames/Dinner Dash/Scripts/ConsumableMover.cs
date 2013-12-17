@@ -386,6 +386,8 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		{
 			// TODO: pick the one that's still empty. If not open... hmz, figure out what to do
 			unprocessedVisualizer.Visualize( unprocessedItems );
+
+			LugusAudio.use.SFX ().Play ( LugusResources.use.Shared.GetAudio("Dish01") ); 
 		}
 
 
@@ -398,6 +400,8 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		// TODO: score!
 		GameObject.Destroy( payment.gameObject );
 		Debug.LogWarning (name + " : NEW PAYMENT BABY!" );
+
+		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio("MoneyCheck01") );
 	}
 
 	public void SetupLocal()
