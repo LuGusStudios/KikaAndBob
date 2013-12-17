@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +12,16 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 	public GameObject foreground = null;
 	public GameObject[] lanePrefabs;
 	public GameObject[] laneItemPrefabs;
+	protected LugusAudioTrackSettings musicSettings = null;
+	protected LugusAudioSource backgroundAudio = null;
+
+	void Awake()
+	{
+		musicSettings = new LugusAudioTrackSettings();
+		musicSettings.Loop(true);
+
+		backgroundAudio = GameObject.Find("BackgroundMusic").GetComponent<LugusAudioSource>();
+	}
 
 	public void LoadLevel(string levelName)
 	{
@@ -29,6 +39,18 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		Debug.Log("Loading level: " + levelIndex);
 
 		BuildLevel(levels[levelIndex]);
+
+		if (!string.IsNullOrEmpty(levels[levelIndex].backgroundMusicName))
+		{
+			backgroundAudio.key = levels[levelIndex].backgroundMusicName;
+			backgroundAudio.Play();
+
+			//LugusAudio.use.Music().Play(LugusResources.use.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
+		}
+		else
+		{
+			Debug.LogWarning("Level music name was null or empty.");
+		}
 	}
 
 	protected void BuildLevel(FroggerLevelDefinition level)
@@ -87,12 +109,12 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			laneScript.minGapDistance = laneDefinition.minGapDistance;
 			laneScript.maxGapDistance = laneDefinition.maxGapDistance;
 			laneScript.repeatAllowFactor = laneDefinition.repeatAllowFactor;
-			laneScript.spawnItems = FindMovingLaneItems(laneDefinition.spawnItems);
-			laneScript.staticItems = FindStaticLaneItems(laneDefinition.spawnItems);
+			laneScript.dynamicSpawnItems = FindMovingLaneItems(laneDefinition.spawnItems);
+			laneScript.staticSpawnItems = FindStaticLaneItems(laneDefinition.spawnItems, laneGameObject);
 
 			// we can't link lane item sounds to lanes directly, since we can't predict what sort of lane items will be placed on which lane
 			// instead, LaneItems have a lanePresenceSound property which, if not null, will be added to the lane's enter sounds
-			foreach(FroggerLaneItem laneItem in laneScript.spawnItems)
+			foreach(FroggerLaneItem laneItem in laneScript.dynamicSpawnItems)
 			{
 				if (laneItem.lanePresenceSound != null && !laneScript.enterSounds.Contains(laneItem.lanePresenceSound))
 				{
@@ -182,7 +204,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		return laneItems;
 	}
 
-	protected Dictionary<float, FroggerLaneItem> FindStaticLaneItems(FroggerLaneItemDefinition[] ids)
+	protected Dictionary<float, FroggerLaneItem> FindStaticLaneItems(FroggerLaneItemDefinition[] ids, GameObject parentLane)
 	{
 		Dictionary<float, FroggerLaneItem> laneItems = new Dictionary<float, FroggerLaneItem>();
 
@@ -194,6 +216,12 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			if (string.IsNullOrEmpty(laneItemDefinition.spawnID))
 			{
 				Debug.LogError("Lane item ID was empty or null!");
+				continue;
+			}
+
+			if (laneItems.ContainsKey(Mathf.Clamp(laneItemDefinition.positioning, 0, 1)))
+			{
+				Debug.LogError("There is already something placed at exactly this location on this lane. Lane: " + parentLane.name +" Item: " + laneItemDefinition.spawnID + " Position: " + laneItemDefinition.positioning);
 				continue;
 			}
 			

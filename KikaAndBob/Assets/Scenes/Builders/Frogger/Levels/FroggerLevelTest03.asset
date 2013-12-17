@@ -11,6 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
   m_Name: FroggerLevelTest03
   m_EditorClassIdentifier: 
+  backgroundMusicName: HerdRunning01
   lanes:
   - laneID: LaneGrass
     goRight: 0
@@ -23,6 +24,10 @@ MonoBehaviour:
       positioning: .25
     - spawnID: Pickup
       positioning: .75
+    - spawnID: Rock
+      positioning: .649999976
+    - spawnID: Rock
+      positioning: .349999994
   - laneID: LaneWater
     goRight: 1
     speed: 4
@@ -32,29 +37,18 @@ MonoBehaviour:
     spawnItems:
     - spawnID: Log03
       positioning: 0
-    - spawnID: Crocodile01
+    - spawnID: Crocodile02
       positioning: 0
-  - laneID: LaneWater
+    - spawnID: Log02
+      positioning: 0
+  - laneID: LaneWaterEnd
     goRight: 0
     speed: 4
     minGapDistance: 4
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     spawnItems:
-    - spawnID: Log03
-      positioning: 0
-    - spawnID: Crocodile01
-      positioning: 0
-  - laneID: LaneWaterEnd
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    spawnItems:
     - spawnID: Log01
-      positioning: 0
-    - spawnID: Log02
       positioning: 0
     - spawnID: Crocodile01
       positioning: 0
@@ -73,6 +67,8 @@ MonoBehaviour:
       positioning: .600000024
     - spawnID: Pickup
       positioning: .800000012
+    - spawnID: Rock
+      positioning: .5
   - laneID: LaneDirt
     goRight: 1
     speed: 4
@@ -80,8 +76,8 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     spawnItems:
-    - spawnID: Elephant
-      positioning: 0
+    - spawnID: Rock
+      positioning: .550000012
   - laneID: LaneDirt
     goRight: 1
     speed: 4
@@ -89,11 +85,106 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     spawnItems:
-    - spawnID: Pickup
+    - spawnID: Rock
+      positioning: .449999988
+    - spawnID: SpikyShrub
       positioning: .330000013
+    - spawnID: SpikyShrub
+      positioning: .769999981
+    - spawnID: SpikyShrub
+      positioning: .0500000007
     - spawnID: Pickup
-      positioning: .660000026
-  - laneID: LaneEndWin
+      positioning: .200000003
+  - laneID: LaneLionAmbush
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: LionSitting
+      positioning: .5
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: SpikyShrub
+      positioning: .449999988
+    - spawnID: Rock
+      positioning: .200000003
+    - spawnID: SpikyShrub
+      positioning: .800000012
+    - spawnID: Pickup
+      positioning: .699999988
+    - spawnID: SpikyShrub
+      positioning: .800000012
+    - spawnID: Pickup
+      positioning: .100000001
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Rock
+      positioning: .5
+    - spawnID: Pickup
+      positioning: .699999988
+    - spawnID: Pickup
+      positioning: .899999976
+    - spawnID: Pickup
+      positioning: .200000003
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: SpikyShrub
+      positioning: .550000012
+    - spawnID: Piclkup
+      positioning: .850000024
+    - spawnID: Rock
+      positioning: .699999988
+  - laneID: LaneLionAmbush
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: LionSitting
+      positioning: .5
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: SpikyShrub
+      positioning: .400000006
+    - spawnID: Pickup
+      positioning: .600000024
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    spawnItems:
+    - spawnID: Pickup
+      positioning: .5
+    - spawnID: Pickup
+      positioning: .899999976
+    - spawnID: Pickup
+      positioning: .300000012
+  - laneID: LaneEnd
     goRight: 0
     speed: 4
     minGapDistance: 4

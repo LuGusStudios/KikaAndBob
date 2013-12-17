@@ -8,7 +8,6 @@ public class FroggerGameManagerDefault : MonoBehaviour
 {
 	public bool gameRunning = false;
 	private bool firstFrame = true;
-	private int pickupCount = 0;
 	private int currentIndex = 0;
 
 	public void StartNewGame()
@@ -22,8 +21,6 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		Debug.Log ("Starting new game.");
 		// TO DO: Give some sort of progression system!
 		FroggerLevelManager.use.LoadLevel(levelIndex);
-
-		pickupCount = 0;
 
 		FroggerPlayer lastPlayer = null;
 		foreach(FroggerPlayer player in (FroggerPlayer[]) FindObjectsOfType(typeof(FroggerPlayer)))
@@ -58,12 +55,6 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	{
 		gameRunning = false;
 		FroggerGUIManager.use.GameLost();
-	}
-
-	public void IncreasePickupCount(int amount)
-	{
-		pickupCount ++;
-		Debug.Log("Increased pickup count to " + pickupCount);
 	}
 
 	void OnGUI()
