@@ -39,9 +39,11 @@ public class FollowCameraContinuous : MonoBehaviour
 	
 	protected void Update()
 	{
-		transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x + xOffset, Time.deltaTime * speed) );
+		// http://forum.unity3d.com/threads/162694-SmoothMovementTest-should-help-eliminate-Hiccup-sources
+		// http://marrt.elementfx.com/SmoothMovementTest.html
 
-		//transform.position += transform.right * 1 * Time.deltaTime;
+		// WORKING if rigidbody is set to interpolate
+		transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x + xOffset, Time.deltaTime * speed) );
 	}
 	
 	protected void FixedUpdate () 

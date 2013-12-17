@@ -310,6 +310,12 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 
 	public void AddConsumable(Consumable item)
 	{
+		if( item.definition.isPayment )
+		{
+			ProcessPayment(item);
+			return;
+		}
+
 		List<Consumable> items = null;
 		if( item.State == Lugus.ConsumableState.Unprocessed )
 		{
@@ -347,6 +353,13 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 
 		//item.renderer.sortingOrder = this.renderer.sortingOrder;
 		//item.transform.position = this.transform.position +  new Vector3(10, renderer.bounds.max.y - 10, 0);
+	}
+
+	public void ProcessPayment(Consumable payment)
+	{
+		// TODO: score!
+		GameObject.Destroy( payment.gameObject );
+		Debug.LogWarning (name + " : NEW PAYMENT BABY!" );
 	}
 
 	public void SetupLocal()
