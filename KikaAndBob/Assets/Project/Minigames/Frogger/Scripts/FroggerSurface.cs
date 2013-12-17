@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public abstract class FroggerSurface : MonoBehaviour {
 
 	public List<AudioClip> enterSounds = new List<AudioClip>();
-	private bool onSurface = false;
+	protected bool onSurface = false;
 	
 
 	public void Enter(FroggerCharacter character)

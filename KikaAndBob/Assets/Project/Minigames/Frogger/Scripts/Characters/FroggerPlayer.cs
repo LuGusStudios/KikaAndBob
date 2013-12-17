@@ -10,19 +10,19 @@ public class FroggerPlayer : FroggerCharacter {
 
 		if (!movingToLane && FroggerGameManager.use.gameRunning)
 		{
-			if (Input.GetKeyDown(KeyCode.UpArrow))
+			if (LugusInput.use.Key(KeyCode.UpArrow))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneAbove(currentLane));
 			}
-			else if (Input.GetKeyDown(KeyCode.DownArrow))
+			else if (LugusInput.use.Key(KeyCode.DownArrow))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneBelow(currentLane));
 			}
-			else if (Input.GetKey(KeyCode.LeftArrow))
+			else if (LugusInput.use.Key(KeyCode.LeftArrow))
 			{
 				MoveSideways(false);
 			}
-			else if (Input.GetKey(KeyCode.RightArrow))
+			else if (LugusInput.use.Key(KeyCode.RightArrow))
 			{
 				MoveSideways(true);
 			}
