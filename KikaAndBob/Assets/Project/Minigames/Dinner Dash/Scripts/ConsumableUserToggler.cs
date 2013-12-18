@@ -25,7 +25,6 @@ public class ConsumableUserToggler : MonoBehaviour
 			foreach( IConsumableUser target in targets )
 			{
 				target.onUsed += OnTargetUsed;
-				target.gameObject.SetActive(false);
 			}
 		}
 
@@ -82,6 +81,7 @@ public class ConsumableUserToggler : MonoBehaviour
 	{ 
 		foreach( IConsumableUser target in targets )
 		{
+			target.gameObject.SetActive(false);
 			LugusCoroutines.use.StartRoutine( EnableRoutine(target) );
 		}
 	}
