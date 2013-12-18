@@ -111,6 +111,14 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 
 		skyLayer.onSectionSwitch -= OnSkyLayerTransitioned;
 
+
+		// make sure sky doesn't show the transition again
+		// shouldn't happen if the transitionSkyOffset is set correctly, but you can never be too sure :)
+		int oneAhead = (currentThemeIndex + 1) % themes.Length;
+		skyLayer.baseLayer = themes[ oneAhead ].sky;
+		skyLayer.detailLayer = themes[ oneAhead ].skyDetails;
+
+
 		LugusCoroutines.use.StartRoutine( GroundTransitionRoutine(nextSection) );
 	}
 
@@ -178,7 +186,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 			NextTheme();
 		}
 
-		if( LugusDebug.debug && !themeTransitionInProgress )
+		if( /*LugusDebug.debug &&*/ !themeTransitionInProgress )
 		{
 			//NextTheme();
 		}

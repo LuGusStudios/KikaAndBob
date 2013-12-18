@@ -47,13 +47,19 @@ public class LayerSection : MonoBehaviour
 			GameObject detail = new GameObject("Detail");
 			details.Add( detail );
 
+			if( detail.name.Contains("FrontTree03") )
+			{
+
+			}
+
 			detail.transform.parent = this.transform;
 			detail.transform.position = baseLayer.position;
 			
 			detail.transform.position = detail.transform.position.zAdd( -5.0f );
-			// /2.0f because position is already in the center
-			// extra /100.0f because the pixel-to-unit ratio is 100 and width is in pixels, while position is in units
-			detail.transform.position = detail.transform.position.xAdd ( (width / 2.0f) * Random.Range(-1.0f, 1.0f) ); 
+			// /2.0f because position is already in the center 
+			// 0.3 to make sure we don't spawn past the right edge (which would pop the elements when the current section would be recycled)
+			// TODO: improve this: check the bounds of the sprite renderer to make sure it doesn't exit the section on the right, and not too much on the left
+			detail.transform.position = detail.transform.position.xAdd ( (width / 2.0f) * Random.Range(-1.0f, 0.3f) ); 
 			if( spawner.detailsRandomY )
 			{
 				detail.transform.position = detail.transform.position.yAdd( new DataRange(-2.0f, 0.5f).Random() );
@@ -93,10 +99,10 @@ public class LayerSection : MonoBehaviour
 			if( mover != null )
 			{
 				ParallaxMover moverDetail = detail.AddComponent<ParallaxMover>();
-				if( mover.speed < 0 )
-					moverDetail.speed = /*mover.speed -*/ 0.5f;
-				else
-					moverDetail.speed = /*mover.speed +*/ 0.5f;
+				//if( mover.speed < 0 )
+					moverDetail.speed = /*mover.speed*/ -1.0f;
+				//else
+				//	moverDetail.speed = mover.speed + 1.0f;
 				
 			} 
 		}
