@@ -71,6 +71,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	public List<Transform> actionPoints = new List<Transform>();
 	public int currentActionPointIndex = 0;
 
+	protected bool finished = false;
+	protected bool missed = false;
+
 	public DanceHeroLaneItem item = null;
 
 	public void SetupLocal()
@@ -98,6 +101,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	
 	protected void Update () 
 	{
+		if (finished) // stop moving even if we're still doing some sort of effect
+			return;
+
 		transform.position += new Vector3(item.speed * Time.deltaTime, 0.0f, 0.0f);
 
 		CheckAction( actionPoints[currentActionPointIndex] );
@@ -106,7 +112,6 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	protected void CheckAction(Transform actionPoint)
 	{
 		// TODO: if the user misses the press and we move offscreen, make sure we're destroyed as well
-		
 		if( Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
 		{
 			if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
@@ -137,10 +142,43 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				}
 			}
 		}
+		else
+		{
+			// in the case of multiple point checks, only ever deal with the last point
+			if (actionPoints[actionPoints.Count -1] == actionPoint)
+			{
+				// if we're 0.8f past the action point, the player "missed" this one
+				// after that, check if the point is offscreen and if yes, delete it
+				if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
+				{
+					MissedSingle();
+					if (missed)
+					{
+						CheckOffScreen();
+					}
+				}
+			}
+
+		}
+	}
+
+	protected void MissedSingle()
+	{
+		if (missed)
+			return;
+
+		missed = true;
+		DanceHeroFeedback.use.UpdateScore(-1);
+	}
+
+	protected void CheckOffScreen()
+	{
+
 	}
 
 	protected void DetectSingle(bool keyDown)
 	{
+		DanceHeroFeedback.use.UpdateScore(1);
 		// TODO
 		GameObject.Destroy( this.gameObject );
 	}

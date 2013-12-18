@@ -69,8 +69,74 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 	protected void CreateLevels()
 	{
-		LoadLevelMetallica();
+		//LoadLevelMetallica();
+		LoadLevelChina();
 	}
+
+	protected void LoadLevelChina()
+	{
+		Debug.Log("Loading level China");
+
+		DanceHeroLane lane1 = GetLane("Lane1");
+		DanceHeroLane lane2 = GetLane("Lane2");
+		DanceHeroLane lane3 = GetLane("Lane3");
+		
+		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+		
+		
+		// GLOBAL_CUMULATIVE
+		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
+		lane1.AddItem( 0.0f );
+		lane2.AddItem( 0.3f );
+		lane3.AddItem( 0.4f );
+
+		lane2.AddItem( 1f );
+		lane1.AddItem( 0.3f );
+		lane2.AddItem( 0.3f );
+		lane3.AddItem( 0.7f );
+
+		lane1.AddItem( 1.2f );
+		lane2.AddItem( 0.3f );
+		lane3.AddItem( 0.3f );
+		lane2.AddItem( 0.3f );
+
+		lane1.AddItem( 6.0f );
+		lane2.AddItem( 0.3f );
+		lane3.AddItem( 0.3f );
+		lane2.AddItem( 0.3f );
+		lane1.AddItem( 0.3f );
+		lane3.AddItem( 0.3f, 1 );
+		lane3.AddItem( 0.3f, 1 );
+
+
+
+
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+		lane3.AddItem( 0.3f);
+
+
+	}
+
 
 	protected void LoadLevel1()
 	{
@@ -144,9 +210,21 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	{
 		SetupGlobal();
 	}
-	
+
+	float interval = 0;
 	protected void Update () 
 	{
-	
+		interval += Time.deltaTime;
+		if (Input.GetKeyDown(KeyCode.Space))
+			interval = 0;
+	}
+
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+
+		GUILayout.Box(Time.time.ToString("0.000"));
+		GUILayout.Box(interval.ToString("0.000"));
 	}
 }
