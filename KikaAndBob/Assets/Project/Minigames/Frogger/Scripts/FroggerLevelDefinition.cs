@@ -4,6 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class FroggerLevelDefinition : ScriptableObject {
 
+	public string backgroundMusicName = "";
 	public FroggerLaneDefinition[] lanes;
 
 	// Arrays of serialized classes are not created with default values
