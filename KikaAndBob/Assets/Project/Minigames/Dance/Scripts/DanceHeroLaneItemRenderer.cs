@@ -25,7 +25,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			
 			actionPoint.name = "Point";
 			actionPoint.transform.parent = container.transform;
-			actionPoint.transform.position = container.transform.position;
+			actionPoint.transform.position = container.transform.position + new Vector3(0, 0, -1);
 
 			renderer.actionPoints.Add( actionPoint.transform );
 		}
@@ -147,7 +147,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		{
 			if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
 			{
-				missed = true;
+				MissedSingle();
 				CheckOffScreen(actionPoint);
 			}
 		}
@@ -159,7 +159,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			return;
 
 		missed = true;
-		DanceHeroFeedback.use.UpdateScore(-1);
+		DanceHeroFeedback.use.UpdateScore(false);
 	}
 
 	protected void CheckOffScreen(Transform actionPoint)
@@ -173,7 +173,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	protected void DetectSingle(bool keyDown, Transform actionPoint)
 	{
 		DanceHeroFeedback.use.HighLightLane(item.lane.actionPoint);
-		DanceHeroFeedback.use.UpdateScore(1);
+		DanceHeroFeedback.use.UpdateScore(true);
 		hit = true;
 		DeleteActionPoint(actionPoint);
 	}
@@ -200,7 +200,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 			// we've hit the first actionPoint and pressed button down: ideal
 			
-			GameObject.Destroy(actionPoints[currentActionPointIndex]);
+			GameObject.Destroy(actionPoints[currentActionPointIndex].gameObject);
 
 			currentActionPointIndex++; 
 		}
@@ -209,7 +209,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		{
 			hit = true;
 			DanceHeroFeedback.use.HighLightLane(item.lane.actionPoint);
-			DanceHeroFeedback.use.UpdateScore(1);
+			DanceHeroFeedback.use.UpdateScore(true);
 
 			DeleteActionPoint(actionPoint);
 

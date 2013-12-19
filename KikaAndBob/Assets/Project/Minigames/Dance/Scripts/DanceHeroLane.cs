@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SmoothMoves;
 
 
 public class DanceHeroLane : MonoBehaviour 
@@ -8,12 +9,15 @@ public class DanceHeroLane : MonoBehaviour
 	public List<DanceHeroLaneItem> items = new List<DanceHeroLaneItem>();
 
 	public Transform actionPoint = null;
+	public string attackAnimation = null;
+	public string idleAnimation = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
 
 	// public GameObject character = null;
 
 	protected float totalDelay = 0.0f;
+	protected BoneAnimation characterAnim = null;
 
 	public void Hide()
 	{
@@ -54,6 +58,7 @@ public class DanceHeroLane : MonoBehaviour
 	public void Begin()
 	{
 		LugusCoroutines.use.StartRoutine( LaneRoutine() );
+		characterAnim.Play(idleAnimation);
 	}
 
 	protected IEnumerator LaneRoutine()
@@ -70,6 +75,13 @@ public class DanceHeroLane : MonoBehaviour
 
 			SpawnItem( item );
 
+
+			// only play a new fight anim if the previous one isn't still playing
+			if (!characterAnim.IsPlaying(attackAnimation))
+			{
+				characterAnim.PlayQueued(attackAnimation, QueueMode.PlayNow, PlayMode.StopAll);
+				characterAnim.PlayQueued(idleAnimation, QueueMode.CompleteOthers);
+			}
 
 			++currentItemIndex;
 		}
@@ -90,6 +102,31 @@ public class DanceHeroLane : MonoBehaviour
 		if( actionPoint == null )
 		{
 			Debug.LogError(name + " : no ActionPoint known for this lane!");
+		}
+
+		if( characterAnim == null )
+		{
+			characterAnim = transform.FindChild("Character").GetComponent<BoneAnimation>();
+		}
+		
+		if( characterAnim == null )
+		{
+			Debug.LogError(name + " : no character known for this lane!");
+		}
+
+		if (string.IsNullOrEmpty(attackAnimation))
+		{
+			Debug.LogError(name + "Attack animation name is not entered.");
+		}
+
+		if(string.IsNullOrEmpty(idleAnimation))
+		{
+			idleAnimation = characterAnim.GetComponent<DefaultBoneAnimation>().clipName;
+		}
+
+		if(string.IsNullOrEmpty(idleAnimation))
+		{
+			Debug.LogError(name + "Idle animation name is not entered or default bone animation component is missing.");
 		}
 	}
 	

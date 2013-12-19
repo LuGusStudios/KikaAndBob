@@ -6,10 +6,12 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public int scoreValue = 15;	// 0-10 = bad, 10 - 20 = neutral, 20 - 30 = good
 	protected BoneAnimation bobAnim = null;
-
 	protected string animationIdle = "BobBalance_Idle";
 	protected string animationStruggle = "BobBalance_Struggle";
 	protected string animationWin = "BobBalance_win";
+	protected int failCount = 0;
+	protected int succesCount = 0;
+
 
 	protected AudioClip laneHitSound = null;
 	
@@ -37,12 +39,28 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	{
 		bobAnim.Play("BobBalance_Idle", PlayMode.StopAll);
 	}
-
-	public void UpdateScore(int amount)
+	
+	public void UpdateScore(bool succes)
 	{
-		Debug.Log("Updating score to :" + scoreValue);
-		scoreValue += amount;
+		UpdateScore(succes, 1);
+	}
+
+	public void UpdateScore(bool succes, int amount)
+	{
+		if (succes)
+		{
+			scoreValue += amount;
+			succesCount += amount;
+		}
+		else
+		{
+			scoreValue -= amount;
+			failCount += amount;
+		}
+
 		scoreValue = Mathf.Clamp(scoreValue, 0, 30);
+
+		Debug.Log("Updating score to :" + scoreValue + ". Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
 		ChangeAnimation();
 	}
@@ -84,8 +102,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	IEnumerator LaneHighlight(Transform actionPoint)
 	{
-	
-
 		Transform highlight = actionPoint.FindChild("Highlight");
 
 		Debug.Log("Highlighting: " + actionPoint.name, highlight.gameObject);
