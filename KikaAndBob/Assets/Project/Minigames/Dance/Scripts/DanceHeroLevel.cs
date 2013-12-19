@@ -108,33 +108,8 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		lane2.AddItem( 0.3f );
 		lane1.AddItem( 0.3f );
 		lane3.AddItem( 0.3f, 1 );
-		lane3.AddItem( 0.3f, 1 );
 
-
-
-
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-		lane3.AddItem( 0.3f);
-
-
+	
 	}
 
 
