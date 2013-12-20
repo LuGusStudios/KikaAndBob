@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 public class DanceHeroLaneItemRenderer : MonoBehaviour 
 {
-	protected static int itemCount = 0; // this serves no purpose except for adding a different number to every lane item for debugging
 	public static DanceHeroLaneItemRenderer Create(DanceHeroLaneItem item)
 	{
 		DanceHeroLane lane = item.lane;
 		// TODO: make this more official or provide prefabs for ActionPoint visualizers
 		GameObject actionIndicatorPrefab = lane.transform.FindChild("ActionPoint").gameObject;
 
-		GameObject container = new GameObject("Item" + itemCount);
+		GameObject container = new GameObject("Item");
 		container.transform.parent = lane.transform;
 		container.transform.position = lane.transform.position;
 
@@ -28,7 +27,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			// don't forget to disable the highlight, because it might still have been active from the highlight effect
 			actionPoint.transform.FindChild("Highlight").gameObject.SetActive(false); 
 
-			actionPoint.name = "Item" + itemCount.ToString()+"_Point";
+			actionPoint.name = "Point";
 			actionPoint.transform.parent = container.transform;
 			actionPoint.transform.position = container.transform.position + new Vector3(0, 0, -1);
 
@@ -41,7 +40,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			// point 1
 			GameObject actionPoint = (GameObject) GameObject.Instantiate( actionIndicatorPrefab );
 			
-			actionPoint.name = "Item" + itemCount.ToString()+"_Point1";
+			actionPoint.name = "Point1";
 			actionPoint.transform.parent = container.transform;
 			actionPoint.transform.position = container.transform.position;
 			// we're directly instantiating the lane action point
@@ -58,7 +57,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			// point 2
 			actionPoint = (GameObject) GameObject.Instantiate( actionIndicatorPrefab );
 			
-			actionPoint.name = "Item" + itemCount.ToString()+"_Point2";
+			actionPoint.name = "Point2";
 			actionPoint.transform.parent = container.transform;
 			actionPoint.transform.position = container.transform.position + new Vector3(-1 * units, 0.0f, 0.0f);
 			// we're directly instantiating the lane action point
@@ -75,8 +74,6 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			renderer.actionPoints.Add( actionPoint.transform );
 
 		}
-
-		itemCount++;
 
 		return renderer;
 	}
@@ -162,13 +159,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				}
 			}
 		}
-		else
+		else if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
 		{
-			if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
-			{
-				MissedSingle();
-				CheckOffScreen(actionPoint);
-			}
+			MissedSingle();
+			CheckOffScreen(actionPoint);
 		}
 	}
 
@@ -178,7 +172,35 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			return;
 
 		missed = true;
-		DanceHeroFeedback.use.UpdateScore(false);
+		DanceHeroFeedback.use.UpdateScore(false, item.lane);
+
+		foreach(Transform t in actionPoints)
+		{
+			foreach(SpriteRenderer sr in t.GetComponentsInChildren<SpriteRenderer>())
+			{
+				// darken sprite, slighty transparent
+				sr.color = (sr.color * 0.5f).a(sr.color.a * 0.8f);
+			}
+
+			if (item.type == KikaAndBob.LaneItemType.SINGLE)
+				t.gameObject.ScaleTo(t.localScale * 0.6f).Time(0.25f).EaseType(iTween.EaseType.easeOutQuad).Execute();
+			else
+			{
+				t.gameObject.ScaleTo(t.localScale * 0.6f).Time(0.25f).EaseType(iTween.EaseType.easeOutQuad).Execute();
+				if (t.name == "Point2")
+				{
+					Transform line = t.FindChild("Line");
+
+					if (line == null)
+					{
+						Debug.LogError("Could not find Line game object under this action point.");
+						continue;
+					}
+
+					line.gameObject.ScaleTo(new Vector3(line.localScale.x / 0.6f, line.localScale.y, line.localScale.z)).Time(0.25f).EaseType(iTween.EaseType.easeOutQuad).Execute();
+				}
+			}
+		}
 	}
 
 	protected void CheckOffScreen(Transform actionPoint)
@@ -192,11 +214,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	protected void DetectSingle(bool keyDown, Transform actionPoint)
 	{
 		DanceHeroFeedback.use.HighLightLane(this.item.lane.actionPoint);
-		DanceHeroFeedback.use.UpdateScore(true);
+		DanceHeroFeedback.use.UpdateScore(true, item.lane);
 		hit = true;
 
 		GameObject.Destroy(this.gameObject);
-		//DeleteActionPoint(actionPoint);
 	}
 
 	protected void DeleteActionPoint(Transform actionPoint)
@@ -230,7 +251,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		{
 			hit = true;
 			DanceHeroFeedback.use.HighLightLane(item.lane.actionPoint);
-			DanceHeroFeedback.use.UpdateScore(true);
+			DanceHeroFeedback.use.UpdateScore(true, item.lane);
 
 			DeleteActionPoint(actionPoint);
 

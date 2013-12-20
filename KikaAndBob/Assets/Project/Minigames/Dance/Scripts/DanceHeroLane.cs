@@ -12,6 +12,7 @@ public class DanceHeroLane : MonoBehaviour
 	public Transform actionPoint = null;
 	public string attackAnimation = null;
 	public string idleAnimation = null;
+	public Transform scoreDisplay = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
 	
@@ -150,6 +151,17 @@ public class DanceHeroLane : MonoBehaviour
 		{
 			Debug.LogError(name + "Idle animation name is not entered or default bone animation component is missing.");
 		}
+
+		if( scoreDisplay == null )
+		{
+			scoreDisplay = transform.FindChild("ScoreDisplay");
+		}
+		
+		if( scoreDisplay == null )
+		{
+			Debug.LogError(name + " : no Score Display found for this lane!");
+		}
+
 	}
 	
 	public void SetupGlobal()
