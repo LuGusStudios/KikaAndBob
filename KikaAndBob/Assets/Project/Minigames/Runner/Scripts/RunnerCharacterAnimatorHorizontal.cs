@@ -53,6 +53,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 
 		if( !hitRoutineBusy )
 		{
+			//Debug.LogError("PLAY ANIMATION " + currentAnimationContainer.name + "/" + clipName);
 			currentAnimationContainer.Stop();
 			//Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
 			currentAnimationContainer.Play(clipName);//CrossFade( clipName, 0.5f );
@@ -98,7 +99,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		else
 		{
 			character.onJump += OnJump;
-			character.onHit += OnHit;
+			character.onHit  += OnHit;
 		}
 		
 		PlayAnimation(runningAnimation);
@@ -140,34 +141,80 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		}
 	}
 
+	protected IEnumerator HitAnimationRoutine(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		hitRoutineBusy = false;
+		
+		PlayAnimation( runningAnimation );  
+	}
+
 	protected IEnumerator HitRoutine(RunnerPickup pickup)
 	{
-		hitRoutineBusy = true;
-		
 		PlayAnimation( hitAnimation );
+
+		hitRoutineBusy = true;
 
 		Color originalColor = Color.white;
 		Color color = Color.red;
 
-		float duration = 1.5f;
+		// we want the running animation to start playing before the invulnerability (red blinking) is done
+		LugusCoroutines.use.StartRoutine( HitAnimationRoutine (0.3f) );
+
+		float duration = 1.5f; 
 		int iterations = 5;
 		float partDuration = duration / (float) iterations;
 
 		for( int i = 0; i < iterations; ++i )
 		{
 
-			iTween.ColorTo(this.currentAnimationContainer.gameObject, color, partDuration / 2.0f );
-			
-			yield return new WaitForSeconds( partDuration / 2.0f );
-			
-			iTween.ColorTo(this.currentAnimationContainer.gameObject, originalColor, partDuration / 2.0f );
+			float percentage = 0.0f;
+			float startTime = Time.time;
+			bool rising = true;
+			Color newColor = new Color();
 
-			yield return new WaitForSeconds( partDuration / 2.0f );
+			while( rising )
+			{
+				percentage = (Time.time - startTime) / (partDuration / 2.0f);
+				newColor = originalColor.Lerp (color, percentage);
+
+				foreach( BoneAnimation container in animationContainers )
+					container.SetMeshColor( newColor );
+
+				//currentAnimationContainer.SetMeshColor(newColor );
+
+				if( percentage >= 1.0f )
+					rising = false;
+
+				yield return null;
+			}
+
+			percentage = 0.0f;
+			startTime = Time.time;
+
+			while( !rising )
+			{
+				percentage = (Time.time - startTime) / (partDuration / 2.0f);
+				newColor = color.Lerp (originalColor,percentage);
+
+				//currentAnimationContainer.SetMeshColor( newColor );
+				
+				foreach( BoneAnimation container in animationContainers )
+					container.SetMeshColor( newColor );
+				
+				if( percentage >= 1.0f )
+					rising = true;
+				
+				yield return null;
+			}
 		}
-		
-		hitRoutineBusy = false;
 
-		PlayAnimation( runningAnimation );
+
+		//yield return new WaitForSeconds( duration );
+
+		foreach( BoneAnimation container in animationContainers )
+			container.SetMeshColor( originalColor );
 	}
 
 	

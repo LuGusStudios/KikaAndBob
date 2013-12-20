@@ -2,13 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager> 
+public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 {
+	public TextMesh scoreText = null;
 	public GameObject scoreTextPrefab = null;
 	
 	public int totalScore = 0;
 
-	public void ShowScore( int score, Vector3 position, float time, AudioClip sound, Color color )
+	public void ProcessPickup(RunnerPickup pickup)
+	{
+		if( pickup.positive )
+		{
+			AddScore( 10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
+		}
+		else // negative
+		{
+			AddScore( -10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+		}
+	}
+
+	public void AddScore( int score, Vector3 position, float time, AudioClip sound, Color color )
 	{
 		if( score == 0 )
 		{
@@ -24,32 +37,51 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 		scoreText.transform.position = position.z( 0.0f );
 		scoreText.GetComponent<TextMesh>().text = "" + score;
 		scoreText.GetComponent<TextMesh>().color = color;
-
-		scoreText.MoveTo( scoreText.transform.position + new Vector3(0, 2, 0) ).Time ( time ).Execute(); 
+		
+		scoreText.MoveTo( scoreText.transform.position + new Vector3(2, 2, 0) ).Time ( time ).Execute(); 
 		GameObject.Destroy(scoreText, time);
 		
 		if( sound != null )
 			LugusAudio.use.SFX().Play( sound );
-		
+
+		int oldScore = totalScore;
+
 		int newScore = totalScore + score;
 		if( newScore >= 0 )
 			totalScore += score;
 		else
 			totalScore = 0;
 		
-		//ShowTotalScore();
+		ShowTotalScore(oldScore);
 	}
 
+	public void ShowTotalScore(int oldScore)
+	{
+		scoreText.text = "" + totalScore;
+	}
+	
 	public void SetupLocal()
 	{
 		if( scoreTextPrefab == null )
 		{
 			scoreTextPrefab = GameObject.Find("Score");
 		}
-
+		
 		if( scoreTextPrefab == null )
 		{
 			Debug.LogError(name + " : no ScoreTextPrefab found!");
+		}
+
+		if( scoreText == null )
+		{
+			GameObject scoreTextGO = GameObject.Find ("Score");
+			if( scoreTextGO != null )
+				scoreText = scoreTextGO.GetComponent<TextMesh>();
+		}
+
+		if( scoreText == null )
+		{
+			Debug.LogError(name + " : no ScoreText found! found!");
 		}
 	}
 	
@@ -62,7 +94,7 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 	{
 		SetupLocal();
 	}
-
+	
 	protected void Start () 
 	{
 		SetupGlobal();
@@ -70,6 +102,6 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 	
 	protected void Update () 
 	{
-	
+		
 	}
 }

@@ -18,6 +18,8 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 	public BackgroundTheme[] themes;
 	public BackgroundTheme[] themeTransitions;
 
+	public DataRange timeBetweenThemes = new DataRange(20.0f, 25.0f);
+
 	public BackgroundTheme CurrentTheme
 	{
 		get{ return themes[currentThemeIndex]; }
@@ -84,6 +86,8 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		frontLayer.detailsRandomY = false;
 		frontLayer.StartSpawning();
+
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
 	}
 
 	protected bool themeTransitionInProgress = false;
@@ -163,9 +167,18 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		skyLayer.baseLayer = themes[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themes[ currentThemeIndex ].skyDetails;
 		
-		frontLayer.detailLayer = themeTransitions[ currentThemeIndex ].frontDetails;
+		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		
 		themeTransitionInProgress = false;
+		
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
+	}
+
+	protected IEnumerator NextThemeRoutine()
+	{
+		yield return new WaitForSeconds( timeBetweenThemes.Random () );
+
+		NextTheme();
 	}
 
 

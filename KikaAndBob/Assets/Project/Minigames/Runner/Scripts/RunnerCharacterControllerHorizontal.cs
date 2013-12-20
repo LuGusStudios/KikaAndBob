@@ -30,6 +30,8 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 
 	public void OnPickupHit(RunnerPickup pickup)
 	{
+		RunnerScoreManager.use.ProcessPickup(pickup);
+
 		if( onHit != null )
 			onHit( pickup );
 	}

@@ -31,6 +31,11 @@ public class RunnerPickup : MonoBehaviour
 
 	public virtual void ProcessHit(RunnerCharacterController character)
 	{
+		character.OnPickupHit(this);
+		
+		if( onHit != null )
+			onHit( this );
+
 		if( positive )
 		{
 			// TODO: possibly move this nicely to a gui element that can then light up with the funky pickup!
@@ -40,11 +45,6 @@ public class RunnerPickup : MonoBehaviour
 		{
 			this.collider2D.enabled = false;
 		}
-
-		character.OnPickupHit(this);
-
-		if( onHit != null )
-			onHit( this );
 	}
 
 	public void SetupLocal()
