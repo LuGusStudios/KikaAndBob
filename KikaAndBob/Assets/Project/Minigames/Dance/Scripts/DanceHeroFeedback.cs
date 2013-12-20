@@ -107,8 +107,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	{
 		Transform highlight = actionPoint.FindChild("Highlight");
 
-		Debug.Log("Highlighting: " + actionPoint.name, highlight.gameObject);
-
 		float alpha = 0;
 		float effectTime = 0.5f;
 

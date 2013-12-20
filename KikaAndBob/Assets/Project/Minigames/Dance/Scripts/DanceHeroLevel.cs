@@ -18,6 +18,8 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 	public float cumulativeDelay = 0.0f;
 
+	protected ILugusCoroutineHandle endLevelRoutine = null;
+
 	public void SetupLocal()
 	{
 		if( lanes.Count == 0 )
@@ -70,7 +72,14 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	protected void CreateLevels()
 	{
 		//LoadLevelMetallica();
+
+		if (endLevelRoutine != null && endLevelRoutine.Running)
+			endLevelRoutine.StopRoutine();
+
+		cumulativeDelay = 0;
 		LoadLevelChina();
+
+		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
 	}
 
 	protected void LoadLevelChina()
@@ -109,9 +118,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		lane1.AddItem( 0.3f );
 		lane3.AddItem( 0.3f, 1 );
 
-	
 	}
-
 
 	protected void LoadLevel1()
 	{
@@ -175,7 +182,39 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		//lane3.AddItem( 4.0f, KikaAndBob.LaneItemActionType.RIGHT );
 		//lane3.AddItem( 1.0f, KikaAndBob.LaneItemActionType.RIGHT, 1.2f );
 	}
+
+	protected IEnumerator LevelEndRoutine(float levelDuration)
+	{
+		yield return new WaitForSeconds(levelDuration);
+		
+		LevelFinished();
+	}
 	
+	protected void LevelFinished()
+	{
+		Debug.Log("Level finished!");
+	}
+	
+	protected float GetTotalLevelDuration()
+	{
+		// total level length consists of a number of things:
+		// the amount of time it takes the first point of a lane to reach the input point
+		// the total delay of that lane
+		// the duration of the last item in that lane
+		// we compare all lanes and see which one is the longest in total, based on the values above
+		// finally, add a little delay so the level's not immediately over
+
+		float longestLaneDuration = 0;
+
+		foreach(DanceHeroLane lane in lanes)
+		{
+			if (lane.GetFullDuration() > longestLaneDuration)
+				longestLaneDuration = lane.GetFullDuration();
+		}
+		
+		return longestLaneDuration + 0;
+	}
+
 	protected void Awake()
 	{
 		SetupLocal();

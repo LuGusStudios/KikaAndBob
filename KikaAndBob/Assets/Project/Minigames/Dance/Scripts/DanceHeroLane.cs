@@ -8,16 +8,19 @@ public class DanceHeroLane : MonoBehaviour
 {
 	public List<DanceHeroLaneItem> items = new List<DanceHeroLaneItem>();
 
+	public float speed = 4;
 	public Transform actionPoint = null;
 	public string attackAnimation = null;
 	public string idleAnimation = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
-
+	
+	[HideInInspector]
+	public BoneAnimation characterAnim = null;
 	// public GameObject character = null;
 
 	protected float totalDelay = 0.0f;
-	protected BoneAnimation characterAnim = null;
+
 
 	public void Hide()
 	{
@@ -45,7 +48,8 @@ public class DanceHeroLane : MonoBehaviour
 
 		this.totalDelay += delay;
 
-		items.Add( new DanceHeroLaneItem(this, delay, type, duration) );
+		// we also pass speed here, because that way it remains customizable if ever needed AND is accessible to DanceHeroLevel to calculate the total level length
+		items.Add( new DanceHeroLaneItem(this, delay, type, speed, duration) );
 
 	}
 
@@ -53,6 +57,11 @@ public class DanceHeroLane : MonoBehaviour
 	{
 		AddItem( delay, defaultActionType, duration );
 		//items.Add( new DanceHeroLaneItem(this, delay, defaultActionType, duration) );
+	}
+
+	public float GetLength()
+	{
+		return Vector2.Distance(transform.position.v2(), transform.FindChild("ActionPoint").position.v2());
 	}
 
 	public void Begin()
@@ -85,6 +94,19 @@ public class DanceHeroLane : MonoBehaviour
 
 			++currentItemIndex;
 		}
+	}
+
+	public float GetTotalDelay()
+	{
+		return totalDelay;
+	}
+
+	public float GetFullDuration()
+	{
+		return 
+			Vector2.Distance(transform.position.v2(), transform.FindChild("ActionPoint").position.v2()) / speed +
+			GetTotalDelay() +
+				items[items.Count - 1].duration;
 	}
 
 	protected void SpawnItem(DanceHeroLaneItem item)

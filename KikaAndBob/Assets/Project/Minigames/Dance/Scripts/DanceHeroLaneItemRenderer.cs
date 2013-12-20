@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DanceHeroLaneItemRenderer : MonoBehaviour 
 {
-	protected static int itemCount = 0; // this has no use except for adding a different number to every lane item for debugging
+	protected static int itemCount = 0; // this serves no purpose except for adding a different number to every lane item for debugging
 	public static DanceHeroLaneItemRenderer Create(DanceHeroLaneItem item)
 	{
 		DanceHeroLane lane = item.lane;
@@ -110,6 +110,15 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
+
+		foreach(Transform t in actionPoints)
+		{
+			Vector3 originalScale = t.localScale;
+			t.localScale = Vector3.zero;
+			float timeToReachCharacter = item.lane.characterAnim.transform.localPosition.x / item.lane.speed;
+
+			t.gameObject.ScaleTo(originalScale).Time(0.5f).EaseType(iTween.EaseType.spring).Delay(timeToReachCharacter).Execute();
+		}
 	}
 	
 	protected void Update () 
@@ -125,7 +134,6 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	{
 		if(Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
 		{
-			Debug.Log(actionPoint.name, actionPoint);
 			if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
 			{
 				// TODO: raycast! both down and up
