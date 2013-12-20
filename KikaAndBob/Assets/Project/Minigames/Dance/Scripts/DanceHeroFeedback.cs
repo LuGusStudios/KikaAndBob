@@ -31,13 +31,16 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			bobAnim = GameObject.Find("Bob").GetComponent<BoneAnimation>();
 		if (bobAnim == null)
 			Debug.LogError("No Bob found in scene.");
-
-		laneHitSound = LugusResources.use.GetAudio("Blob01");
 	}
 
 	public void SetupGlobal()
 	{
 		bobAnim.Play("BobBalance_Idle", PlayMode.StopAll);
+
+		if (laneHitSound == null)
+			laneHitSound = LugusResources.use.GetAudio("Blob01");
+		if (laneHitSound == null)
+			Debug.Log("Lane hit sound is missing!");
 	}
 	
 	public void UpdateScore(bool succes)
@@ -62,11 +65,11 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		Debug.Log("Updating score to :" + scoreValue + ". Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
-		ChangeAnimation();
+		ChangeBobAnimation();
 	}
 
 	// blend three animations for value
-	protected void ChangeAnimation()
+	protected void ChangeBobAnimation()
 	{
 		// blend win from 0 - 1 for values 20-30
 		if (scoreValue >= 20)
@@ -115,8 +118,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			"amount", new Vector3(0, 0, -0.5f),
 			"time", effectTime,
 			"easetype", iTween.EaseType.easeInOutQuad));
-		
-
 
 		LugusAudio.use.SFX().Play(laneHitSound);
 		
@@ -133,5 +134,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			alpha -= (1 / (effectTime * 0.5f)) * Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
+		highlight.gameObject.SetActive(false);
 	}
 }

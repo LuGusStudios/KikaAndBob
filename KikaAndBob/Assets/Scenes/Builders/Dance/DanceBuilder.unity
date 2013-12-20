@@ -259,6 +259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPoint: {fileID: 0}
+  attackAnimation: MonkAttack
+  idleAnimation: 
   defaultActionType: -1
 --- !u!1 &207734262
 GameObject:
@@ -2725,7 +2727,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 764994064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 338794550}
@@ -2830,7 +2832,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 912683930}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 173055262}
@@ -6964,6 +6966,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPoint: {fileID: 0}
+  attackAnimation: PandaAttack
+  idleAnimation: 
   defaultActionType: -1
 --- !u!43 &1139151792
 Mesh:
@@ -8099,6 +8103,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPoint: {fileID: 0}
+  attackAnimation: Poacher_Attack
+  idleAnimation: 
   defaultActionType: -1
 --- !u!1 &1209598856
 GameObject:
@@ -8375,6 +8381,7 @@ GameObject:
   - 114: {fileID: 1312578865}
   - 111: {fileID: 1312578864}
   - 137: {fileID: 1312578863}
+  - 114: {fileID: 1312578866}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -8461,7 +8468,7 @@ Animation:
   - {fileID: 7400000, guid: ca0495d55e8b22e4b990fa17922d5777, type: 2}
   - {fileID: 7400000, guid: 27ad6df6a769f294a9a960348263afe3, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!114 &1312578865
@@ -11989,6 +11996,19 @@ MonoBehaviour:
   mMeshColor: {r: 1, g: 1, b: 1, a: 1}
   updateColors: 0
   updatePrefabs: 1
+--- !u!114 &1312578866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312578861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcf112720cd9463aa07edcb9c60bc39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipName: MonkIdle
+  clip: {fileID: 0}
 --- !u!1 &1350289062
 GameObject:
   m_ObjectHideFlags: 0
@@ -12631,6 +12651,7 @@ GameObject:
   - 114: {fileID: 1619499779}
   - 111: {fileID: 1619499778}
   - 137: {fileID: 1619499777}
+  - 114: {fileID: 1619499780}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -12723,7 +12744,7 @@ Animation:
   - {fileID: 7400000, guid: a614877794932d9479d3d2af756b0192, type: 2}
   - {fileID: 7400000, guid: 77e6acd88d118244c8f8a68e09fa672d, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!114 &1619499779
@@ -17432,6 +17453,19 @@ MonoBehaviour:
   mMeshColor: {r: 1, g: 1, b: 1, a: 1}
   updateColors: 0
   updatePrefabs: 1
+--- !u!114 &1619499780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1619499775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcf112720cd9463aa07edcb9c60bc39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipName: Poacher_Idle
+  clip: {fileID: 0}
 --- !u!1 &1628665767
 GameObject:
   m_ObjectHideFlags: 0
@@ -17493,6 +17527,7 @@ GameObject:
   - 114: {fileID: 1635872960}
   - 111: {fileID: 1635872959}
   - 137: {fileID: 1635872958}
+  - 114: {fileID: 1635872961}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -17574,7 +17609,7 @@ Animation:
   - {fileID: 7400000, guid: b3bfb9bd39f86484d8f86230707f0d9c, type: 2}
   - {fileID: 7400000, guid: ddb806933bfc8dc47a147a9b3d434c53, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!114 &1635872960
@@ -21111,6 +21146,19 @@ MonoBehaviour:
   mMeshColor: {r: 1, g: 1, b: 1, a: 1}
   updateColors: 0
   updatePrefabs: 1
+--- !u!114 &1635872961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1635872956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcf112720cd9463aa07edcb9c60bc39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipName: PandaIdle
+  clip: {fileID: 0}
 --- !u!1 &1638678976
 GameObject:
   m_ObjectHideFlags: 0
@@ -22002,7 +22050,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1790698352}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 351427005}
