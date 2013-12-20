@@ -61,12 +61,13 @@ public class DanceHeroLaneItem
 
 
 
-	public DanceHeroLaneItem(DanceHeroLane lane, float delay, KikaAndBob.LaneItemActionType type, float duration = DanceHeroLaneItem.singleDuration)
+	public DanceHeroLaneItem(DanceHeroLane lane, float delay, KikaAndBob.LaneItemActionType type,  float speed, float duration = DanceHeroLaneItem.singleDuration)
 	{
 		this.lane = lane;
 		this.delay = delay;
 		this.actionType = type;
 		this.duration = duration;
+		this.speed = speed;
 
 		if( duration <= DanceHeroLaneItem.singleDuration )
 		{
