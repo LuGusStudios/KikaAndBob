@@ -157,7 +157,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		hitRoutineBusy = true;
 
 		Color originalColor = Color.white;
-		Color color = Color.red;
+		Color color = Color.red; 
 
 		// we want the running animation to start playing before the invulnerability (red blinking) is done
 		LugusCoroutines.use.StartRoutine( HitAnimationRoutine (0.3f) );

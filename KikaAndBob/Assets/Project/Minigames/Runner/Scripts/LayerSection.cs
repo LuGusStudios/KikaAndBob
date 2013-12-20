@@ -100,7 +100,11 @@ public class LayerSection : MonoBehaviour
 			{
 				ParallaxMover moverDetail = detail.AddComponent<ParallaxMover>();
 				//if( mover.speed < 0 )
-					moverDetail.speed = /*mover.speed*/ -1.0f;
+				if( moverDetail.speed.x != 0.0f )
+					moverDetail.speed = new Vector3(-1.0f, 0.0f, 0.0f);
+				if( moverDetail.speed.y != 0.0f )
+					moverDetail.speed = new Vector3(0.0f, -1.0f, 0.0f);
+
 				//else
 				//	moverDetail.speed = mover.speed + 1.0f;
 				
