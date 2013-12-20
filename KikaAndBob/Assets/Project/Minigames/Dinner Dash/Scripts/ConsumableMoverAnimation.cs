@@ -43,11 +43,11 @@ public class ConsumableMoverAnimation : MonoBehaviour
 		
 		// factor in epsilons (ex. going up is not exactly 0.0f, but between [-1.0f, and 1.0f])
 		
-		if( movementDirection.x < -0.1f ) 
+		if( movementDirection.x < -0.2f ) 
 		{ 
 			quadrant = quadrant | (int) KikaAndBob.MovementQuadrant.LEFT;
 		}
-		else if( movementDirection.x > 0.1f )
+		else if( movementDirection.x > 0.2f )
 		{
 			quadrant = quadrant | (int) KikaAndBob.MovementQuadrant.RIGHT;
 		}
@@ -65,7 +65,7 @@ public class ConsumableMoverAnimation : MonoBehaviour
 		
 		if( quadrantReal == KikaAndBob.MovementQuadrant.NONE )
 		{
-			Debug.LogError(name + ": quadrant was NONE " + quadrant + "/" + movementDirection + " : defaulting to RIGHT");
+			//Debug.LogError(name + ": quadrant was NONE " + quadrant + "/" + movementDirection + " : defaulting to RIGHT");
 			quadrantReal = KikaAndBob.MovementQuadrant.RIGHT;
 		}
 		

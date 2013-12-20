@@ -15,21 +15,25 @@ public class RunnerManagerDefault : MonoBehaviour
 
 	public void ShiftLevel(float units)
 	{
-		Debug.Log ("Shifting level " + units + " units");
+		// TODO: make this decent... this is kind of hacky with the layer list etc.
 
 		FollowCameraContinuous camera = LugusCamera.game.GetComponent<FollowCameraContinuous>();
 		Vector3 cameraOriginal = camera.transform.position;
 		float xOffset = camera.character.transform.position.x - camera.transform.position.x;
 
+		
+		Debug.Log ("Shifting level " + units + " units. Cam offset : " + xOffset);
+
 		List<string> layers = new List<string>();
 		layers.Add ("LayerGround");
 		layers.Add ("LayerSky");
+		layers.Add ("LayerFront");
 		layers.Add ("Character");
 
 		foreach( string layer in layers )
 		{
 			GameObject layerObj = GameObject.Find ( layer );
-			if( layerObj.transform.childCount > 0 )
+			if( layerObj.transform.childCount > 0 && layer != "Character" )
 			{
 				foreach( Transform child in layerObj.transform )
 				{
@@ -49,7 +53,7 @@ public class RunnerManagerDefault : MonoBehaviour
 	{
 		if( LugusCamera.game.transform.position.x > shiftXTreshold || LugusInput.use.KeyDown(KeyCode.R) )
 		{
-			ShiftLevel( -1 * LugusCamera.game.transform.transform.position.x ); // shift back to 0.0f
+			ShiftLevel( -1 * LugusCamera.game.transform.position.x ); // shift back to 0.0f
 		}
 	}
 

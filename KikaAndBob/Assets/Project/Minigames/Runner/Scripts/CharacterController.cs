@@ -4,8 +4,15 @@ using System.Collections.Generic;
 
 public class CharacterController : MonoBehaviour 
 {
-	public float speed = 13.0f;
+	//public float speed = 13.0f;
+	public DataRange speedRange = new DataRange(13.0f, 26.0f);
+	public float timeToMaxSpeed = 60.0f;
 	public float jumpForce = 10.0f;
+
+	[HideInInspector]
+	public float speedPercentage = 0.0f;
+
+	protected float startTime = -1.0f;
 
 	public void SetupLocal()
 	{
@@ -15,6 +22,7 @@ public class CharacterController : MonoBehaviour
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+		startTime = Time.time;
 	}
 	
 	protected void Awake()
@@ -37,11 +45,21 @@ public class CharacterController : MonoBehaviour
 
 
 		//rigidbody2D.AddForce(Vector2.right * speed * 10);
+
+		float timeDiff = Time.time - startTime;
+		if( timeDiff > timeToMaxSpeed )
+		{
+			speedPercentage = 1.0f;
+		}
+		else
+		{
+			speedPercentage = timeDiff / timeToMaxSpeed;
+		}
 		
 		// If the player's horizontal velocity is greater than the maxSpeed...
 		//if(Mathf.Abs(rigidbody2D.velocity.x) > speed)
 			// ... set the player's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y);
+			rigidbody2D.velocity = new Vector2(speedRange.ValueFromPercentage(speedPercentage), rigidbody2D.velocity.y);
 
 
 

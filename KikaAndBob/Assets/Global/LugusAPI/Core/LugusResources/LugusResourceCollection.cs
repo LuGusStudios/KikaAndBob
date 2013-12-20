@@ -86,6 +86,9 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 	public AudioClip GetAudio(string key)
 	{
 		AudioClip output = null;
+
+		if( string.IsNullOrEmpty(key) )
+			return output;
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
