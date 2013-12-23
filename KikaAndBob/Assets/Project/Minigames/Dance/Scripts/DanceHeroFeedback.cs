@@ -15,11 +15,23 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected int score = 0;
 	protected float scoreModifier = 1;
 	protected int scoreModifierStep = 1;
-	protected float maxScoreModifier = 4;
+	protected int nextMessageIndex = 1;
+	protected float maxScoreModifier = 9;
 	protected float scoreIncreaseStep = 0.2f;
 	protected TextMesh scoreDisplay = null;
+	protected TextMesh message = null;
 	protected GameObject modifierDisplayPrefab = null;
 	protected AudioClip laneHitSound = null;
+	protected ILugusCoroutineHandle messageRoutine = null;
+	protected string[] messages = new string[]
+	{
+		"Come on, Bob!",
+		"You got it!",
+		"Keep going!",
+		"Great!",
+		"Wow!",
+		"Amazing!"
+	};
 	
 	void Awake()
 	{
@@ -29,6 +41,8 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	void Start()
 	{
 		SetupGlobal();
+		scoreDisplay.text = "0";
+		message.gameObject.SetActive(false);
 	}
 
 	public void SetupLocal()
@@ -47,9 +61,14 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		if (modifierDisplayPrefab == null)
 			modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
-
 		if (modifierDisplayPrefab == null)
 			Debug.LogError("No modifier display found in scene.");
+
+		if (message == null)
+			message = guiParent.FindChild("Message").gameObject.GetComponent<TextMesh>();
+		if (message == null)
+			Debug.LogError("No message game object found in scene.");
+
 
 	}
 
@@ -58,7 +77,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		bobAnim.Play("BobBalance_Idle", PlayMode.StopAll);
 
 		if (laneHitSound == null)
-			laneHitSound = LugusResources.use.GetAudio("Blob01");
+			laneHitSound = LugusResources.use.Shared.GetAudio("Blob01");
 		if (laneHitSound == null)
 			Debug.Log("Lane hit sound is missing!");
 	}
@@ -78,7 +97,14 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			score += scoreAdd;
 			DisplayScoreGainAtLane(lane, scoreAdd);
 
-			if (scoreModifier >= 2 && scoreModifier >= scoreModifierStep && scoreModifier < maxScoreModifier + 1)
+			if (scoreModifier >= (maxScoreModifier / 6) * nextMessageIndex)
+			{
+				DisplayMessage(messages[nextMessageIndex - 1]);
+				nextMessageIndex++;
+			}
+		
+			// we only display the modifier above Bob's head when it has crossed a certain threshold, i.e. scoreModifierStep
+			if (scoreModifier >= scoreModifierStep && scoreModifier < maxScoreModifier + 1)
 			{
 				DisplayModifierAboveBob();
 				scoreModifierStep++;
@@ -86,16 +112,30 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		}
 		else
 		{
+			// only show a "modifier lost" message if some has been built up - otherwise it shows up all the time
+			bool showChange = false;
+			if (scoreModifier > 2)
+			{
+				showChange = true;
+			}
+
+			if (showChange)
+				DisplayMessage("OUCH!");
+
 			scoreValue -= amount;
 			failCount += amount;
 
 			scoreModifier = 1;
 			scoreModifierStep = 1;
+			nextMessageIndex = 1;
+
+			if (showChange)
+				DisplayModifierAboveBob();
 		}
 
 		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
 
-		Debug.Log("Updating score to :" + scoreValue + ". Failcount: " + failCount + " . Succes count: " + succesCount + ".");
+		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
 		scoreDisplay.text = score.ToString();
 
@@ -106,7 +146,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	{
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
-		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 2, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
 		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(scoreModifier).ToString();
 		Destroy(modifierDisplay, 0.5f);
 	}
@@ -135,15 +175,18 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	// blend three animations for value
 	protected void ChangeBobAnimation()
 	{
-		if (scoreModifier >= 3)
+		float step = maxScoreModifier / 3;
+
+		// between 2/3rd - full , win anim
+		if (scoreModifier >= step * 2)
 		{
 			float animWeight = Mathf.Lerp(0, 1, scoreModifier - 2 / 2);
 			bobAnim.Blend(animationWin, animWeight);
 			bobAnim.Blend(animationIdle, 1 - animWeight);
 			bobAnim.Blend(animationStruggle, 0);
 		}
-		// between 10 - 20, idle anim
-		else if (scoreModifier >= 2)
+		// between 1/3rd - 2/3rd , idle anim
+		else if (scoreModifier >= step)
 		{
 			bobAnim.Blend(animationWin, 0);
 			bobAnim.Blend(animationIdle, 1);
@@ -184,6 +227,46 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 //			bobAnim.Blend(animationIdle, 1 - animWeight);
 //			bobAnim.Blend(animationStruggle, animWeight);
 //		}
+	}
+
+	public void DisplayMessage(string messageText)
+	{
+		message.text = messageText;
+
+		if (messageRoutine != null && messageRoutine.Running)
+		{
+			messageRoutine.StopRoutine();
+		}
+
+		messageRoutine = LugusCoroutines.use.StartRoutine(MessageRoutine());
+	}
+
+	protected IEnumerator MessageRoutine()
+	{
+		if (!message.gameObject.activeSelf)
+		{
+			message.gameObject.SetActive(true);
+		}
+
+		message.transform.localScale = Vector3.zero;
+		message.gameObject.ScaleTo(Vector3.one * 0.25f).EaseType(iTween.EaseType.easeOutBack).IsLocal(true).Time(0.5f).Execute();
+
+		message.color = message.color.a(0);
+		while (message.color.a < 1)
+		{
+			message.color = message.color.a(message.color.a + 2f * Time.deltaTime);
+			yield return new WaitForEndOfFrame();
+		}
+
+		yield return new WaitForSeconds(0.5f);
+
+
+		message.gameObject.ScaleTo(Vector3.zero).EaseType(iTween.EaseType.linear).IsLocal(true).Time(0.5f).Execute();
+		while (message.color.a > 0)
+		{
+			message.color = message.color.a(message.color.a - 2f * Time.deltaTime);
+			yield return new WaitForEndOfFrame();
+		}
 	}
 
 	public void HighLightLane(Transform actionPoint)
