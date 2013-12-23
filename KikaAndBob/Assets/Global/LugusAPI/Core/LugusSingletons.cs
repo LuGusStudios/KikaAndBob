@@ -50,6 +50,11 @@ public class LugusSingletonExisting<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		_instance = newInstance;
 	}
+
+	void OnDisable()
+	{
+		_instance = null;
+	}
 	
 	/*
 	void OnEnable()
@@ -112,6 +117,11 @@ public class LugusSingletonRuntime<T> : MonoBehaviour where T : MonoBehaviour
 	public void Change(T newInstance)
 	{
 		_instance = newInstance;
+	}
+	
+	void OnDisable()
+	{
+		_instance = null;
 	}
 }
 

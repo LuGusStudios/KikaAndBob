@@ -191,8 +191,11 @@ public class ConsumableConsumer : IConsumableUser
 		subject.transform.position = place.consumableLocation.position; 
 		//subject.transform.localScale *= 0.5f;
 
+		ILugusAudioTrack track = LugusAudio.use.SFX ().Play ( LugusResources.use.Shared.GetAudio("Eating01"), false, new LugusAudioTrackSettings().Loop(true) );
 		
 		yield return new WaitForSeconds( eatingTime.Random () ); 
+
+		track.Stop();
 		
 		currentConsumable.State = Lugus.ConsumableState.Consumed;
 		state = State.Done;

@@ -5,6 +5,8 @@ using System.Collections;
 // example: garbage bin
 public class ConsumableRemover : IConsumableUser
 {
+	public string removeSound = "";
+
 	protected void Awake()
 	{
 	}
@@ -36,6 +38,8 @@ public class ConsumableRemover : IConsumableUser
 		}
 		mover.processedItems.Clear();
 		mover.processedVisualizer.Hide();
+
+		LugusAudio.use.SFX().Play ( LugusResources.use.Shared.GetAudio(removeSound) );
 		
 		return true;
 	}
