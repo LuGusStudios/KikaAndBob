@@ -185,6 +185,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 		foreach(Transform t in actionPoints)
 		{
+			if (t == null)
+				continue;
+
 			foreach(SpriteRenderer sr in t.GetComponentsInChildren<SpriteRenderer>())
 			{
 				// darken sprite, slighty transparent

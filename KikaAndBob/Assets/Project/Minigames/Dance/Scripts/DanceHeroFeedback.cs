@@ -14,9 +14,11 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected int scorePerHit = 10;
 	protected int score = 0;
 	protected float scoreModifier = 1;
+	protected int scoreModifierStep = 1;
 	protected float maxScoreModifier = 4;
-	protected float scoreIncreaseStep = 0.1f;
-	
+	protected float scoreIncreaseStep = 0.2f;
+	protected TextMesh scoreDisplay = null;
+	protected GameObject modifierDisplayPrefab = null;
 	protected AudioClip laneHitSound = null;
 	
 	void Awake()
@@ -35,6 +37,20 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			bobAnim = GameObject.Find("Bob").GetComponent<BoneAnimation>();
 		if (bobAnim == null)
 			Debug.LogError("No Bob found in scene.");
+
+		Transform guiParent = GameObject.Find("GUI").transform;
+
+		if (scoreDisplay == null)
+			scoreDisplay = guiParent.FindChild("ScoreDisplay").GetComponent<TextMesh>();
+		if (scoreDisplay == null)
+			Debug.LogError("No score display found in scene.");
+
+		if (modifierDisplayPrefab == null)
+			modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
+
+		if (modifierDisplayPrefab == null)
+			Debug.LogError("No modifier display found in scene.");
+
 	}
 
 	public void SetupGlobal()
@@ -56,11 +72,17 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			scoreValue += amount;
 			succesCount += amount;
 
-			scoreModifier += (scoreIncreaseStep * maxScoreModifier);
+			scoreModifier += (scoreIncreaseStep);
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
 			scoreAdd =  Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
 			DisplayScoreGainAtLane(lane, scoreAdd);
+
+			if (scoreModifier >= 2 && scoreModifier >= scoreModifierStep && scoreModifier < maxScoreModifier + 1)
+			{
+				DisplayModifierAboveBob();
+				scoreModifierStep++;
+			}
 		}
 		else
 		{
@@ -68,13 +90,25 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			failCount += amount;
 
 			scoreModifier = 1;
+			scoreModifierStep = 1;
 		}
 
 		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
 
 		Debug.Log("Updating score to :" + scoreValue + ". Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
+		scoreDisplay.text = score.ToString();
+
 		ChangeBobAnimation();
+	}
+
+	protected void DisplayModifierAboveBob()
+	{
+		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
+		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
+		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 2, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(scoreModifier).ToString();
+		Destroy(modifierDisplay, 0.5f);
 	}
 
 	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain)
@@ -101,16 +135,15 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	// blend three animations for value
 	protected void ChangeBobAnimation()
 	{
-		// blend win from 0 - 1 for values 20-30
-		if (scoreValue >= 10)
+		if (scoreModifier >= 3)
 		{
-			float animWeight = Mathf.Lerp(0, 1, scoreValue - 10 / 4);
+			float animWeight = Mathf.Lerp(0, 1, scoreModifier - 2 / 2);
 			bobAnim.Blend(animationWin, animWeight);
 			bobAnim.Blend(animationIdle, 1 - animWeight);
 			bobAnim.Blend(animationStruggle, 0);
 		}
 		// between 10 - 20, idle anim
-		else if (scoreValue >= 5)
+		else if (scoreModifier >= 2)
 		{
 			bobAnim.Blend(animationWin, 0);
 			bobAnim.Blend(animationIdle, 1);
@@ -120,11 +153,37 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		// blend win from 1 - 0 for values 0-10
 		else
 		{
-			float animWeight = Mathf.Lerp(1, 0, scoreValue / 4);
+			float animWeight = Mathf.Lerp(1, 0, scoreModifier - 1);
 			bobAnim.Blend(animationWin, 0);
 			bobAnim.Blend(animationIdle, 1 - animWeight);
 			bobAnim.Blend(animationStruggle, animWeight);
 		}
+
+
+//		// blend win from 0 - 1 for values 20-30
+//		if (scoreValue >= 10)
+//		{
+//			float animWeight = Mathf.Lerp(0, 1, scoreValue - 10 / 4);
+//			bobAnim.Blend(animationWin, animWeight);
+//			bobAnim.Blend(animationIdle, 1 - animWeight);
+//			bobAnim.Blend(animationStruggle, 0);
+//		}
+//		// between 10 - 20, idle anim
+//		else if (scoreValue >= 5)
+//		{
+//			bobAnim.Blend(animationWin, 0);
+//			bobAnim.Blend(animationIdle, 1);
+//			bobAnim.Blend(animationStruggle, 0);
+//		
+//		}
+//		// blend win from 1 - 0 for values 0-10
+//		else
+//		{
+//			float animWeight = Mathf.Lerp(1, 0, scoreValue / 4);
+//			bobAnim.Blend(animationWin, 0);
+//			bobAnim.Blend(animationIdle, 1 - animWeight);
+//			bobAnim.Blend(animationStruggle, animWeight);
+//		}
 	}
 
 	public void HighLightLane(Transform actionPoint)
