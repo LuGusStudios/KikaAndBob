@@ -83,6 +83,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 	protected bool hit = false;
 	protected bool missed = false;
+	protected float offScreenTime = 0;
+	protected float offScreenRemoveTime = 10;
 
 	public DanceHeroLaneItem item = null;
 
@@ -115,6 +117,13 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			float timeToReachCharacter = item.lane.characterAnim.transform.localPosition.x / item.lane.speed;
 
 			t.gameObject.ScaleTo(originalScale).Time(0.5f).EaseType(iTween.EaseType.spring).Delay(timeToReachCharacter).Execute();
+
+
+			ParticleSystem particles = t.GetComponentInChildren<ParticleSystem>();
+			particles.startDelay = timeToReachCharacter;
+			particles.Play();
+			
+
 		}
 	}
 	
@@ -176,6 +185,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 		foreach(Transform t in actionPoints)
 		{
+			if (t == null)
+				continue;
+
 			foreach(SpriteRenderer sr in t.GetComponentsInChildren<SpriteRenderer>())
 			{
 				// darken sprite, slighty transparent
@@ -203,11 +215,18 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		}
 	}
 
+	// after the player has missed the action point, check if it is off screen
+	// if yes, allow some time for the particle effect to fade out, then remove the game object
 	protected void CheckOffScreen(Transform actionPoint)
 	{
 		float minX = LugusCamera.game.WorldToScreenPoint(actionPoint.FindChild("Background").renderer.bounds.min).x;
 
 		if (minX > Screen.width)
+		{
+			offScreenTime += Time.deltaTime;
+		}
+
+		if (offScreenTime >= offScreenRemoveTime)
 			DeleteActionPoint(actionPoint);
 	}
 
