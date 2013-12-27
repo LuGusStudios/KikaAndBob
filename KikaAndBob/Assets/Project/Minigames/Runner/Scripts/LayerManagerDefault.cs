@@ -66,7 +66,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 			Debug.LogError(name + " : no themes found!");
 		}
 		
-		if( themeTransitions.Length == 0 || themeTransitions.Length != themes.Length )
+		if( themes.Length > 1 && themeTransitions.Length != themes.Length )
 		{
 			Debug.LogError(name + " : wrong number of themeTransitions found! " + themeTransitions.Length + " should be " + themes.Length );
 		}
@@ -96,6 +96,12 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		if( themeTransitionInProgress ) 
 		{
 			Debug.LogError (name + " : theme transition was already in progress!! " + currentThemeIndex);
+			return;
+		}
+
+		if( themes.Length == 1 )
+		{
+			// just 1 theme : nothing to switch to...
 			return;
 		}
 
