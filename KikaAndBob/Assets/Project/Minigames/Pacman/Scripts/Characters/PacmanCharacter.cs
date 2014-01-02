@@ -109,14 +109,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
 	}
 
-	private CharacterDirections previousDirection = CharacterDirections.Undefined;
+
 	public virtual void ChangeSpriteDirection(CharacterDirections direction)
 	{
-		if (previousDirection != CharacterDirections.Undefined && previousDirection == direction)
-			return;
-
-		previousDirection = direction;
-
 		CharacterDirections adjustedDirection = direction;
 
 		// Right facing = left flipped on x axis
@@ -128,8 +123,21 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		PlayAnimation("" + adjustedDirection.ToString(), direction);
 	}
 
+	private string previousAnim = "";
+	private CharacterDirections previousDirection = CharacterDirections.Undefined;
 	public void PlayAnimation(string clipName, CharacterDirections direction)
 	{
+		// normally we'd only check for the same animation playing
+		// BUT we are using the same animation for left-right, so also check if the direction is the same
+		if (previousAnim == clipName)
+		{
+			if (previousDirection != CharacterDirections.Undefined && previousDirection == direction)
+				return;
+		}
+
+		previousAnim = clipName;
+		previousDirection = direction;
+
 		FindAnimations();
 
 		currentAnimation = null;
@@ -151,7 +159,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 		currentAnimation.Stop();
 		//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
-		
+
 		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
 		
 		if( direction == CharacterDirections.Right )

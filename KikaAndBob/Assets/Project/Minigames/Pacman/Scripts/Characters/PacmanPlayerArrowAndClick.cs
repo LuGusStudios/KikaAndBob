@@ -30,12 +30,12 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 	{
 		if (LugusInput.use.down)
 		{
-			movingwithArrows = false;
-
 			clickedTile = PacmanLevelManager.use.GetTileByClick(LugusInput.use.lastPoint);
 			
 			if (clickedTile != null)
 			{
+				movingwithArrows = false;
+
 				// player can click tiles that are not directly reachable 
 				// in this case, the player will move in a generally right direction
 				// the direction is selected based on distance: the direction with the largest distance wins out
@@ -193,6 +193,10 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			{
 				MoveTo(nextTile);
 			}
+			else
+			{
+				PlayAnimation("Idle", CharacterDirections.Undefined);
+			}
 		}
 	}
 
@@ -211,16 +215,22 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		{
 			currentDirection = nextDirection;
 			MoveTo(nextTile);
+			ChangeSpriteDirection(currentDirection);
 		}
 		else // else continue in the current direction
 		{
+			ChangeSpriteDirection(currentDirection);
 			nextTile = FindOpenTileInDirection(currentDirection);
 			if (nextTile != null)
 			{
 				MoveTo(nextTile);
 			}
+			else
+			{
+				PlayAnimation("Idle", CharacterDirections.Undefined);
+			}
 		}
 		
-		ChangeSpriteDirection(currentDirection);
+
 	}
 }
