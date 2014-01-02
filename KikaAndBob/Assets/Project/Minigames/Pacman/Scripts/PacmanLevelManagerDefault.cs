@@ -54,6 +54,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	// MOVE TO SCRIPTABLE OBJECT
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
+	public Sprite[] blockDecorations = null;
 	public Sprite pickupSprite = null;
 	public float wallTileScaleFactor = 0.6f;
 	
@@ -289,6 +290,17 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				spriteRenderer2.sprite = blockShadows[randomIndex];
 
 				tile.sprite = block;
+
+				// also randomly add a tile decorator to some tiles
+				if (Random.value > 0.8f && blockDecorations.Length > 0)
+				{
+					GameObject decoration = new GameObject("Decoration");
+					decoration.transform.localScale = decoration.transform.localScale * wallTileScaleFactor;
+					decoration.transform.parent = block.transform;
+					decoration.transform.localPosition = new Vector3(0, 0, -1);
+					SpriteRenderer decorationSpriteRenderer = decoration.AddComponent<SpriteRenderer>();
+					decorationSpriteRenderer.sprite = blockDecorations[Random.Range(0, blockDecorations.Length)];
+				}
 			}
 			else if (tile.tileType == GameTile.TileType.Pickup)
 			{
