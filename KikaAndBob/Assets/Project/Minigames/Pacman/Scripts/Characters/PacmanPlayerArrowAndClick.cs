@@ -99,6 +99,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Up;
+			ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -107,6 +108,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Down;
+			ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -115,6 +117,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Left;
+			ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -123,6 +126,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Right;
+			ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}

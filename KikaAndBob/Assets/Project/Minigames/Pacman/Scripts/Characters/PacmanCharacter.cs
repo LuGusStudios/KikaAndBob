@@ -109,8 +109,14 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
 	}
 
+	private CharacterDirections previousDirection = CharacterDirections.Undefined;
 	public virtual void ChangeSpriteDirection(CharacterDirections direction)
 	{
+		if (previousDirection != CharacterDirections.Undefined && previousDirection == direction)
+			return;
+
+		previousDirection = direction;
+
 		CharacterDirections adjustedDirection = direction;
 
 		// Right facing = left flipped on x axis
