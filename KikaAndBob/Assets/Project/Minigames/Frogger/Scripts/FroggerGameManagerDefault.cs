@@ -6,12 +6,21 @@ public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefau
 
 public class FroggerGameManagerDefault : MonoBehaviour 
 {
-	bool firstFrame = true;
+	public bool gameRunning = false;
+	private bool firstFrame = true;
+	private int currentIndex = 0;
 
 	public void StartNewGame()
 	{
+		StartNewGame(currentIndex);
+	}
+
+	public void StartNewGame(int levelIndex)
+	{
+		currentIndex = levelIndex;
 		Debug.Log ("Starting new game.");
-		FroggerLaneManager.use.FindLanes();
+		// TO DO: Give some sort of progression system!
+		FroggerLevelManager.use.LoadLevel(levelIndex);
 
 		FroggerPlayer lastPlayer = null;
 		foreach(FroggerPlayer player in (FroggerPlayer[]) FindObjectsOfType(typeof(FroggerPlayer)))
@@ -21,9 +30,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		}
 
 		FroggerCameraController.use.FocusOn(lastPlayer);
+
+		gameRunning = true;
 	}
 
-	// TO DO Placeholder!!!
+	// TO DO: Placeholder!!!
 	void Update()
 	{
 		if (firstFrame)
@@ -36,16 +47,27 @@ public class FroggerGameManagerDefault : MonoBehaviour
 
 	public void WinGame()
 	{
-		Debug.Log("Game won!");
+		gameRunning = false;
+		FroggerGUIManager.use.GameWon();
 	}
 
 	public void LoseGame()
 	{
-		Debug.Log("Game lost!");
+		gameRunning = false;
+		FroggerGUIManager.use.GameLost();
+	}
 
-		foreach(FroggerCharacter character in (FroggerCharacter[]) FindObjectsOfType(typeof(FroggerCharacter)))
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+
+		for (int i = 0; i < FroggerLevelManager.use.levels.Length; i++) 
 		{
-			character.Reset();
+			if (GUILayout.Button("Start Level " + i))
+			{
+				StartNewGame(i);
+			}
 		}
 	}
 }

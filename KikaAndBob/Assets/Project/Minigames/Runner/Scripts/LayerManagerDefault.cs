@@ -8,7 +8,7 @@ public class LayerManager : LugusSingletonExisting<LayerManagerDefault>
 }
 
 
-public class LayerManagerDefault : MonoBehaviour 
+public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault> 
 {
 	public LayerSpawner skyLayer = null;
 	public LayerSpawner groundLayer = null;
@@ -17,6 +17,13 @@ public class LayerManagerDefault : MonoBehaviour
 	public int currentThemeIndex = 0;
 	public BackgroundTheme[] themes;
 	public BackgroundTheme[] themeTransitions;
+
+	public DataRange timeBetweenThemes = new DataRange(20.0f, 25.0f);
+
+	public BackgroundTheme CurrentTheme
+	{
+		get{ return themes[currentThemeIndex]; }
+	}
 
 	// if camera is this many units from the center of the sky transition, it will transition the ground as well
 	// in testing, 20.0f was a good value
@@ -31,7 +38,7 @@ public class LayerManagerDefault : MonoBehaviour
 
 		if( skyLayer == null )
 		{
-			Debug.LogError(name + " : no LayerSky found!");
+			Debug.LogError(name + " : no LayerSky found!"); 
 		}
 		
 		if( groundLayer == null )
@@ -79,6 +86,8 @@ public class LayerManagerDefault : MonoBehaviour
 		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		frontLayer.detailsRandomY = false;
 		frontLayer.StartSpawning();
+
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
 	}
 
 	protected bool themeTransitionInProgress = false;
@@ -105,6 +114,14 @@ public class LayerManagerDefault : MonoBehaviour
 		// TODO: add timeout to better time transition of groundlayer with actual rendition of skylayer to transition
 
 		skyLayer.onSectionSwitch -= OnSkyLayerTransitioned;
+
+
+		// make sure sky doesn't show the transition again
+		// shouldn't happen if the transitionSkyOffset is set correctly, but you can never be too sure :)
+		int oneAhead = (currentThemeIndex + 1) % themes.Length;
+		skyLayer.baseLayer = themes[ oneAhead ].sky;
+		skyLayer.detailLayer = themes[ oneAhead ].skyDetails;
+
 
 		LugusCoroutines.use.StartRoutine( GroundTransitionRoutine(nextSection) );
 	}
@@ -150,9 +167,18 @@ public class LayerManagerDefault : MonoBehaviour
 		skyLayer.baseLayer = themes[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themes[ currentThemeIndex ].skyDetails;
 		
-		frontLayer.detailLayer = themeTransitions[ currentThemeIndex ].frontDetails;
+		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		
 		themeTransitionInProgress = false;
+		
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
+	}
+
+	protected IEnumerator NextThemeRoutine()
+	{
+		yield return new WaitForSeconds( timeBetweenThemes.Random () );
+
+		NextTheme();
 	}
 
 
@@ -173,7 +199,7 @@ public class LayerManagerDefault : MonoBehaviour
 			NextTheme();
 		}
 
-		if( LugusDebug.debug && !themeTransitionInProgress )
+		if( /*LugusDebug.debug &&*/ !themeTransitionInProgress )
 		{
 			//NextTheme();
 		}

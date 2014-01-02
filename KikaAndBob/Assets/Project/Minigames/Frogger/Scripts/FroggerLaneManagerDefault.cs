@@ -12,12 +12,21 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 	protected float levelLengthLanePixels = -1;
 	protected float levelLengthLaneCenters = -1;
 
-	public void FindLanes()
+//	public void FindLanes()
+//	{
+//		lanes.Clear();
+//		levelLengthLanePixels = -1;
+//		levelLengthLaneCenters = -1;
+//		FroggerLane[] lanesInScene = (FroggerLane[]) FindObjectsOfType(typeof(FroggerLane));
+//		lanes = OrderLanes(new List<FroggerLane>(lanesInScene));
+//	}
+
+	public void SetLanes(List<FroggerLane> _lanes)
 	{
 		levelLengthLanePixels = -1;
 		levelLengthLaneCenters = -1;
-		FroggerLane[] lanesInScene = (FroggerLane[]) FindObjectsOfType(typeof(FroggerLane));
-		lanes = OrderLanes(new List<FroggerLane>(lanesInScene));
+		lanes.Clear();
+		lanes = _lanes;
 	}
 
 	public List<FroggerLane> GetLanes()
@@ -31,6 +40,7 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 		List<FroggerLane> ordered = new List<FroggerLane>();
 		int listCount = unordered.Count;
 
+		// order lanes in list
 		while (ordered.Count < listCount)
 		{
 			int currentlyLowestIndex = -1;
@@ -49,6 +59,13 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 			unordered.Remove(toBeMoved);
 			ordered.Add(toBeMoved);
 		}
+
+//		// automatically depth-sort lanes
+//		for (int i = 0; i < ordered.Count; i++) 
+//		{
+//			ordered[i].transform.position = ordered[i].transform.position.z(i * 10);
+//		}
+
 
 		return ordered;
 	}
@@ -125,7 +142,7 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 	public Vector2 GetBottomLaneCenter()
 	{
 		if (lanes.Count < 1)
-			return Vector3.zero;
+			return Vector2.zero;
 
 		return lanes[0].GetCenterPoint();
 	}
@@ -133,9 +150,30 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 	public Vector2 GetTopLaneCenter()
 	{
 		if (lanes.Count < 1)
-			return Vector3.zero;
+			return Vector2.zero;
 		
 		return lanes[lanes.Count - 1].GetCenterPoint();
 	}
 
+	public float GetBottomLaneBottomPixel()
+	{
+		if (lanes.Count < 1)
+			return 0;
+
+		if (lanes[0] == null)
+			return 0;
+
+		return (lanes[0].transform.position + lanes[0].GetComponent<SpriteRenderer>().sprite.bounds.min).y;
+	}
+
+	public float GetTopLaneTopPixel()
+	{
+		if (lanes.Count < 1)
+			return 0;
+
+		if (lanes[lanes.Count - 1] == null)
+			return Screen.height;
+		
+		return (lanes[lanes.Count - 1].transform.position + lanes[lanes.Count - 1].GetComponent<SpriteRenderer>().sprite.bounds.max).y;
+	}
 }

@@ -10,6 +10,8 @@ public class ConsumableDefinition : ScriptableObject
 	public Sprite textureProcessed = null;
 	public Sprite textureConsumed = null;
 
+	public bool isPayment = false;
+
 	public Sprite TextureForState(Lugus.ConsumableState state)
 	{
 		if( state == Lugus.ConsumableState.Unprocessed )

@@ -6,9 +6,12 @@ public class DebugCollisionChecker : MonoBehaviour
 {
 	void OnTriggerEnter2D(Collider2D other) 
 	{
-		Debug.Log ("Trigger " + name + " collided with " + other.transform.name);
+		if( other.name == "Character" )
+		{
+			Debug.Log ("Trigger " + name + " collided with " + other.transform.name);
 
-		transform.position = LugusUtil.OFFSCREEN;
+			transform.position = LugusUtil.OFFSCREEN;
+		}
 	}
 
 	public void SetupLocal()

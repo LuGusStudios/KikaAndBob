@@ -21,9 +21,17 @@ public class ConsumableProcessor : IConsumableUser
 	public Lugus.ConsumableState toState = Lugus.ConsumableState.NONE;
 
 	public float processingTime = 3.0f;
+	public string processingSound = "";
 
 	public ConsumableProcessor.State state = ConsumableProcessor.State.Idle;
 	public Consumable currentConsumable = null;
+
+	public delegate void OnProcessing(Consumable consumable);
+
+	public OnProcessing onProcessingStart;
+	public OnProcessing onProcessingEnd;
+
+
 
 	public override bool Use()
 	{
@@ -59,6 +67,12 @@ public class ConsumableProcessor : IConsumableUser
 
 		if( state == State.Done )
 		{
+			if( !DinnerDashManager.use.Mover.CanCarry(currentConsumable) )
+			   return false; // TODO: highlight 
+
+			
+			GameObject.Destroy( currentConsumable.gameObject.GetComponent<ConsumableHighlight>() );
+
 			// 1. transfer currentConsumable over to the Mover
 			DinnerDashManager.use.Mover.AddConsumable( currentConsumable );
 
@@ -78,21 +92,40 @@ public class ConsumableProcessor : IConsumableUser
 		currentConsumable = subject;
 
 		subject.transform.parent = this.transform.parent;
-		subject.renderer.sortingOrder = this.renderer.sortingOrder;
-		subject.transform.position = this.transform.position + new Vector3(10,10, 0);
+		//subject.renderer.sortingOrder = this.renderer.sortingOrder;
+
+		Transform spawnLocation = transform.FindChild("SpawnLocation");
+		if( spawnLocation != null )
+		{
+			subject.transform.position = spawnLocation.position;
+		}
+		else 
+		{
+			subject.transform.position = this.transform.position + new Vector3(10,10, 0);
+		}
+
 
 		subject.renderer.enabled = false;
 
 		// TODO: show graphic update of the subject being placed "inside" the processor
 		// TODO: show graphical update indicating we're busy
 
-		yield return new WaitForSeconds( processingTime );
+		if( onProcessingStart != null )
+			onProcessingStart( subject );
 
+		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(processingSound) );
+
+		yield return new WaitForSeconds( processingTime );
+		
+		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
 		
 		subject.GetComponent<SpriteRenderer>().enabled = true;
 
 		currentConsumable.State = toState;
 		state = State.Done;
+		
+		if( onProcessingStart != null )
+			onProcessingEnd( subject );
 
 		// TODO: indicate food is ready for pickup (graphically!)
 	}

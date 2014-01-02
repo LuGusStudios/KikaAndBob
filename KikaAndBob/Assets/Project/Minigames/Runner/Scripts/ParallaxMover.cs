@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ParallaxMover : MonoBehaviour 
 {
-	public float speed = -5.0f;
+	public Vector3 speed = Vector3.zero;
 
 	public void SetupLocal()
 	{
@@ -28,6 +28,6 @@ public class ParallaxMover : MonoBehaviour
 	
 	protected void Update () 
 	{
-		transform.position += transform.right * speed * Time.deltaTime;
+		transform.position += speed * Time.deltaTime;
 	}
 }
