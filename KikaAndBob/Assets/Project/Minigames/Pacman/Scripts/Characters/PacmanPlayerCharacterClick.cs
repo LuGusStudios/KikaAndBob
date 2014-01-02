@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
@@ -79,7 +79,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 			}
 		}
 		
-		UpdatePosition();
+		UpdateMovement();
 	}
 
 	public override void DestinationReached ()

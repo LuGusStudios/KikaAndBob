@@ -73,6 +73,8 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		
 		gameRunning = true;
 
+		PacmanSoundEffects.use.Reset();
+
 		// enable enemies at regular intervals
 		StartCoroutine(EnemySpawning());
 	}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -23,7 +23,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			CheckClick();
 		}
 
-		UpdatePosition();
+		UpdateMovement();
 	}
 
 	private void CheckClick()

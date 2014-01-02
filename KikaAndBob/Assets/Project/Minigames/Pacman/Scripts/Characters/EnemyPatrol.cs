@@ -8,7 +8,7 @@ public class EnemyPatrol : EnemyCharacter {
 	protected int patrolIndex = 0;
 	protected int playerChaseCount = 5;		// how many tiles will the enemy chase the player without seeing them directly
 	protected int playerChaseCounter = 0; 	// how many tiles the enemy has chased the player without seeing them directly
-	
+
 	protected override void SetDefaultTargetTiles()
 	{
 		patrolPath.Add(PacmanLevelManager.use.GetTile(1,1));

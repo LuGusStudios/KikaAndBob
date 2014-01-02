@@ -4,12 +4,14 @@ using SmoothMoves;
 using System.Collections.Generic;
 
 public abstract class PacmanCharacter : MonoBehaviour {
-	
+
+	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
+	public string walkSound = "";
+
 	protected GameTile moveTargetTile;			// the tile we are immediately moving to
 	protected Vector3 startPosition = Vector3.zero;
 	protected float movementTimer = 0;
 	protected float movementDuration = 0;
-	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
 	protected bool moving = false;
 	protected bool horizontalMovement = false;
 	public GameTile currentTile = null;
@@ -34,7 +36,6 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	void Awake()
 	{
-
 	}
 
 	void FindAnimations()
@@ -65,7 +66,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	}
 
 	// does actual moving and calls appropriate methods when destination was reached
-	protected void UpdatePosition () 
+	protected void UpdateMovement () 
 	{		
 		if (moveTargetTile != null)
 		{
@@ -79,7 +80,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 				movementTimer += Time.deltaTime;
 				transform.localPosition = Vector3.Lerp(startPosition, moveTargetTile.location, movementTimer/movementDuration);
 			}
-		}	
+		}
 	}
 	
 	protected virtual void MoveTo(GameTile target)
@@ -98,7 +99,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		
 		movementDuration = Vector3.Distance(startPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
 		
-		UpdatePosition();	// needs to be called again, or character will pause for one frame
+		UpdateMovement();	// needs to be called again, or character will pause for one frame
 	}
 	
 	public virtual void ChangeSpriteDirection(bool faceRight)

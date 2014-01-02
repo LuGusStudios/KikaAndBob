@@ -33,6 +33,7 @@ public class EnemyCharacter : PacmanCharacter {
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
+		// used for visualizing enemy target tile
 		if (debugPathFinding)
 		{
 			if (targetMarker != null)
@@ -67,7 +68,7 @@ public class EnemyCharacter : PacmanCharacter {
 		DetectPlayer();
 
 		// move
-		UpdatePosition();
+		UpdateMovement();
 
 		if (debugPathFinding)
 		{

@@ -47,7 +47,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		UpdatePosition();
+		UpdateMovement();
 	}
 	
 	public override void DestinationReached()
