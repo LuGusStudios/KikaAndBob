@@ -15,35 +15,22 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	protected bool gameDone = false;
 	protected List<EnemyCharacter> enemies = new List<EnemyCharacter>();
 	protected PacmanPlayerCharacter player;
-	
-	void Awake () 
+	protected Transform level = null;
+	protected List<PacmanPlayerCharacter> playerChars = new List<PacmanPlayerCharacter>();
+
+	protected void Awake () 
 	{
-		Transform level = GameObject.Find("LevelRoot").transform;
-
-		foreach(EnemyCharacter enemy in (EnemyCharacter[])FindObjectsOfType(typeof(EnemyCharacter)))
-		{
-			enemies.Add(enemy);
-		}
-
-		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
-
-		StartNewGame();
+		SetupLocal();
 	}
-	
-	// starts new round in the same level
-	public void StartNewRound()
-	{
-		ResetPlayer();
-		
-		foreach (EnemyCharacter enemy in enemies)
-		{
-			DisableEnemy(enemy);
-		}
 
-		StopAllCoroutines();
-		StartCoroutine(EnemySpawning());
-		
-		gameRunning = true;
+	public void SetupLocal()
+	{
+		level = GameObject.Find("LevelRoot").transform;
+	}
+
+	protected void Start()
+	{
+		StartNewGame();
 	}
 
 	// starts a completely new level
@@ -57,13 +44,28 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	{
 		PacmanLevelManager.use.BuildLevel(levelName);
 
-		ResetPlayer();
-		
-		//initially disable enemies; they will be gradually re-enabled later
-		foreach (EnemyCharacter enemy in enemies)
+		// find and reset any player characters
+		playerChars.Clear();
+		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>(true));
+
+		if (playerChars.Count >= 1)
 		{
-			DisableEnemy(enemy);
+			player = playerChars[0];
 		}
+		else
+		{
+			Debug.LogError("No player characters found!");
+			return;
+		}
+
+		ResetPlayerChars();
+
+		// find and reset enemy characters
+		enemies.Clear();
+		enemies = new List<EnemyCharacter>(level.GetComponentsInChildren<EnemyCharacter>(true));
+
+		//initially disable enemies; they will be gradually re-enabled later
+		DisableEnemies();
 
 		// start all level updaters
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
@@ -71,21 +73,38 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 			updater.Activate();
 		}
 		
-		gameRunning = true;
 
-		PacmanSoundEffects.use.Reset();
+		PacmanSoundEffects.use.Reset(enemies);
 
 		// enable enemies at regular intervals
 		StartCoroutine(EnemySpawning());
+
+		gameRunning = true;
+	}
+
+	// starts new round in the same level
+	public void StartNewRound()
+	{
+		ResetPlayerChars();
+
+		DisableEnemies();
+
+		StopAllCoroutines();
+		StartCoroutine(EnemySpawning());
+		
+		gameRunning = true;
 	}
 
 	// puts the player in the start location and resets their movement
-	protected void ResetPlayer()
+	protected void ResetPlayerChars()
 	{
-		player.PlayAnimation("Idle", PacmanCharacter.CharacterDirections.Undefined);
-		player.transform.localPosition = PacmanLevelManager.use.GetTile(2,1).location;
-		player.DetectCurrentTile();
-		player.ResetMovement();
+		foreach(PacmanPlayerCharacter ppc in playerChars)
+		{
+			ppc.PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
+			ppc.transform.localPosition = PacmanLevelManager.use.GetTile(2,1).location;	// TO DO make customizable and per character
+			ppc.DetectCurrentTile();
+			ppc.ResetMovement();
+		}
 	}
 
 	protected IEnumerator EnemySpawning()
@@ -104,20 +123,23 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		}
 	}
 	
-	protected void DisableEnemy(EnemyCharacter target)
+	protected void DisableEnemies()
 	{
-		foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
+		foreach(EnemyCharacter target in enemies)
 		{
-			spriteRenderer.enabled = false;
-		}
+			foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
+			{
+				spriteRenderer.enabled = false;
+			}
 
-		foreach (SkinnedMeshRenderer skinnedmeshRenderer in (SkinnedMeshRenderer[])target.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-		{
-			skinnedmeshRenderer.enabled = false;
-		}
+			foreach (SkinnedMeshRenderer skinnedmeshRenderer in (SkinnedMeshRenderer[])target.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+			{
+				skinnedmeshRenderer.enabled = false;
+			}
 
-		target.enabled = false;
-		target.Reset(enemySpawnLocation);
+			target.enabled = false;
+			target.Reset(enemySpawnLocation);
+		}
 	}
 
 	void EnableEnemy(EnemyCharacter target)

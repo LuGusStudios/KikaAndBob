@@ -68,7 +68,6 @@ public class LavaUpdater : PacmanLevelUpdater {
 		int streamXLocation = 10;
 		int streamYLocation = 1;
 		GameTile startTile = PacmanLevelManager.use.GetTile(streamXLocation, PacmanLevelManager.use.height - 1);
-		Vector3 lavaOffset = new Vector3(0, 0, -10);
 
 		// stream first descends to cross entire level
 		while (streamYLocation <= PacmanLevelManager.use.height)

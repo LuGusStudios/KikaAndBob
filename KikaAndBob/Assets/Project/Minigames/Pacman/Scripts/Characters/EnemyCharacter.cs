@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections;
+using SmoothMoves;
 
 public class EnemyCharacter : PacmanCharacter {
 
 	public bool allowUTurns = true;
 	public int forwardDetectDistance = 5;
+	public string walkAnimation = "";
 	protected bool playerFound = false;
 	protected bool runBehavior = true;			// if set to false, most behavior is disabled (for cutscenes, teleport etc.)
 	protected float scatterModeDuration = 5;
@@ -28,10 +30,13 @@ public class EnemyCharacter : PacmanCharacter {
 		Frightened
 	}
 	
-	void Start()
+	void Awake()
 	{
+		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
+
+		boneAnimations = GetComponentsInChildren<BoneAnimation>();
 
 		// used for visualizing enemy target tile
 		if (debugPathFinding)
@@ -85,6 +90,9 @@ public class EnemyCharacter : PacmanCharacter {
 		enemyState = EnemyState.Neutral;
 		DetectCurrentTile();
 		DestinationReached(); // calling DestinationReached will set enemies moving again
+
+		ChangeSpriteDirection(CharacterDirections.Left);
+		PlayAnimation(walkAnimation, CharacterDirections.Left);
 	}
 
 	// Set tile that enemy will originally try to find here.
@@ -126,8 +134,8 @@ public class EnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Neutral)
 			return;
 
-		iTween.Stop(gameObject);
-		transform.localScale = originalScale;
+//		iTween.Stop(gameObject);
+//		transform.localScale = originalScale;
 
 		//renderer.material.color = Color.white;
 
@@ -140,8 +148,8 @@ public class EnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Chasing)
 			return;
 
-		iTween.Stop(gameObject);
-		transform.localScale = originalScale;
+//		iTween.Stop(gameObject);
+//		transform.localScale = originalScale;
 		
 		// do detected effect
 //		if (playerDetectedItweener == null)
@@ -153,11 +161,11 @@ public class EnemyCharacter : PacmanCharacter {
 //		}
 //		playerDetectedItweener.Execute();
 
-		iTween.ScaleTo(gameObject, iTween.Hash(
-			"scale", Vector3.one * 1.1f,
-			"time", 0.5f,
-			"easetype", iTween.EaseType.easeInOutQuad,
-			"looptype", iTween.LoopType.pingPong));
+//		iTween.ScaleTo(gameObject, iTween.Hash(
+//			"scale", Vector3.one * 1.1f,
+//			"time", 0.5f,
+//			"easetype", iTween.EaseType.easeInOutQuad,
+//			"looptype", iTween.LoopType.pingPong));
 
 		//renderer.material.color = Color.red;
 
@@ -166,7 +174,8 @@ public class EnemyCharacter : PacmanCharacter {
 
 	public override void ChangeSpriteDirection (CharacterDirections direction)
 	{
-		PlayAnimation("" + CharacterDirections.Left.ToString(), direction);
+		// enemies probably only ever have one animation
+		PlayAnimationObject(CharacterDirections.Left.ToString(), direction);
 	}
 
 	// override for custom effect when the enemy runs away from the player
@@ -213,6 +222,18 @@ public class EnemyCharacter : PacmanCharacter {
 		transform.localScale = originalScale;
 		gameObject.SetActive(false);
 	}
+
+//	public override void PlayAnimation(string clipName, CharacterDirections direction)
+//	{
+//		foreach (BoneAnimation ba in boneAnimations)
+//		{
+//			if (ba.AnimationClipExists(clipName))
+//			{
+//				ba.Play(clipName);
+//				break;
+//			}
+//		}
+//	}
 
 	// override for custom behavior upon having reached a tile (e.g. picking the next tile to move to)
 	public override void DestinationReached ()

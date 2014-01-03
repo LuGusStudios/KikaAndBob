@@ -151,7 +151,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)
 		{
-			PlayAnimation("Idle", CharacterDirections.Undefined);
+			PlayAnimationObject("Idle", CharacterDirections.Undefined);
 			return;
 		}
 		// if clicked tile was reached, success
@@ -195,7 +195,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			}
 			else
 			{
-				PlayAnimation("Idle", CharacterDirections.Undefined);
+				PlayAnimationObject("Idle", CharacterDirections.Undefined);
 			}
 		}
 	}
@@ -227,7 +227,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			}
 			else
 			{
-				PlayAnimation("Idle", CharacterDirections.Undefined);
+				PlayAnimationObject("Idle", CharacterDirections.Undefined);
 			}
 		}
 		

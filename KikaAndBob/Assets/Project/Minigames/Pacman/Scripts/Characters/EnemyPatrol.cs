@@ -11,28 +11,18 @@ public class EnemyPatrol : EnemyCharacter {
 
 	protected override void SetDefaultTargetTiles()
 	{
+		patrolIndex = 0;
 		patrolPath.Add(PacmanLevelManager.use.GetTile(1,1));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(1,11));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(11,11));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(11,1));
 
-		defaultTargetTile = patrolPath[0];
-	}
-
-	public override void Reset(Vector2 enemySpawnLocation)
-	{
-		patrolIndex = 0;
-		playerFound = false;
-		SetDefaultTargetTiles();
-		targetTile = defaultTargetTile;
-		transform.localPosition = PacmanLevelManager.use.GetTile(enemySpawnLocation).location;
-		enemyState = EnemyState.Neutral;
-		DetectCurrentTile();
-		DestinationReached(); // calling DestinationReached will set enemies moving again
+		defaultTargetTile = patrolPath[patrolIndex];
 	}
 
 	public override void DestinationReached()
 	{
+		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
@@ -40,7 +30,6 @@ public class EnemyPatrol : EnemyCharacter {
 		{
 			FrightenedEffect();
 
-			int avoidRadius = 6;
 			GameTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
 				PacmanLevelManager.use.GetOppositeQuadrant(
 					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
@@ -51,6 +40,7 @@ public class EnemyPatrol : EnemyCharacter {
 		}
 		else
 		{
+			// TO DO: Turn on or not? Changes behavior quite a lot.
 			allowUTurns = false;	
 
 			// if the player was detected, chase him

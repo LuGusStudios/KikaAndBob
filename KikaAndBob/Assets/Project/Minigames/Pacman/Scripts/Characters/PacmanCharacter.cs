@@ -101,16 +101,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		
 		UpdateMovement();	// needs to be called again, or character will pause for one frame
 	}
-	
-	public virtual void ChangeSpriteDirection(bool faceRight)
-	{
-		if (faceRight)
-			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-		else
-			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
-	}
 
-
+	// intermediary for changing sprite and its animation - i.e. transforms CharacterDirections.Right into Left, which is just the same one flipped, or limits choices to an object that actually exists
+	// override for different rewrite rules
 	public virtual void ChangeSpriteDirection(CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
@@ -121,12 +114,13 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		PlayAnimation("" + adjustedDirection.ToString(), direction);
+		PlayAnimationObject("" + adjustedDirection.ToString(), direction);
 	}
 
 	private string previousAnim = "";
 	private CharacterDirections previousDirection = CharacterDirections.Undefined;
-	public void PlayAnimation(string clipName, CharacterDirections direction)
+	// will attempt to find a BoneAnimation parented to this object named after the clip provided (for use with multiple animations not based on the same skeleton) and disable the others
+	public virtual void PlayAnimationObject(string clipName, CharacterDirections direction)
 	{
 		// normally we'd only check for the same animation playing
 		// BUT we are using the same animation for left-right, so also check if the direction is the same
@@ -180,7 +174,43 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			}
 		}
 	}
+	// will attempt to play the provided clip on the currently enabled bone animation (for use with single skeleton characters)
+	public virtual void PlayAnimation(string clipName, CharacterDirections direction)
+	{
+		if (currentAnimation == null)
+		{
+			Debug.LogError("CurrentAnimation is null. At least run PlayAnimationObject once.");
+			return;
+		}
+		print (currentAnimation.gameObject);
+		if (currentAnimation.AnimationClipExists(clipName))
+		{
+			print (clipName);
+			currentAnimation.Play(clipName, PlayMode.StopAll);
+		}
+		else
+		{
+			Debug.LogError("CurrentAnimation does not have animation clip: " + clipName);
+			return;
+		}
 
+		if( direction == CharacterDirections.Right )
+		{
+			// if going left, the scale.x needs to be negative
+			if( currentAnimation.transform.localScale.x > 0 )
+			{
+				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
+			}
+		}
+		else // moving left
+		{
+			// if going right, the scale.x needs to be positive 
+			if( currentAnimation.transform.localScale.x < 0 )
+			{
+				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
+			}
+		}
+	}
 
 	public virtual void ResetMovement()
 	{
