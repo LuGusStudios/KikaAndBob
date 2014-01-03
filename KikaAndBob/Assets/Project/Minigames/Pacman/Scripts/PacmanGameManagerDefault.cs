@@ -33,6 +33,11 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		StartNewGame();
 	}
 
+	public List<PacmanPlayerCharacter> GetPlayerChars()
+	{
+		return playerChars;
+	}
+
 	// starts a completely new level
 	public void StartNewGame()
 	{
@@ -72,12 +77,14 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		{
 			updater.Activate();
 		}
-		
-
+	
 		PacmanSoundEffects.use.Reset(enemies);
 
 		// enable enemies at regular intervals
 		StartCoroutine(EnemySpawning());
+
+		lives = 3;
+		PacmanGUIManager.use.UpdateLives(lives);
 
 		gameRunning = true;
 	}
@@ -171,13 +178,29 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	public void LoseLife()
 	{
 		Debug.Log ("Lost one life!");
-		
+
+		LugusCoroutines.use.StartRoutine(LoseLifeRoutine());
+	}
+
+	public IEnumerator LoseLifeRoutine()
+	{
 		lives--;
 		
-		if (lives < 0)
-			LoseGame();
-		else
+		gameRunning = false;
+
+		if (lives > 0)
+		{
 			PacmanGUIManager.use.UpdateLives(lives);
+			StartNewRound();
+			Debug.Log("You lose one life!");
+		}
+		else
+		{
+			PacmanGUIManager.use.ShowGameOverMessage();
+			yield return new WaitForSeconds(1f);
+			StartNewGame();
+			Debug.Log("You lost the game!");
+		}
 	}
 	
 	public void WinGame()
@@ -193,11 +216,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		PacmanGUIManager.use.ShowWinMessage();
 	}
 	
-	public void LoseGame()
-	{
-		Debug.Log("You lose!");
-		gameRunning = false;
-		PacmanGUIManager.use.ShowGameOverMessage();
-	}
+
 }
 

@@ -55,12 +55,17 @@ public class EnemyCharacter : PacmanCharacter {
 		if (!PacmanGameManager.use.gameRunning)
 			return;
 
-		if (currentTile == player.currentTile)
+		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{
-			if (enemyState != EnemyState.Frightened)
-				PacmanGameManager.use.LoseLife();
-			else
-				DefeatedEffect();
+			if (currentTile == p.currentTile)
+			{
+				if (enemyState != EnemyState.Frightened)
+				{
+					p.DoHitEffect();
+				}
+				else
+					DefeatedEffect();
+			}
 		}
 
 		// what tile is character currently on?
