@@ -157,7 +157,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
 		
-		if( direction == CharacterDirections.Right )
+		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
 			if( currentAnimation.transform.localScale.x > 0 )
@@ -165,7 +165,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
 			}
 		}
-		else // moving left
+		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
 			if( currentAnimation.transform.localScale.x < 0 )
