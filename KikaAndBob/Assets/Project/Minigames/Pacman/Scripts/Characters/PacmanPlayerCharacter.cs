@@ -5,9 +5,29 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public bool enemiesFlee = false;
 	public float powerupDuration = 10;
+
 	protected bool allowControl = true;
 	protected bool cutScene = false;
 	protected PacmanCharacter.CharacterDirections nextDirection = CharacterDirections.Undefined;
+	protected ILugusAudioTrack walkTrack = null;
+	protected LugusAudioTrackSettings walkTrackSettings = null;
+	protected AudioClip walkSoundClip = null;
+
+
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+
+	public void SetupLocal()
+	{
+		walkTrack = LugusAudio.use.SFX().GetTrack();
+		walkTrack.Claim();
+		walkTrackSettings = new LugusAudioTrackSettings().Loop(true);
+	
+		if (!string.IsNullOrEmpty(walkSoundKey))
+			walkSoundClip = LugusResources.use.Shared.GetAudio(walkSoundKey);
+	}
 
 	private void Update () 
 	{
@@ -48,6 +68,24 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 
 		UpdateMovement();
+
+		UpdateWalkSound();
+	}
+
+	protected void UpdateWalkSound()
+	{
+		if (moving)
+		{
+//			print ("moving");
+			if (!walkTrack.Playing)
+				walkTrack.Play(walkSoundClip, walkTrackSettings);
+		}
+		else
+		{
+//print ("not moving");
+			if (walkTrack.Playing)
+				walkTrack.Stop();
+		}
 	}
 	
 	public override void DestinationReached()

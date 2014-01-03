@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public abstract class PacmanCharacter : MonoBehaviour {
 
 	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
-	public string walkSound = "";
+	public string walkSoundKey = "";
 
 	protected GameTile moveTargetTile;			// the tile we are immediately moving to
 	protected Vector3 startPosition = Vector3.zero;
@@ -19,6 +19,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected CharacterDirections currentDirection;
 	protected BoneAnimation currentAnimation = null;
 	protected BoneAnimation[] boneAnimations = null;
+
 		
 	public enum CharacterDirections
 	{
@@ -33,11 +34,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	{
 		return currentDirection;
 	}
-
-	void Awake()
-	{
-	}
-
+	
 	void FindAnimations()
 	{
 		// this only needs to be done once, but it's handy to be able to call from various places to ensure these are always assigned
@@ -182,10 +179,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			Debug.LogError("CurrentAnimation is null. At least run PlayAnimationObject once.");
 			return;
 		}
-		print (currentAnimation.gameObject);
+
 		if (currentAnimation.AnimationClipExists(clipName))
 		{
-			print (clipName);
 			currentAnimation.Play(clipName, PlayMode.StopAll);
 		}
 		else

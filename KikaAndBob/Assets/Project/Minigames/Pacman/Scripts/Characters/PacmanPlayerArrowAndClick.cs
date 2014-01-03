@@ -24,6 +24,8 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		}
 
 		UpdateMovement();
+
+		UpdateWalkSound();
 	}
 
 	private void CheckClick()
@@ -99,7 +101,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Up;
-			ChangeSpriteDirection (nextDirection);
+			//ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -108,7 +110,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Down;
-			ChangeSpriteDirection (nextDirection);
+			//ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -117,7 +119,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Left;
-			ChangeSpriteDirection (nextDirection);
+			//ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -126,7 +128,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			movingwithArrows = true;
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Right;
-			ChangeSpriteDirection (nextDirection);
+			//ChangeSpriteDirection (nextDirection);
 			if (!moving)
 				DestinationReachedArrows();
 		}
@@ -147,6 +149,8 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			return;
 		
 		DoCurrentTileBehavior();
+
+		moving = false;
 		
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)

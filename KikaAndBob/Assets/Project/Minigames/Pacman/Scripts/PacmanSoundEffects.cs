@@ -16,7 +16,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	public void SetupLocal()
 	{
 		enemiesTrack = LugusAudio.use.SFX().GetTrack();
-		//enemiesTrack.Loop = true; 
+		enemiesTrack.Claim();
 		enemyTrackSettings = new LugusAudioTrackSettings().Loop(true);
 	}
 	
@@ -47,9 +47,9 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		// dig enemy sounds up from Resources just once
 		foreach(EnemyCharacter enemy in enemies)
 		{
-			if (!string.IsNullOrEmpty(enemy.walkSound) && !enemyAudioClips.ContainsKey(enemy.walkSound))
+			if (!string.IsNullOrEmpty(enemy.walkSoundKey) && !enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
-				enemyAudioClips.Add(enemy.walkSound, LugusResources.use.Shared.GetAudio(enemy.walkSound));
+				enemyAudioClips.Add(enemy.walkSoundKey, LugusResources.use.Shared.GetAudio(enemy.walkSoundKey));
 			}
 		}
 	}
@@ -60,7 +60,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		EnemyCharacter newClosestEnemy = null;
 		foreach(EnemyCharacter enemy in enemies)
 		{
-			if (enemy.gameObject.activeInHierarchy && enemyAudioClips.ContainsKey(enemy.walkSound))
+			if (enemy.gameObject.activeInHierarchy && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
 				float distance = Vector2.Distance(player.transform.position.v2(), enemy.transform.position.v2());
 
@@ -76,7 +76,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		{
 			if (newClosestEnemy != closestEnemy || !enemiesTrack.Playing)
 			{
-				enemiesTrack.Play(enemyAudioClips[newClosestEnemy.walkSound], enemyTrackSettings);
+				enemiesTrack.Play(enemyAudioClips[newClosestEnemy.walkSoundKey], enemyTrackSettings);
 				closestEnemy = newClosestEnemy;
 			}
 			enemiesTrack.Volume = Mathf.Lerp(1, 0, closestDistance/maxEnemyDistance);
