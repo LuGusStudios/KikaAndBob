@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class ParallaxMover : MonoBehaviour 
 {
 	public Vector3 speed = Vector3.zero;
+	public RunnerCharacterController character = null;
 
 	public void SetupLocal()
 	{
@@ -14,6 +15,15 @@ public class ParallaxMover : MonoBehaviour
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+		if( RunnerCharacterControllerHorizontal.Exists() )
+			character = RunnerCharacterControllerHorizontal.use;
+		else if( RunnerCharacterControllerVertical.Exists() )
+			character = RunnerCharacterControllerVertical.use;
+
+		if( character == null )
+		{
+			Debug.LogError(name + " : No character found!");
+		}
 	}
 	
 	protected void Awake()
@@ -28,6 +38,12 @@ public class ParallaxMover : MonoBehaviour
 	
 	protected void Update () 
 	{
-		transform.position += speed * Time.deltaTime;
+		Vector3 modifier = Vector3.one;
+		if( character != null )
+		{
+			modifier = character.SpeedScale();
+		}
+
+		transform.position += Vector3.Scale (speed, modifier) * Time.deltaTime;
 	}
 }

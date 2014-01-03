@@ -15,13 +15,28 @@ public class RunnerCharacterControllerVertical : LugusSingletonExisting<RunnerCh
 
 	public int direction = -1; // -1 is down, 1 is up
 	public DataRange speedRange = new DataRange(13.0f, 26.0f);
+	public DataRange SpeedRange(){ return speedRange; }
+	public Vector2 Velocity(){ return rigidbody2D.velocity; }
 	public DataRange speedModifiers = new DataRange(0.5f, 1.5f);
 	public float timeToMaxSpeed = 60.0f;
 	public float horizontalSpeed = 4.0f;
 
+	// speedRange.from is speedScale 1 (normal speed)
+	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
+	// especially handy in things like ParallaxMover
+	public Vector3 SpeedScale()
+	{
+		Vector3 modifier = Vector3.one;
+		
+		//modifier = modifier.x ( Mathf.Abs ( character.Velocity().x / character.SpeedRange().from ) );
+		modifier = modifier.y ( Mathf.Abs ( Velocity().y / SpeedRange().from ) );
+		
+		return modifier;
+	}
+
 	[HideInInspector]
 	public float speedPercentage = 0.0f;
-	[HideInInspector]
+	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
 
 	protected float startTime = -1.0f;
@@ -89,11 +104,17 @@ public class RunnerCharacterControllerVertical : LugusSingletonExisting<RunnerCh
 
 		if( left )
 		{ 
+			//if( this.rigidbody2D.velocity.x > 0.0f )
+			//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
+
 			this.rigidbody2D.velocity += Vector2.right * -1.0f * horizontalSpeed * speedModifier; 
 		}
 		
 		if( right )
 		{
+			//if( this.rigidbody2D.velocity.x < 0.0f )
+			//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
+
 			this.rigidbody2D.velocity += Vector2.right  * horizontalSpeed * speedModifier; 
 		}
 	}

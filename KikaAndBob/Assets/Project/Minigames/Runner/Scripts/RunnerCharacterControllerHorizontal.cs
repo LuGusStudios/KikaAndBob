@@ -5,16 +5,36 @@ using System.Collections.Generic;
 public interface RunnerCharacterController
 {
 	void OnPickupHit(RunnerPickup pickup);
+
+	DataRange SpeedRange();
+	Vector2 Velocity();
+
+	Vector3 SpeedScale(); // to be used in ParallaxMover
 }
 
 public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<RunnerCharacterControllerHorizontal>, RunnerCharacterController
 {
 	//public float speed = 13.0f;
 	public DataRange speedRange = new DataRange(13.0f, 26.0f);
+	public DataRange SpeedRange(){ return speedRange; }
+	public Vector2 Velocity(){ return rigidbody2D.velocity; }
 	public float timeToMaxSpeed = 60.0f;
-	public float jumpForce = 10.0f;
+	public float jumpForce = 10.0f; 
 
-	[HideInInspector]
+	// speedRange.from is speedScale 1 (normal speed)
+	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
+	// especially handy in things like ParallaxMover
+	public Vector3 SpeedScale()
+	{
+		Vector3 modifier = Vector3.one;
+
+		modifier = modifier.x ( Mathf.Abs ( Velocity().x / SpeedRange().from ) );
+		//modifier = modifier.y ( Mathf.Abs ( character.Velocity().y / character.SpeedRange().from ) );
+
+		return modifier;
+	}
+
+	[HideInInspector] 
 	public float speedPercentage = 0.0f;
 
 	protected float startTime = -1.0f;
