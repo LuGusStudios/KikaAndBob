@@ -9,8 +9,8 @@ public class LavaUpdater : PacmanLevelUpdater {
 	protected GameObject lavaPrefab = null;
 	protected GameObject lavaStream = null;
 
-	protected Dictionary<GameTile, GameTile.TileType> originalTileTypes = new Dictionary<GameTile, GameTile.TileType>();
-	protected Dictionary<GameTile, Transform> lavaTiles = new Dictionary<GameTile, Transform>();
+	protected Dictionary<PacmanTile, PacmanTile.TileType> originalTileTypes = new Dictionary<PacmanTile, PacmanTile.TileType>();
+	protected Dictionary<PacmanTile, Transform> lavaTiles = new Dictionary<PacmanTile, Transform>();
 
 
 	public override void Activate()
@@ -67,12 +67,12 @@ public class LavaUpdater : PacmanLevelUpdater {
 	{
 		int streamXLocation = 10;
 		int streamYLocation = 1;
-		GameTile startTile = PacmanLevelManager.use.GetTile(streamXLocation, PacmanLevelManager.use.height - 1);
+		PacmanTile startTile = PacmanLevelManager.use.GetTile(streamXLocation, PacmanLevelManager.use.height - 1);
 
 		// stream first descends to cross entire level
 		while (streamYLocation <= PacmanLevelManager.use.height)
 		{
-			foreach(GameTile tile in PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Down))
+			foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Down))
 			{
 				if (tile == null)
 					continue;
@@ -82,9 +82,9 @@ public class LavaUpdater : PacmanLevelUpdater {
 					originalTileTypes.Add(tile, tile.tileType);
 				}
 
-				if (tile.tileType != GameTile.TileType.Lethal)
+				if (tile.tileType != PacmanTile.TileType.Lethal)
 				{
-					tile.tileType = GameTile.TileType.Lethal;
+					tile.tileType = PacmanTile.TileType.Lethal;
 				}
 
 				if (!lavaTiles.ContainsKey(tile))
@@ -96,7 +96,7 @@ public class LavaUpdater : PacmanLevelUpdater {
 					lavaTileTransform.localPosition = tile.location;
 					lavaTiles.Add(tile, lavaTileTransform);
 
-					foreach(GameTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(tile))
+					foreach(PacmanTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(tile))
 					{
 						updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
 					}
@@ -113,10 +113,10 @@ public class LavaUpdater : PacmanLevelUpdater {
 		// then have top of stream descend
 		while (streamYLocation > 0)
 		{
-			List<GameTile> currentLavaTiles = new List<GameTile>(PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Up));
-			List<GameTile> deleteList = new List<GameTile>();	// we can't delete things while iterating over the dictionary directly, so we add them a list of things to be deleted
+			List<PacmanTile> currentLavaTiles = new List<PacmanTile>(PacmanLevelManager.use.GetTilesInDirection(startTile, streamYLocation, PacmanCharacter.CharacterDirections.Up));
+			List<PacmanTile> deleteList = new List<PacmanTile>();	// we can't delete things while iterating over the dictionary directly, so we add them a list of things to be deleted
 
-			foreach (GameTile tile in lavaTiles.Keys)
+			foreach (PacmanTile tile in lavaTiles.Keys)
 			{
 				if (!currentLavaTiles.Contains(tile))
 				{
@@ -127,7 +127,7 @@ public class LavaUpdater : PacmanLevelUpdater {
 
 			for (int i = 0; i < deleteList.Count; i++) 
 			{
-				foreach(GameTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(deleteList[i]))
+				foreach(PacmanTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(deleteList[i]))
 				{
 					updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
 				}

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameTile
+public class PacmanTile
 {
 	public enum TileType
 	{
@@ -24,7 +24,7 @@ public class GameTile
 	public Vector2 gridIndices;
 	public int exitCount;
 	
-	public GameTile()
+	public PacmanTile()
 	{
 		tileType = TileType.Open;
 		location = Vector2.zero;

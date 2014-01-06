@@ -9,14 +9,14 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 	public bool gameRunning = false;
 	public Vector2 enemySpawnLocation = new Vector2(5, 5);
-	public Vector2 playerSpawnTile = new Vector2(2, 1);
 	protected float timer = 120;
 	protected int lives = 3;
 	protected bool gameDone = false;
-	protected List<EnemyCharacter> enemies = new List<EnemyCharacter>();
+	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
 	protected PacmanPlayerCharacter player;
 	protected Transform level = null;
 	protected List<PacmanPlayerCharacter> playerChars = new List<PacmanPlayerCharacter>();
+	protected int currentLevelIndex = 0;
 
 	protected void Awake () 
 	{
@@ -41,14 +41,14 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// starts a completely new level
 	public void StartNewGame()
 	{
-		StartNewGame("levelDefault");
+		StartNewGame(currentLevelIndex);
 	}
 
 	// starts a completely new level
-	public void StartNewGame(string levelName)
+	public void StartNewGame(int levelIndex)
 	{
-		PacmanLevelManager.use.BuildLevel(levelName);
-
+		PacmanLevelManager.use.BuildLevel(levelIndex);
+		
 		// find and reset any player characters
 		playerChars.Clear();
 		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>(true));
@@ -65,26 +65,30 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		ResetPlayerChars();
 
+
 		// find and reset enemy characters
 		enemies.Clear();
-		enemies = new List<EnemyCharacter>(level.GetComponentsInChildren<EnemyCharacter>(true));
+		enemies = new List<PacmanEnemyCharacter>(level.GetComponentsInChildren<PacmanEnemyCharacter>(true));
+		ResetEnemies();
 
-		//initially disable enemies; they will be gradually re-enabled later
-		DisableEnemies();
-
+		// start character spawn routine (will only enable certain enemies after a time set in the level definition has passed)
+		PacmanLevelManager.use.StartCharacterSpawnRoutine();
+		
 		// start all level updaters
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
 		{
 			updater.Activate();
 		}
 	
+
+		// reset sound effects
 		PacmanSoundEffects.use.Reset(enemies);
 
-		// enable enemies at regular intervals
-		StartCoroutine(EnemySpawning());
 
+		// reset lives
 		lives = 3;
 		PacmanGUIManager.use.UpdateLives(lives);
+
 
 		gameRunning = true;
 	}
@@ -94,62 +98,30 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	{
 		ResetPlayerChars();
 
-		DisableEnemies();
+		ResetEnemies();
 
-		StopAllCoroutines();
-		StartCoroutine(EnemySpawning());
+		PacmanLevelManager.use.StartCharacterSpawnRoutine();
 		
 		gameRunning = true;
 	}
-
-	// puts the player in the start location and resets their movement
+	
 	protected void ResetPlayerChars()
 	{
 		foreach(PacmanPlayerCharacter ppc in playerChars)
 		{
-			ppc.PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
-			ppc.transform.localPosition = PacmanLevelManager.use.GetTile(2,1).location;	// TO DO make customizable and per character
-			ppc.DetectCurrentTile();
-			ppc.ResetMovement();
-		}
-	}
-
-	protected IEnumerator EnemySpawning()
-	{
-		// first enemy takes a fraction of a second to spawn
-		yield return new WaitForSeconds(0.1f);
-		
-		int enemyIndex = 0;
-
-		// the rest spawns at regular intervals
-		while(enemyIndex < enemies.Count)
-		{	
-			EnableEnemy(enemies[enemyIndex]);
-			enemyIndex++;
-			yield return new WaitForSeconds(4);
+			ppc.Reset();
 		}
 	}
 	
-	protected void DisableEnemies()
+	protected void ResetEnemies()
 	{
-		foreach(EnemyCharacter target in enemies)
+		foreach(PacmanEnemyCharacter target in enemies)
 		{
-			foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
-			{
-				spriteRenderer.enabled = false;
-			}
-
-			foreach (SkinnedMeshRenderer skinnedmeshRenderer in (SkinnedMeshRenderer[])target.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-			{
-				skinnedmeshRenderer.enabled = false;
-			}
-
-			target.enabled = false;
-			target.Reset(enemySpawnLocation);
+			target.Reset();
 		}
 	}
 
-	void EnableEnemy(EnemyCharacter target)
+	void EnableEnemy(PacmanEnemyCharacter target)
 	{
 		foreach (SpriteRenderer spriteRenderer in (SpriteRenderer[])target.gameObject.GetComponentsInChildren<SpriteRenderer>())
 		{
@@ -211,6 +183,11 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
 		{
 			updater.Deactivate();
+		}
+
+		if (currentLevelIndex < PacmanLevelManager.use.levels.Length - 1)
+		{
+			currentLevelIndex ++;
 		}
 
 		PacmanGUIManager.use.ShowWinMessage();

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,9 +7,9 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	public float maxEnemyDistance = 100;
 
 	protected Dictionary<string, AudioClip> enemyAudioClips = new Dictionary<string, AudioClip>();	// load enemy sounds by LugusResources just once
-	protected List<EnemyCharacter> enemies = new List<EnemyCharacter>();
+	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
 	protected PacmanPlayerCharacter player = null;
-	protected EnemyCharacter closestEnemy = null;
+	protected PacmanEnemyCharacter closestEnemy = null;
 	protected LugusAudioTrackSettings enemyTrackSettings;
 	protected ILugusAudioTrack enemiesTrack = null;
 
@@ -35,7 +35,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		SetupGlobal();
 	}
 
-	public void Reset(List<EnemyCharacter> _enemies)
+	public void Reset(List<PacmanEnemyCharacter> _enemies)
 	{
 		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		if (player == null)
@@ -45,7 +45,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 
 		enemyAudioClips.Clear();
 		// dig enemy sounds up from Resources just once
-		foreach(EnemyCharacter enemy in enemies)
+		foreach(PacmanEnemyCharacter enemy in enemies)
 		{
 			if (!string.IsNullOrEmpty(enemy.walkSoundKey) && !enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
@@ -57,8 +57,8 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	protected void Update () 
 	{
 		float closestDistance = Mathf.Infinity;
-		EnemyCharacter newClosestEnemy = null;
-		foreach(EnemyCharacter enemy in enemies)
+		PacmanEnemyCharacter newClosestEnemy = null;
+		foreach(PacmanEnemyCharacter enemy in enemies)
 		{
 			if (enemy.gameObject.activeInHierarchy && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{

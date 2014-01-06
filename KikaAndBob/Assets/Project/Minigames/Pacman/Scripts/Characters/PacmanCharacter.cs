@@ -7,19 +7,21 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
 	public string walkSoundKey = "";
+	public float spawnDelay = 0;
 
-	protected GameTile moveTargetTile;			// the tile we are immediately moving to
-	protected Vector3 startPosition = Vector3.zero;
+	protected PacmanTile moveTargetTile;			// the tile we are immediately moving to
+	protected Vector3 moveStartPosition = Vector3.zero;
+	protected Vector2 spawnLocation = Vector2.zero;
 	protected float movementTimer = 0;
 	protected float movementDuration = 0;
 	protected bool moving = false;
 	protected bool horizontalMovement = false;
-	public GameTile currentTile = null;
-	protected GameTile startTile;
+
+	public PacmanTile currentTile = null;
+	protected PacmanTile startTile;
 	protected CharacterDirections currentDirection;
 	protected BoneAnimation currentAnimation = null;
 	protected BoneAnimation[] boneAnimations = null;
-
 		
 	public enum CharacterDirections
 	{
@@ -75,17 +77,17 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			else
 			{
 				movementTimer += Time.deltaTime;
-				transform.localPosition = Vector3.Lerp(startPosition, moveTargetTile.location, movementTimer/movementDuration);
+				transform.localPosition = Vector3.Lerp(moveStartPosition, moveTargetTile.location, movementTimer/movementDuration);
 			}
 		}
 	}
 	
-	protected virtual void MoveTo(GameTile target)
+	protected virtual void MoveTo(PacmanTile target)
 	{
 		moving = true;
 		
 		ResetMovement();
-		startPosition = transform.localPosition;
+		moveStartPosition = transform.localPosition;
 		moveTargetTile = target;
 		
 		if (target == null)
@@ -94,7 +96,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			return;
 		}
 		
-		movementDuration = Vector3.Distance(startPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
+		movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
 		
 		UpdateMovement();	// needs to be called again, or character will pause for one frame
 	}
@@ -234,4 +236,47 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		return Mathf.RoundToInt(transform.localPosition.y);
 	}
 
+	public void EnableCharacter()
+	{
+		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = true;
+		}
+		
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = true;
+		}
+		
+		this.enabled = true;
+	}
+
+	public void DisableCharacter()
+	{
+		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = false;
+		}
+		
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = false;
+		}
+		
+		this.enabled = false;
+	}
+
+	public void SetSpawnLocation(Vector2 location)
+	{
+		spawnLocation = location;
+	}
+
+	public void PlaceAtSpawnLocation()
+	{
+		transform.localPosition = PacmanLevelManager.use.GetTile (spawnLocation).location;
+	}
+
+	public virtual void Reset()
+	{
+	}
 }

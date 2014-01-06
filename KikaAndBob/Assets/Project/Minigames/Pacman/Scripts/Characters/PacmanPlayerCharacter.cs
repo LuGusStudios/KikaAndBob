@@ -20,7 +20,16 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		SetupLocal();
 	}
 
+	protected void Start()
+	{
+		SetupGlobal();
+	}
+
 	public void SetupLocal()
+	{
+	}
+
+	public void SetupGlobal()
 	{
 		walkTrack = LugusAudio.use.SFX().GetTrack();
 		walkTrack.Claim();
@@ -86,7 +95,15 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 				walkTrack.Stop();
 		}
 	}
-	
+
+	public override void Reset()
+	{
+		PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
+		DetectCurrentTile();
+		ResetMovement();
+		PlaceAtSpawnLocation();
+	}
+		
 	public override void DestinationReached()
 	{	
 		if (cutScene)
@@ -97,7 +114,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		moving = false;
 
 		// if we can move in the next selected direction, go there
-		GameTile nextTile = FindOpenTileInDirection(nextDirection);
+		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
@@ -117,7 +134,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	
 	protected void TryMoveInDirection(CharacterDirections direction)
 	{
-		GameTile newTarget = FindOpenTileInDirection(direction);
+		PacmanTile newTarget = FindOpenTileInDirection(direction);
 		
 		if (newTarget != null && newTarget != moveTargetTile)
 		{
@@ -130,30 +147,30 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	// Override for custom behavior
 	protected virtual void DoCurrentTileBehavior()
 	{
-		if (currentTile.tileType == GameTile.TileType.Pickup)
+		if (currentTile.tileType == PacmanTile.TileType.Pickup)
 		{
-			currentTile.tileType = GameTile.TileType.Open;
+			currentTile.tileType = PacmanTile.TileType.Open;
 			currentTile.sprite.SetActive(false);
 			PacmanLevelManager.use.IncreasePickUpCount();
 			PacmanLevelManager.use.CheckPickedUpItems();
 		}
-		else if (currentTile.tileType == GameTile.TileType.Upgrade)
+		else if (currentTile.tileType == PacmanTile.TileType.Upgrade)
 		{
-			currentTile.tileType = GameTile.TileType.Open;
+			currentTile.tileType = PacmanTile.TileType.Open;
 			currentTile.sprite.SetActive(false);
 			LugusCoroutines.use.StartRoutine(PowerupRoutine());
 		}
-		else if (currentTile.tileType == GameTile.TileType.Lethal)
+		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
 		{
 			PacmanGameManager.use.LoseLife();
 		}
-		else if (currentTile.tileType == GameTile.TileType.LevelEnd && PacmanLevelManager.use.AllItemsPickedUp())
+		else if (currentTile.tileType == PacmanTile.TileType.LevelEnd && PacmanLevelManager.use.AllItemsPickedUp())
 		{
 			PacmanGameManager.use.WinGame();
 			allowControl = false;
 			return;
 		}
-		else if (allowControl && currentTile.tileType == GameTile.TileType.Teleport) // this is also under the scope of allowControl, 
+		else if (allowControl && currentTile.tileType == PacmanTile.TileType.Teleport) // this is also under the scope of allowControl, 
 			// because we don't want the player character to look for teleports when he's already moving in one
 		{
 			// TO DO: Make this more elegant and extensible
@@ -166,11 +183,11 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 	}
 	
-	protected GameTile FindOpenTileInDirection(CharacterDirections direction)
+	protected PacmanTile FindOpenTileInDirection(CharacterDirections direction)
 	{
 		int xIndex = (int)currentTile.gridIndices.x;	
 		int yIndex = (int)currentTile.gridIndices.y;
-		GameTile inspectedTile = null;
+		PacmanTile inspectedTile = null;
 		
 		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
@@ -212,13 +229,13 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		return null;
 	}
 	
-	public bool IsEnemyWalkable(GameTile inspectedTile)
+	public bool IsEnemyWalkable(PacmanTile inspectedTile)
 	{
-		if (inspectedTile.tileType == GameTile.TileType.Collide ||
-			inspectedTile.tileType == GameTile.TileType.Locked)
+		if (inspectedTile.tileType == PacmanTile.TileType.Collide ||
+			inspectedTile.tileType == PacmanTile.TileType.Locked)
 			return false;
 
-		if (inspectedTile.tileType == GameTile.TileType.LevelEnd && !PacmanLevelManager.use.AllItemsPickedUp())
+		if (inspectedTile.tileType == PacmanTile.TileType.LevelEnd && !PacmanLevelManager.use.AllItemsPickedUp())
 			return false;
 		
 		return true;

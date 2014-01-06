@@ -17,6 +17,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	 * u: upgrade; if picked up, makes enemies afraid and run away for some time
 	 */
 
+	public PacmanLevelDefinition[] levels = null;
+	public PacmanCharacter[] characterPrefabs = null;
+
 	private string testLevel ="" +
 		"xxxxxxxxxxxxx"+
 		"xpopopopopopx"+
@@ -71,11 +74,15 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	protected Transform pickupParent = null;
 	protected Transform levelParent = null;
 	protected Transform prefabParent = null;
+	protected Transform characterParent = null;
+	protected ILugusCoroutineHandle spawnRoutine = null;
+	protected List<PacmanCharacter> spawnedCharacters = new List<PacmanCharacter>();
+	
 	[HideInInspector]
 	public Transform effectsParent = null;
 	
-	public GameTile[,] levelTiles;
-	public GameTile[] teleportTiles = new GameTile[2];
+	public PacmanTile[,] levelTiles;
+	public PacmanTile[] teleportTiles = new PacmanTile[2];
 
 	public delegate void OnLevelBuilt();
 	public OnLevelBuilt onLevelBuilt;
@@ -106,6 +113,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		pickupParent = levelRoot.FindChild("PickupParent");
 		levelParent = levelRoot.FindChild("LevelParent");
 		effectsParent = levelRoot.FindChild("EffectsParent");
+		characterParent = levelRoot.FindChild("CharacterParent");
 		prefabParent = levelRoot.FindChild("Prefabs");
 		doorPrefab = GetPrefab("Door");
 	}
@@ -121,6 +129,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			Destroy(pickupParent.GetChild(i).gameObject);
 		}
+
+		for (int i = characterParent.childCount - 1; i >= 0; i--) 
+		{
+			Destroy(characterParent.GetChild(i).gameObject);
+		}
 	}
 
 	public void ClearLevelEditor()
@@ -134,22 +147,44 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			DestroyImmediate(pickupParent.GetChild(i).gameObject);
 		}
+
+		for (int i = characterParent.childCount - 1; i >= 0; i--) 
+		{
+			DestroyImmediate(characterParent.GetChild(i).gameObject);
+		}
 	}
 
-	public void BuildLevel(string levelName)
+	public void BuildLevel(int levelIndex)
 	{
-		string levelData = "";
-		// TO DO: Placeholder
-		if (levelName == "levelDefault")
-			levelData = testLevel;
-	
+		if (levelIndex < 0 || levelIndex >= levels.Length)
+		{
+			Debug.LogError("Level index was out of bounds!");
+			return;
+		}
+
+		PacmanLevelDefinition level = levels[levelIndex];
+
 		FindReferences();
 
-		ParseLevel(levelData);
+		#if UNITY_EDITOR
+		ClearLevelEditor();
+		#else
+		ClearLevel();
+		#endif
+
+		ParseLevelTiles(level.level);
+
+		PlaceLevelTiles();
+
+		PlaceCharacters(level.characters);
+
+		if (onLevelBuilt != null)
+			onLevelBuilt();
+		
 		//StartCoroutine(DoorUpdateRoutine());
 	}
 		
-	public void ParseLevel(string levelData)
+	public void ParseLevelTiles(string levelData)
 	{
 		if (string.IsNullOrEmpty(levelData))
 		{
@@ -157,14 +192,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			return;
 		}
 
-		#if UNITY_EDITOR
-			ClearLevelEditor();
-		#else
-			ClearLevel();
-		#endif
-
 		// clear grid
-		levelTiles = new GameTile[width, height];
+		levelTiles = new PacmanTile[width, height];
 		itemsPickedUp = 0;
 		itemsToBePickedUp = 0;
 
@@ -173,7 +202,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			for (int x = 0; x < width; x++)
 			{
-				GameTile currentTile = new GameTile();
+				PacmanTile currentTile = new PacmanTile();
 				levelTiles[x,y] = currentTile;
 
 				// register this tile's grid indices and its true location, which is its index * scale
@@ -189,12 +218,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				// assign tiletype depending on character
 				// could be done with a lookup dictionary, but per type some custom actions are required anyway
 				if (tileChar == 'x')
-					currentTile.tileType = GameTile.TileType.Collide;
+					currentTile.tileType = PacmanTile.TileType.Collide;
 				else if (tileChar == 'o')
-					currentTile.tileType = GameTile.TileType.Open;
+					currentTile.tileType = PacmanTile.TileType.Open;
 				else if (tileChar == 'p')
 				{
-					currentTile.tileType = GameTile.TileType.Pickup;
+					currentTile.tileType = PacmanTile.TileType.Pickup;
 					itemsToBePickedUp++;
 				}
 				else if (tileChar == 'u')
@@ -210,7 +239,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				}
 				else if (testLevel[currentStringIndex] == 'd') // Door tiles start off as open tiletype, but are kept in a list of doors which are regularly switched between Open and Collide
 				{
-					currentTile.tileType = GameTile.TileType.Door;
+					currentTile.tileType = PacmanTile.TileType.Door;
 			
 					GameObject door = (GameObject)Instantiate(doorPrefab);
 					door.transform.parent = levelRoot;
@@ -221,7 +250,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				}
 				else if (testLevel[currentStringIndex] == 't')	// teleport tiles on either side of the field
 				{
-					currentTile.tileType = GameTile.TileType.Teleport;
+					currentTile.tileType = PacmanTile.TileType.Teleport;
 					for (int i = 0; i < teleportTiles.Length; i++)
 					{
 						if (teleportTiles[i] == null)
@@ -231,26 +260,137 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 					}
 				}
 				else if (testLevel[currentStringIndex] == 'e')	// entering this tile finishes the game
-					currentTile.tileType = GameTile.TileType.LevelEnd;
+					currentTile.tileType = PacmanTile.TileType.LevelEnd;
 				else if (testLevel[currentStringIndex] == 'a')	
-					currentTile.tileType = GameTile.TileType.Locked;
+					currentTile.tileType = PacmanTile.TileType.Locked;
 				else
-					currentTile.tileType = GameTile.TileType.Open;
+					currentTile.tileType = PacmanTile.TileType.Open;
 			}
 		}
 		
 		//PacmanGUIManager.use.UpdatePickupCounter(itemsToBePickedUp);
 		
 		// count tile exits for each tile. Enemies use this value to figure out whether they're in a cul-de-sac and are allowed to turn around.
-		foreach(GameTile tile in levelTiles)
+		foreach(PacmanTile tile in levelTiles)
 		{
 			tile.exitCount = GetNumberOfExits(tile);
 		}
+	}
 
-		BuildLevelTiles();
+	public void PlaceCharacters(PacmanCharacterDefinition[] characters)
+	{
+		if (characters == null || characters.Length < 1)
+		{
+			Debug.LogError("This level has no characters!");
+			return;
+		}
 
-		if (onLevelBuilt != null)
-			onLevelBuilt();
+		foreach(PacmanCharacterDefinition characterDefinition in characters)
+		{
+			spawnedCharacters.Clear();
+
+			if (string.IsNullOrEmpty(characterDefinition.id))
+			{
+				Debug.LogError("Character ID is null or empty!");
+				continue;
+			}
+
+			PacmanCharacter characterPrefabFound = null;
+			foreach(PacmanCharacter characterPrefab in characterPrefabs)
+			{
+				if (characterDefinition.id == characterPrefab.gameObject.name)
+				{
+					characterPrefabFound = characterPrefab;
+					break;
+				}
+			}
+
+			if (characterPrefabFound == null)
+			{
+				Debug.LogError("Character prefab could not be found: " + characterDefinition.id);
+				continue;
+			}
+
+			PacmanCharacter characterSpawned = (PacmanCharacter)Instantiate(characterPrefabFound);
+
+			characterSpawned.transform.parent = characterParent;
+			PacmanTile startTile = GetTile(characterDefinition.xLocation, characterDefinition.yLocation);
+			characterSpawned.transform.localPosition = Vector3.zero;
+			
+			// check if character doesn't happen to be on weird tile (not a problem per se, but probably unwanted)
+			if (startTile.tileType != PacmanTile.TileType.Open && startTile.tileType != PacmanTile.TileType.Pickup)
+			{
+				Debug.LogWarning("Caution. Character " + characterDefinition.id + " placed on non-open tile: " + startTile + ": " + startTile.tileType );
+			}
+
+			// set speed
+			if (characterDefinition.speed < 0)
+			{
+				Debug.LogError("Speed is negative for character " + characterDefinition.id + ". Setting speed to 1.");
+				characterSpawned.speed = 1;
+			}
+			else
+			{
+				characterSpawned.speed = characterDefinition.speed;
+			}
+
+			// set spawndelay - i.e. how long before various characters become visible 
+			// characters are then gradually enabled by CharacterSpawnRoutine()
+			if (characterDefinition.spawnDelay < 0)
+			{
+				Debug.LogError("Spawn delay is negative for character " + characterDefinition.id + ". Setting spawn delay to 0.");
+				characterSpawned.spawnDelay = 0;
+			}
+			else
+			{
+				characterSpawned.spawnDelay = characterDefinition.spawnDelay;
+			}
+
+			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
+
+			spawnedCharacters.Add(characterSpawned);
+		}
+	}
+
+	public void StartCharacterSpawnRoutine()
+	{
+		// stop and restart character spawn routine
+		if (spawnRoutine != null && spawnRoutine.Running)
+		{
+			spawnRoutine.StopRoutine();
+		}
+		
+		spawnRoutine = LugusCoroutines.use.StartRoutine(CharacterSpawnRoutine(spawnedCharacters));
+	}
+
+	protected IEnumerator CharacterSpawnRoutine(List<PacmanCharacter> spawnedCharacters)
+	{
+		List<PacmanCharacter> toBeEnabled = spawnedCharacters;
+		
+		foreach(PacmanCharacter c in spawnedCharacters)
+		{
+			if (c.spawnDelay > 0)
+				c.DisableCharacter();
+			else
+				toBeEnabled.Remove(c);
+		}
+
+		float time = 0;
+		while (toBeEnabled.Count > 0)
+		{
+			// each from, iterate over all characters until they've all been re-enabled
+			for (int i = toBeEnabled.Count-1; i >= 0; i--) 
+			{
+				if (time >= toBeEnabled[i].spawnDelay)
+				{
+					toBeEnabled[i].EnableCharacter();
+					toBeEnabled.Remove(toBeEnabled[i]);
+				}
+			}
+
+			time += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
 	}
 
 	public GameObject GetPrefab(string name)
@@ -266,11 +406,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 	}
 
-	void BuildLevelTiles()
+	protected void PlaceLevelTiles()
 	{
-		foreach(GameTile tile in levelTiles)
+		foreach(PacmanTile tile in levelTiles)
 		{
-			if (tile.tileType == GameTile.TileType.Collide)
+			if (tile.tileType == PacmanTile.TileType.Collide)
 			{
 				GameObject block = new GameObject(tile.gridIndices.ToString());
 
@@ -302,7 +442,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 					decorationSpriteRenderer.sprite = blockDecorations[Random.Range(0, blockDecorations.Length)];
 				}
 			}
-			else if (tile.tileType == GameTile.TileType.Pickup)
+			else if (tile.tileType == PacmanTile.TileType.Pickup)
 			{
 				GameObject pickUp = new GameObject(tile.gridIndices.ToString());
 				pickUp.AddComponent<SpriteRenderer>().sprite = pickupSprite;
@@ -312,7 +452,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 				tile.sprite = pickUp;
 			}
-			else if (tile.tileType == GameTile.TileType.LevelEnd)
+			else if (tile.tileType == PacmanTile.TileType.LevelEnd)
 			{
 				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 				
@@ -328,13 +468,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	// Lookup methods--------------------------------------------------------------------
 
 	// get tile by grid indices (contained in vector2)
-	public GameTile GetTile(Vector2 coords)
+	public PacmanTile GetTile(Vector2 coords)
 	{
 		return GetTile(coords, false);
 	}
 
 	// get tile by grid indices (contained in vector2)
-	public GameTile GetTile(Vector2 coords, bool clamp)
+	public PacmanTile GetTile(Vector2 coords, bool clamp)
 	{
 		int x = Mathf.RoundToInt(coords.x);
 		int y = Mathf.RoundToInt(coords.y);
@@ -343,13 +483,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	}
 
 	// get tile by grid indices
-	public GameTile GetTile(int x, int y)
+	public PacmanTile GetTile(int x, int y)
 	{
 		return GetTile(x, y, false);
 	}
 
 	// get tile by local position under level root
-	public GameTile GetTileByLocation(float x, float y)
+	public PacmanTile GetTileByLocation(float x, float y)
 	{
 		int xIndex = Mathf.RoundToInt(x/scale);
 		int yIndex = Mathf.RoundToInt(y/scale);
@@ -362,7 +502,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return GetTile(xIndex, yIndex, true);
 	}
 
-	public GameTile GetTile(int x, int y, bool clamp)
+	public PacmanTile GetTile(int x, int y, bool clamp)
 	{
 		if (x >= width || x < 0)
 		{
@@ -382,7 +522,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return levelTiles[x, y];
 	}
 
-	public GameTile GetTileInDirection(GameTile startTile, PacmanCharacter.CharacterDirections direction)
+	public PacmanTile GetTileInDirection(PacmanTile startTile, PacmanCharacter.CharacterDirections direction)
 	{
 		if (direction == PacmanCharacter.CharacterDirections.Undefined)
 		{
@@ -410,14 +550,14 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return null;
 	}
 	
-	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, PacmanCharacter.CharacterDirections direction)
+	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction)
 	{
 		return GetTilesInDirection(startTile, amount, direction, false);
 	}
 
-	public GameTile[] GetTilesInDirection(GameTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp)
+	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp)
 	{
-		List<GameTile> tileList = new List<GameTile>();
+		List<PacmanTile> tileList = new List<PacmanTile>();
 		
 		int xStart = (int)startTile.gridIndices.x;
 		int yStart = (int)startTile.gridIndices.y;
@@ -460,9 +600,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return tileList.ToArray();
 	}
 
-	public GameTile[] GetTilesAroundStraight(GameTile tile)
+	public PacmanTile[] GetTilesAroundStraight(PacmanTile tile)
 	{
-		List<GameTile> result = new List<GameTile>();
+		List<PacmanTile> result = new List<PacmanTile>();
 
 		foreach(PacmanCharacter.CharacterDirections direction in System.Enum.GetValues(typeof(PacmanCharacter.CharacterDirections)))
 		{
@@ -506,7 +646,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return LevelQuadrant.None;
 	}
 
-	public LevelQuadrant GetQuadrantOfTile(GameTile tile)
+	public LevelQuadrant GetQuadrantOfTile(PacmanTile tile)
 	{
 		if (tile.gridIndices.x >= width / 2 &&
 		    tile.gridIndices.y >= height / 2)
@@ -532,13 +672,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return LevelQuadrant.None;
 	}
 
-	public GameTile[] GetTilesForQuadrant(LevelQuadrant quadrant)
+	public PacmanTile[] GetTilesForQuadrant(LevelQuadrant quadrant)
 	{
-		List<GameTile> returnTiles = new List<GameTile>();
+		List<PacmanTile> returnTiles = new List<PacmanTile>();
 
 		if (quadrant == LevelQuadrant.NE)
 		{
-			foreach(GameTile tile in levelTiles)
+			foreach(PacmanTile tile in levelTiles)
 			{
 				if (tile.gridIndices.x >= width / 2 &&
 				    tile.gridIndices.y >= height / 2)
@@ -549,7 +689,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		else if (quadrant == LevelQuadrant.SE)
 		{
-			foreach(GameTile tile in levelTiles)
+			foreach(PacmanTile tile in levelTiles)
 			{
 				if (tile.gridIndices.x >= width / 2 &&
 				    tile.gridIndices.y < height / 2)
@@ -560,7 +700,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		else if (quadrant == LevelQuadrant.SW)
 		{
-			foreach(GameTile tile in levelTiles)
+			foreach(PacmanTile tile in levelTiles)
 			{
 				if (tile.gridIndices.x < width / 2 &&
 				    tile.gridIndices.y < height / 2)
@@ -571,7 +711,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		else if (quadrant == LevelQuadrant.NW)
 		{
-			foreach(GameTile tile in levelTiles)
+			foreach(PacmanTile tile in levelTiles)
 			{
 				if (tile.gridIndices.x < width / 2 &&
 				    tile.gridIndices.y >= height / 2)
@@ -583,7 +723,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return returnTiles.ToArray();
 	}
 	
-	public GameTile GetTileByClick(Vector3 clickPoint)
+	public PacmanTile GetTileByClick(Vector3 clickPoint)
 	{
 		Vector3 pointOnLevel = (LugusCamera.game.ScreenToWorldPoint(clickPoint) - levelRoot.position);
 
@@ -607,7 +747,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return GetTileByLocation(pointOnLevel.x, pointOnLevel.y);
 	}
 
-	public float GetDistanceBetweenTiles(GameTile tile1, GameTile tile2)
+	public float GetDistanceBetweenTiles(PacmanTile tile1, PacmanTile tile2)
 	{
 		if (tile1 == null)
 		{
@@ -624,7 +764,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return Vector2.Distance(tile1.location, tile2.location);
 	}
 
-	public Vector2 GetTileDistanceBetweenTiles(GameTile tile1, GameTile tile2)
+	public Vector2 GetTileDistanceBetweenTiles(PacmanTile tile1, PacmanTile tile2)
 	{
 		if (tile1 == null)
 		{
@@ -662,19 +802,19 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public void UnlockCenter()
 	{
-		foreach(GameTile tile in levelTiles)
+		foreach(PacmanTile tile in levelTiles)
 		{
-			if (tile.tileType == GameTile.TileType.Locked)
-				tile.tileType = GameTile.TileType.EnemyAvoid;
+			if (tile.tileType == PacmanTile.TileType.Locked)
+				tile.tileType = PacmanTile.TileType.EnemyAvoid;
 		}
 	}
 
-	public int GetNumberOfExits(GameTile tile)
+	public int GetNumberOfExits(PacmanTile tile)
 	{
 		int exitCounter = 0;
 		int x = (int)tile.gridIndices.x;
 		int y = (int)tile.gridIndices.y;
-		GameTile inspectedTile;
+		PacmanTile inspectedTile;
 	
 		// TO DO: Optimize. We're currently doing excess work for neighboring tiles that share an exit.
 		
@@ -682,7 +822,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		inspectedTile = GetTile(x, y+1);		// will return null for invalid coords
 		if (inspectedTile != null)
 		{
-			if (EnemyCharacter.IsEnemyWalkable(inspectedTile))
+			if (PacmanEnemyCharacter.IsEnemyWalkable(inspectedTile))
 				exitCounter++;
 		}
 		
@@ -690,7 +830,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		inspectedTile = GetTile(x+1, y);				// will return null for invalid coords
 		if (inspectedTile != null)
 		{
-			if (EnemyCharacter.IsEnemyWalkable(inspectedTile))
+			if (PacmanEnemyCharacter.IsEnemyWalkable(inspectedTile))
 				exitCounter++;
 		}
 		
@@ -698,7 +838,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		inspectedTile = GetTile(x, y-1);				// will return null for invalid coords
 		if (inspectedTile != null)
 		{
-			if (EnemyCharacter.IsEnemyWalkable(inspectedTile))
+			if (PacmanEnemyCharacter.IsEnemyWalkable(inspectedTile))
 				exitCounter++;
 		}
 		
@@ -706,16 +846,25 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		inspectedTile = GetTile(x-1, y);				// will return null for invalid coords
 		if (inspectedTile != null)
 		{
-			if (EnemyCharacter.IsEnemyWalkable(inspectedTile))
+			if (PacmanEnemyCharacter.IsEnemyWalkable(inspectedTile))
 				exitCounter++;
 		}
 		
 		return exitCounter;	
 	}
+
+	void OnGUI()
+	{
+		if (LugusDebug.debug)
+		{
+			for (int i = 0; i < levels.Length; i++) 
+			{
+				if (GUILayout.Button("Level " + i))
+				{
+					PacmanGameManager.use.StartNewGame(i);
+				}
+			}
+		}
+	}
 }
 
-public class PacmanLevel
-{
-	public string id = "NewLevelName"; 
-	public string level;
-}

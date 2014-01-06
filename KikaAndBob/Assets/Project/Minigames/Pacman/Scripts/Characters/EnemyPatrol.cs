@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyPatrol : EnemyCharacter {
+public class EnemyPatrol : PacmanEnemyCharacter {
 
-	protected List<GameTile> patrolPath = new List<GameTile>();
+	protected List<PacmanTile> patrolPath = new List<PacmanTile>();
 	protected int patrolIndex = 0;
 	protected int playerChaseCount = 5;		// how many tiles will the enemy chase the player without seeing them directly
 	protected int playerChaseCounter = 0; 	// how many tiles the enemy has chased the player without seeing them directly
@@ -30,7 +30,7 @@ public class EnemyPatrol : EnemyCharacter {
 		{
 			FrightenedEffect();
 
-			GameTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
+			PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
 				PacmanLevelManager.use.GetOppositeQuadrant(
 					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
 
@@ -68,7 +68,7 @@ public class EnemyPatrol : EnemyCharacter {
 					// turn off player sighted effect
 					transform.localScale = originalScale;
 					//Debug.Log("Player not detected! Continuing patrol.");
-					foreach (GameTile patrolTile in patrolPath)
+					foreach (PacmanTile patrolTile in patrolPath)
 					{
 						// if patrol waypoint was reached, find next
 						if (currentTile == patrolTile)

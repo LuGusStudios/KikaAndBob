@@ -93,16 +93,16 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		PacmanGameManager.use.StartNewGame();
 	}
 	
-	public void UpdateDoors(List<GameTile> doors)
+	public void UpdateDoors(List<PacmanTile> doors)
 	{
-		foreach(GameTile door in doors)
+		foreach(PacmanTile door in doors)
 		{
 			if (door == null)
 				continue;
 
-			if (door.tileType == GameTile.TileType.Collide)
+			if (door.tileType == PacmanTile.TileType.Collide)
 				door.sprite.SetActive(true);
-			else if (door.tileType == GameTile.TileType.Open)
+			else if (door.tileType == PacmanTile.TileType.Open)
 				door.sprite.SetActive(false);
 		}
 	}

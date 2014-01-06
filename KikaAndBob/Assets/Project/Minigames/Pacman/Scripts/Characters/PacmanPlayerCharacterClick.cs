@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 
-	protected GameTile clickedTile = null;
+	protected PacmanTile clickedTile = null;
 
 	private void Update () 
 	{
@@ -121,7 +121,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 		}
 
 		// if we can move in the next selected direction, go there
-		GameTile nextTile = FindOpenTileInDirection(nextDirection);
+		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;

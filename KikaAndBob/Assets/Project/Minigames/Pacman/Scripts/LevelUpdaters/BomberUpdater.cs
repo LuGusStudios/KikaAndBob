@@ -13,12 +13,12 @@ public class BomberUpdater : PacmanLevelUpdater {
 
 	protected class ChargedTile
 	{
-		public GameTile attachedTile = null;
+		public PacmanTile attachedTile = null;
 		public GameObject bombItem = null;
 		private float duration = 0;
 		private float timer;
 
-		public ChargedTile(GameTile _tile, float _duration, GameObject _bombItem)
+		public ChargedTile(PacmanTile _tile, float _duration, GameObject _bombItem)
 		{
 			attachedTile = _tile;
 			duration = _duration;
@@ -100,10 +100,10 @@ public class BomberUpdater : PacmanLevelUpdater {
 				Destroy(ps.gameObject, 5);
 
 				// clear tiles around
-				foreach (GameTile tile in PacmanLevelManager.use.GetTilesAroundStraight(ctile.attachedTile))
+				foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(ctile.attachedTile))
 				{
 					Destroy(tile.sprite);
-					tile.tileType = GameTile.TileType.Open;
+					tile.tileType = PacmanTile.TileType.Open;
 				}
 
 				chargedTiles.Remove(ctile);
