@@ -9,25 +9,43 @@ public class RandomFlip : MonoBehaviour
 	public bool flipX = true;
 	public bool flipY = false;
 
+	public GameObject[] brothers;
+
 	public void SetupLocal()
 	{
-		RunnerMover mover = GetComponent<RunnerMover>();
+		bool x = Random.value > 0.5f  && flipX;
+		bool y = Random.value < 0.5f && flipY;
 
-		if( Random.value > 0.5f  && flipX )
+
+		Flip ( this.transform, x, y);
+		foreach( GameObject obj in brothers )
 		{
-			this.transform.localPosition   = Vector3.Scale( this.transform.localPosition, new Vector3(-1.0f, 1.0f, 1.0f) );
-			this.transform.localScale = Vector3.Scale(this.transform.localScale, new Vector3(-1.0f, 1.0f, 1.0f) );
+			if( obj != null )
+			{
+				Flip ( obj.transform, x, y );
+			}
+		}
+	}
 
+	protected void Flip( Transform target, bool x, bool y )
+	{
+		RunnerMover mover = target.GetComponent<RunnerMover>();
+
+		if( x )
+		{
+			target.localPosition   = Vector3.Scale( target.localPosition, new Vector3(-1.0f, 1.0f, 1.0f) );
+			target.localScale = Vector3.Scale(target.localScale, new Vector3(-1.0f, 1.0f, 1.0f) );
+			
 			if( mover != null )
 			{
 				mover.direction = Vector3.Scale( mover.direction, new Vector3(-1.0f, 1.0f, 1.0f) );
 			}
 		}
 
-		if( Random.value < 0.5f && flipY )
+		if( y )
 		{
-			this.transform.localPosition   = Vector3.Scale( this.transform.localPosition, new Vector3(1.0f, -1.0f, 1.0f) );
-			this.transform.localScale = Vector3.Scale(this.transform.localScale, new Vector3(1.0f, -1.0f, 1.0f) );
+			target.localPosition   = Vector3.Scale( target.localPosition, new Vector3(1.0f, -1.0f, 1.0f) );
+			target.localScale = Vector3.Scale(target.localScale, new Vector3(1.0f, -1.0f, 1.0f) );
 			
 			if( mover != null )
 			{

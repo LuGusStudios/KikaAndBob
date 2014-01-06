@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,29 +7,107 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public List<RunnerInteractionZone> zones = new List<RunnerInteractionZone>();
 	public LayerSpawner groundLayer = null;
 
-	protected int nextZoneCountdown = 0;
+	public enum Direction
+	{
+		NONE = -1,
+
+		EAST = 1, // character is running to the right
+		WEST = 2, // character running to the left
+		NORTH = 3, // character running to the top
+		SOUTH = 4 // character running to the bottom
+	}
+
+	public Direction direction = Direction.EAST;
+
+	//protected int nextZoneCountdown = 0;
+	protected float sectionSpanOverflow = 0.0f;
+	protected RunnerInteractionZone lastSpawned = null;
 
 	public void OnSectionSwitch(LayerSection currentSection, LayerSection newSection)
 	{
 		//Debug.LogError("SECTION SWITCH ACCEPTED");
 
-		--nextZoneCountdown;
-		if( nextZoneCountdown < 0 )
-			nextZoneCountdown = 0;
+		float sectionSpan = sectionSpanOverflow;
 
-		if( nextZoneCountdown == 0 )
+		// when spawning new sections, we can't really do this on a separate clock (separate from section generation)
+		// because we don't know how long a section is going to be on screen...
+		// so, instead : spawn everything that resides within this section (And possibly a part of the next section)
+		// and keep how "far over the edge" we went, so we can take that into account on the next section spawn 
+		while( sectionSpan < 1.0f )
 		{
-			RunnerInteractionZone newZone = (RunnerInteractionZone) GameObject.Instantiate( zones[ Random.Range(0, zones.Count) ] );
+			RunnerInteractionZone zonePrefab = null;
+			do
+			{
+				zonePrefab = zones[ Random.Range(0, zones.Count) ];
+				 
+				if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+					lastSpawned = null;
+			}
+			while( zonePrefab == lastSpawned ); 
+
+			if( sectionSpan + zonePrefab.sectionSpan > 1.0f )
+			{
+				// if we spawn the zones outside of the section, chances are big they will "disappear" at the end
+				// because they are parented to the section, which is being re-used constantly
+				// so: make sure the zones don't surpass the section's area on the end side
+				
+				//Debug.LogError("DISMISSED " + zonePrefab.name + " with span " + zonePrefab.sectionSpan );
+				break;
+			}
+
+
+			lastSpawned = zonePrefab;
+			
+			RunnerInteractionZone newZone = (RunnerInteractionZone) GameObject.Instantiate( zonePrefab );
+
+
+			sectionSpan += (newZone.sectionSpan / 2.0f); // only half for now, because we want the zone to spawn in "it's center"
+
 			
 			newZone.gameObject.SetActive(true);
-			newZone.transform.position = newSection.transform.position.zAdd( -30.0f );
-			newZone.transform.parent = newSection.transform;
+			newZone.transform.position = newSection.transform.position.zAdd( (sectionSpan + 1.0f) * -30.0f ); // zone is now at CENTER of new section
 
+			Vector3 offset = Vector3.zero;
+			
+			// offset = sectionSpan/2 * width/height - [width/height]/2
+			//          (add from START (left or bottom) of the section) - (half, because we're at the CENTER now: need to undo)
+			if( this.direction == Direction.EAST )
+			{
+				// EAST: start counting on the left, as we normally do on the x axis
+				offset = new Vector3( (sectionSpan * newSection.width) - (newSection.width / 2.0f), 0.0f, 0.0f );
+			}
+			else if( this.direction == Direction.WEST )
+			{
+				// WEST: start couting on the RIGHT : flip x basically
+				offset = new Vector3( (-1.0f * (sectionSpan * newSection.width)) + (newSection.width / 2.0f), 0.0f, 0.0f );
+			}
+			else if( this.direction == Direction.NORTH )
+			{
+				// NORTH: start counting on the bottom, as we normally do on the y axis
+				offset = new Vector3(0.0f, (sectionSpan * newSection.height) - (newSection.height / 2.0f), 0.0f );
+			}
+			else
+			{
+				// SOUTH : start counting on the TOP : flip y 
+				offset = new Vector3(0.0f, (-1.0f * (sectionSpan * newSection.height)) + (newSection.height / 2.0f), 0.0f );
+			}
+
+			newZone.transform.position += offset; 
+
+
+			newZone.transform.parent = newSection.transform;
+			
 			// TODO: do this at build time? or at least at level startup once, not every time we spawn!
 			GameObject.Destroy( newZone.transform.FindChild("Background").gameObject );
-
-			nextZoneCountdown += newZone.sectionWidth;
+			
+			sectionSpan += (newZone.sectionSpan / 2.0f); 
+			 
+			//Debug.LogWarning("Spawned " + newZone.name + " with span " + newZone.sectionSpan + " so total is now " + sectionSpan + " // " + offset + " of " + newSection.height );
 		}
+
+		sectionSpanOverflow = sectionSpan - 1.0f; // what remains for the next section
+
+		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
 	}
 
 	public void SetupLocal()
