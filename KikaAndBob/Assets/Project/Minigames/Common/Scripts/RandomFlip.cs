@@ -13,8 +13,8 @@ public class RandomFlip : MonoBehaviour
 
 	public void SetupLocal()
 	{
-		bool x = Random.value > 0.5f  && flipX;
-		bool y = Random.value < 0.5f && flipY;
+		bool x = Random.value < flipChance && flipX;
+		bool y = Random.value < flipChance && flipY;
 
 
 		Flip ( this.transform, x, y);
@@ -67,10 +67,5 @@ public class RandomFlip : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
-	}
-	
-	protected void Update () 
-	{
-	
 	}
 }

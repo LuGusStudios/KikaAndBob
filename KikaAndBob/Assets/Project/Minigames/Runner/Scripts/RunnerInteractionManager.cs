@@ -4,6 +4,16 @@ using System.Collections.Generic;
 
 public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteractionManager>  
 {
+	public bool activated = true;
+	public void Activate()
+	{
+		activated = true;
+	}
+	public void Deactivate()
+	{
+		activated = false;
+	}
+
 	public List<RunnerInteractionZone> zones = new List<RunnerInteractionZone>();
 	public LayerSpawner groundLayer = null;
 
@@ -19,12 +29,19 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public Direction direction = Direction.EAST;
 
+	public float sectionSpanMultiplier = 1.0f;
+
 	//protected int nextZoneCountdown = 0;
 	protected float sectionSpanOverflow = 0.0f;
 	protected RunnerInteractionZone lastSpawned = null;
 
 	public void OnSectionSwitch(LayerSection currentSection, LayerSection newSection)
 	{
+		if( !activated )
+		{
+			return;
+		}
+
 		//Debug.LogError("SECTION SWITCH ACCEPTED");
 
 		float sectionSpan = sectionSpanOverflow;
@@ -45,13 +62,15 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			}
 			while( zonePrefab == lastSpawned ); 
 
-			if( sectionSpan + zonePrefab.sectionSpan > 1.0f )
+			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
+
+			if( sectionSpan + newSectionSpan > 0.9f ) // not 1.0f but 0.9f, to provide some extra padding
 			{
 				// if we spawn the zones outside of the section, chances are big they will "disappear" at the end
 				// because they are parented to the section, which is being re-used constantly
 				// so: make sure the zones don't surpass the section's area on the end side
 				
-				//Debug.LogError("DISMISSED " + zonePrefab.name + " with span " + zonePrefab.sectionSpan );
+				//Debug.LogError("DISMISSED " + zonePrefab.name + " with span " + newSectionSpan );
 				break;
 			}
 
@@ -61,7 +80,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			RunnerInteractionZone newZone = (RunnerInteractionZone) GameObject.Instantiate( zonePrefab );
 
 
-			sectionSpan += (newZone.sectionSpan / 2.0f); // only half for now, because we want the zone to spawn in "it's center"
+			sectionSpan += (newSectionSpan / 2.0f); // only half for now, because we want the zone to spawn in "it's center"
 
 			
 			newZone.gameObject.SetActive(true);
@@ -100,14 +119,15 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			// TODO: do this at build time? or at least at level startup once, not every time we spawn!
 			GameObject.Destroy( newZone.transform.FindChild("Background").gameObject );
 			
-			sectionSpan += (newZone.sectionSpan / 2.0f); 
+			sectionSpan += (newSectionSpan / 2.0f); 
 			 
-			//Debug.LogWarning("Spawned " + newZone.name + " with span " + newZone.sectionSpan + " so total is now " + sectionSpan + " // " + offset + " of " + newSection.height );
+			//Debug.LogWarning("Spawned " + newZone.name + " with span " + newSectionSpan + " so total is now " + sectionSpan + " // " + offset + " of " + newSection.height );
 		}
 
 		sectionSpanOverflow = sectionSpan - 1.0f; // what remains for the next section
+		sectionSpanOverflow = Mathf.Max ( sectionSpanOverflow, -0.4f ); // make sure we don't spawn too far in the "previous" section or we might see some popping there
 
-		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
+		Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
 	}
 
 	public void SetupLocal()
