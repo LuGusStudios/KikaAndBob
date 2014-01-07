@@ -60,6 +60,9 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		PacmanEnemyCharacter newClosestEnemy = null;
 		foreach(PacmanEnemyCharacter enemy in enemies)
 		{
+			if (enemy == null)
+				return;
+
 			if (enemy.gameObject.activeInHierarchy && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
 				float distance = Vector2.Distance(player.transform.position.v2(), enemy.transform.position.v2());

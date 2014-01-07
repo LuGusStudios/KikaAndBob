@@ -154,6 +154,22 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 	}
 
+	// only used for testing and for quickly building a level
+	public void BuildLevelDebug(string levelData, int _width, int _height)
+	{
+		FindReferences();
+		
+		#if UNITY_EDITOR
+		ClearLevelEditor();
+		#else
+		ClearLevel();
+		#endif
+		
+		ParseLevelTiles(levelData, _width, _height);
+		
+		PlaceLevelTiles();
+	}
+
 	public void BuildLevel(int levelIndex)
 	{
 		if (levelIndex < 0 || levelIndex >= levels.Length)
@@ -172,7 +188,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		ClearLevel();
 		#endif
 
-		ParseLevelTiles(level.level);
+		ParseLevelTiles(level.level, width, height);
 
 		PlaceLevelTiles();
 
@@ -184,7 +200,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		//StartCoroutine(DoorUpdateRoutine());
 	}
 		
-	public void ParseLevelTiles(string levelData)
+	public void ParseLevelTiles(string levelData, int _width, int _height)
 	{
 		if (string.IsNullOrEmpty(levelData))
 		{
@@ -193,7 +209,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 
 		// clear grid
-		levelTiles = new PacmanTile[width, height];
+		levelTiles = new PacmanTile[_width, _height];
 		itemsPickedUp = 0;
 		itemsToBePickedUp = 0;
 
@@ -213,7 +229,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				// e.g. tile at row 2, column 4 in a grid of 5*5 has index (((5-1)-2)*5) + 4 = 14
 				int currentStringIndex = (((height-1)-y)*width) + x;
 
-				char tileChar = testLevel[currentStringIndex];
+				char tileChar = 'o';
+				if (currentStringIndex < levelData.Length)
+					tileChar = levelData[currentStringIndex];
 
 				// assign tiletype depending on character
 				// could be done with a lookup dictionary, but per type some custom actions are required anyway
@@ -285,9 +303,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			return;
 		}
 
+		spawnedCharacters.Clear();
+		
 		foreach(PacmanCharacterDefinition characterDefinition in characters)
 		{
-			spawnedCharacters.Clear();
 
 			if (string.IsNullOrEmpty(characterDefinition.id))
 			{
@@ -359,20 +378,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			spawnRoutine.StopRoutine();
 		}
-		
+
 		spawnRoutine = LugusCoroutines.use.StartRoutine(CharacterSpawnRoutine(spawnedCharacters));
 	}
 
 	protected IEnumerator CharacterSpawnRoutine(List<PacmanCharacter> spawnedCharacters)
 	{
-		List<PacmanCharacter> toBeEnabled = spawnedCharacters;
-		
-		foreach(PacmanCharacter c in spawnedCharacters)
+		List<PacmanCharacter> toBeEnabled = new List<PacmanCharacter>(spawnedCharacters);
+
+		for (int i = toBeEnabled.Count-1; i >= 0; i--) 
 		{
-			if (c.spawnDelay > 0)
-				c.DisableCharacter();
+			if (toBeEnabled[i].spawnDelay > 0)
+			{
+				toBeEnabled[i].DisableCharacter();
+			}
 			else
-				toBeEnabled.Remove(c);
+			{
+				toBeEnabled.Remove(toBeEnabled[i]);
+			}
 		}
 
 		float time = 0;
@@ -408,6 +431,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	protected void PlaceLevelTiles()
 	{
+		if (levelTiles == null)
+			return;
+
 		foreach(PacmanTile tile in levelTiles)
 		{
 			if (tile.tileType == PacmanTile.TileType.Collide)
