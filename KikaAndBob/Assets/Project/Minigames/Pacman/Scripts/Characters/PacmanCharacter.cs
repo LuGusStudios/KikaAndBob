@@ -21,7 +21,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected PacmanTile startTile;
 	protected CharacterDirections currentDirection;
 	protected BoneAnimation currentAnimation = null;
-	protected BoneAnimation[] boneAnimations = null;
+
+	protected PacmanCharacterAnimator characterAnimator = null;
 		
 	public enum CharacterDirections
 	{
@@ -36,33 +37,49 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	{
 		return currentDirection;
 	}
-	
-	void FindAnimations()
+
+	protected void Awake()
 	{
-		// this only needs to be done once, but it's handy to be able to call from various places to ensure these are always assigned
-		if (boneAnimations == null || boneAnimations.Length <= 0)
+		SetUpLocal();
+	}
+
+	public void SetUpLocal()
+	{
+		characterAnimator = GetComponent<PacmanCharacterAnimator>();
+
+		if (characterAnimator == null)
 		{
-			// since switching between animations relies on setting child objects non-active, we can't rely on getcomponentsinchildren or something similar
-			// instead, make sure they're all active and and turn them off again if needed
-			List<BoneAnimation> foundAnimations = new List<BoneAnimation>();
-			foreach(Transform t in transform)
-			{
-				bool objectActive = t.gameObject.activeSelf;
-				if (!objectActive)
-					t.gameObject.SetActive(true);
-
-				BoneAnimation found = t.gameObject.GetComponent<BoneAnimation>();
-
-				if (found != null)
-					foundAnimations.Add(found);
-
-				if (objectActive != t.gameObject.activeSelf)
-					t.gameObject.SetActive(objectActive);
-			}
-
-			boneAnimations = foundAnimations.ToArray();
+			Debug.LogError("Missing character animator on: " + gameObject.name);
 		}
 	}
+
+	
+//	protected void FindAnimations()
+//	{
+//		// this only needs to be done once, but it's handy to be able to call from various places to ensure these are always assigned
+//		if (boneAnimations == null || boneAnimations.Length <= 0)
+//		{
+//			// since switching between animations relies on setting child objects non-active, we can't rely on getcomponentsinchildren or something similar
+//			// instead, make sure they're all active and and turn them off again if needed
+//			List<BoneAnimation> foundAnimations = new List<BoneAnimation>();
+//			foreach(Transform t in transform)
+//			{
+//				bool objectActive = t.gameObject.activeSelf;
+//				if (!objectActive)
+//					t.gameObject.SetActive(true);
+//
+//				BoneAnimation found = t.gameObject.GetComponent<BoneAnimation>();
+//
+//				if (found != null)
+//					foundAnimations.Add(found);
+//
+//				if (objectActive != t.gameObject.activeSelf)
+//					t.gameObject.SetActive(objectActive);
+//			}
+//
+//			boneAnimations = foundAnimations.ToArray();
+//		}
+//	}
 
 	// does actual moving and calls appropriate methods when destination was reached
 	protected void UpdateMovement () 
@@ -113,102 +130,123 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		PlayAnimationObject("" + adjustedDirection.ToString(), direction);
-	}
+		characterAnimator.PlayAnimation("" + adjustedDirection.ToString());
 
-	private string previousAnim = "";
-	private CharacterDirections previousDirection = CharacterDirections.Undefined;
-	// will attempt to find a BoneAnimation parented to this object named after the clip provided (for use with multiple animations not based on the same skeleton) and disable the others
-	public virtual void PlayAnimationObject(string clipName, CharacterDirections direction)
-	{
-		// normally we'd only check for the same animation playing
-		// BUT we are using the same animation for left-right, so also check if the direction is the same
-		if (previousAnim == clipName)
-		{
-			if (previousDirection != CharacterDirections.Undefined && previousDirection == direction)
-				return;
-		}
-
-		previousAnim = clipName;
-		previousDirection = direction;
-
-		FindAnimations();
-
-		currentAnimation = null;
-		foreach( BoneAnimation animation in boneAnimations )
-		{
-			animation.gameObject.SetActive(false);
-			if( animation.name == clipName )
-			{
-				currentAnimation = animation;
-				animation.gameObject.SetActive(true);
-			}
-		}
-		
-		if( currentAnimation == null )
-		{
-			Debug.LogError(name + " : No animation found for name " + clipName);
-			currentAnimation = boneAnimations[0];
-		}
-
-		currentAnimation.Stop();
-		//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
-
-		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
-		
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( currentAnimation.transform.localScale.x > 0 )
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
 			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( currentAnimation.transform.localScale.x < 0 )
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
 			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
 			}
 		}
+		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
 	}
-	// will attempt to play the provided clip on the currently enabled bone animation (for use with single skeleton characters)
-	public virtual void PlayAnimation(string clipName, CharacterDirections direction)
-	{
-		if (currentAnimation == null)
-		{
-			Debug.LogError("CurrentAnimation is null. At least run PlayAnimationObject once.");
-			return;
-		}
 
-		if (currentAnimation.AnimationClipExists(clipName))
-		{
-			currentAnimation.Play(clipName, PlayMode.StopAll);
-		}
-		else
-		{
-			Debug.LogError("CurrentAnimation does not have animation clip: " + clipName);
-			return;
-		}
+//	private string previousAnim = "";
+//	private CharacterDirections previousDirection = CharacterDirections.Undefined;
+//	// will attempt to find a BoneAnimation parented to this object named after the clip provided (for use with multiple animations not based on the same skeleton) and disable the others
+//	public virtual void PlayAnimationObject(string clipName, CharacterDirections direction)
+//	{
+//		// normally we'd only check for the same animation playing
+//		// BUT we are using the same animation for left-right, so also check if the direction is the same
+//		if (previousAnim == clipName)
+//		{
+//			if (previousDirection != CharacterDirections.Undefined && previousDirection == direction)
+//				return;
+//		}
+//
+//		previousAnim = clipName;
+//		previousDirection = direction;
+//
+//		FindAnimations();
+//
+//		currentAnimation = null;
+//		foreach( BoneAnimation animation in boneAnimations )
+//		{
+//			animation.gameObject.SetActive(false);
+//			if( animation.name == clipName )
+//			{
+//				currentAnimation = animation;
+//				animation.gameObject.SetActive(true);
+//			}
+//		}
+//		
+//		if( currentAnimation == null )
+//		{
+//			Debug.LogError(name + " : No animation found for name " + clipName);
+//			currentAnimation = boneAnimations[0];
+//		}
+//
+//		currentAnimation.Stop();
+//		//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
+//
+//		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
+//		
+//		if ( direction == CharacterDirections.Right )
+//		{
+//			// if going left, the scale.x needs to be negative
+//			if( currentAnimation.transform.localScale.x > 0 )
+//			{
+//				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
+//			}
+//		}
+//		else if ( direction == CharacterDirections.Left )
+//		{
+//			// if going right, the scale.x needs to be positive 
+//			if( currentAnimation.transform.localScale.x < 0 )
+//			{
+//				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
+//			}
+//		}
+//	}
+//	// will attempt to play the provided clip on the currently enabled bone animation (for use with single skeleton characters)
+//	public virtual void PlayAnimation(string clipName, CharacterDirections direction)
+//	{
+//		if (currentAnimation == null)
+//		{
+//			Debug.LogError("CurrentAnimation is null. At least run PlayAnimationObject once.");
+//			return;
+//		}
+//
+//		if (currentAnimation.AnimationClipExists(clipName))
+//		{
+//			currentAnimation.Play(clipName, PlayMode.StopAll);
+//		}
+//		else
+//		{
+//			Debug.LogError("CurrentAnimation does not have animation clip: " + clipName);
+//			return;
+//		}
+//
+//		if( direction == CharacterDirections.Right )
+//		{
+//			// if going left, the scale.x needs to be negative
+//			if( currentAnimation.transform.localScale.x > 0 )
+//			{
+//				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
+//			}
+//		}
+//		else // moving left
+//		{
+//			// if going right, the scale.x needs to be positive 
+//			if( currentAnimation.transform.localScale.x < 0 )
+//			{
+//				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
+//			}
+//		}
+//	}
 
-		if( direction == CharacterDirections.Right )
-		{
-			// if going left, the scale.x needs to be negative
-			if( currentAnimation.transform.localScale.x > 0 )
-			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
-			}
-		}
-		else // moving left
-		{
-			// if going right, the scale.x needs to be positive 
-			if( currentAnimation.transform.localScale.x < 0 )
-			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
-			}
-		}
-	}
+
+
 
 	public virtual void ResetMovement()
 	{

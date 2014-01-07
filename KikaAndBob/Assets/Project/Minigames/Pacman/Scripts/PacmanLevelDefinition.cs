@@ -9,6 +9,7 @@ public class PacmanLevelDefinition : ScriptableObject {
 	public int height = 13;
 	public string level;
 	public PacmanCharacterDefinition[] characters;
+	public string[] updaters;
 
 	// Arrays of serialized classes are not created with default values
 	// Instead, initialize values once in OnEnable (which runs AFTER deserialization), checking for null / zero value

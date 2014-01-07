@@ -102,7 +102,7 @@ public class BomberUpdater : PacmanLevelUpdater {
 				// clear tiles around
 				foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(ctile.attachedTile))
 				{
-					Destroy(tile.sprite);
+					Destroy(tile.rendered);
 					tile.tileType = PacmanTile.TileType.Open;
 				}
 

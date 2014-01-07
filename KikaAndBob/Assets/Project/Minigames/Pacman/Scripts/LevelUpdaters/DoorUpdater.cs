@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class DoorUpdater : PacmanLevelUpdater {
 
-	public float doorChangeTime = 5;
-	public int minimumDoorsClosed = 2;
-	public int minimumDoorsOpen =2;
+	public float doorChangeTime = 2;
+	public int minimumDoorsClosed = 1;
+	public int minimumDoorsOpen = 1;
 
 	protected List<PacmanTile> doors = new List<PacmanTile>();
 

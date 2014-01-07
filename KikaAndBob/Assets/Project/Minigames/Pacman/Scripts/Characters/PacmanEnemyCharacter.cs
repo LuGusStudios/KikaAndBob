@@ -30,25 +30,30 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		Frightened
 	}
 	
-	void Awake()
+	protected void Awake()
+	{
+		base.SetUpLocal();
+		SetUpLocal();
+
+	}
+	public void SetUpLocal()
 	{
 		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
-
-		boneAnimations = GetComponentsInChildren<BoneAnimation>();
-
-		// used for visualizing enemy target tile
-		if (debugPathFinding)
-		{
-			if (targetMarker != null)
-				Destroy(targetMarker.gameObject);
-
-			targetMarker = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-			targetMarker.localScale = Vector3.one * (PacmanLevelManager.use.scale * 0.5f);
-			targetMarker.parent = transform.parent;
-		}
+		
+		//		// used for visualizing enemy target tile
+		//		if (debugPathFinding)
+		//		{
+		//			if (targetMarker != null)
+		//				Destroy(targetMarker.gameObject);
+		//
+		//			targetMarker = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
+		//			targetMarker.localScale = Vector3.one * (PacmanLevelManager.use.scale * 0.5f);
+		//			targetMarker.parent = transform.parent;
+		//		}
 	}
+
 		
 	void Update() 
 	{
@@ -96,8 +101,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		DetectCurrentTile();
 		DestinationReached(); // calling DestinationReached will set enemies moving again
 
-		ChangeSpriteDirection(CharacterDirections.Left);
-		PlayAnimation(walkAnimation, CharacterDirections.Left);
+		//ChangeSpriteDirection(CharacterDirections.Left);
+		//PlayAnimation(walkAnimation, CharacterDirections.Left);
+		characterAnimator.PlayAnimation(walkAnimation);
 	}
 
 	// Set tile that enemy will originally try to find here.
@@ -180,7 +186,25 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public override void ChangeSpriteDirection (CharacterDirections direction)
 	{
 		// enemies probably only ever have one animation
-		PlayAnimationObject(CharacterDirections.Left.ToString(), direction);
+		//PlayAnimationObject(CharacterDirections.Left.ToString(), direction);
+		characterAnimator.PlayAnimation(CharacterDirections.Left.ToString());
+
+		if ( direction == CharacterDirections.Right )
+		{
+			// if going left, the scale.x needs to be negative
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+			}
+		}
+		else if ( direction == CharacterDirections.Left )
+		{
+			// if going right, the scale.x needs to be positive 
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+			}
+		}
 	}
 
 	// override for custom effect when the enemy runs away from the player

@@ -101,9 +101,9 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 				continue;
 
 			if (door.tileType == PacmanTile.TileType.Collide)
-				door.sprite.SetActive(true);
+				door.rendered.SetActive(true);
 			else if (door.tileType == PacmanTile.TileType.Open)
-				door.sprite.SetActive(false);
+				door.rendered.SetActive(false);
 		}
 	}
 }

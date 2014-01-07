@@ -59,6 +59,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite[] blockShadows = null;
 	public Sprite[] blockDecorations = null;
 	public Sprite pickupSprite = null;
+	public Sprite powerUpSprite = null;
+	public Sprite doorSprite = null;
 	public float wallTileScaleFactor = 0.6f;
 	
 	public enum LevelQuadrant
@@ -194,6 +196,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		PlaceCharacters(level.characters);
 
+		ApplyUpdaters(level.updaters);
+
 		if (onLevelBuilt != null)
 			onLevelBuilt();
 		
@@ -229,6 +233,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				// e.g. tile at row 2, column 4 in a grid of 5*5 has index (((5-1)-2)*5) + 4 = 14
 				int currentStringIndex = (((height-1)-y)*width) + x;
 
+				// default value is open tile
 				char tileChar = 'o';
 				if (currentStringIndex < levelData.Length)
 					tileChar = levelData[currentStringIndex];
@@ -246,27 +251,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				}
 				else if (tileChar == 'u')
 				{
-//					currentTile.tileType = GameTile.TileType.Upgrade;
-//			
-//					GameObject powerUpPickup = (GameObject)Instantiate(pickUpPrefab);
-//					powerUpPickup.transform.parent = levelRoot;
-//					powerUpPickup.transform.localPosition = new Vector3(currentTile.location.x, currentTile.location.y, 1);
-//					currentTile.sprite = powerUpPickup;
-//					powerUpPickup.transform.localScale = powerUpPickup.transform.localScale * 2;
-//					powerUpPickup.transform.parent = pickupParent;
+					currentTile.tileType = PacmanTile.TileType.Upgrade;
 				}
-				else if (testLevel[currentStringIndex] == 'd') // Door tiles start off as open tiletype, but are kept in a list of doors which are regularly switched between Open and Collide
+				else if (tileChar == 'd') // Door tiles start off as open tiletype, but are kept in a list of doors which are regularly switched between Open and Collide
 				{
 					currentTile.tileType = PacmanTile.TileType.Door;
-			
-					GameObject door = (GameObject)Instantiate(doorPrefab);
-					door.transform.parent = levelRoot;
-					door.transform.localPosition = new Vector3(currentTile.location.x, currentTile.location.y, 1);
-					door.transform.Translate(new Vector3(0, 2, 0));		// TO DO: Quick and dirty. The doorjambs on the background image are not entirely identical in size.
-																		// Slightly scaling and then moving the doors by a few pixels results in a good average.
-					currentTile.sprite = door;
 				}
-				else if (testLevel[currentStringIndex] == 't')	// teleport tiles on either side of the field
+				else if (tileChar == 't')	// teleport tiles on either side of the field
 				{
 					currentTile.tileType = PacmanTile.TileType.Teleport;
 					for (int i = 0; i < teleportTiles.Length; i++)
@@ -277,9 +268,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 						}
 					}
 				}
-				else if (testLevel[currentStringIndex] == 'e')	// entering this tile finishes the game
+				else if (tileChar == 'e')	// entering this tile finishes the game
 					currentTile.tileType = PacmanTile.TileType.LevelEnd;
-				else if (testLevel[currentStringIndex] == 'a')	
+				else if (tileChar == 'a')	
 					currentTile.tileType = PacmanTile.TileType.Locked;
 				else
 					currentTile.tileType = PacmanTile.TileType.Open;
@@ -371,6 +362,36 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 	}
 
+	protected void ApplyUpdaters(string[] ids)
+	{
+		GameObject updaterContainer = GameObject.Find("Updaters");
+
+		if (updaterContainer == null)
+		{
+			updaterContainer = new GameObject("Updaters");
+		}
+
+		PacmanLevelUpdater[] updaters = updaterContainer.GetComponents<PacmanLevelUpdater>();
+
+		for (int i = updaters.Length - 1; i >= 0; i--) 
+		{
+			#if UNITY_EDITOR
+			DestroyImmediate(updaters[i]);
+			#else
+			Destroy(updaters[i]);
+			#endif
+
+		}
+
+		foreach(string id in ids)
+		{
+			if (id == "DoorUpdater" && updaterContainer.GetComponent<DoorUpdater>() == null)
+			{
+				updaterContainer.AddComponent<DoorUpdater>();
+			}
+		}
+	}
+
 	public void StartCharacterSpawnRoutine()
 	{
 		// stop and restart character spawn routine
@@ -438,7 +459,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			if (tile.tileType == PacmanTile.TileType.Collide)
 			{
-				GameObject block = new GameObject(tile.gridIndices.ToString());
+				GameObject block = new GameObject(tile.gridIndices.ToString() + ": Block");
 
 				int randomIndex = Random.Range(0, blockSprites.Length);
 
@@ -455,7 +476,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				SpriteRenderer spriteRenderer2 = shadow.AddComponent<SpriteRenderer>();
 				spriteRenderer2.sprite = blockShadows[randomIndex];
 
-				tile.sprite = block;
+				tile.rendered = block;
 
 				// also randomly add a tile decorator to some tiles
 				if (Random.value > 0.8f && blockDecorations.Length > 0)
@@ -470,27 +491,49 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			}
 			else if (tile.tileType == PacmanTile.TileType.Pickup)
 			{
-				GameObject pickUp = new GameObject(tile.gridIndices.ToString());
+				GameObject pickUp = new GameObject(tile.gridIndices.ToString() + ": Pick up");
 				pickUp.AddComponent<SpriteRenderer>().sprite = pickupSprite;
 
 				pickUp.transform.parent = pickupParent;
 				pickUp.transform.localPosition = new Vector3(tile.location.x, tile.location.y, -1);
 
-				tile.sprite = pickUp;
+				tile.rendered = pickUp;
 			}
 			else if (tile.tileType == PacmanTile.TileType.LevelEnd)
 			{
-				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				
-				cube.transform.localScale = cube.transform.localScale * scale;
-				cube.transform.parent = levelParent;
-				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+//				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//				
+//				cube.transform.localScale = cube.transform.localScale * scale;
+//				cube.transform.parent = levelParent;
+//				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
 
-				cube.renderer.material.color = Color.red;
+			//	cube.renderer.material.color = Color.red;
+			}
+			else if (tile.tileType == PacmanTile.TileType.Door)
+			{
+				GameObject door = new GameObject(tile.gridIndices.ToString() + ": Door");
+				door.AddComponent<SpriteRenderer>().sprite = doorSprite;
+				
+				door.transform.parent = levelParent;
+				door.transform.localScale = door.transform.localScale * wallTileScaleFactor;
+				door.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+			
+				tile.rendered = door;
+			}
+			else if (tile.tileType == PacmanTile.TileType.Upgrade)
+			{
+				GameObject powerUp = new GameObject(tile.gridIndices.ToString() + ": Power Up");
+				powerUp.AddComponent<SpriteRenderer>().sprite = powerUpSprite;
+				
+				powerUp.transform.parent = pickupParent;
+				powerUp.transform.localScale = powerUp.transform.localScale * wallTileScaleFactor;
+				powerUp.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+
+				tile.rendered = powerUp;
 			}
 		}
 	}
-
+	
 	// Lookup methods--------------------------------------------------------------------
 
 	// get tile by grid indices (contained in vector2)

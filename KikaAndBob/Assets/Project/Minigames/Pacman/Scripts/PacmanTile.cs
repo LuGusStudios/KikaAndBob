@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PacmanTile
@@ -18,7 +18,7 @@ public class PacmanTile
 		Lethal
 	}
 
-	public GameObject sprite;
+	public GameObject rendered;
 	public TileType tileType;
 	public Vector2 location;
 	public Vector2 gridIndices;

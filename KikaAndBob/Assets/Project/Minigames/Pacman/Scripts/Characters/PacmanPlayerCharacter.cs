@@ -27,6 +27,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public void SetupLocal()
 	{
+		base.SetUpLocal();
 	}
 
 	public void SetupGlobal()
@@ -98,10 +99,61 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public override void Reset()
 	{
-		PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
+		enemiesFlee = false;
+		characterAnimator.PlayAnimation("Idle");
+		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
 		DetectCurrentTile();
 		ResetMovement();
 		PlaceAtSpawnLocation();
+	}
+
+	public override void ChangeSpriteDirection(CharacterDirections direction)
+	{
+		CharacterDirections adjustedDirection = direction;
+		
+		// Right facing = left flipped on x axis
+		if (direction == CharacterDirections.Undefined || direction == CharacterDirections.Right)
+		{
+			adjustedDirection = CharacterDirections.Left;
+		}
+
+		if (enemiesFlee)
+		{
+			if ( direction == CharacterDirections.Right || direction == CharacterDirections.Left)
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredSide);
+			}
+			else if (direction == CharacterDirections.Up)
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredUp);
+			}
+			else
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredDown);
+			}
+		}
+		else
+		{
+			characterAnimator.PlayAnimation("" + adjustedDirection.ToString());
+		}
+		
+		if ( direction == CharacterDirections.Right )
+		{
+			// if going left, the scale.x needs to be negative
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+			}
+		}
+		else if ( direction == CharacterDirections.Left )
+		{
+			// if going right, the scale.x needs to be positive 
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+			}
+		}
+		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
 	}
 		
 	public override void DestinationReached()
@@ -150,14 +202,15 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (currentTile.tileType == PacmanTile.TileType.Pickup)
 		{
 			currentTile.tileType = PacmanTile.TileType.Open;
-			currentTile.sprite.SetActive(false);
+			currentTile.rendered.SetActive(false);
 			PacmanLevelManager.use.IncreasePickUpCount();
 			PacmanLevelManager.use.CheckPickedUpItems();
 		}
 		else if (currentTile.tileType == PacmanTile.TileType.Upgrade)
 		{
 			currentTile.tileType = PacmanTile.TileType.Open;
-			currentTile.sprite.SetActive(false);
+			if (currentTile.rendered != null)
+				currentTile.rendered.SetActive(false);
 			LugusCoroutines.use.StartRoutine(PowerupRoutine());
 		}
 		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
@@ -312,6 +365,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		float duration = 1.5f; 
 		int iterations = 5;
 		float partDuration = duration / (float) iterations;
+
+		BoneAnimation[] boneAnimations = GetComponentsInChildren<BoneAnimation>();
 		
 		for( int i = 0; i < iterations; ++i )
 		{

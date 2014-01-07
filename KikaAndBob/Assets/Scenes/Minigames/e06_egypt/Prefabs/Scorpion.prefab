@@ -358,6 +358,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400046}
   - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: Scorpion
   m_TagString: Untagged
@@ -9147,10 +9148,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 120
   walkSoundKey: ScorpionWalk01
+  spawnDelay: 0
   allowUTurns: 0
   forwardDetectDistance: 5
-  walkAnimation: ScorpionA_Walk
+  walkAnimation: Left/ScorpionA_Walk
   enemyState: 0
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e72a1a04248499543aa1d8fcff0b4331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAnimationContainer: {fileID: 0}
+  currentAnimationClip: 
+  currentAnimationPath: 
 --- !u!137 &13700000
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

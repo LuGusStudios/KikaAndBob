@@ -92,7 +92,8 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)
 		{
-			PlayAnimationObject("Idle", CharacterDirections.Undefined);
+			//PlayAnimationObject("Idle", CharacterDirections.Undefined);
+			characterAnimator.PlayAnimation("Idle");
 			return;
 		}
 		// if clicked tile was reached, success
