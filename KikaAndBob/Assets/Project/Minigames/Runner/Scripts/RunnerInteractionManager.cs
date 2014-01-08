@@ -52,6 +52,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		// and keep how "far over the edge" we went, so we can take that into account on the next section spawn 
 		while( sectionSpan < 1.0f )
 		{
+			if( !activated )
+				break;
+
 			RunnerInteractionZone zonePrefab = null;
 			do
 			{

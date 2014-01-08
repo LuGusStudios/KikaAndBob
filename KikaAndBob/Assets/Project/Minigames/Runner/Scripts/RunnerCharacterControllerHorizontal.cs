@@ -43,6 +43,9 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 
 	public delegate void OnJump(bool start);
 	public OnJump onJump;
+	
+	public delegate void OnSlide(bool start);
+	public OnSlide onSlide;
 
 	public delegate void OnHit(RunnerPickup pickup);
 	public OnHit onHit;
@@ -136,6 +139,9 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 	protected int jumpFrame = -1;
 	public bool jumping = false; 
 
+	protected float slideStartTime = -1.0f;
+	public bool sliding = false;
+
 	public bool Grounded
 	{
 		get
@@ -152,10 +158,20 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 		}
 	}
 
+	/*
+	public bool AlmostGrounded
+	{
+		get
+		{
+			return Physics2D.Linecast(transform.position, groundCheck.position + new Vector3(0.0f, -0.5f, 0.0f), 1 << LayerMask.NameToLayer("Ground")); 
+		}
+	}
+	*/
+
 	protected void CheckJump()
 	{
 		// both space and mouse button 1 (or single touch) work
-		if( (LugusInput.use.KeyDown (KeyCode.Space) || LugusInput.use.down) && this.Grounded )
+		if( (LugusInput.use.KeyDown (KeyCode.Space) || LugusInput.use.down || LugusInput.use.KeyDown(KeyCode.UpArrow)) && this.Grounded )
 		{
 			triggerJump = true;
 			jumping = true;
@@ -173,10 +189,47 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 		}
 	}
 
+	protected void CheckSlide()
+	{
+		if( LugusInput.use.KeyDown(KeyCode.DownArrow) && this.Grounded )
+		{
+			sliding = true;
+			slideStartTime = Time.time;
+
+			BoxCollider2D topCollider = GetComponent<BoxCollider2D>();
+			if( topCollider != null )
+			{
+				topCollider.enabled = false;
+			}
+			else
+			{
+				Debug.LogError(name + " : Could not disable boxCollider while sliding...");
+			}
+
+			if( onSlide != null )
+				onSlide(true);
+		}
+
+		if( sliding && (LugusInput.use.KeyUp(KeyCode.DownArrow) || (Time.time - slideStartTime > 1.5f)) )
+		{
+			sliding = false;
+
+			BoxCollider2D topCollider = GetComponent<BoxCollider2D>();
+			if( topCollider != null )
+			{
+				topCollider.enabled = true;
+			}
+			
+			if( onSlide != null )
+				onSlide(false);
+		}
+	}
+
 	public void Update()
 	{
 		CheckJump();
-		
+		CheckSlide();
+
 		//Debug.Log ("VELOCITY " + this.rigidbody2D.velocity);
    
 	}
