@@ -15,6 +15,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 	public string runningAnimation = "RUNNING/KikaSide_RunningSprites";
 	public string jumpAnimation = "OTHER/KikaSide_JumpShort";
 	public string hitAnimation = "OTHER/KikaSide_Hit";
+	public string slideAnimation = "OTHER/KikaSide_Slide";
 
 	public void PlayAnimation(string animationPath)
 	{
@@ -99,6 +100,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		else
 		{
 			character.onJump += OnJump;
+			character.onSlide += OnSlide;
 			character.onHit  += OnHit;
 		}
 		
@@ -122,14 +124,25 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		if( start )
 		{
 			PlayAnimation( jumpAnimation ); 
-			// TODO: this should be done in OnGrounded()
-			//PlayAnimationDelayed( "RUNNING/KikaSide_RunningSprites", 1.05f );
 		}
 		else
 		{
 			PlayAnimation( runningAnimation );
 		}
 	}
+
+	public void OnSlide(bool start)
+	{
+		if( start )
+		{
+			PlayAnimation( slideAnimation ); 
+		}
+		else
+		{
+			PlayAnimation( runningAnimation );
+		}
+	}
+	       
 
 	protected bool hitRoutineBusy = false;
 

@@ -16,12 +16,12 @@ public class RunnerCharacterShadow : MonoBehaviour
 	{
 		if( character == null )
 		{
-			character = GameObject.Find("Character");//.GetComponent<CharacterController>();
+			character = GameObject.Find("Character");
 		}
 		
 		if( character == null )
 		{
-			Debug.LogError(name + " : no CharacterController found!");
+			Debug.LogError(name + " : no Character found!");
 		}
 
 		originalScale = this.transform.localScale;
