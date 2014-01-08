@@ -227,6 +227,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
 		if (nextTile != null)
 		{
+			print (nextTile);
 			currentDirection = nextDirection;
 			MoveTo(nextTile);
 			ChangeSpriteDirection(currentDirection);

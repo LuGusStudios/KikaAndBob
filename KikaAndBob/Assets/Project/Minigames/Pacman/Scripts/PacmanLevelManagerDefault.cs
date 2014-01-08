@@ -20,39 +20,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanLevelDefinition[] levels = null;
 	public PacmanCharacter[] characterPrefabs = null;
 
-	private string testLevel ="" +
-		"xxxxxxxxxxxxx"+
-		"xpopopopopopx"+
-		"xoxxxxoxxxxox"+
-		"xopopxpxpopox"+
-		"xoxxoxoxoxxox"+
-		"xpxopopopoxpx"+
-		"xoooxxoxxooox"+
-		"xxxoxopoxoxxx"+
-		"xopoxpxpxopox"+
-		"xoxoooxoooxox"+
-		"xoxxoxxxoxxox"+
-		"xpoopopopoopx"+
-		"xxxxxxxxxxxxx";
-
-//	private string testLevel ="" +
-//		"ooxxxxxxxxxxxxxxxxxxxxxoo"+
-//		"ooxpopxpdpxpxpxpdpopxpxoo"+
-//		"ooxoxoooxoxoxoxoxoxoxoxoo"+
-//		"ooxpxpxpxpopxpopxpxpopxoo"+
-//		"xxxoxoxoxoxoooxoxoxxxoxxx"+
-//		"optpxpxpxpxxaxxpxpopoptpo"+
-//		"xxxoxoxodoxaaexodoxxxoxxx"+
-//		"ooxpopxpxpxaaaxpxpxxxpxoo"+
-//		"ooxxxoooxoxxxxxoxoxxxoxoo"+
-//		"ooxxopxpdpxpxpxpdpxxxpxoo"+
-//		"ooxxoxxoxoxoxoxoxoxxxoxoo"+
-//		"ooxxopopxpopopopxpxxxpxoo"+
-//		"ooxxxxxxxxxxxxxxxoooooxoo";
-	
 	public int width = 13;
 	public int height = 13;
 	public float scale = 64;
+	public float wallTileScaleFactor = 0.6f;
 
 	// MOVE TO SCRIPTABLE OBJECT
 	public Sprite[] blockSprites = null;
@@ -62,7 +33,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
 	public Sprite teleportSprite = null;
-	public float wallTileScaleFactor = 0.6f;
+	public GameObject[] tileItems = null;
 	
 	public enum LevelQuadrant
 	{
@@ -194,6 +165,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		ParseLevelTiles(level.level, width, height);
 
 		PlaceLevelTiles();
+
+		PlaceLevelTileItems(level.tileItems);
 
 		PlaceCharacters(level.characters);
 
@@ -356,6 +329,44 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
 
 			spawnedCharacters.Add(characterSpawned);
+		}
+	}
+
+	protected void PlaceLevelTileItems(PacmanTileItemDefinition[] tileItemDefinitions)
+	{
+		foreach(PacmanTileItemDefinition definition in tileItemDefinitions)
+		{
+			GameObject tileItemPrefab = null;
+
+			foreach(GameObject go in tileItems)
+			{
+				if (go.name == definition.id)
+				{
+					tileItemPrefab = go;
+					break;
+				}
+			}
+
+			if (tileItemPrefab == null)
+			{
+				Debug.LogError("Did not find tile item ID: " + definition.id);
+				return;
+			}
+
+			PacmanTile targetTile = GetTile(definition.tileCoordinates);
+
+			if (targetTile == null)
+			{
+				Debug.LogError("Did not find tile with coordinates:" + definition.tileCoordinates);
+				return;
+			}
+
+			GameObject tileItem = (GameObject)Instantiate(tileItemPrefab);
+
+			tileItem.transform.parent = pickupParent;
+			tileItem.transform.localPosition = targetTile.location;
+
+			 
 		}
 	}
 

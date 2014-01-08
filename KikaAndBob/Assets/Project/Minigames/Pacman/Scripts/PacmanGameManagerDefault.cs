@@ -8,7 +8,6 @@ public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault
 public class PacmanGameManagerDefault : MonoBehaviour {
 
 	public bool gameRunning = false;
-	public Vector2 enemySpawnLocation = new Vector2(5, 5);
 	protected float timer = 120;
 	protected int lives = 3;
 	protected bool gameDone = false;
