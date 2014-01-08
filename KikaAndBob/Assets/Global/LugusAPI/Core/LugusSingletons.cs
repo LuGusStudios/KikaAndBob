@@ -55,6 +55,16 @@ public class LugusSingletonExisting<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		_instance = null;
 	}
+
+	public static bool Exists()
+	{
+		if( _instance != null )
+			return true;
+
+
+		T[] instances = (T[]) GameObject.FindObjectsOfType( typeof(T) );
+		return instances.Length != 0;
+	}
 	
 	/*
 	void OnEnable()

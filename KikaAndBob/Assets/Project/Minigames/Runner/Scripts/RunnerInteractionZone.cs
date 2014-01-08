@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class RunnerInteractionZone : MonoBehaviour 
 {
-	public int sectionWidth = 1; // nr of ground sections this thing spans (default 1 = 2 screenwidths)
+	public float sectionSpan = 0.5f; // nr of ground sections this thing spans (default 0.5 = approx. 1 screenwidth/height, 1 = approx. 2 screenwidths)
 	public int difficulty = 1; // 0 = very easy, 5 = majorly difficult
 
 	public BackgroundTheme[] themes; // themes in which this block can occur. Empty = any theme
