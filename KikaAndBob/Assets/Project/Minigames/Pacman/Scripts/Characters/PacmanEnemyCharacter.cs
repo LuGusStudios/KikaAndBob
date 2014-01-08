@@ -29,18 +29,16 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		Chasing,
 		Frightened
 	}
-	
-	protected void Awake()
+
+	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
-		SetUpLocal();
 
-	}
-	public void SetUpLocal()
-	{
 		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
+		if (player == null)
+			Debug.Log("Could not find player.");
 		
 		//		// used for visualizing enemy target tile
 		//		if (debugPathFinding)
@@ -269,21 +267,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (runBehavior == true)
 		{
-			if (currentTile.tileType == PacmanTile.TileType.Teleport)
-			{
-				// TO DO: Make this more elegant and extensible
-				if (currentTile.gridIndices.x < (float)PacmanLevelManager.use.width * 0.5f)
-					StartCoroutine(TeleportRoutine(true));
-				else
-					StartCoroutine(TeleportRoutine(false));
+			MoveTo(FindTileClosestTo(targetTile));
 				
-				return;
-			}
-			else
-			{
-				MoveTo(FindTileClosestTo(targetTile));
-			}
-			
 			if(moveTargetTile == null)
 			{
 				Debug.LogError("EnemyCharacterMover: Target tile was null!");
@@ -423,34 +408,5 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			return false;
 		
 		return true;
-	}
-	
-	IEnumerator TeleportRoutine(bool exitLeft)
-	{				
-		runBehavior = false;
-			
-		if (exitLeft)
-			MoveTo(PacmanLevelManager.use.GetTile(0, 7));			// 7 = y location on grid of teleporters. TO DO: Make cleaner/more extinsible.
-		else
-			MoveTo(PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 7));
-		
-		yield return new WaitForSeconds(movementDuration);
-		
-		if (exitLeft)
-		{
-			transform.localPosition = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 7).location;			// put player on other side of level
-			DetectCurrentTile();
-			MoveTo(PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-4, 7));									// initiate movement to first tile next to teleporter
-		}
-		else // exiting on the right
-		{
-			transform.localPosition = PacmanLevelManager.use.GetTile(0, 7).location;								// put player on other side of level
-			DetectCurrentTile();
-			MoveTo(PacmanLevelManager.use.GetTile(3, 7));														// initiate movement to first tile next to teleporter
-		}
-
-		yield return new WaitForSeconds(movementDuration);
-		
-		runBehavior = true;
 	}
 }

@@ -32,6 +32,9 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 	{
 		if (LugusInput.use.down)
 		{
+			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+				return;
+
 			clickedTile = PacmanLevelManager.use.GetTileByClick(LugusInput.use.lastPoint);
 			
 			if (clickedTile != null)
@@ -96,6 +99,9 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 
 	private void CheckArrows()
 	{
+		if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+			return;
+
 		if (PacmanInput.use.GetUp())
 		{
 			movingwithArrows = true;
@@ -151,6 +157,8 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		DoCurrentTileBehavior();
 
 		moving = false;
+
+		moveTargetTile = null;
 		
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)

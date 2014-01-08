@@ -61,6 +61,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite pickupSprite = null;
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
+	public Sprite teleportSprite = null;
 	public float wallTileScaleFactor = 0.6f;
 	
 	public enum LevelQuadrant
@@ -84,7 +85,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Transform effectsParent = null;
 	
 	public PacmanTile[,] levelTiles;
-	public PacmanTile[] teleportTiles = new PacmanTile[2];
+	public List<PacmanTile> teleportTiles = new List<PacmanTile>();
 
 	public delegate void OnLevelBuilt();
 	public OnLevelBuilt onLevelBuilt;
@@ -217,6 +218,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		itemsPickedUp = 0;
 		itemsToBePickedUp = 0;
 
+		teleportTiles.Clear();
+
 		// iterate over entire grid
 		for (int y = height-1; y >= 0; y--)
 		{
@@ -260,13 +263,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				else if (tileChar == 't')	// teleport tiles on either side of the field
 				{
 					currentTile.tileType = PacmanTile.TileType.Teleport;
-					for (int i = 0; i < teleportTiles.Length; i++)
-					{
-						if (teleportTiles[i] == null)
-						{
-							teleportTiles[i] = currentTile;
-						}
-					}
+					teleportTiles.Add(currentTile);
 				}
 				else if (tileChar == 'e')	// entering this tile finishes the game
 					currentTile.tileType = PacmanTile.TileType.LevelEnd;
@@ -530,6 +527,17 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				powerUp.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
 
 				tile.rendered = powerUp;
+			}
+			else if (tile.tileType == PacmanTile.TileType.Teleport)
+			{
+				GameObject teleport = new GameObject(tile.gridIndices.ToString() + ": Teleport");
+				teleport.AddComponent<SpriteRenderer>().sprite = teleportSprite;
+				
+				teleport.transform.parent = levelParent;
+				teleport.transform.localScale = teleport.transform.localScale * wallTileScaleFactor;
+				teleport.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+				
+				tile.rendered = teleport;
 			}
 		}
 	}
