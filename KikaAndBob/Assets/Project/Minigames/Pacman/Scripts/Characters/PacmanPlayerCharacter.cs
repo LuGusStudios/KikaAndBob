@@ -202,6 +202,14 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			alreadyTeleported = false;
 		}
 
+		foreach(GameObject go in currentTile.tileItems)
+		{
+			if (go.GetComponent<PacmanTileItem>() != null)
+			{
+				go.GetComponent<PacmanTileItem>().OnEnter();
+			}
+		}
+
 		if (currentTile.tileType == PacmanTile.TileType.Pickup)
 		{
 			currentTile.tileType = PacmanTile.TileType.Open;
@@ -284,38 +292,33 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex+1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex+1, yIndex);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex-1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex-1, yIndex);
-			if (inspectedTile != null)
+		}
+
+		if (inspectedTile != null)
+		{
+			// first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+			foreach(GameObject go in inspectedTile.tileItems)
 			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
+				if (go.GetComponent<PacmanTileItem>() != null)
+				{
+					go.GetComponent<PacmanTileItem>().OnTryEnter();
+				}
 			}
+
+			if (IsEnemyWalkable(inspectedTile))
+				return inspectedTile;
 		}
 		
 		return null;

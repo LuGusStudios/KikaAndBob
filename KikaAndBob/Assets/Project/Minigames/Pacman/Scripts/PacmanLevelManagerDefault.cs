@@ -364,9 +364,16 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			GameObject tileItem = (GameObject)Instantiate(tileItemPrefab);
 
 			tileItem.transform.parent = pickupParent;
-			tileItem.transform.localPosition = targetTile.location;
+			tileItem.transform.localPosition = targetTile.location.v3().z(1);
 
-			 
+			PacmanTileItem tileItemScript = tileItem.GetComponent<PacmanTileItem>();
+
+			if (tileItemScript != null)
+			{
+				tileItemScript.parentTile = targetTile;
+			}
+
+			targetTile.tileItems.Add(tileItem);
 		}
 	}
 

@@ -78,16 +78,15 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		{
 			updater.Activate();
 		}
-	
 
 		// reset sound effects
 		PacmanSoundEffects.use.Reset(enemies);
-
 
 		// reset lives
 		lives = 3;
 		PacmanGUIManager.use.UpdateLives(lives);
 
+		PacmanPickups.use.ClearPickups();
 
 		gameRunning = true;
 	}
