@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 
-	protected GameTile clickedTile = null;
+	protected PacmanTile clickedTile = null;
 
 	private void Update () 
 	{
@@ -79,7 +79,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 			}
 		}
 		
-		UpdatePosition();
+		UpdateMovement();
 	}
 
 	public override void DestinationReached ()
@@ -92,7 +92,8 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 		// if there is no tile that was clicked, don't move any more
 		if (clickedTile == null)
 		{
-			PlayAnimation("Idle", CharacterDirections.Undefined);
+			//PlayAnimationObject("Idle", CharacterDirections.Undefined);
+			characterAnimator.PlayAnimation("Idle");
 			return;
 		}
 		// if clicked tile was reached, success
@@ -121,7 +122,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 		}
 
 		// if we can move in the next selected direction, go there
-		GameTile nextTile = FindOpenTileInDirection(nextDirection);
+		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;

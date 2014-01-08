@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class GameTile
+public class PacmanTile
 {
 	public enum TileType
 	{
@@ -18,13 +18,13 @@ public class GameTile
 		Lethal
 	}
 
-	public GameObject sprite;
+	public GameObject rendered;
 	public TileType tileType;
 	public Vector2 location;
 	public Vector2 gridIndices;
 	public int exitCount;
 	
-	public GameTile()
+	public PacmanTile()
 	{
 		tileType = TileType.Open;
 		location = Vector2.zero;
