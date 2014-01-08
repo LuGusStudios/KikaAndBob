@@ -2,37 +2,27 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyPatrol : EnemyCharacter {
+public class EnemyPatrol : PacmanEnemyCharacter {
 
-	protected List<GameTile> patrolPath = new List<GameTile>();
+	protected List<PacmanTile> patrolPath = new List<PacmanTile>();
 	protected int patrolIndex = 0;
 	protected int playerChaseCount = 5;		// how many tiles will the enemy chase the player without seeing them directly
 	protected int playerChaseCounter = 0; 	// how many tiles the enemy has chased the player without seeing them directly
-	
+
 	protected override void SetDefaultTargetTiles()
 	{
+		patrolIndex = 0;
 		patrolPath.Add(PacmanLevelManager.use.GetTile(1,1));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(1,11));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(11,11));
 		patrolPath.Add(PacmanLevelManager.use.GetTile(11,1));
 
-		defaultTargetTile = patrolPath[0];
-	}
-
-	public override void Reset(Vector2 enemySpawnLocation)
-	{
-		patrolIndex = 0;
-		playerFound = false;
-		SetDefaultTargetTiles();
-		targetTile = defaultTargetTile;
-		transform.localPosition = PacmanLevelManager.use.GetTile(enemySpawnLocation).location;
-		enemyState = EnemyState.Neutral;
-		DetectCurrentTile();
-		DestinationReached(); // calling DestinationReached will set enemies moving again
+		defaultTargetTile = patrolPath[patrolIndex];
 	}
 
 	public override void DestinationReached()
 	{
+		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
@@ -40,8 +30,7 @@ public class EnemyPatrol : EnemyCharacter {
 		{
 			FrightenedEffect();
 
-			int avoidRadius = 6;
-			GameTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
+			PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
 				PacmanLevelManager.use.GetOppositeQuadrant(
 					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
 
@@ -51,6 +40,7 @@ public class EnemyPatrol : EnemyCharacter {
 		}
 		else
 		{
+			// TO DO: Turn on or not? Changes behavior quite a lot.
 			allowUTurns = false;	
 
 			// if the player was detected, chase him
@@ -78,7 +68,7 @@ public class EnemyPatrol : EnemyCharacter {
 					// turn off player sighted effect
 					transform.localScale = originalScale;
 					//Debug.Log("Player not detected! Continuing patrol.");
-					foreach (GameTile patrolTile in patrolPath)
+					foreach (PacmanTile patrolTile in patrolPath)
 					{
 						// if patrol waypoint was reached, find next
 						if (currentTile == patrolTile)

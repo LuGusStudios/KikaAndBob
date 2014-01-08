@@ -270,7 +270,7 @@ public class LugusAudioTrackSettings
 	{
 		if( volume_set )
 			target.Volume = volume;
-		
+
 		if( loop_set )
 			target.Loop = loop;
 		

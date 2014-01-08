@@ -8,12 +8,43 @@ public class PacmanGUIManager : LugusSingletonExisting<PacmanGUIManagerDefault>
 
 public class PacmanGUIManagerDefault : MonoBehaviour
 {
-	void Start () 
+	protected Transform guiParent = null;
+	protected TextMesh livesText = null;
+
+	public void SetupLocal()
 	{
+		if (guiParent == null)
+		{
+			guiParent = GameObject.Find("GUI").transform;
+		}
+		if (guiParent == null)
+		{
+			Debug.LogError("Could not find GUI parent object.");
+		}
+
+		if (livesText == null)
+		{
+			livesText = guiParent.FindChild("Lives").GetComponent<TextMesh>();
+		}
+		if (livesText == null)
+		{
+			Debug.LogError("Could not find lives text mesh.");
+		}
 	}
 	
-	void Update()
+	public void SetupGlobal()
 	{
+	
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
 	}
 	
 	public void UpdatePickupCounter(int newValue)
@@ -22,8 +53,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdateLives(int lives)
 	{
-		Debug.Log("Add lives message here: " + lives);
-		PacmanGameManager.use.StartNewRound();
+		livesText.text = lives.ToString();
 	}
 
 	
@@ -42,8 +72,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 
 		child.gameObject.SetActive(false);
-
-		PacmanGameManager.use.StartNewGame();
 	}
 
 	public void ShowWinMessage()
@@ -65,17 +93,17 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		PacmanGameManager.use.StartNewGame();
 	}
 	
-	public void UpdateDoors(List<GameTile> doors)
+	public void UpdateDoors(List<PacmanTile> doors)
 	{
-		foreach(GameTile door in doors)
+		foreach(PacmanTile door in doors)
 		{
 			if (door == null)
 				continue;
 
-			if (door.tileType == GameTile.TileType.Collide)
-				door.sprite.SetActive(true);
-			else if (door.tileType == GameTile.TileType.Open)
-				door.sprite.SetActive(false);
+			if (door.tileType == PacmanTile.TileType.Collide)
+				door.rendered.SetActive(true);
+			else if (door.tileType == PacmanTile.TileType.Open)
+				door.rendered.SetActive(false);
 		}
 	}
 }

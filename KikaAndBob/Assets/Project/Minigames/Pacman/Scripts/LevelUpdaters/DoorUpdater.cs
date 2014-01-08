@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class DoorUpdater : PacmanLevelUpdater {
 
-	public float doorChangeTime = 5;
-	public int minimumDoorsClosed = 2;
-	public int minimumDoorsOpen =2;
+	public float doorChangeTime = 2;
+	public int minimumDoorsClosed = 1;
+	public int minimumDoorsOpen = 1;
 
-	protected List<GameTile> doors = new List<GameTile>();
+	protected List<PacmanTile> doors = new List<PacmanTile>();
 
 	public override void Activate()
 	{
@@ -19,9 +19,9 @@ public class DoorUpdater : PacmanLevelUpdater {
 
 		doors.Clear();
 
-		foreach(GameTile tile in PacmanLevelManager.use.levelTiles)
+		foreach(PacmanTile tile in PacmanLevelManager.use.levelTiles)
 		{
-			if (tile.tileType == GameTile.TileType.Door)
+			if (tile.tileType == PacmanTile.TileType.Door)
 			{
 				doors.Add(tile);
 			}
@@ -51,9 +51,9 @@ public class DoorUpdater : PacmanLevelUpdater {
 
 	public void ResetDoors()
 	{	
-		foreach(GameTile door in doors)
+		foreach(PacmanTile door in doors)
 		{
-			door.tileType = GameTile.TileType.Open;
+			door.tileType = PacmanTile.TileType.Open;
 		}
 		
 		PacmanGUIManager.use.UpdateDoors(doors);
@@ -67,9 +67,9 @@ public class DoorUpdater : PacmanLevelUpdater {
 		int closedDoors = 0;
 
 		// first, open all doors
-		foreach(GameTile door in doors)
+		foreach(PacmanTile door in doors)
 		{
-			door.tileType = GameTile.TileType.Open;
+			door.tileType = PacmanTile.TileType.Open;
 		}
 		
 		// keep a minimum of doors open and a minimum of doors closed
@@ -77,14 +77,14 @@ public class DoorUpdater : PacmanLevelUpdater {
 		{
 			// close random door
 			int randomIndex = Random.Range(0, doors.Count);
-			GameTile doorTile = doors[randomIndex];
-			doorTile.tileType = GameTile.TileType.Collide;
+			PacmanTile doorTile = doors[randomIndex];
+			doorTile.tileType = PacmanTile.TileType.Collide;
 			closedDoors++;
 
 			// update exit count for tiles around the door tile
 			//GameTile updatedTile;
 
-			foreach(GameTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(doorTile))
+			foreach(PacmanTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(doorTile))
 			{
 				updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
 			}
@@ -112,12 +112,12 @@ public class DoorUpdater : PacmanLevelUpdater {
 			}
 		}
 		
-		foreach(GameTile door in doors)
+		foreach(PacmanTile door in doors)
 		{
-			if (door.tileType == GameTile.TileType.Open)
+			if (door.tileType == PacmanTile.TileType.Open)
 			{
 				// update exit count for tiles left and right of other doors - these may still have their exit counts lowered from having been closed before
-				GameTile updatedTile;
+				PacmanTile updatedTile;
 
 				updatedTile = PacmanLevelManager.use.GetTile(door.gridIndices + new Vector2(-1,0));
 				if(updatedTile != null)

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy4 : EnemyCharacter {
+public class Enemy4 : PacmanEnemyCharacter {
 
 	protected override void SetDefaultTargetTiles()
 	{

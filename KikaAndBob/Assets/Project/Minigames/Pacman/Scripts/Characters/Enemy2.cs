@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy2 : EnemyCharacter {
+public class Enemy2 : PacmanEnemyCharacter {
 
 	protected override void SetDefaultTargetTiles()
 	{
@@ -19,7 +19,7 @@ public class Enemy2 : EnemyCharacter {
 		
 		if (player.currentTile != null)
 		{
-			GameTile favoredTile = null;
+			PacmanTile favoredTile = null;
 			PacmanCharacter.CharacterDirections heading = player.GetDirection();
 			
 			int playerX = (int)player.currentTile.gridIndices.x;
@@ -71,7 +71,7 @@ public class Enemy2 : EnemyCharacter {
 			if (Mathf.Abs(favoredTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if target tile is (more than) half a level away in x distance
 			{
 				// if reasonably close to teleport, go there
-				foreach(GameTile tile in PacmanLevelManager.use.teleportTiles)
+				foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 				{
 					if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width *0.25f)
 					{
