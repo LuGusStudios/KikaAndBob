@@ -57,6 +57,13 @@ public class PacmanCharacterAnimator : MonoBehaviour
 
 	public void PlayAnimation(string animationPath)
 	{
+		if (string.IsNullOrEmpty(animationPath))
+		{
+			Debug.LogError("Animation path was empty!");
+		}
+
+		print (animationPath);
+
 		string[] parts = animationPath.Split('/');
 		string containerName = "";
 		string clipName = "";

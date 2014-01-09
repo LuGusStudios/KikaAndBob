@@ -4478,6 +4478,7 @@ GameObject:
   - 114: {fileID: 739109687}
   - 114: {fileID: 739109689}
   - 114: {fileID: 739109688}
+  - 114: {fileID: 739109690}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -4506,6 +4507,7 @@ MonoBehaviour:
   width: 13
   height: 13
   scale: 100
+  wallTileScaleFactor: .899999976
   blockSprites:
   - {fileID: 21300000, guid: a433e204ea010c64d832fedeb44976f8, type: 3}
   - {fileID: 21300000, guid: 9f9a430d34343be48b3b4cfe1f934307, type: 3}
@@ -4529,7 +4531,7 @@ MonoBehaviour:
   powerUpSprite: {fileID: 21300056, guid: fbd5b115403044240adad5e962a8e40f, type: 3}
   doorSprite: {fileID: 21300000, guid: 999b3846dc6331347a8bde7bccfd72e0, type: 3}
   teleportSprite: {fileID: 21300128, guid: fbd5b115403044240adad5e962a8e40f, type: 3}
-  wallTileScaleFactor: .899999976
+  tileItems: []
   effectsParent: {fileID: 1114714943}
 --- !u!114 &739109683
 MonoBehaviour:
@@ -4554,7 +4556,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameRunning: 0
-  enemySpawnLocation: {x: 5, y: 5}
 --- !u!114 &739109685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4618,6 +4619,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxEnemyDistance: 400
+--- !u!114 &739109690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 739109681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8742733b19ed42458c113385f4c814c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &740445685
 GameObject:
   m_ObjectHideFlags: 0

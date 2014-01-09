@@ -92,15 +92,29 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public override void Reset()
 	{
 		PlaceAtSpawnLocation();
-		playerFound = false;
+
 		SetDefaultTargetTiles();
 		targetTile = defaultTargetTile;
-		enemyState = EnemyState.Neutral;
+
+		// set the sprite to face the start direction if provided
+		if (startDirection != CharacterDirections.Undefined)
+		{
+			currentDirection = startDirection;
+			ChangeSpriteFacing(startDirection);
+		}
+		else
+		{
+			currentDirection = CharacterDirections.Left;
+			ChangeSpriteFacing(CharacterDirections.Left);
+		}
+
 		DetectCurrentTile();
 		DestinationReached(); // calling DestinationReached will set enemies moving again
+		
+		enemyState = EnemyState.Neutral;
 
-		//ChangeSpriteDirection(CharacterDirections.Left);
-		//PlayAnimation(walkAnimation, CharacterDirections.Left);
+		playerFound = false;
+
 		characterAnimator.PlayAnimation(walkAnimation);
 	}
 
@@ -181,11 +195,10 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		enemyState = EnemyState.Chasing;
 	}
 
-	public override void ChangeSpriteDirection (CharacterDirections direction)
+	public override void ChangeSpriteFacing (CharacterDirections direction)
 	{
 		// enemies probably only ever have one animation
-		//PlayAnimationObject(CharacterDirections.Left.ToString(), direction);
-		characterAnimator.PlayAnimation(CharacterDirections.Left.ToString());
+		characterAnimator.PlayAnimation(walkAnimation);
 
 		if ( direction == CharacterDirections.Right )
 		{
@@ -250,18 +263,6 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		gameObject.SetActive(false);
 	}
 
-//	public override void PlayAnimation(string clipName, CharacterDirections direction)
-//	{
-//		foreach (BoneAnimation ba in boneAnimations)
-//		{
-//			if (ba.AnimationClipExists(clipName))
-//			{
-//				ba.Play(clipName);
-//				break;
-//			}
-//		}
-//	}
-
 	// override for custom behavior upon having reached a tile (e.g. picking the next tile to move to)
 	public override void DestinationReached ()
 	{
@@ -277,13 +278,13 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			
 			// figure out if target tile is to the right or to the left of the current position
 			if (moveTargetTile.gridIndices.x > currentTile.gridIndices.x)
-				ChangeSpriteDirection(CharacterDirections.Right);
+				ChangeSpriteFacing(CharacterDirections.Right);
 			else if (moveTargetTile.gridIndices.x < currentTile.gridIndices.x)
-				ChangeSpriteDirection(CharacterDirections.Left);
+				ChangeSpriteFacing(CharacterDirections.Left);
 			else if (moveTargetTile.gridIndices.y < currentTile.gridIndices.y)
-				ChangeSpriteDirection(CharacterDirections.Down);
+				ChangeSpriteFacing(CharacterDirections.Down);
 			else if (moveTargetTile.gridIndices.y > currentTile.gridIndices.y)
-				ChangeSpriteDirection(CharacterDirections.Up);
+				ChangeSpriteFacing(CharacterDirections.Up);
 		}
 	}
 

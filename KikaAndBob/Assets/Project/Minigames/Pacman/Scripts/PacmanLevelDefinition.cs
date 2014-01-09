@@ -29,6 +29,7 @@ public class PacmanCharacterDefinition
 	public int xLocation = 0;
 	public int yLocation = 0;
 	public float spawnDelay = 0;
+	public PacmanCharacter.CharacterDirections startDirection = PacmanCharacter.CharacterDirections.Undefined;
 	
 }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using SmoothMoves;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(PacmanCharacterAnimator))]
 public abstract class PacmanCharacter : MonoBehaviour {
 
 	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
@@ -21,6 +22,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	public PacmanTile currentTile = null;
 	protected PacmanTile startTile;
 	protected CharacterDirections currentDirection;
+	protected CharacterDirections startDirection;
 	protected BoneAnimation currentAnimation = null;
 
 	protected PacmanCharacterAnimator characterAnimator = null;
@@ -44,6 +46,11 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		SetUpLocal();
 	}
 
+	protected void Start()
+	{
+		SetUpGlobal();
+	}
+
 	public virtual void SetUpLocal()
 	{
 		if (characterAnimator == null)
@@ -56,6 +63,10 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		}
 	}
 
+	public virtual void SetUpGlobal()
+	{
+	}
+	
 	// does actual moving and calls appropriate methods when destination was reached
 	protected void UpdateMovement () 
 	{		
@@ -95,7 +106,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	// intermediary for changing sprite and its animation - i.e. transforms CharacterDirections.Right into Left, which is just the same one flipped, or limits choices to an object that actually exists
 	// override for different rewrite rules
-	public virtual void ChangeSpriteDirection(CharacterDirections direction)
+	public virtual void ChangeSpriteFacing(CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
 
@@ -124,6 +135,11 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			}
 		}
 		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
+	}
+
+	public void SetStartDirection(CharacterDirections newDirection)
+	{
+		startDirection = newDirection;
 	}
 
 	protected virtual IEnumerator TeleportRoutine()

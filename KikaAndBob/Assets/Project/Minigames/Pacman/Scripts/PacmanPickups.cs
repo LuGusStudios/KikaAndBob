@@ -51,7 +51,7 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 				pickups[id] = 0;
 			}
 
-			Debug.Log("Modified pickup: " + id + " by " + amount);
+			Debug.Log("Modified pickup: " + id + " by " + amount + " to " + pickups[id]);
 		}
 		else
 		{

@@ -328,6 +328,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
 
+		
+			characterSpawned.SetStartDirection(characterDefinition.startDirection);
+
+
 			spawnedCharacters.Add(characterSpawned);
 		}
 	}
@@ -516,13 +520,15 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			}
 			else if (tile.tileType == PacmanTile.TileType.LevelEnd)
 			{
-//				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-//				
-//				cube.transform.localScale = cube.transform.localScale * scale;
-//				cube.transform.parent = levelParent;
-//				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				
+				cube.transform.localScale = cube.transform.localScale * scale;
+				cube.transform.parent = levelParent;
+				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
 
-			//	cube.renderer.material.color = Color.red;
+				cube.renderer.sharedMaterial.color = Color.red;
+
+				tile.rendered = cube;
 			}
 			else if (tile.tileType == PacmanTile.TileType.Door)
 			{

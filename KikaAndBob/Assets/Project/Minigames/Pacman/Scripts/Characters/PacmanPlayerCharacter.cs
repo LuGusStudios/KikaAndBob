@@ -105,7 +105,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		PlaceAtSpawnLocation();
 	}
 
-	public override void ChangeSpriteDirection(CharacterDirections direction)
+	public override void ChangeSpriteFacing(CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
 		
@@ -179,7 +179,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		ChangeSpriteDirection(currentDirection);
+		ChangeSpriteFacing(currentDirection);
 	}
 	
 	protected void TryMoveInDirection(CharacterDirections direction)

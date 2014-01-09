@@ -98,12 +98,12 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 
 		// figure out if target tile is to the right or to the left of the current position
 		if (moveTargetTile.gridIndices.x > currentTile.gridIndices.x)
-			ChangeSpriteDirection(CharacterDirections.Right);
+			ChangeSpriteFacing(CharacterDirections.Right);
 		else if (moveTargetTile.gridIndices.x < currentTile.gridIndices.x)
-			ChangeSpriteDirection(CharacterDirections.Left);
+			ChangeSpriteFacing(CharacterDirections.Left);
 		else if (moveTargetTile.gridIndices.y < currentTile.gridIndices.y)
-			ChangeSpriteDirection(CharacterDirections.Down);
+			ChangeSpriteFacing(CharacterDirections.Down);
 		else if (moveTargetTile.gridIndices.y > currentTile.gridIndices.y)
-			ChangeSpriteDirection(CharacterDirections.Up);
+			ChangeSpriteFacing(CharacterDirections.Up);
 	}
 }
