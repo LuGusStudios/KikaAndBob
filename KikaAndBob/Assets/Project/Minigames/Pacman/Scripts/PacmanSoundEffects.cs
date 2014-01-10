@@ -37,9 +37,10 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 
 	public void Reset(List<PacmanEnemyCharacter> _enemies)
 	{
-		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
+		player = PacmanGameManager.use.GetActivePlayer();
 		if (player == null)
-			Debug.LogError("Couldn't find player.");
+			Debug.LogError("Player was null!");
+
 
 		enemies = _enemies;
 
@@ -56,6 +57,13 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	
 	protected void Update () 
 	{
+		player = PacmanGameManager.use.GetActivePlayer();
+		if (player == null)
+		{
+			Debug.LogError("Player was null!");
+			return;
+		}
+
 		float closestDistance = Mathf.Infinity;
 		PacmanEnemyCharacter newClosestEnemy = null;
 		foreach(PacmanEnemyCharacter enemy in enemies)
@@ -63,7 +71,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 			if (enemy == null)
 				return;
 
-			if (enemy.gameObject.activeInHierarchy && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
+			if (enemy.enabled && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
 				float distance = Vector2.Distance(player.transform.position.v2(), enemy.transform.position.v2());
 
@@ -91,7 +99,5 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 				enemiesTrack.Stop();
 			}
 		}
-
-
 	}
 }

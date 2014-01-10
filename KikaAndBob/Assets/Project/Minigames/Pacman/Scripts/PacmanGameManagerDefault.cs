@@ -67,7 +67,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		ResetPlayerChars();
 
-
 		// find and reset enemy characters
 		enemies.Clear();
 		enemies = new List<PacmanEnemyCharacter>(level.GetComponentsInChildren<PacmanEnemyCharacter>(true));
