@@ -8,7 +8,7 @@ public class PacmanTileItemKey : PacmanTileItem
 	public int amount = 1;
 	protected bool pickedUp = false;
 
-	protected void Start()
+	public override void Initialize ()
 	{
 		PacmanPickups.use.RegisterPickup(keyID);
 	}
@@ -22,6 +22,6 @@ public class PacmanTileItemKey : PacmanTileItem
 
 		this.gameObject.SetActive(false);
 
-		PacmanPickups.use.ModifyPickups(keyID, amount);
+		PacmanPickups.use.ModifyPickupAmount(keyID, amount);
 	}
 }

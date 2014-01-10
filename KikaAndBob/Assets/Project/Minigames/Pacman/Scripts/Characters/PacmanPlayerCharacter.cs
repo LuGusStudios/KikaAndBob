@@ -97,6 +97,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public override void Reset()
 	{
+		moving = false;
 		enemiesFlee = false;
 		characterAnimator.PlayAnimation("Idle");
 		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);

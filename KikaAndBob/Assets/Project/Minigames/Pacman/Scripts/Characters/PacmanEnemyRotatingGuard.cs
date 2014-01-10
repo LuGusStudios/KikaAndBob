@@ -56,8 +56,6 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 
 		currentDirection = (PacmanCharacter.CharacterDirections)nextDirectionStep;
 
-		Debug.Log(currentDirection, gameObject);
-
 		ChangeSpriteFacing(currentDirection);
 	}
 
@@ -126,6 +124,9 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 	protected IEnumerator PlayerSeenRoutine()
 	{
 		detectedRoutineRunning = true;
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(discoveredSound));
+
 		iTween.PunchScale(this.gameObject, Vector3.one, 0.5f);
 
 		yield return new WaitForSeconds(0.5f);

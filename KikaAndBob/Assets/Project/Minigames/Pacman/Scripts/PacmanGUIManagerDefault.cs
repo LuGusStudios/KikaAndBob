@@ -9,7 +9,9 @@ public class PacmanGUIManager : LugusSingletonExisting<PacmanGUIManagerDefault>
 public class PacmanGUIManagerDefault : MonoBehaviour
 {
 	protected Transform guiParent = null;
+	protected Transform keysParent = null;
 	protected TextMesh livesText = null;
+	protected List<Transform> guiKeyItems = new List<Transform>();
 
 	public void SetupLocal()
 	{
@@ -29,6 +31,20 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		if (livesText == null)
 		{
 			Debug.LogError("Could not find lives text mesh.");
+		}
+
+		if (keysParent == null)
+		{
+			keysParent = guiParent.FindChild("Keys");
+		}
+		if (keysParent == null)
+		{
+			Debug.LogError("Could not find Keys parent object.");
+		}
+
+		foreach(Transform t in keysParent)
+		{
+			guiKeyItems.Add(t);
 		}
 	}
 	
@@ -55,7 +71,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	{
 		livesText.text = lives.ToString();
 	}
-
 	
 	public void ShowGameOverMessage()
 	{
@@ -92,18 +107,34 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 		PacmanGameManager.use.StartNewGame();
 	}
-	
-	public void UpdateDoors(List<PacmanTile> doors)
-	{
-		foreach(PacmanTile door in doors)
-		{
-			if (door == null)
-				continue;
 
-			if (door.tileType == PacmanTile.TileType.Collide)
-				door.rendered.SetActive(true);
-			else if (door.tileType == PacmanTile.TileType.Open)
-				door.rendered.SetActive(false);
+	// this will get called each time a new key index has been added
+	public void UpdateKeyGUIItems()
+	{
+		foreach(Transform t in guiKeyItems)
+		{
+			if (PacmanPickups.use.pickups.ContainsKey(t.name))
+			{
+				t.gameObject.SetActive(true);
+			}
+			else
+			{
+				t.gameObject.SetActive(false);
+			}
 		}
 	}
+
+	public void DisplayKeyAmount(string key, int amount)
+	{
+		foreach(Transform t in guiKeyItems)
+		{
+			if (t.name == key)
+			{
+				TextMesh display = t.FindChild("Count").GetComponent<TextMesh>();
+				display.text = amount.ToString();
+				break;
+			}
+		}
+	}
+
 }

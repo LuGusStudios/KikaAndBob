@@ -38,4 +38,9 @@ public class PacmanTile
 	{
 		return "GameTile: " + gridIndices;
 	}
+
+	public Vector2 GetWorldLocation()
+	{
+		return PacmanLevelManager.use.GetLevelRoot().position.v2() + location;
+	}
 }

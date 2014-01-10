@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [System.Serializable]
@@ -7,6 +7,7 @@ public class PacmanLevelDefinition : ScriptableObject {
 	public string backgroundMusicName = "";
 	public int width = 13;
 	public int height = 13;
+	public bool cameraTracksPlayer = false;
 	public string level;
 	public PacmanCharacterDefinition[] characters;
 	public string[] updaters;

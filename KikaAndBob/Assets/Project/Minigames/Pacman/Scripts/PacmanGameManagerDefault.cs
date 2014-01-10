@@ -46,6 +46,9 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// starts a completely new level
 	public void StartNewGame(int levelIndex)
 	{
+		PacmanPickups.use.ClearPickups();
+		PacmanCameraFollower.use.ResetCamera();
+
 		PacmanLevelManager.use.BuildLevel(levelIndex);
 		
 		// find and reset any player characters
@@ -85,10 +88,15 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		// reset lives
 		lives = 3;
 		PacmanGUIManager.use.UpdateLives(lives);
-
-		PacmanPickups.use.ClearPickups();
+		PacmanGUIManager.use.UpdateKeyGUIItems();
 
 		gameRunning = true;
+	}
+
+	// TO DO: make this useful
+	public PacmanPlayerCharacter GetActivePlayer()
+	{
+		return playerChars[0];
 	}
 
 	// starts new round in the same level

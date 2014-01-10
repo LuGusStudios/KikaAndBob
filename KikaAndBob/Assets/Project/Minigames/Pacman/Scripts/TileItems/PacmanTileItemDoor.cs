@@ -6,16 +6,16 @@ public class PacmanTileItemDoor : PacmanTileItem
 {
 	public string keyID = "Key01";
 
-	protected void Start()
+	public override void Initialize ()
 	{
 		parentTile.tileType = PacmanTile.TileType.Collide;
 	}
 
 	public override void OnTryEnter ()
 	{
-		if (PacmanPickups.use.GetPickups(keyID) >= 1)
+		if (PacmanPickups.use.GetPickupAmount(keyID) >= 1)
 		{
-			PacmanPickups.use.ModifyPickups(keyID, -1);
+			PacmanPickups.use.ModifyPickupAmount(keyID, -1);
 			parentTile.tileType = PacmanTile.TileType.Open;
 			this.gameObject.SetActive(false);
 		}

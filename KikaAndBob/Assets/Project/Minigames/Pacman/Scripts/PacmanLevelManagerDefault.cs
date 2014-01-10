@@ -162,6 +162,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		ClearLevel();
 		#endif
 
+		width = level.width;
+		height = level.height;
+
 		ParseLevelTiles(level.level, width, height);
 
 		PlaceLevelTiles();
@@ -171,6 +174,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		PlaceCharacters(level.characters);
 
 		ApplyUpdaters(level.updaters);
+
+		PacmanCameraFollower.use.track = level.cameraTracksPlayer;
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
@@ -291,17 +296,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				continue;
 			}
 
-			PacmanCharacter characterSpawned = (PacmanCharacter)Instantiate(characterPrefabFound);
-
-			characterSpawned.transform.parent = characterParent;
 			PacmanTile startTile = GetTile(characterDefinition.xLocation, characterDefinition.yLocation);
-			characterSpawned.transform.localPosition = Vector3.zero;
+
+			if (startTile == null)
+			{
+				Debug.LogWarning("Character " + characterDefinition.id + " was placed on a non-existing tile. Not placing.");
+				return;
+			}
 			
-			// check if character doesn't happen to be on weird tile (not a problem per se, but probably unwanted)
+			// check if character doesn't happen to be on a non-open tile (not a problem per se, but probably unwanted)
 			if (startTile.tileType != PacmanTile.TileType.Open && startTile.tileType != PacmanTile.TileType.Pickup)
 			{
 				Debug.LogWarning("Caution. Character " + characterDefinition.id + " placed on non-open tile: " + startTile + ": " + startTile.tileType );
 			}
+
+			PacmanCharacter characterSpawned = (PacmanCharacter)Instantiate(characterPrefabFound);
+
+			characterSpawned.transform.parent = characterParent;
+			characterSpawned.transform.localPosition = Vector3.zero;
 
 			// set speed
 			if (characterDefinition.speed < 0)
@@ -357,11 +369,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				return;
 			}
 
-			PacmanTile targetTile = GetTile(definition.tileCoordinates);
+			PacmanTile targetTile = GetTile(definition.tileCoordinates, false);
 
 			if (targetTile == null)
 			{
-				Debug.LogError("Did not find tile with coordinates:" + definition.tileCoordinates);
+				Debug.LogError("Did not find tile with coordinates:" + definition.tileCoordinates + ". Skipping placing tile item: " + definition.id);
 				return;
 			}
 
@@ -375,6 +387,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemScript != null)
 			{
 				tileItemScript.parentTile = targetTile;
+				tileItemScript.Initialize();
 			}
 
 			targetTile.tileItems.Add(tileItem);
@@ -952,6 +965,21 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		
 		return exitCounter;	
+	}
+
+	public float GetLevelWidthInPixels()
+	{
+		return width * scale;
+	}
+
+	public float GetLevelHeightInPixels()
+	{
+		return height * scale;
+	}
+
+	public Transform GetLevelRoot()
+	{
+		return levelRoot;
 	}
 
 	void OnGUI()

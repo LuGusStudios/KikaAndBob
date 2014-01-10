@@ -37,10 +37,13 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 		{
 			pickups.Add(id, 0);
 			Debug.Log("Registered pickup: " + id);
+			ModifyPickupAmount(id, 0);	// modify amount once, to reset the display to 0
 		} 
+
+		PacmanGUIManager.use.UpdateKeyGUIItems();
 	}
 
-	public void ModifyPickups(string id, int amount)
+	public void ModifyPickupAmount(string id, int amount)
 	{
 		if (pickups.ContainsKey(id))
 		{
@@ -51,6 +54,8 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 				pickups[id] = 0;
 			}
 
+			PacmanGUIManager.use.DisplayKeyAmount(id, pickups[id]);
+
 			Debug.Log("Modified pickup: " + id + " by " + amount + " to " + pickups[id]);
 		}
 		else
@@ -59,7 +64,7 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 		}
 	}
 
-	public int GetPickups(string id)
+	public int GetPickupAmount(string id)
 	{
 		if (pickups.ContainsKey(id))
 		{
