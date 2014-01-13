@@ -9,6 +9,7 @@ public class LayerSpawner : MonoBehaviour
 
 	public Sprite[] baseLayer = null;
 	public Sprite[] detailLayer = null;
+	public float detailSpawnIntensity = 1.0f;
 
 	public delegate void OnSectionSwitch(LayerSection currentSection, LayerSection nextSection);
 	public OnSectionSwitch onSectionSwitch;
