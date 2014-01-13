@@ -393,6 +393,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 158124273}
+  - 114: {fileID: 158124278}
   - 114: {fileID: 158124272}
   - 114: {fileID: 158124274}
   - 114: {fileID: 158124275}
@@ -465,6 +466,7 @@ MonoBehaviour:
   groundLayer: {fileID: 0}
   direction: 4
   sectionSpanMultiplier: .5
+  maximumDifficulty: 6
 --- !u!114 &158124276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +496,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+--- !u!114 &158124278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 158124271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc3bb486574fe457a88da955caf26a5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &169444295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1887,7 +1900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .449999988
-  difficulty: 2
+  difficulty: 1
   themes: []
 --- !u!1 &495759212
 GameObject:
@@ -17461,7 +17474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .400000006
-  difficulty: 4
+  difficulty: 3
   themes: []
 --- !u!4 &2139386739
 Transform:

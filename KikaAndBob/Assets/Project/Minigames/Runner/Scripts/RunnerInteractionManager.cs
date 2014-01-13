@@ -30,6 +30,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public Direction direction = Direction.EAST;
 
 	public float sectionSpanMultiplier = 1.0f;
+	public float maximumDifficulty = 6;
 
 	//protected int nextZoneCountdown = 0;
 	protected float sectionSpanOverflow = 0.0f;
@@ -59,6 +60,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			do
 			{
 				zonePrefab = zones[ Random.Range(0, zones.Count) ];
+
+				if( zonePrefab.difficulty > maximumDifficulty )
+					zonePrefab = lastSpawned;
 				 
 				if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
 					lastSpawned = null;
@@ -130,7 +134,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		sectionSpanOverflow = sectionSpan - 1.0f; // what remains for the next section
 		sectionSpanOverflow = Mathf.Max ( sectionSpanOverflow, -0.4f ); // make sure we don't spawn too far in the "previous" section or we might see some popping there
 
-		Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
+		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
 	}
 
 	public void SetupLocal()
@@ -151,16 +155,24 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 		if( zones.Count == 0 )
 		{
-			GameObject zoneContainer = GameObject.Find ("Zones");
-
-			zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>() );
+			CacheInteractionZones();
 		}
-		
+
 		if( zones.Count == 0 )
 		{
 			Debug.LogError(name + " : no InteractionZones found!");
 		}
+	}
 
+	public void CacheInteractionZones()
+	{
+		if( zones.Count > 0 )
+			zones.Clear();
+
+		GameObject zoneContainer = GameObject.Find ("Zones");
+		
+		zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>(true) );
+		
 		foreach( RunnerInteractionZone zone in zones )
 		{
 			zone.gameObject.SetActive(false);
