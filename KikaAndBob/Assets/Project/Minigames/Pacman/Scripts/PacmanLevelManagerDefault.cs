@@ -18,12 +18,14 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	 */
 
 	public PacmanLevelDefinition[] levels = null;
-	public PacmanCharacter[] characterPrefabs = null;
-
 	public int width = 13;
 	public int height = 13;
 	public float scale = 64;
 	public float wallTileScaleFactor = 0.6f;
+	public float pickupScaleFactor = 0.15f;
+	
+	public PacmanCharacter[] characterPrefabs = null;
+	public GameObject[] tileItems = null;
 
 	// MOVE TO SCRIPTABLE OBJECT
 	public Sprite[] blockSprites = null;
@@ -33,7 +35,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
 	public Sprite teleportSprite = null;
-	public GameObject[] tileItems = null;
+
 	
 	public enum LevelQuadrant
 	{
@@ -528,6 +530,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 				pickUp.transform.parent = pickupParent;
 				pickUp.transform.localPosition = new Vector3(tile.location.x, tile.location.y, -1);
+
+				pickUp.transform.localScale = Vector3.one * pickupScaleFactor;
 
 				tile.rendered = pickUp;
 			}
