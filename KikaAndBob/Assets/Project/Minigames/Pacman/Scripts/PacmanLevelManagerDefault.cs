@@ -18,41 +18,14 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	 */
 
 	public PacmanLevelDefinition[] levels = null;
-	public PacmanCharacter[] characterPrefabs = null;
-
-	private string testLevel ="" +
-		"xxxxxxxxxxxxx"+
-		"xpopopopopopx"+
-		"xoxxxxoxxxxox"+
-		"xopopxpxpopox"+
-		"xoxxoxoxoxxox"+
-		"xpxopopopoxpx"+
-		"xoooxxoxxooox"+
-		"xxxoxopoxoxxx"+
-		"xopoxpxpxopox"+
-		"xoxoooxoooxox"+
-		"xoxxoxxxoxxox"+
-		"xpoopopopoopx"+
-		"xxxxxxxxxxxxx";
-
-//	private string testLevel ="" +
-//		"ooxxxxxxxxxxxxxxxxxxxxxoo"+
-//		"ooxpopxpdpxpxpxpdpopxpxoo"+
-//		"ooxoxoooxoxoxoxoxoxoxoxoo"+
-//		"ooxpxpxpxpopxpopxpxpopxoo"+
-//		"xxxoxoxoxoxoooxoxoxxxoxxx"+
-//		"optpxpxpxpxxaxxpxpopoptpo"+
-//		"xxxoxoxodoxaaexodoxxxoxxx"+
-//		"ooxpopxpxpxaaaxpxpxxxpxoo"+
-//		"ooxxxoooxoxxxxxoxoxxxoxoo"+
-//		"ooxxopxpdpxpxpxpdpxxxpxoo"+
-//		"ooxxoxxoxoxoxoxoxoxxxoxoo"+
-//		"ooxxopopxpopopopxpxxxpxoo"+
-//		"ooxxxxxxxxxxxxxxxoooooxoo";
-	
 	public int width = 13;
 	public int height = 13;
 	public float scale = 64;
+	public float wallTileScaleFactor = 0.6f;
+	public float pickupScaleFactor = 0.15f;
+	
+	public PacmanCharacter[] characterPrefabs = null;
+	public GameObject[] tileItems = null;
 
 	// MOVE TO SCRIPTABLE OBJECT
 	public Sprite[] blockSprites = null;
@@ -62,7 +35,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
 	public Sprite teleportSprite = null;
-	public float wallTileScaleFactor = 0.6f;
+
 	
 	public enum LevelQuadrant
 	{
@@ -167,6 +140,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		#else
 		ClearLevel();
 		#endif
+
+		width = _width;
+		height = _height;
 		
 		ParseLevelTiles(levelData, _width, _height);
 		
@@ -191,13 +167,27 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		ClearLevel();
 		#endif
 
+		width = level.width;
+		height = level.height;
+
 		ParseLevelTiles(level.level, width, height);
 
 		PlaceLevelTiles();
 
+		PlaceLevelTileItems(level.tileItems);
+
 		PlaceCharacters(level.characters);
 
 		ApplyUpdaters(level.updaters);
+
+		PacmanCameraFollower.use.track = level.cameraTracksPlayer;
+
+		LugusAudio.use.Ambient().StopAll();
+		if (!string.IsNullOrEmpty(level.backgroundMusicName))
+		{
+			AudioClip music = LugusResources.use.Shared.GetAudio(level.backgroundMusicName);
+			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
+		}
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
@@ -279,6 +269,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		// count tile exits for each tile. Enemies use this value to figure out whether they're in a cul-de-sac and are allowed to turn around.
 		foreach(PacmanTile tile in levelTiles)
 		{
+			if (tile == null)
+			{
+				Debug.LogError("Tile was null!");
+				continue;
+			}
+
 			tile.exitCount = GetNumberOfExits(tile);
 		}
 	}
@@ -295,7 +291,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		
 		foreach(PacmanCharacterDefinition characterDefinition in characters)
 		{
-
 			if (string.IsNullOrEmpty(characterDefinition.id))
 			{
 				Debug.LogError("Character ID is null or empty!");
@@ -318,17 +313,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				continue;
 			}
 
-			PacmanCharacter characterSpawned = (PacmanCharacter)Instantiate(characterPrefabFound);
-
-			characterSpawned.transform.parent = characterParent;
 			PacmanTile startTile = GetTile(characterDefinition.xLocation, characterDefinition.yLocation);
-			characterSpawned.transform.localPosition = Vector3.zero;
+
+			if (startTile == null)
+			{
+				Debug.LogWarning("Character " + characterDefinition.id + " was placed on a non-existing tile. Not placing.");
+				return;
+			}
 			
-			// check if character doesn't happen to be on weird tile (not a problem per se, but probably unwanted)
+			// check if character doesn't happen to be on a non-open tile (not a problem per se, but probably unwanted)
 			if (startTile.tileType != PacmanTile.TileType.Open && startTile.tileType != PacmanTile.TileType.Pickup)
 			{
 				Debug.LogWarning("Caution. Character " + characterDefinition.id + " placed on non-open tile: " + startTile + ": " + startTile.tileType );
 			}
+
+			PacmanCharacter characterSpawned = (PacmanCharacter)Instantiate(characterPrefabFound);
+
+			characterSpawned.transform.parent = characterParent;
+			characterSpawned.transform.localPosition = Vector3.zero;
 
 			// set speed
 			if (characterDefinition.speed < 0)
@@ -353,9 +355,59 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				characterSpawned.spawnDelay = characterDefinition.spawnDelay;
 			}
 
+
 			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
+			characterSpawned.SetStartDirection(characterDefinition.startDirection);
+			characterSpawned.SetDefaultTargetTiles(characterDefinition.defaultTargetTiles);
+
 
 			spawnedCharacters.Add(characterSpawned);
+		}
+	}
+
+	protected void PlaceLevelTileItems(PacmanTileItemDefinition[] tileItemDefinitions)
+	{
+		foreach(PacmanTileItemDefinition definition in tileItemDefinitions)
+		{
+			GameObject tileItemPrefab = null;
+
+			foreach(GameObject go in tileItems)
+			{
+				if (go.name == definition.id)
+				{
+					tileItemPrefab = go;
+					break;
+				}
+			}
+
+			if (tileItemPrefab == null)
+			{
+				Debug.LogError("Did not find tile item ID: " + definition.id);
+				return;
+			}
+
+			PacmanTile targetTile = GetTile(definition.tileCoordinates, false);
+
+			if (targetTile == null)
+			{
+				Debug.LogError("Did not find tile with coordinates:" + definition.tileCoordinates + ". Skipping placing tile item: " + definition.id);
+				return;
+			}
+
+			GameObject tileItem = (GameObject)Instantiate(tileItemPrefab);
+
+			tileItem.transform.parent = pickupParent;
+			tileItem.transform.localPosition = targetTile.location.v3().z(1);
+
+			PacmanTileItem tileItemScript = tileItem.GetComponent<PacmanTileItem>();
+
+			if (tileItemScript != null)
+			{
+				tileItemScript.parentTile = targetTile;
+				tileItemScript.Initialize();
+			}
+
+			targetTile.tileItems.Add(tileItem);
 		}
 	}
 
@@ -372,6 +424,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		for (int i = updaters.Length - 1; i >= 0; i--) 
 		{
+			updaters[i].Deactivate();
+
 			#if UNITY_EDITOR
 			DestroyImmediate(updaters[i]);
 			#else
@@ -454,6 +508,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		foreach(PacmanTile tile in levelTiles)
 		{
+			if (tile == null)
+				continue;
+
 			if (tile.tileType == PacmanTile.TileType.Collide)
 			{
 				GameObject block = new GameObject(tile.gridIndices.ToString() + ": Block");
@@ -494,17 +551,21 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				pickUp.transform.parent = pickupParent;
 				pickUp.transform.localPosition = new Vector3(tile.location.x, tile.location.y, -1);
 
+				pickUp.transform.localScale = Vector3.one * pickupScaleFactor;
+
 				tile.rendered = pickUp;
 			}
 			else if (tile.tileType == PacmanTile.TileType.LevelEnd)
 			{
-//				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-//				
-//				cube.transform.localScale = cube.transform.localScale * scale;
-//				cube.transform.parent = levelParent;
-//				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
+				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				
+				cube.transform.localScale = cube.transform.localScale * scale;
+				cube.transform.parent = levelParent;
+				cube.transform.localPosition = new Vector3(tile.location.x, tile.location.y, 0);
 
-			//	cube.renderer.material.color = Color.red;
+				cube.renderer.sharedMaterial.color = Color.red;
+
+				tile.rendered = cube;
 			}
 			else if (tile.tileType == PacmanTile.TileType.Door)
 			{
@@ -888,6 +949,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public int GetNumberOfExits(PacmanTile tile)
 	{
+		if (tile == null)
+		{
+			Debug.LogError("Tile was null!");
+			return 0;
+		}
+
 		int exitCounter = 0;
 		int x = (int)tile.gridIndices.x;
 		int y = (int)tile.gridIndices.y;
@@ -928,6 +995,21 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		
 		return exitCounter;	
+	}
+
+	public float GetLevelWidthInPixels()
+	{
+		return width * scale;
+	}
+
+	public float GetLevelHeightInPixels()
+	{
+		return height * scale;
+	}
+
+	public Transform GetLevelRoot()
+	{
+		return levelRoot;
 	}
 
 	void OnGUI()

@@ -2,13 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Enemy3 : PacmanEnemyCharacter {
-
-	protected override void SetDefaultTargetTiles()
-	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 0);
-	}
 	
-	// green cat : find position four tiles behind player - since enemies can not normally turn around, it can still reach the player
+	// third enemy : find position four tiles behind player - since enemies can not normally turn around, it can still reach the player
 	protected override void CheckTeleportProximity()
 	{
 		if (player == null)

@@ -14,22 +14,30 @@ MonoBehaviour:
   backgroundMusicName: 
   width: 13
   height: 13
+  cameraTracksPlayer: 0
   level: xxxxxxxxxxxxxxopoxopoxopoxxoxoxoxoxoxoxxpxpxpxpxpxpxxooodooodoooxxxoxxxoxxxoxxxpoxpxpxpxopxxoxxoxoxoxxoxxopdpopopdpoxxxoxxxxxxxoxxxpoxxoooxxopxxxopopxpopoxxxxxxxxxxxxxxx
   characters:
   - id: Kika
-    speed: 200
+    speed: 2
     xLocation: 2
     yLocation: 1
     spawnDelay: 0
-  - id: Scorpion
-    speed: 120
+    startDirection: 0
+    defaultTargetTiles: []
+  - id: ScorpionChase
+    speed: 1.20000005
     xLocation: 1
     yLocation: 11
     spawnDelay: 0
-  - id: Scorpion
-    speed: 150
+    startDirection: 0
+    defaultTargetTiles: []
+  - id: ScorpionChase
+    speed: 1.5
     xLocation: 11
     yLocation: 11
     spawnDelay: 0
+    startDirection: 0
+    defaultTargetTiles: []
   updaters:
   - DoorUpdater
+  tileItems: []

@@ -74,7 +74,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 					if (!moving)
 						DestinationReached();
 
-					ChangeSpriteDirection (nextDirection);
+					ChangeSpriteFacing (nextDirection);
 				}
 			}
 		}

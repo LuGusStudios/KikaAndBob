@@ -56,7 +56,7 @@ public class DoorUpdater : PacmanLevelUpdater {
 			door.tileType = PacmanTile.TileType.Open;
 		}
 		
-		PacmanGUIManager.use.UpdateDoors(doors);
+		UpdateDoorSprites(doors);
 	}
 	
 	public void ChangeDoors()
@@ -129,6 +129,20 @@ public class DoorUpdater : PacmanLevelUpdater {
 			}
 		}
 		
-		PacmanGUIManager.use.UpdateDoors(doors);
+		UpdateDoorSprites(doors);
+	}
+
+	public void UpdateDoorSprites(List<PacmanTile> doors)
+	{
+		foreach(PacmanTile door in doors)
+		{
+			if (door == null)
+				continue;
+
+			if (door.tileType == PacmanTile.TileType.Collide)
+				door.rendered.SetActive(true);
+			else if (door.tileType == PacmanTile.TileType.Open)
+				door.rendered.SetActive(false);
+		}
 	}
 }

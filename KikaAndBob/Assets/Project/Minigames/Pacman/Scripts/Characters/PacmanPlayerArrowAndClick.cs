@@ -92,7 +92,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 				if (!moving)
 					DestinationReachedClick();
 				
-				ChangeSpriteDirection (nextDirection);
+				ChangeSpriteFacing (nextDirection);
 			}
 		}
 	}
@@ -229,11 +229,11 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		{
 			currentDirection = nextDirection;
 			MoveTo(nextTile);
-			ChangeSpriteDirection(currentDirection);
+			ChangeSpriteFacing(currentDirection);
 		}
 		else // else continue in the current direction
 		{
-			ChangeSpriteDirection(currentDirection);
+			ChangeSpriteFacing(currentDirection);
 			nextTile = FindOpenTileInDirection(currentDirection);
 			if (nextTile != null)
 			{

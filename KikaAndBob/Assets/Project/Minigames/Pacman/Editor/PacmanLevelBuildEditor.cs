@@ -38,7 +38,7 @@ public class PacmanLevelBuildEditor : EditorWindow
 //			{
 //				cursor = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
 //				cursor.gameObject.name = "LevelCursor";
-//				cursor.localScale = cursor.localScale * 50;
+//				cursor.localScale = cursor.localScale * 0.5f;
 //			}
 //		}
 //		else
@@ -49,7 +49,9 @@ public class PacmanLevelBuildEditor : EditorWindow
 //			yIndex = Mathf.FloorToInt(level.Length / width);
 //			xIndex = level.Length - (yIndex * width);
 //
-//			cursor.position = levelParent.position + PacmanLevelManager.use.GetTile(xIndex, yIndex).location.v3();
+//
+//
+//			cursor.position = levelParent.position + PacmanLevelManager.use.levelTiles[xIndex, yIndex].location.v3();
 //		}
 
 		if (previousLevel != level)
