@@ -87,7 +87,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		// reset lives
 		lives = 3;
 		PacmanGUIManager.use.UpdateLives(lives);
-		PacmanGUIManager.use.UpdateKeyGUIItems();
+	//	PacmanGUIManager.use.UpdateKeyGUIItems();
 
 		gameRunning = true;
 	}

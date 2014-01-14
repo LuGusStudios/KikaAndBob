@@ -232,6 +232,10 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	{
 		transform.localPosition = PacmanLevelManager.use.GetTile (spawnLocation).location;
 	}
+	
+	public virtual void SetDefaultTargetTiles(Vector2[] defaultTargetTiles)
+	{
+	}
 
 	public virtual void Reset()
 	{

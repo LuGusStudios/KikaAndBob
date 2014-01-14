@@ -140,6 +140,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		#else
 		ClearLevel();
 		#endif
+
+		width = _width;
+		height = _height;
 		
 		ParseLevelTiles(levelData, _width, _height);
 		
@@ -178,6 +181,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		ApplyUpdaters(level.updaters);
 
 		PacmanCameraFollower.use.track = level.cameraTracksPlayer;
+
+		LugusAudio.use.Ambient().StopAll();
+		if (!string.IsNullOrEmpty(level.backgroundMusicName))
+		{
+			AudioClip music = LugusResources.use.Shared.GetAudio(level.backgroundMusicName);
+			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
+		}
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
@@ -259,6 +269,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		// count tile exits for each tile. Enemies use this value to figure out whether they're in a cul-de-sac and are allowed to turn around.
 		foreach(PacmanTile tile in levelTiles)
 		{
+			if (tile == null)
+			{
+				Debug.LogError("Tile was null!");
+				continue;
+			}
+
 			tile.exitCount = GetNumberOfExits(tile);
 		}
 	}
@@ -275,7 +291,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		
 		foreach(PacmanCharacterDefinition characterDefinition in characters)
 		{
-
 			if (string.IsNullOrEmpty(characterDefinition.id))
 			{
 				Debug.LogError("Character ID is null or empty!");
@@ -340,10 +355,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				characterSpawned.spawnDelay = characterDefinition.spawnDelay;
 			}
 
-			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
 
-		
+			characterSpawned.SetSpawnLocation(new Vector2(characterDefinition.xLocation, characterDefinition.yLocation));
 			characterSpawned.SetStartDirection(characterDefinition.startDirection);
+			characterSpawned.SetDefaultTargetTiles(characterDefinition.defaultTargetTiles);
 
 
 			spawnedCharacters.Add(characterSpawned);
@@ -409,6 +424,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		for (int i = updaters.Length - 1; i >= 0; i--) 
 		{
+			updaters[i].Deactivate();
+
 			#if UNITY_EDITOR
 			DestroyImmediate(updaters[i]);
 			#else
@@ -491,6 +508,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		foreach(PacmanTile tile in levelTiles)
 		{
+			if (tile == null)
+				continue;
+
 			if (tile.tileType == PacmanTile.TileType.Collide)
 			{
 				GameObject block = new GameObject(tile.gridIndices.ToString() + ": Block");
@@ -929,6 +949,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public int GetNumberOfExits(PacmanTile tile)
 	{
+		if (tile == null)
+		{
+			Debug.LogError("Tile was null!");
+			return 0;
+		}
+
 		int exitCounter = 0;
 		int x = (int)tile.gridIndices.x;
 		int y = (int)tile.gridIndices.y;

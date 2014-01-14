@@ -38,9 +38,8 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 			pickups.Add(id, 0);
 			Debug.Log("Registered pickup: " + id);
 			ModifyPickupAmount(id, 0);	// modify amount once, to reset the display to 0
+			PacmanGUIManager.use.UpdateKeyGUIItems();
 		} 
-
-		PacmanGUIManager.use.UpdateKeyGUIItems();
 	}
 
 	public void ModifyPickupAmount(string id, int amount)
@@ -80,5 +79,6 @@ public class PacmanPickups : LugusSingletonExisting<PacmanPickups>
 	public void ClearPickups()
 	{
 		pickups.Clear();
+		PacmanGUIManager.use.ClearKeyGUI();
 	}
 }

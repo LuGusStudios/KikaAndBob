@@ -31,7 +31,7 @@ public class PacmanCharacterDefinition
 	public int yLocation = 0;
 	public float spawnDelay = 0;
 	public PacmanCharacter.CharacterDirections startDirection = PacmanCharacter.CharacterDirections.Undefined;
-	
+	public Vector2[] defaultTargetTiles;
 }
 
 [System.Serializable]

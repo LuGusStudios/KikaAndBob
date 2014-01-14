@@ -34,6 +34,10 @@ public class PacmanCharacterAnimator : MonoBehaviour
 		{
 			Debug.LogError(name + " : no BoneAnimations found for this animator!");
 		}
+		else
+		{
+			currentAnimationContainer = animationContainers[0];
+		}
 	}
 	
 	public void SetupGlobal()

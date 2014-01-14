@@ -53,7 +53,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	}
 
 		
-	void Update() 
+	protected virtual void Update() 
 	{
 		if (!PacmanGameManager.use.gameRunning)
 			return;
@@ -93,7 +93,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		PlaceAtSpawnLocation();
 
-		SetDefaultTargetTiles();
+		//SetDefaultTargetTiles();
 		targetTile = defaultTargetTile;
 
 		// set the sprite to face the start direction if provided
@@ -120,9 +120,31 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 
 	// Set tile that enemy will originally try to find here.
 	// Override for different default tile per enemy or setting other paths etc.
-	protected virtual void SetDefaultTargetTiles()
+	public override void SetDefaultTargetTiles(Vector2[] defaultTargetTiles)
 	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, PacmanLevelManager.use.height-1);
+		PacmanTile tile = null;
+
+		// pick the first valid tile from a patrol path if given
+		foreach(Vector2 indices in defaultTargetTiles)
+		{
+			tile = PacmanLevelManager.use.GetTile(indices);
+			
+			if (tile != null)
+				break;
+		}
+
+		if (tile == null)
+		{
+			// this can be desired behavior, so it shouldn't register as an error; e.g. the standard chasing enemy has no use for its
+			// default target tile, since it always finds the player anyway. Other enemy types might, though.
+			//Debug.LogError(this.gameObject.name + ": No valid default target tile found. Defaulting to (0,0).");
+			defaultTargetTile = PacmanLevelManager.use.GetTile(0,0);
+			return;
+		}
+		else
+		{
+			defaultTargetTile = tile;
+		}
 	}
 
 	// set playerFound bool in this method and call any effects on the player
@@ -166,7 +188,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	}
 
 	// override for custom effect when the enemy finds the player
-	protected virtual void PlayerDetectedEffect()
+	protected virtual void PlayerSeenEffect()
 	{
 		if (enemyState == EnemyState.Chasing)
 			return;
@@ -268,6 +290,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (runBehavior == true)
 		{
+			targetTile = PacmanGameManager.use.GetActivePlayer().currentTile;
+
 			MoveTo(FindTileClosestTo(targetTile));
 				
 			if(moveTargetTile == null)

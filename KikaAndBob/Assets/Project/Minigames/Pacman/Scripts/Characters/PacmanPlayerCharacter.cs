@@ -14,19 +14,17 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected LugusAudioTrackSettings walkTrackSettings = null;
 	protected AudioClip walkSoundClip = null;
 
-	
-	protected void Start()
-	{
-		SetupGlobal();
-	}
+
 
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
 	}
 
-	public void SetupGlobal()
+	public override void SetUpGlobal()
 	{
+		base.SetUpGlobal();
+
 		walkTrack = LugusAudio.use.SFX().GetTrack();
 		walkTrack.Claim();
 		walkTrackSettings = new LugusAudioTrackSettings().Loop(true);

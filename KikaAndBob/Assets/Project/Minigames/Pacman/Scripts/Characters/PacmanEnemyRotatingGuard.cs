@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -19,7 +19,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 //		ChangeSpriteDirection(currentDirection);
 	}
 
-	protected void Update () 
+	protected override void Update () 
 	{	
 		if (!PacmanGameManager.use.gameRunning)
 			return;
@@ -30,7 +30,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 			return;
 
 		directionChangeTimer += Time.deltaTime;
-		if (directionChangeTimer >= directionChangeInterval)
+		if (directionChangeTimer >= 1/speed)
 		{
 			directionChangeTimer = 0;
 			FaceNextDirection();
@@ -40,7 +40,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 
 		if (playerFound && !detectedRoutineRunning)
 		{
-			PlayerDetectedEffect();
+			PlayerSeenEffect();
 		}
 	}
 
@@ -63,7 +63,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 	{
 		PlaceAtSpawnLocation();
 		
-		SetDefaultTargetTiles();
+	//	SetDefaultTargetTiles();
 		targetTile = defaultTargetTile;
 		
 		// set the sprite to face the start direction if provided
@@ -95,28 +95,56 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 
 		characterAnimator.PlayAnimation(adjustedDirection.ToString());
 
-		// TO DO: FIX THIS AGAIN TO USE THE X DIRECTION!!!
-		// USING A STATIC (ROTATED) SPRITE UNTIL THERE'S A PROPER ANIMATED CHARACTER
-
-		if ( direction == CharacterDirections.Right )
+	
+		if (characterAnimator.GetComponent<FlippedIncorrectly>() == null)
 		{
-			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentAnimationContainer.transform.localScale.y > 0 )
+			if ( direction == CharacterDirections.Right )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.y( characterAnimator.currentAnimationContainer.transform.localScale.y * -1.0f );
+				// if going left, the scale.x needs to be negative
+				if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+				{
+					characterAnimator.currentAnimationContainer.transform.localScale = 
+						characterAnimator.currentAnimationContainer.transform.localScale.x( 
+							characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				}
+			}
+			else if ( direction == CharacterDirections.Left )
+			{
+				// if going right, the scale.x needs to be positive 
+				if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+				{
+					characterAnimator.currentAnimationContainer.transform.localScale = 
+						characterAnimator.currentAnimationContainer.transform.localScale.x( 
+							Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x)); 
+				}
 			}
 		}
-		else if ( direction == CharacterDirections.Left )
+		else
 		{
-			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentAnimationContainer.transform.localScale.y < 0 )
+			if ( direction == CharacterDirections.Left )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.y( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.y)); 
+				// if going left, the scale.x needs to be negative
+				if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+				{
+					characterAnimator.currentAnimationContainer.transform.localScale = 
+						characterAnimator.currentAnimationContainer.transform.localScale.x( 
+						                                                                   characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				}
+			}
+			else if ( direction == CharacterDirections.Right )
+			{
+				// if going right, the scale.x needs to be positive 
+				if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+				{
+					characterAnimator.currentAnimationContainer.transform.localScale = 
+						characterAnimator.currentAnimationContainer.transform.localScale.x( 
+						                                                                   Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x)); 
+				}
 			}
 		}
 	}
 
-	protected override void PlayerDetectedEffect ()
+	protected void PlayerSeenEffect ()
 	{
 		LugusCoroutines.use.StartRoutine(PlayerSeenRoutine());
 	}

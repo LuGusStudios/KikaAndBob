@@ -137,4 +137,13 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		}
 	}
 
+	public void ClearKeyGUI()
+	{
+		Debug.Log("Clearing key GUI.");
+		foreach(Transform t in guiKeyItems)
+		{
+			t.gameObject.SetActive(false);
+		}
+	}
+
 }

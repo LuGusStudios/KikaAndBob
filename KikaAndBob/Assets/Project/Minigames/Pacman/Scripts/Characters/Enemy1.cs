@@ -4,14 +4,8 @@ using System.Collections;
 public class Enemy1 : PacmanEnemyCharacter {
 	
 	public int detectDistance = 8;	// tile radius within which enemy will chase player
-
-	protected override void SetDefaultTargetTiles()
-	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, PacmanLevelManager.use.height-1);
-	}
 	
-	
-	// blue cat: find player directly if close, find default target tile if not
+	// first enemy: find player directly if close, find default target tile if not
 	protected override void CheckTeleportProximity()
 	{
 		if (player == null)
