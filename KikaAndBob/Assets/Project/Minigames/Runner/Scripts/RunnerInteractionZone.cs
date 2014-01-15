@@ -9,6 +9,25 @@ public class RunnerInteractionZone : MonoBehaviour
 
 	public BackgroundTheme[] themes; // themes in which this block can occur. Empty = any theme
 
+	// if the system should destroy this zone when the section it belongs to goes offscreen (for almost everything, this should be yes)
+	// if this is false, the zone itself needs to make sure it is destroyed and at an appropriate time
+	public bool autoDestroy = true; 
+
+	public void OnDrawGizmos()
+	{
+		Transform background = transform.FindChild("Background");
+		if( background != null )
+		{
+			float sectionWidth = background.renderer.bounds.size.x;
+
+			Gizmos.color = Color.red;
+
+			Vector3 start = transform.position.xAdd( -0.5f * sectionWidth );
+			Vector3 stop = start.xAdd( sectionWidth * sectionSpan );
+
+			Gizmos.DrawLine( start, stop );
+		}
+	}
 
 	public void SetupLocal()
 	{

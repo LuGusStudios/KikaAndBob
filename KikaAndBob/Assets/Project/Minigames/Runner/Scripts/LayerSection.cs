@@ -75,7 +75,24 @@ public class LayerSection : MonoBehaviour
 		RunnerInteractionZone[] zones = transform.GetComponentsInChildren<RunnerInteractionZone>();
 		foreach( RunnerInteractionZone zone in zones )
 		{
-			GameObject.Destroy( zone.gameObject );
+			if( zone.autoDestroy )
+			{
+				GameObject.Destroy( zone.gameObject );
+			}
+			else 
+			{
+				// no autodestroy, but can't keep it in this section either...
+				// de-couple and make sure it keeps moving if necessary
+				zone.transform.parent = this.transform.parent; // keep it in the system, because when we reset the whole level to prevent x-overflow, this things needs to go along :)
+				
+				RunnerMover mover = GetComponent<RunnerMover>();
+				if( mover != null )
+				{
+					RunnerMover mover2 = zone.GetComponent<RunnerMover>();
+					mover2.speed = mover.speed;
+					mover2.direction = mover.direction;
+				}
+			}
 		}
 
 

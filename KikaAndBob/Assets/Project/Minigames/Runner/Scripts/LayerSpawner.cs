@@ -80,6 +80,8 @@ public class LayerSpawner : MonoBehaviour
 	{
 		while( true )
 		{
+			//Debug.Log (Time.frameCount + "LAYER SPAWNING HAPPENING"); 
+
 			// if currentSection is offscreen on the left side:
 			// - respawn it on the right side using a new Sprite (if necessary)
 			// - switch current to next section
@@ -97,10 +99,12 @@ public class LayerSpawner : MonoBehaviour
 			bool offscreenLeft = rightBound < leftBound;
 			bool offscreenBottom = bottomBound > topBound;
 
+
 			if( offscreenLeft || offscreenBottom ) 
 			{
 				// load new sprites and content to fill the section (which is now fully offscreen)
 				currentSection.Reset();
+
 
 				if( offscreenLeft )
 				{
@@ -117,9 +121,12 @@ public class LayerSpawner : MonoBehaviour
 				currentSection = nextSection;
 				nextSection = temp; 
 
+
 				if( onSectionSwitch != null )
 					onSectionSwitch( currentSection, nextSection );
-			}
+
+			} 
+
 
 
 
