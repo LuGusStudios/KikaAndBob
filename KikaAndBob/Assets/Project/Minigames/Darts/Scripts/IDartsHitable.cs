@@ -9,6 +9,8 @@ public abstract class IDartsHitable : MonoBehaviour
 
 	public DartsFunctionalityGroup group = null;
 
+	public int score = 100;
+
 	protected int _hitCount = 0;
 	public int HitCount
 	{
@@ -75,4 +77,9 @@ public abstract class IDartsHitable : MonoBehaviour
 	public abstract void Hide();
 
 	public abstract void OnHit();
+
+	public virtual int GetScore()
+	{
+		return score;
+	}
 }
