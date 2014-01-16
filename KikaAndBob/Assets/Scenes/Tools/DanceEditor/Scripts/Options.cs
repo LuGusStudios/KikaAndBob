@@ -67,6 +67,7 @@ public class Options : LugusSingletonRuntime<Options>
 			clipname = AudioPlayer.use.Source.clip.name;
 
 		lanesdata += "\t<AudioClip>" + clipname + "</AudioClip>\r\n";
+		lanesdata += "\t<Bookmarks>\r\n" + Bookmarks.use.ToXML(2) + "\t</Bookmarks>\r\n";
 
 		// Write the actions of each lane
 		foreach (Lane lane in LaneManager.use.Lanes)
@@ -132,6 +133,8 @@ public class Options : LugusSingletonRuntime<Options>
 				{
 					LaneManager.use.CreateLane(parser);
 				}
+				else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Bookmarks"))
+					Bookmarks.use.FromXML(parser);
 			}
 		}
 		else

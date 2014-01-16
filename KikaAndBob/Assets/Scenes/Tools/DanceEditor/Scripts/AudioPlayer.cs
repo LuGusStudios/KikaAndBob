@@ -23,6 +23,13 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 		{
 			return _seekTime;
 		}
+		set
+		{
+			if (_source.isPlaying)
+				_source.time = value;
+			else
+				_seekTime = value;
+		}
 	}
 	public bool IsPlaying
 	{
