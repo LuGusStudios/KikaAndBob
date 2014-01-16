@@ -57,7 +57,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		}
 	}
 
-	protected DanceHeroLane GetLane(string name)
+	public DanceHeroLane GetLane(string name)
 	{
 		foreach( DanceHeroLane lane in lanes )
 		{
@@ -77,7 +77,11 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 			endLevelRoutine.StopRoutine();
 
 		cumulativeDelay = 0;
-		LoadLevelChina();
+		//LoadLevelChina();
+		GetLane("Lane1").defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+		GetLane("Lane2").defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+		GetLane("Lane3").defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+		LaneLoader.LoadLanes();
 
 		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
 	}
