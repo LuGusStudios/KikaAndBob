@@ -59,20 +59,33 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 				break;
 
 			RunnerInteractionZone zonePrefab = null;
+			int maxIterations = 100;
+			int iteration = 0;
 			do
 			{
 				zonePrefab = zones[ Random.Range(0, zones.Count) ];
 
-				if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+				// for example if all zones are too difficult
+				// won't happen in "real" situations, but can easily happen in testing if we're not carefull
+				if( iteration >= maxIterations )
 				{
 					lastSpawned = null;
 				}
 				else
 				{
-					// if too difficult: skip this one
-					if( zonePrefab.difficulty > maximumDifficulty )
-						zonePrefab = lastSpawned;
+					if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+					{
+						lastSpawned = null;
+					}
+					else
+					{
+						// if too difficult: skip this one
+						if( zonePrefab.difficulty > maximumDifficulty )
+							zonePrefab = lastSpawned;
+					}
 				}
+
+				++iteration;
 			}
 			while( zonePrefab == lastSpawned ); 
 

@@ -25,7 +25,7 @@ public class RunnerConfig_13Pacific : IRunnerConfig
 
 		character.speedRange = new DataRange(13,13);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
-		RunnerInteractionManager.use.maximumDifficulty = 6; // TODO: change this, only good for testing :)bg
+		RunnerInteractionManager.use.maximumDifficulty = 2; // TODO: change this, only good for testing :)bg
 	}
 	
 	public void Level1()
