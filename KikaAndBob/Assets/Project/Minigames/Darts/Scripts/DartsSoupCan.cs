@@ -20,6 +20,7 @@ public class DartsSoupCan : IDartsHitable
 	{
 		// like anyone is ever gonna be this badass...
 		if (hitStreak < 6)
+		{
 			hitStreak++;
 
 		HitCount++;
@@ -27,6 +28,7 @@ public class DartsSoupCan : IDartsHitable
 
 		if (!flying)
 			routineHandle = LugusCoroutines.use.StartRoutine(AnimationRoutine());
+		}
 	}
 
 	protected IEnumerator AnimationRoutine()
