@@ -43,7 +43,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			return;
 		}
 
-		//Debug.LogError("SECTION SWITCH ACCEPTED");
+		//Debug.LogError("SECTION SWITCH ACCEPTED " + zones.Count);
+
+		//return;
 
 		float sectionSpan = sectionSpanOverflow;
 
@@ -57,25 +59,45 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 				break;
 
 			RunnerInteractionZone zonePrefab = null;
+			int maxIterations = 100;
+			int iteration = 0;
 			do
 			{
 				zonePrefab = zones[ Random.Range(0, zones.Count) ];
 
-				if( zonePrefab.difficulty > maximumDifficulty )
-					zonePrefab = lastSpawned;
-				 
-				if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+				// for example if all zones are too difficult
+				// won't happen in "real" situations, but can easily happen in testing if we're not carefull
+				if( iteration >= maxIterations )
+				{
 					lastSpawned = null;
+				}
+				else
+				{
+					if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+					{
+						lastSpawned = null;
+					}
+					else
+					{
+						// if too difficult: skip this one
+						if( zonePrefab.difficulty > maximumDifficulty )
+							zonePrefab = lastSpawned;
+					}
+				}
+
+				++iteration;
 			}
 			while( zonePrefab == lastSpawned ); 
 
 			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
 
-			if( sectionSpan + newSectionSpan > 0.9f ) // not 1.0f but 0.9f, to provide some extra padding
+			if( (sectionSpan + newSectionSpan > 0.9f) && zonePrefab.autoDestroy ) // not 1.0f but 0.9f, to provide some extra padding
 			{
 				// if we spawn the zones outside of the section, chances are big they will "disappear" at the end
 				// because they are parented to the section, which is being re-used constantly
 				// so: make sure the zones don't surpass the section's area on the end side
+
+				// unless autoDestroy is OFF: then we don't need to worry about disappearances out of time :)
 				
 				//Debug.LogError("DISMISSED " + zonePrefab.name + " with span " + newSectionSpan );
 				break;
