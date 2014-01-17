@@ -124,10 +124,16 @@ public class DartsBeanShooter : MonoBehaviour
 //		trail.SetVertexCount(2);
 //		trail.SetPosition(0, spitStart.position);
 
-		GameObject trail = (GameObject) GameObject.Instantiate( bulletTrailPrefab );
+		//GameObject trail = (GameObject) GameObject.Instantiate( bulletTrailPrefab );
+		GameObject trail = bullet.transform.FindChild("BulletTrail").gameObject;
 		trail.transform.position = spitStart.transform.position;
 		trail.transform.eulerAngles = spitStart.transform.eulerAngles;
+
 		float targetScale = Vector3.Distance(spitStart.transform.position, worldTarget) / trail.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+	
+		if (targetScale > 1.0f)
+			targetScale = 1.0f;
+
 		trail.transform.localScale = new Vector3(1, 0, 1);
 		
 		float travelTime = bulletTravelTimeRange.Random();
