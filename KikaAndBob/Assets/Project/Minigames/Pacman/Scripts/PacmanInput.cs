@@ -36,6 +36,40 @@ public class PacmanInput : LugusSingletonRuntime<PacmanInput>
 		return false;
 	}
 
+	public bool GetUpContinuous()
+	{
+		if (LugusInput.use.Key(KeyCode.UpArrow))
+			return true;
+		
+		return false;
+	}
+	
+	public bool GetDownContinuous()
+	{
+		if (LugusInput.use.Key(KeyCode.DownArrow))
+			return true;
+		
+		return false;
+	}
+	
+	public bool GetRightContinuous()
+	{
+		if (LugusInput.use.Key(KeyCode.RightArrow))
+			return true;
+		
+		return false;
+	}
+	
+	public bool GetLeftContinuous()
+	{
+		if (LugusInput.use.Key(KeyCode.LeftArrow))
+			return true;
+		
+		return false;
+	}
+
+	
+ 	//TO DO: Placeholder
 	public bool GetAction1()
 	{
 		if (LugusInput.use.KeyDown(KeyCode.Space))

@@ -18,11 +18,11 @@ public class WebplayerBuilder : MonoBehaviour
 		// Build players
 
 		List<string> levels = new List<string>();  
-		levels.Add( "Assets/Scenes/Builders/Dance/DanceBuilder.unity" );
+		//levels.Add( "Assets/Scenes/Builders/Dance/DanceBuilder.unity" );
 		levels.Add( "Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity" ); 
 		levels.Add( "Assets/Scenes/Builders/Frogger/FroggerBuilder.unity" );
-		levels.Add( "Assets/Scenes/Builders/Pacman/PacmanBuilder.unity" );
-		levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" );  
+		//levels.Add( "Assets/Scenes/Builders/Pacman/PacmanBuilder.unity" );
+		//levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" );  
 
 		foreach( string currentLevel in levels ) 
 		{

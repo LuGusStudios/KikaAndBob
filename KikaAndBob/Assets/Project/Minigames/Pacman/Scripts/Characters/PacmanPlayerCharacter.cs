@@ -1,13 +1,37 @@
 using UnityEngine;
 using System.Collections;
+using SmoothMoves;
 
 public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public bool enemiesFlee = false;
 	public float powerupDuration = 10;
+
 	protected bool allowControl = true;
 	protected bool cutScene = false;
 	protected PacmanCharacter.CharacterDirections nextDirection = CharacterDirections.Undefined;
+	protected ILugusAudioTrack walkTrack = null;
+	protected LugusAudioTrackSettings walkTrackSettings = null;
+	protected AudioClip walkSoundClip = null;
+
+
+
+	public override void SetUpLocal()
+	{
+		base.SetUpLocal();
+	}
+
+	public override void SetUpGlobal()
+	{
+		base.SetUpGlobal();
+
+		walkTrack = LugusAudio.use.SFX().GetTrack();
+		walkTrack.Claim();
+		walkTrackSettings = new LugusAudioTrackSettings().Loop(true);
+	
+		if (!string.IsNullOrEmpty(walkSoundKey))
+			walkSoundClip = LugusResources.use.Shared.GetAudio(walkSoundKey);
+	}
 
 	private void Update () 
 	{
@@ -21,6 +45,9 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 		if (allowControl == true)
 		{
+			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+				return;
+
 			if (PacmanInput.use.GetUp())
 			{
 				nextDirection = PacmanCharacter.CharacterDirections.Up;
@@ -47,9 +74,85 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		UpdatePosition();
+		UpdateMovement();
+
+		UpdateWalkSound();
 	}
-	
+
+	protected void UpdateWalkSound()
+	{
+		if (moving)
+		{
+			if (!walkTrack.Playing)
+				walkTrack.Play(walkSoundClip, walkTrackSettings);
+		}
+		else
+		{
+			if (walkTrack.Playing)
+				walkTrack.Stop();
+		}
+	}
+
+	public override void Reset()
+	{
+		moving = false;
+		enemiesFlee = false;
+		characterAnimator.PlayAnimation("Idle");
+		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
+		DetectCurrentTile();
+		ResetMovement();
+		PlaceAtSpawnLocation();
+	}
+
+	public override void ChangeSpriteFacing(CharacterDirections direction)
+	{
+		CharacterDirections adjustedDirection = direction;
+		
+		// Right facing = left flipped on x axis
+		if (direction == CharacterDirections.Undefined || direction == CharacterDirections.Right)
+		{
+			adjustedDirection = CharacterDirections.Left;
+		}
+
+		if (enemiesFlee)
+		{
+			if ( direction == CharacterDirections.Right || direction == CharacterDirections.Left)
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredSide);
+			}
+			else if (direction == CharacterDirections.Up)
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredUp);
+			}
+			else
+			{
+				characterAnimator.PlayAnimation(characterAnimator.poweredDown);
+			}
+		}
+		else
+		{
+			characterAnimator.PlayAnimation("" + adjustedDirection.ToString());
+		}
+		
+		if ( direction == CharacterDirections.Right )
+		{
+			// if going left, the scale.x needs to be negative
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+			}
+		}
+		else if ( direction == CharacterDirections.Left )
+		{
+			// if going right, the scale.x needs to be positive 
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			{
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+			}
+		}
+		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
+	}
+		
 	public override void DestinationReached()
 	{	
 		if (cutScene)
@@ -60,7 +163,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		moving = false;
 
 		// if we can move in the next selected direction, go there
-		GameTile nextTile = FindOpenTileInDirection(nextDirection);
+		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
@@ -75,12 +178,12 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		ChangeSpriteDirection(currentDirection);
+		ChangeSpriteFacing(currentDirection);
 	}
 	
 	protected void TryMoveInDirection(CharacterDirections direction)
 	{
-		GameTile newTarget = FindOpenTileInDirection(direction);
+		PacmanTile newTarget = FindOpenTileInDirection(direction);
 		
 		if (newTarget != null && newTarget != moveTargetTile)
 		{
@@ -93,95 +196,140 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	// Override for custom behavior
 	protected virtual void DoCurrentTileBehavior()
 	{
-		if (currentTile.tileType == GameTile.TileType.Pickup)
+		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
 		{
-			currentTile.tileType = GameTile.TileType.Open;
-			currentTile.sprite.SetActive(false);
+			alreadyTeleported = false;
+		}
+
+		foreach(GameObject go in currentTile.tileItems)
+		{
+			if (go.GetComponent<PacmanTileItem>() != null)
+			{
+				go.GetComponent<PacmanTileItem>().OnEnter();
+			}
+		}
+
+		if (currentTile.tileType == PacmanTile.TileType.Pickup)
+		{
+			currentTile.tileType = PacmanTile.TileType.Open;
+			currentTile.rendered.SetActive(false);
 			PacmanLevelManager.use.IncreasePickUpCount();
 			PacmanLevelManager.use.CheckPickedUpItems();
 		}
-		else if (currentTile.tileType == GameTile.TileType.Upgrade)
+		else if (currentTile.tileType == PacmanTile.TileType.Upgrade)
 		{
-			currentTile.tileType = GameTile.TileType.Open;
-			currentTile.sprite.SetActive(false);
+			currentTile.tileType = PacmanTile.TileType.Open;
+			if (currentTile.rendered != null)
+				currentTile.rendered.SetActive(false);
 			LugusCoroutines.use.StartRoutine(PowerupRoutine());
 		}
-		else if (currentTile.tileType == GameTile.TileType.Lethal)
+		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
 		{
 			PacmanGameManager.use.LoseLife();
 		}
-		else if (currentTile.tileType == GameTile.TileType.LevelEnd && PacmanLevelManager.use.AllItemsPickedUp())
+		else if (currentTile.tileType == PacmanTile.TileType.LevelEnd && PacmanLevelManager.use.AllItemsPickedUp())
 		{
 			PacmanGameManager.use.WinGame();
 			allowControl = false;
 			return;
 		}
-		else if (allowControl && currentTile.tileType == GameTile.TileType.Teleport) // this is also under the scope of allowControl, 
-			// because we don't want the player character to look for teleports when he's already moving in one
+		else if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
 		{
-			// TO DO: Make this more elegant and extensible
-			if (currentTile.gridIndices.x < (float)PacmanLevelManager.use.width * 0.5f)
-				StartCoroutine(TeleportRoutine(true));
-			else
-				StartCoroutine(TeleportRoutine(false));
-			
-			return;
+			LugusCoroutines.use.StartRoutine(TeleportRoutine());
 		}
 	}
+
+	// TO DO: This doesn't really need to be a coroutine anymore
+	protected override IEnumerator TeleportRoutine()
+	{				
+		alreadyTeleported = true;
+
+		PacmanTile targetTile = null;
+
+		if (PacmanLevelManager.use.teleportTiles.Count <= 1)
+		{
+			Debug.LogError("There's only one teleport tile in this level!");
+			yield break;
+		}
+
+		// this idea is not what we want, because it links teleports in a circle (always to the next), but not in two directions (i.e. also to the previous one)
+//		int indexCurrentTeleport = PacmanLevelManager.use.teleportTiles.IndexOf(currentTile);
+//		int	indexCounterpart = indexCurrentTeleport  + 1;
+//
+//		if (indexCounterpart >= PacmanLevelManager.use.teleportTiles.Count)
+//		{
+//			indexCounterpart = 0;
+//		}
+
+		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+		{
+			if (currentTile != tile)
+			{
+				targetTile = tile;
+				break;
+			}
+		}
+		
+		if (targetTile == null)
+		{
+			Debug.LogError("No other teleport tile found!");
+			yield break;
+		}
+
+		transform.localPosition = targetTile.location.v3();
+
+		DestinationReached();
+	}
+
 	
-	protected GameTile FindOpenTileInDirection(CharacterDirections direction)
+	protected PacmanTile FindOpenTileInDirection(CharacterDirections direction)
 	{
 		int xIndex = (int)currentTile.gridIndices.x;	
 		int yIndex = (int)currentTile.gridIndices.y;
-		GameTile inspectedTile = null;
+		PacmanTile inspectedTile = null;
 		
 		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex+1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex+1, yIndex);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex-1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex-1, yIndex);
-			if (inspectedTile != null)
+		}
+
+		if (inspectedTile != null)
+		{
+			// first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+			foreach(GameObject go in inspectedTile.tileItems)
 			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
+				if (go.GetComponent<PacmanTileItem>() != null)
+				{
+					go.GetComponent<PacmanTileItem>().OnTryEnter();
+				}
 			}
+
+			if (IsEnemyWalkable(inspectedTile))
+				return inspectedTile;
 		}
 		
 		return null;
 	}
 	
-	public bool IsEnemyWalkable(GameTile inspectedTile)
+	public bool IsEnemyWalkable(PacmanTile inspectedTile)
 	{
-		if (inspectedTile.tileType == GameTile.TileType.Collide ||
-			inspectedTile.tileType == GameTile.TileType.Locked)
+		if (inspectedTile.tileType == PacmanTile.TileType.Collide ||
+			inspectedTile.tileType == PacmanTile.TileType.Locked)
 			return false;
 
-		if (inspectedTile.tileType == GameTile.TileType.LevelEnd && !PacmanLevelManager.use.AllItemsPickedUp())
+		if (inspectedTile.tileType == PacmanTile.TileType.LevelEnd && !PacmanLevelManager.use.AllItemsPickedUp())
 			return false;
 		
 		return true;
@@ -195,47 +343,78 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 		enemiesFlee = false;
 	}
-
-	protected IEnumerator TeleportRoutine(bool exitLeft)
-	{				
-		allowControl = false;
-		
-		if (exitLeft)
-			MoveTo(PacmanLevelManager.use.GetTile(1, 7));			// 7 = y location on grid of teleporters. TO DO: Make cleaner/more extensible.
-		else
-			MoveTo(PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-2, 7));
-		
-
-		yield return new WaitForSeconds(movementDuration*2); // TO DO: This works. Figure out why.
-		
-		
-		if (exitLeft)
-		{
-			transform.localPosition = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 7).location;			// put player on other side of level
-			currentDirection = PacmanCharacter.CharacterDirections.Left;
-			DetectCurrentTile();
-			DestinationReached();
-			//MoveTo(PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-4, 7));									// initiate movement to first tile next to teleporter
-			
-		}
-		else // exiting on the right
-		{
-			transform.localPosition = PacmanLevelManager.use.GetTile(0, 7).location;								// put player on other side of level
-			currentDirection = PacmanCharacter.CharacterDirections.Right;
-			DetectCurrentTile();
-			DestinationReached();
-			//MoveTo(PacmanLevelManager.use.GetTile(3, 7));														// initiate movement to first tile next to teleporter
-		}
-		
-		
-		yield return new WaitForSeconds(movementDuration*3);
-		
-		
-		allowControl = true;
-	}
 	
 	public PacmanCharacter.CharacterDirections GetDirection()
 	{
 		return currentDirection;
+	}
+
+	private bool hitRoutineBusy = false;
+
+	public void DoHitEffect()
+	{
+		LugusCoroutines.use.StartRoutine(HitRoutine());
+	}
+
+	protected IEnumerator HitRoutine()
+	{
+		hitRoutineBusy = true;
+
+		PacmanGameManager.use.gameRunning = false;
+
+		Color originalColor = Color.white;
+		Color color = Color.red; 
+		
+		float duration = 1.5f; 
+		int iterations = 5;
+		float partDuration = duration / (float) iterations;
+
+		BoneAnimation[] boneAnimations = GetComponentsInChildren<BoneAnimation>();
+		
+		for( int i = 0; i < iterations; ++i )
+		{
+			float percentage = 0.0f;
+			float startTime = Time.time;
+			bool rising = true;
+			Color newColor = new Color();
+
+			while( rising )
+			{
+				percentage = (Time.time - startTime) / (partDuration / 2.0f);
+				newColor = originalColor.Lerp (color, percentage);
+				
+				foreach( BoneAnimation container in boneAnimations )
+					container.SetMeshColor( newColor );
+
+				if( percentage >= 1.0f )
+					rising = false;
+				
+				yield return null;
+			}
+			
+			percentage = 0.0f;
+			startTime = Time.time;
+			
+			while( !rising )
+			{
+				percentage = (Time.time - startTime) / (partDuration / 2.0f);
+				newColor = color.Lerp (originalColor,percentage);
+				
+				//currentAnimationContainer.SetMeshColor( newColor );
+				
+				foreach( BoneAnimation container in boneAnimations )
+					container.SetMeshColor( newColor );
+				
+				if( percentage >= 1.0f )
+					rising = true;
+				
+				yield return null;
+			}
+		}
+		
+		foreach( BoneAnimation container in boneAnimations )
+			container.SetMeshColor( originalColor );
+
+		PacmanGameManager.use.LoseLife();
 	}
 }

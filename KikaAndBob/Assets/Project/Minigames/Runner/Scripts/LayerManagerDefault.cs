@@ -18,6 +18,8 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 	public BackgroundTheme[] themes;
 	public BackgroundTheme[] themeTransitions;
 
+	public DataRange timeBetweenThemes = new DataRange(20.0f, 25.0f);
+
 	public BackgroundTheme CurrentTheme
 	{
 		get{ return themes[currentThemeIndex]; }
@@ -64,7 +66,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 			Debug.LogError(name + " : no themes found!");
 		}
 		
-		if( themeTransitions.Length == 0 || themeTransitions.Length != themes.Length )
+		if( themes.Length > 1 && themeTransitions.Length != themes.Length )
 		{
 			Debug.LogError(name + " : wrong number of themeTransitions found! " + themeTransitions.Length + " should be " + themes.Length );
 		}
@@ -84,6 +86,8 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		frontLayer.detailsRandomY = false;
 		frontLayer.StartSpawning();
+
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
 	}
 
 	protected bool themeTransitionInProgress = false;
@@ -92,6 +96,12 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		if( themeTransitionInProgress ) 
 		{
 			Debug.LogError (name + " : theme transition was already in progress!! " + currentThemeIndex);
+			return;
+		}
+
+		if( themes.Length == 1 )
+		{
+			// just 1 theme : nothing to switch to...
 			return;
 		}
 
@@ -110,6 +120,14 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		// TODO: add timeout to better time transition of groundlayer with actual rendition of skylayer to transition
 
 		skyLayer.onSectionSwitch -= OnSkyLayerTransitioned;
+
+
+		// make sure sky doesn't show the transition again
+		// shouldn't happen if the transitionSkyOffset is set correctly, but you can never be too sure :)
+		int oneAhead = (currentThemeIndex + 1) % themes.Length;
+		skyLayer.baseLayer = themes[ oneAhead ].sky;
+		skyLayer.detailLayer = themes[ oneAhead ].skyDetails;
+
 
 		LugusCoroutines.use.StartRoutine( GroundTransitionRoutine(nextSection) );
 	}
@@ -155,9 +173,18 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		skyLayer.baseLayer = themes[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themes[ currentThemeIndex ].skyDetails;
 		
-		frontLayer.detailLayer = themeTransitions[ currentThemeIndex ].frontDetails;
+		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		
 		themeTransitionInProgress = false;
+		
+		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
+	}
+
+	protected IEnumerator NextThemeRoutine()
+	{
+		yield return new WaitForSeconds( timeBetweenThemes.Random () );
+
+		NextTheme();
 	}
 
 
@@ -178,7 +205,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 			NextTheme();
 		}
 
-		if( LugusDebug.debug && !themeTransitionInProgress )
+		if( /*LugusDebug.debug &&*/ !themeTransitionInProgress )
 		{
 			//NextTheme();
 		}

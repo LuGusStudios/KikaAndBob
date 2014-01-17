@@ -5,6 +5,9 @@ public abstract class IConsumableUser : MonoBehaviour
 {
 	public abstract bool Use();
 
+	public delegate void OnUsed(IConsumableUser user);
+	public OnUsed onUsed;
+
 	// TODO:
 	/*
 	public Vector3 GetTarget()

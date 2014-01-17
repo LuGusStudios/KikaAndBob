@@ -13,7 +13,7 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 		if( score == 0 )
 		{
 			if( sound != null )
-				audio.PlayOneShot( sound );
+				LugusAudio.use.SFX().Play( sound );
 			
 			return;
 		}
@@ -29,7 +29,7 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 		GameObject.Destroy(scoreText, time);
 		
 		if( sound != null )
-			audio.PlayOneShot( sound );
+			LugusAudio.use.SFX().Play( sound );
 		
 		int newScore = totalScore + score;
 		if( newScore >= 0 )

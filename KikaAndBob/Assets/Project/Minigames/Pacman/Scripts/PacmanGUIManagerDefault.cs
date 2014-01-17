@@ -8,12 +8,59 @@ public class PacmanGUIManager : LugusSingletonExisting<PacmanGUIManagerDefault>
 
 public class PacmanGUIManagerDefault : MonoBehaviour
 {
-	void Start () 
+	protected Transform guiParent = null;
+	protected Transform keysParent = null;
+	protected TextMesh livesText = null;
+	protected List<Transform> guiKeyItems = new List<Transform>();
+
+	public void SetupLocal()
 	{
+		if (guiParent == null)
+		{
+			guiParent = GameObject.Find("GUI").transform;
+		}
+		if (guiParent == null)
+		{
+			Debug.LogError("Could not find GUI parent object.");
+		}
+
+		if (livesText == null)
+		{
+			livesText = guiParent.FindChild("Lives").GetComponent<TextMesh>();
+		}
+		if (livesText == null)
+		{
+			Debug.LogError("Could not find lives text mesh.");
+		}
+
+		if (keysParent == null)
+		{
+			keysParent = guiParent.FindChild("Keys");
+		}
+		if (keysParent == null)
+		{
+			Debug.LogError("Could not find Keys parent object.");
+		}
+
+		foreach(Transform t in keysParent)
+		{
+			guiKeyItems.Add(t);
+		}
 	}
 	
-	void Update()
+	public void SetupGlobal()
 	{
+	
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
 	}
 	
 	public void UpdatePickupCounter(int newValue)
@@ -22,10 +69,8 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdateLives(int lives)
 	{
-		Debug.Log("Add lives message here: " + lives);
-		PacmanGameManager.use.StartNewRound();
+		livesText.text = lives.ToString();
 	}
-
 	
 	public void ShowGameOverMessage()
 	{
@@ -42,8 +87,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 
 		child.gameObject.SetActive(false);
-
-		PacmanGameManager.use.StartNewGame();
 	}
 
 	public void ShowWinMessage()
@@ -64,18 +107,43 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 		PacmanGameManager.use.StartNewGame();
 	}
-	
-	public void UpdateDoors(List<GameTile> doors)
-	{
-		foreach(GameTile door in doors)
-		{
-			if (door == null)
-				continue;
 
-			if (door.tileType == GameTile.TileType.Collide)
-				door.sprite.SetActive(true);
-			else if (door.tileType == GameTile.TileType.Open)
-				door.sprite.SetActive(false);
+	// this will get called each time a new key index has been added
+	public void UpdateKeyGUIItems()
+	{
+		foreach(Transform t in guiKeyItems)
+		{
+			if (PacmanPickups.use.pickups.ContainsKey(t.name))
+			{
+				t.gameObject.SetActive(true);
+			}
+			else
+			{
+				t.gameObject.SetActive(false);
+			}
 		}
 	}
+
+	public void DisplayKeyAmount(string key, int amount)
+	{
+		foreach(Transform t in guiKeyItems)
+		{
+			if (t.name == key)
+			{
+				TextMesh display = t.FindChild("Count").GetComponent<TextMesh>();
+				display.text = amount.ToString();
+				break;
+			}
+		}
+	}
+
+	public void ClearKeyGUI()
+	{
+		Debug.Log("Clearing key GUI.");
+		foreach(Transform t in guiKeyItems)
+		{
+			t.gameObject.SetActive(false);
+		}
+	}
+
 }

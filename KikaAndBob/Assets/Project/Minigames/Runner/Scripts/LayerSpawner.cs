@@ -14,6 +14,7 @@ public class LayerSpawner : MonoBehaviour
 	public OnSectionSwitch onSectionSwitch;
 
 	public bool detailsRandomY = true; // should the details in the detail layer have a semi-random y position or stick to the default pivots?
+	public bool detailsRandomX = true;
 
 	public void SetupLocal()
 	{
@@ -86,14 +87,30 @@ public class LayerSpawner : MonoBehaviour
 			// TODO: add some pixels to UIWidth so we're 100% sure offscreen? 
 			float leftBound = LugusCamera.game.transform.position.x - (LugusUtil.UIWidth / 200.0f); // by 2 to get half, by 100 for pixels to units ratio
 
-			if( rightBound < leftBound ) 
+
+			float bottomBound = currentSection.transform.position.y - (currentSection.height / 2.0f);
+			float topBound = LugusCamera.game.transform.position.y + (LugusUtil.UIHeight / 200.0f);
+
+
+			// TODO: find a better way? now we can only detect left an bottom, what about up and right?
+			bool offscreenLeft = rightBound < leftBound;
+			bool offscreenBottom = bottomBound > topBound;
+
+			if( offscreenLeft || offscreenBottom ) 
 			{
 				// load new sprites and content to fill the section (which is now fully offscreen)
 				currentSection.Reset();
-				
-				// put it nicely to the right of the current section
-				currentSection.transform.position = nextSection.transform.position.xAdd( (nextSection.width / 2.0f) + (currentSection.width / 2.0f) );
 
+				if( offscreenLeft )
+				{
+					// put it nicely to the right of the current section
+					currentSection.transform.position = nextSection.transform.position.xAdd( (nextSection.width / 2.0f) + (currentSection.width / 2.0f) );
+				}
+				else if( offscreenBottom )
+				{	
+					// put it nicely above the current section
+					currentSection.transform.position = nextSection.transform.position.yAdd( ( -1.0f * (nextSection.height / 2.0f)) - (currentSection.height / 2.0f) );
+				}
 
 				LayerSection temp = currentSection;
 				currentSection = nextSection;
@@ -102,6 +119,8 @@ public class LayerSpawner : MonoBehaviour
 				if( onSectionSwitch != null )
 					onSectionSwitch( currentSection, nextSection );
 			}
+
+
 
 
 			yield return null;
