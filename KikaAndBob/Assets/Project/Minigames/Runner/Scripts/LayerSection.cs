@@ -60,7 +60,7 @@ public class LayerSection : MonoBehaviour
 					}
 					else
 					{
-						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name);
+						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name + " // " + nameID);
 					}
 				}
 			}
