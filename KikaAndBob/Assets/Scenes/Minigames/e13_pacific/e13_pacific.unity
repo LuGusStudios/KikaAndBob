@@ -15017,18 +15017,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 573294607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c576c480163a044bc8192b589907ef2d, type: 3}
+  m_Script: {fileID: 11500000, guid: 48889495f54ed4f94af4c8b36f7a2dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedRange:
-    from: 13
-    to: 20
-  timeToMaxSpeed: 60
-  jumpForce: 30
-  speedPercentage: 0
-  groundCheck: {fileID: 0}
-  jumping: 0
-  sliding: 0
+  animationContainers: []
+  currentAnimationContainer: {fileID: 0}
+  currentAnimationClip: 
+  currentAnimationPath: 
+  runningAnimation: RUNNING/KikaSide_RunningSprites
+  jumpAnimation: OTHER/KikaSide_JumpShort
+  hitAnimation: OTHER/KikaSide_Hit
+  slideAnimation: OTHER/KikaSide_Slide
 --- !u!61 &573294613
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15074,18 +15073,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 573294607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb9f245d14e6f4184897394aefb796cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 85fbf6c9e94334b04801f723d860906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationContainers: []
-  currentAnimationContainer: {fileID: 0}
-  currentAnimationClip: 
-  currentAnimationPath: 
-  character: {fileID: 0}
-  runningAnimation: RUNNING/KikaSide_RunningSprites
-  jumpAnimation: OTHER/KikaSide_JumpShort
-  hitAnimation: OTHER/KikaSide_Hit
-  slideAnimation: OTHER/KikaSide_Slide
+  speedRange:
+    from: 13
+    to: 26
+  timeToMaxSpeed: 60
+  jumpForce: 30
+  speedPercentage: 0
+  groundCheck: {fileID: 0}
+  jumping: 0
+  sliding: 0
 --- !u!1 &579623387
 GameObject:
   m_ObjectHideFlags: 0

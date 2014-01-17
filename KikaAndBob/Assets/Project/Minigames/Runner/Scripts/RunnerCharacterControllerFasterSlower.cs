@@ -1,17 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using KikaAndBob.Runner;
 
-public class RunnerCharacterControllerVertical : LugusSingletonExisting<RunnerCharacterControllerVertical>, RunnerCharacterController
+public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<RunnerCharacterControllerFasterSlower>, IRunnerCharacterController, IRunnerCharacterController_FasterSlower
 {
-	public enum SpeedType
-	{
-		NONE = -1,
 
-		SLOW = 1, // modifierPercentage = 0
-		NORMAL = 2, // modifierPercentage = 0.5f
-		FAST = 3 // modifierPercentage = 1.0f
-	}
 
 	public int direction = -1; // -1 is down, 1 is up
 	public DataRange speedRange = new DataRange(13.0f, 26.0f);
@@ -41,13 +35,11 @@ public class RunnerCharacterControllerVertical : LugusSingletonExisting<RunnerCh
 
 	protected float startTime = -1.0f;
 
-	public delegate void OnHit(RunnerPickup pickup);
-	public OnHit onHit;
-	
-	public delegate void OnSpeedTypeChange(SpeedType oldType, SpeedType newType);
-	public OnSpeedTypeChange onSpeedTypeChange;
+	public event KikaAndBob.Runner.OnHit onHit;
+	public event KikaAndBob.Runner.OnSpeedTypeChange onSpeedTypeChange;
 
-	public SpeedType currentSpeedType = SpeedType.NORMAL;
+
+	public KikaAndBob.Runner.SpeedType currentSpeedType = KikaAndBob.Runner.SpeedType.NORMAL;
 
 
 	public void OnPickupHit(RunnerPickup pickup)
@@ -150,11 +142,17 @@ public class RunnerCharacterControllerVertical : LugusSingletonExisting<RunnerCh
 		SpeedType targetType = SpeedType.NORMAL;
 		if( LugusInput.use.Key (KeyCode.UpArrow) )
 		{
-			targetType = SpeedType.SLOW;
+			if( this.direction < 0 )// going DOWN, up is slowing down
+				targetType = SpeedType.SLOW;
+			else
+				targetType = SpeedType.FAST;
 		}
 		else if( LugusInput.use.Key (KeyCode.DownArrow) )
 		{
-			targetType = SpeedType.FAST;
+			if( this.direction < 0 )// going DOWN, down is faster
+				targetType = SpeedType.FAST;
+			else
+				targetType = SpeedType.SLOW;
 		}
 
 		if( currentSpeedType != targetType )

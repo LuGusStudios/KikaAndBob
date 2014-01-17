@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ParallaxMover : MonoBehaviour 
 {
 	public Vector3 speed = Vector3.zero;
-	public RunnerCharacterController character = null;
+	public IRunnerCharacterController character = null;
 
 	public void SetupLocal()
 	{
@@ -15,10 +15,7 @@ public class ParallaxMover : MonoBehaviour
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
-		if( RunnerCharacterControllerHorizontal.Exists() )
-			character = RunnerCharacterControllerHorizontal.use;
-		else if( RunnerCharacterControllerVertical.Exists() )
-			character = RunnerCharacterControllerVertical.use;
+		character = RunnerCharacterController.use;
 
 		if( character == null )
 		{

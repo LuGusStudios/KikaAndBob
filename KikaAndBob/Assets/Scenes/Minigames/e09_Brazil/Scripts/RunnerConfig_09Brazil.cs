@@ -17,20 +17,30 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 			Level1 ();
 		else if( index == 2 )
 			Level2(); 
+
+		Transform background = LugusCamera.game.transform.FindChild("Background");
+		if( background != null )
+		{
+			background.gameObject.MoveTo( background.transform.localPosition.y ( background.transform.localPosition.y * -1.0f ) ).IsLocal(true).Time(60).Execute();
+		}
+		else
+		{
+			Debug.LogError(name + " : No Background found under Game Camera!");
+		}
 	}
 	
 	public void Level0()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
-		character.speedRange = new DataRange(10,10);
+		character.speedRange = new DataRange(0,0.0001f);//10,10);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
 		RunnerInteractionManager.use.maximumDifficulty = 3;
 	}
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
 		character.speedRange = new DataRange(10,14);
 		character.timeToMaxSpeed = 120;
@@ -40,7 +50,7 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;

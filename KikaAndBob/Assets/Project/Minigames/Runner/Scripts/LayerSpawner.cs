@@ -86,21 +86,30 @@ public class LayerSpawner : MonoBehaviour
 			// - respawn it on the right side using a new Sprite (if necessary)
 			// - switch current to next section
 		
+			// EAST
 			float rightBound = currentSection.transform.position.x + (currentSection.width / 2.0f);
 			// TODO: add some pixels to UIWidth so we're 100% sure offscreen? 
 			float leftBound = LugusCamera.game.transform.position.x - (LugusUtil.UIWidth / 200.0f); // by 2 to get half, by 100 for pixels to units ratio
 
 
+			// SOUTH
 			float bottomBound = currentSection.transform.position.y - (currentSection.height / 2.0f);
 			float topBound = LugusCamera.game.transform.position.y + (LugusUtil.UIHeight / 200.0f);
 
 
 			// TODO: find a better way? now we can only detect left an bottom, what about up and right?
 			bool offscreenLeft = rightBound < leftBound;
+			bool offscreenTop = bottomBound > topBound;
+
+			// NORTH
+			// moving up, so if we're offscreen on the bottom we can respawn
+			topBound = currentSection.transform.position.y + (currentSection.height / 2.0f);
+			bottomBound = LugusCamera.game.transform.position.y - (LugusUtil.UIHeight / 200.0f);
+
 			bool offscreenBottom = bottomBound > topBound;
 
 
-			if( offscreenLeft || offscreenBottom ) 
+			if( offscreenLeft || offscreenTop || offscreenBottom ) 
 			{
 				// load new sprites and content to fill the section (which is now fully offscreen)
 				currentSection.Reset();
@@ -111,10 +120,15 @@ public class LayerSpawner : MonoBehaviour
 					// put it nicely to the right of the current section
 					currentSection.transform.position = nextSection.transform.position.xAdd( (nextSection.width / 2.0f) + (currentSection.width / 2.0f) );
 				}
-				else if( offscreenBottom )
+				else if( offscreenTop )
 				{	
 					// put it nicely above the current section
 					currentSection.transform.position = nextSection.transform.position.yAdd( ( -1.0f * (nextSection.height / 2.0f)) - (currentSection.height / 2.0f) );
+				}
+				else if( offscreenBottom )
+				{
+					//Debug.LogError("WE ARE OFFSCREEN BOTTOM " + currentSection.transform.Path() );
+					currentSection.transform.position = nextSection.transform.position.yAdd( (nextSection.height / 2.0f) + (currentSection.height / 2.0f) );
 				}
 
 				LayerSection temp = currentSection;

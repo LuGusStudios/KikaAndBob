@@ -21,7 +21,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	
 	public void Level0()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
 		
 		character.speedRange = new DataRange(10,10);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
@@ -30,7 +30,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
 		
 		character.speedRange = new DataRange(10,14);
 		character.timeToMaxSpeed = 120;
@@ -40,7 +40,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerVertical character = RunnerCharacterControllerVertical.use;
+		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;

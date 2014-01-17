@@ -247,7 +247,11 @@ public class LayerSection : MonoBehaviour
 	{
 		if( spawner == null )
 		{
-			Debug.LogError(name + " : No spawner known for this LayerSection! ");
+			spawner = this.transform.parent.GetComponent<LayerSpawner>();
+		}
+		if( spawner == null )
+		{
+			Debug.LogError(transform.Path () + " : No spawner known for this LayerSection! ");
 		}
 	}
 	
