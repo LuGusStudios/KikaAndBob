@@ -11,6 +11,7 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 	public string normalAnimation = "ALL/KikaParachute_FallingLeft";
 	public string slowAnimation = "ALL/KikaParachute_Slower";
 	public string fastAnimation = "ALL/KikaParachute_Faster";
+	public string stillAnimation = "ALL/KikaParachute_Slower";
 
 	
 	public override void SetupGlobal()
@@ -59,12 +60,16 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 		{
 			PlayAnimation( fastAnimation );
 		}
+		else if( newType == SpeedType.STILL )
+		{
+			PlayAnimation( stillAnimation );
+		}
 	}
 
 
 	public void OnHit(RunnerPickup pickup)
 	{
-		if( pickup.negative )
+		if( pickup == null || pickup.negative )
 		{
 			LugusCoroutines.use.StartRoutine( HitRoutine(pickup) );
 		}

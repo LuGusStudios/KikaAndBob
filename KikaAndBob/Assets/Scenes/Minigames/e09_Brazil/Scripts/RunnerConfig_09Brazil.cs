@@ -33,7 +33,7 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 	{
 		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
-		character.speedRange = new DataRange(0,0.0001f);//10,10);
+		character.speedRange = new DataRange(10,10);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
 		RunnerInteractionManager.use.maximumDifficulty = 3;
 	}

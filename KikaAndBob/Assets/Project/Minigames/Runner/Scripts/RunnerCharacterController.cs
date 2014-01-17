@@ -9,10 +9,11 @@ namespace KikaAndBob
 		public enum SpeedType
 		{
 			NONE = -1,
-			
-			SLOW = 1, // modifierPercentage = 0
-			NORMAL = 2, // modifierPercentage = 0.5f
-			FAST = 3 // modifierPercentage = 1.0f
+
+			STILL = 0,
+			SLOW = 1, // modifierPercentage = 0.5
+			NORMAL = 2, // modifierPercentage = 1
+			FAST = 3 // modifierPercentage = 1.2f
 		}
 
 		public delegate void OnJump(bool start);

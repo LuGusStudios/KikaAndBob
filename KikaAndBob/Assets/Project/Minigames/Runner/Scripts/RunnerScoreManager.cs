@@ -11,7 +11,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 
 	public void ProcessPickup(RunnerPickup pickup)
 	{
-		if( pickup.positive )
+		if( pickup != null && pickup.positive )
 		{
 			AddScore( 10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
 		}

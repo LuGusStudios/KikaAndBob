@@ -15,17 +15,23 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public float timeToMaxSpeed = 60.0f;
 	public float horizontalSpeed = 4.0f; 
 
+	protected Vector3 originalScale = Vector3.zero;
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
 	public Vector3 SpeedScale()
 	{
+		/*
 		Vector3 modifier = Vector3.one;
 		
 		//modifier = modifier.x ( Mathf.Abs ( character.Velocity().x / character.SpeedRange().from ) );
 		modifier = modifier.y ( Mathf.Abs ( Velocity().y / SpeedRange().from ) );
 		
 		return modifier;
+		*/
+
+		return RunnerCameraPuller.use.SpeedScale(); // so ParallaxMover gets the right data
 	}
 
 	[HideInInspector]
@@ -46,14 +52,40 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		RunnerScoreManager.use.ProcessPickup(pickup);
 
+		if( !pickup.positive )
+		{
+			LugusCoroutines.use.StartRoutine( OnHitRoutine() );
+		}
+
 		if( onHit != null )
 			onHit( pickup );
+	}
+
+	protected IEnumerator OnHitRoutine()
+	{
+		upDisabled = true;
+		leftDisabled = true;
+		rightDisabled = true;
+		downDisabled = true;
+
+		up = false;
+		left = false;
+		down = false;
+		right = false;
+
+		yield return new WaitForSeconds(0.3f);
+
+		upDisabled = false;
+		leftDisabled = false;
+		downDisabled = false;
+		rightDisabled = false;
 	}
 
 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
+		originalScale = this.transform.localScale;
 	}
 	
 	public void SetupGlobal()
@@ -74,6 +106,54 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	
 	protected void FixedUpdate ()  
 	{
+		/*
+		if( up )
+		{
+			this.rigidbody2D.velocity = new Vector2( 0.0f, horizontalSpeed );
+		}
+		else if( down )
+		{
+			this.rigidbody2D.velocity = new Vector2( 0.0f, -1.0f * horizontalSpeed );
+		}
+		else if( right )
+		{
+			this.rigidbody2D.velocity = new Vector2( horizontalSpeed, 0.0f );
+		}
+		else if( left )
+		{
+			this.rigidbody2D.velocity = new Vector2( -1.0f * horizontalSpeed, 0.0f );
+		}
+		else
+		{
+			this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
+		}
+		*/
+		
+		this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
+		if( up )
+		{
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( horizontalSpeed * 1.2f );
+			this.transform.localScale = originalScale;
+		}
+		else if( down )
+		{
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * horizontalSpeed * 0.8f );
+			this.transform.localScale = originalScale.xMul(-1.0f);
+		}
+
+		if( right )
+		{
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( horizontalSpeed );
+			this.transform.localScale = originalScale.xMul(-1.0f);
+		}
+		else if( left )
+		{
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * horizontalSpeed );
+			this.transform.localScale = originalScale;
+		}
+
+
+		/*
 		float timeDiff = Time.time - startTime;
 		if( timeDiff > timeToMaxSpeed )
 		{
@@ -109,51 +189,122 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( horizontalSpeed * speedModifier ); 
 		}
+		*/
 	}
+
+	protected bool checkBottomBoundary = true;
+	protected void CheckBoundaries()
+	{
+		Vector2 screenPos = LugusCamera.game.WorldToScreenPoint( this.transform.position );
+
+		if( checkBottomBoundary && screenPos.y < -50 )
+		{
+			LugusCoroutines.use.StartRoutine( BottomBoundaryCross() );
+		}
+
+		if( screenPos.y >= (Screen.height - 100) )
+		{
+			this.transform.position = this.transform.position.y( LugusCamera.game.ScreenToWorldPoint( screenPos.y( (float) Screen.height - 101) ).y );
+		}
+	}
+
+	protected IEnumerator BottomBoundaryCross()
+	{
+		checkBottomBoundary = false;
+
+		RunnerScoreManager.use.AddScore( -10, this.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+
+		if( onHit != null )
+			onHit( null );
+
+		downDisabled = true;
+		upDisabled = true;
+		down = false;
+		up = true;
+
+		yield return new WaitForSeconds( 2.0f );
+
+		downDisabled = false;
+		upDisabled = false;
+
+		checkBottomBoundary = true;
+	}
+
 
 	public bool left = false;
 	public bool right = false;
+	public bool up = false;
+	public bool down = false;
+
+	public bool leftDisabled = false;
+	public bool rightDisabled = false;
+	public bool upDisabled = false;
+	public bool downDisabled = false;
 
 	public void Update()
 	{
-		if( LugusInput.use.Key(KeyCode.LeftArrow) )
+		if( !leftDisabled )
 		{
-			left = true;
-		}
-		else
-		{
-			left = false;
+			if( LugusInput.use.Key(KeyCode.LeftArrow) )
+			{
+				left = true;
+			}
+			else
+			{
+				left = false;
+			}
 		}
 		
-		if( LugusInput.use.Key(KeyCode.RightArrow) )
+		if(  !rightDisabled )
 		{
-			right = true;
+			if( LugusInput.use.Key(KeyCode.RightArrow) )
+			{
+				right = true;
+			}
+			else
+			{
+				right = false;
+			}
 		}
-		else
+
+		if( !upDisabled )
 		{
-			right = false;
+			if( LugusInput.use.Key(KeyCode.UpArrow) )
+			{
+				up = true;
+			}
+			else
+			{
+				up = false;
+			}
+		}
+
+		if( !downDisabled )
+		{
+			if( LugusInput.use.Key(KeyCode.DownArrow) )
+			{
+				down = true;
+			}
+			else
+			{
+				down = false;
+			}
 		}
 
 		CheckSpeedType();
+		CheckBoundaries();
 	}
+
 
 	protected void CheckSpeedType()
 	{
-		SpeedType targetType = SpeedType.NORMAL;
-		if( LugusInput.use.Key (KeyCode.UpArrow) )
+		SpeedType targetType = SpeedType.STILL;
+
+		if( left || right || up || down )
 		{
-			if( this.direction < 0 )// going DOWN, up is slowing down
-				targetType = SpeedType.SLOW;
-			else
-				targetType = SpeedType.FAST;
+			targetType = SpeedType.NORMAL;
 		}
-		else if( LugusInput.use.Key (KeyCode.DownArrow) )
-		{
-			if( this.direction < 0 )// going DOWN, down is faster
-				targetType = SpeedType.FAST;
-			else
-				targetType = SpeedType.SLOW;
-		}
+
 
 		if( currentSpeedType != targetType )
 		{
@@ -166,15 +317,8 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		SpeedType oldType = currentSpeedType;
 		currentSpeedType = type;
 
-		if( currentSpeedType == SpeedType.NORMAL )
-			speedModifierPercentage = 0.5f;
-		else if( currentSpeedType == SpeedType.SLOW )
-			speedModifierPercentage = 0.0f;
-		else if( currentSpeedType == SpeedType.FAST )
-			speedModifierPercentage = 1.0f;
-
-
 		if( onSpeedTypeChange != null )
 			onSpeedTypeChange(oldType, type);
 	}
+
 }
