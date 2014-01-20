@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PacmanTile
 {
@@ -23,6 +24,7 @@ public class PacmanTile
 	public Vector2 location;
 	public Vector2 gridIndices;
 	public int exitCount;
+	public List<GameObject> tileItems = new List<GameObject>();
 	
 	public PacmanTile()
 	{
@@ -35,5 +37,10 @@ public class PacmanTile
 	public override string ToString ()
 	{
 		return "GameTile: " + gridIndices;
+	}
+
+	public Vector2 GetWorldLocation()
+	{
+		return PacmanLevelManager.use.GetLevelRoot().position.v2() + location;
 	}
 }

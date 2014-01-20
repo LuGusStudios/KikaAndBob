@@ -14,19 +14,17 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected LugusAudioTrackSettings walkTrackSettings = null;
 	protected AudioClip walkSoundClip = null;
 
-	
-	protected void Start()
-	{
-		SetupGlobal();
-	}
+
 
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
 	}
 
-	public void SetupGlobal()
+	public override void SetUpGlobal()
 	{
+		base.SetUpGlobal();
+
 		walkTrack = LugusAudio.use.SFX().GetTrack();
 		walkTrack.Claim();
 		walkTrackSettings = new LugusAudioTrackSettings().Loop(true);
@@ -97,6 +95,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public override void Reset()
 	{
+		moving = false;
 		enemiesFlee = false;
 		characterAnimator.PlayAnimation("Idle");
 		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
@@ -105,7 +104,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		PlaceAtSpawnLocation();
 	}
 
-	public override void ChangeSpriteDirection(CharacterDirections direction)
+	public override void ChangeSpriteFacing(CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
 		
@@ -179,7 +178,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		ChangeSpriteDirection(currentDirection);
+		ChangeSpriteFacing(currentDirection);
 	}
 	
 	protected void TryMoveInDirection(CharacterDirections direction)
@@ -200,6 +199,14 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
 		{
 			alreadyTeleported = false;
+		}
+
+		foreach(GameObject go in currentTile.tileItems)
+		{
+			if (go.GetComponent<PacmanTileItem>() != null)
+			{
+				go.GetComponent<PacmanTileItem>().OnEnter();
+			}
 		}
 
 		if (currentTile.tileType == PacmanTile.TileType.Pickup)
@@ -284,38 +291,33 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (direction == PacmanCharacter.CharacterDirections.Up)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex+1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Right)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex+1, yIndex);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Down)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex, yIndex-1);
-			if (inspectedTile != null)
-			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
-			}
 		}
 		else if (direction == PacmanCharacter.CharacterDirections.Left)
 		{
 			inspectedTile = PacmanLevelManager.use.GetTile(xIndex-1, yIndex);
-			if (inspectedTile != null)
+		}
+
+		if (inspectedTile != null)
+		{
+			// first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+			foreach(GameObject go in inspectedTile.tileItems)
 			{
-				if (IsEnemyWalkable(inspectedTile))
-					return inspectedTile;
+				if (go.GetComponent<PacmanTileItem>() != null)
+				{
+					go.GetComponent<PacmanTileItem>().OnTryEnter();
+				}
 			}
+
+			if (IsEnemyWalkable(inspectedTile))
+				return inspectedTile;
 		}
 		
 		return null;

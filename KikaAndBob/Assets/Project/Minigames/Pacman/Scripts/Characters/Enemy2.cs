@@ -2,13 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Enemy2 : PacmanEnemyCharacter {
-
-	protected override void SetDefaultTargetTiles()
-	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(0, 0);
-	}
-	
-	// green cat: find tile four (if possible) positions ahead of player character
+		
+	// second enemy: find tile four (if possible) positions ahead of player character
 	protected override void CheckTeleportProximity()
 	{
 		if (player == null)
