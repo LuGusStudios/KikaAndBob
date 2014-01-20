@@ -5,6 +5,8 @@ using UnityEditor;
 
 public class FroggerConfigWindow : EditorWindow {
 
+	protected FroggerLevelDefinition levelToBuild = null;
+
 	[MenuItem ("KikaAndBob/Frogger/Frogger Config Window")]
 	static void Init () 
 	{
@@ -31,6 +33,16 @@ public class FroggerConfigWindow : EditorWindow {
 			AssetDatabase.SaveAssets();
 			EditorUtility.FocusProjectWindow();
 			Selection.activeObject = level;
+		}
+
+		levelToBuild = (FroggerLevelDefinition) EditorGUILayout.ObjectField(levelToBuild, typeof(FroggerLevelDefinition), false);
+		                                        
+		if( GUILayout.Button ("Build level") )
+		{ 
+			if (levelToBuild != null)
+			{
+				FroggerLevelManager.use.BuildLevel(levelToBuild);
+			}
 		}
 	}
 }

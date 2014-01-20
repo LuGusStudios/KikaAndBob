@@ -22,13 +22,15 @@ MonoBehaviour:
     backgroundScrollingSpeed: 0
     spawnItems: []
   - laneID: LaneDikeMiddle
-    goRight: 1
-    speed: 0
+    goRight: 0
+    speed: 5
     minGapDistance: 4
     maxGapDistance: 8
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems: []
+    spawnItems:
+    - spawnID: Cyclist
+      positioning: 0
   - laneID: LaneDikeTop
     goRight: 1
     speed: 0
@@ -37,10 +39,24 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems:
-    - spawnID: Lantern
-      positioning: 0
-    - spawnID: Pole
-      positioning: 0
+    - spawnID: FenceTop
+      positioning: .00999999978
+    - spawnID: LanternTop
+      positioning: .0719999969
+    - spawnID: FenceTop
+      positioning: .25
+    - spawnID: FenceTop
+      positioning: .36500001
+    - spawnID: LanternTop
+      positioning: .426999986
+    - spawnID: FenceTop
+      positioning: .75
+    - spawnID: LanternTop
+      positioning: .694999993
+    - spawnID: FenceTop
+      positioning: .86500001
+    - spawnID: FenceTop
+      positioning: .980000019
   - laneID: LaneWater
     goRight: 1
     speed: 1.5
@@ -58,14 +74,16 @@ MonoBehaviour:
     maxGapDistance: 8
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 2
-    spawnItems: []
+    spawnItems:
+    - spawnID: Submarine
+      positioning: 0
   - laneID: LaneWater
     goRight: 0
     speed: 2
     minGapDistance: 4
     maxGapDistance: 8
     repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 1.5
+    backgroundScrollingSpeed: -1.5
     spawnItems:
     - spawnID: Buoy
       positioning: 0

@@ -15,7 +15,6 @@ public abstract class FroggerLane : FroggerSurface
 
 	protected float height = 200;
 	protected Vector2 laneSize = Vector3.one;
-	protected BoxCollider2D boxCollider2D = null;
 	protected float nextInterval = 0;
 	protected int lastItemIndex = -1;
 	protected float spawnDistance = 0;
@@ -24,14 +23,23 @@ public abstract class FroggerLane : FroggerSurface
 	protected Transform scrollingBackground = null;
 	protected Vector2 scrollingOffset = Vector2.zero;
 
-	private void Awake()
+	protected void Awake()
 	{
-		boxCollider2D = GetComponent<BoxCollider2D>();
+		SetUpLocal();
+	}
+
+	public override void SetUpLocal()
+	{
+		base.SetUpLocal();
 		
 		if (boxCollider2D != null)
 		{
 			laneSize = boxCollider2D.size;
 			height = laneSize.y;
+		}
+		else
+		{
+			Debug.Log(name + ": Missing BoxCollider2D");
 		}
 	}
 	
@@ -109,6 +117,12 @@ public abstract class FroggerLane : FroggerSurface
 		if (staticSpawnItems.Count < 1)
 			return;
 
+		// just ensures this also works in the editor
+		if (boxCollider2D == null)
+		{
+			SetUpLocal();
+		}
+
 		foreach(KeyValuePair<float, FroggerLaneItem> item in staticSpawnItems)
 		{
 			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
@@ -145,7 +159,7 @@ public abstract class FroggerLane : FroggerSurface
 		return transform.position.v2() + boxCollider2D.center;
 	}
 	
-	private void Update()
+	protected void Update()
 	{
 		// move background if there is a moving one
 		if (scrollingBackground != null)
@@ -188,6 +202,12 @@ public abstract class FroggerLane : FroggerSurface
 
 	private GameObject SpawnLaneItem()
 	{
+		// just ensures this also works in the editor
+		if (boxCollider2D == null)
+		{
+			SetUpLocal();
+		}
+
 		// create random item
 		int index = Random.Range(0, dynamicSpawnItems.Count);
 

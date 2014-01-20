@@ -47,7 +47,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		}
 	}
 
-	protected void BuildLevel(FroggerLevelDefinition level)
+	public void BuildLevel(FroggerLevelDefinition level)
 	{
 		if (level == null)
 		{
@@ -59,12 +59,19 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		int laneIndex = 0;
 		float currentY = 0;
 		List<FroggerLane> lanes = new List<FroggerLane>();
-
+	
+		#if UNITY_EDITOR
 		// clear existing level
-		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
-		{
-			Destroy(lanesRoot.GetChild(i).gameObject);
-		}
+			for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+			{
+				DestroyImmediate(lanesRoot.GetChild(i).gameObject);
+			}
+		#else
+			for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+			{
+				Destroy(lanesRoot.GetChild(i).gameObject);
+			}
+		#endif
 
 		// set up new level
 		foreach (FroggerLaneDefinition laneDefinition in level.lanes) 

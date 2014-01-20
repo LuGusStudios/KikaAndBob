@@ -27,16 +27,24 @@ public class FroggerCharacter : MonoBehaviour {
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
 	protected Vector3 originalScale = Vector3.one;
 	protected BoneAnimation[] boneAnimations;
+	protected Renderer[] renderers;
+	protected BoxCollider boundsCollider;
 
-	void Start()
+	protected void Start()
 	{
-		boneAnimations = GetComponentsInChildren<BoneAnimation>();
-		originalScale = transform.localScale;
-
+		SetUpLocal();
 		PlayAnimation("Idle");
 	}
 
-	void Update () 
+	public void SetUpLocal()
+	{
+		boneAnimations = GetComponentsInChildren<BoneAnimation>();
+		renderers = GetComponentsInChildren<Renderer>();
+		originalScale = transform.localScale;
+		boundsCollider = GetComponent<BoxCollider>();
+	}
+
+	protected void Update () 
 	{
 		CheckSurface();
 		UpdatePosition();
@@ -44,6 +52,8 @@ public class FroggerCharacter : MonoBehaviour {
 
 	public virtual void Reset()
 	{
+		ShowCharacter(true);
+
 		movingToLane = false;
 		if (laneMoveRoutine != null && laneMoveRoutine.Running)
 			laneMoveRoutine.StopRoutine();
@@ -104,18 +114,22 @@ public class FroggerCharacter : MonoBehaviour {
 		int currentLaneIndex = FroggerLaneManager.use.GetLaneIndex(currentLane);
 		int targetLaneIndex = FroggerLaneManager.use.GetLaneIndex(targetLane);
 
-		// don't move if there is a collision item on the target lane
-		if (GetCollisionVertical(targetLane))
-		    return;
-
 		if (targetLaneIndex > currentLaneIndex)
 		{
+			// don't move if there is a collision item on the target lane
+			if (GetCollisionVertical(targetLane, true))
+				return;
+
 			PlayAnimation("Up");
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, true));
 
 		}
 		else if (targetLaneIndex < currentLaneIndex)
 		{	
+			// don't move if there is a collision item on the target lane
+			if (GetCollisionVertical(targetLane, false))
+				return;
+
 			PlayAnimation("Down");
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, false));
 		}
@@ -126,16 +140,39 @@ public class FroggerCharacter : MonoBehaviour {
 		}
 	}
 
-	protected bool GetCollisionVertical(FroggerLane lane)
+	protected bool GetCollisionVertical(FroggerLane targetLane, bool movingUp)
 	{
-		Vector2 checkLocation = new Vector2(transform.position.x, lane.transform.position.y);
-
+		// first check current lane to see if we can exit in the proposed direction
+		Vector2 checkLocation = new Vector2(transform.position.x, currentLane.transform.position.y);
 		RaycastHit2D[] hits = Physics2D.RaycastAll(checkLocation, this.transform.forward);
 		foreach(RaycastHit2D hit in hits)
 		{
-			if (hit.transform != null && hit.transform.GetComponent<FroggerCollider>() != null)
+			FroggerCollider froggerCollider = hit.transform.GetComponent<FroggerCollider>();
+			
+			if (hit.transform != null && froggerCollider != null)
 			{
-				return true;
+				if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.Bottom && !movingUp)
+					return true;
+				else if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.Top && movingUp)
+					return true;
+			}
+		}
+
+		// then check target lane to see if we can enter in the proposed direction
+		checkLocation = new Vector2(transform.position.x, targetLane.transform.position.y);
+		hits = Physics2D.RaycastAll(checkLocation, this.transform.forward);
+		foreach(RaycastHit2D hit in hits)
+		{
+			FroggerCollider froggerCollider = hit.transform.GetComponent<FroggerCollider>();
+
+			if (hit.transform != null && froggerCollider != null)
+			{
+				if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.All)
+				    return true;
+				else if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.Bottom && movingUp)
+					return true;
+				else if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.Top && !movingUp)
+					return true;
 			}
 		}
 		return false;
@@ -146,19 +183,22 @@ public class FroggerCharacter : MonoBehaviour {
 		Vector2 checkLocation;
 		if (right)
 		{
-			checkLocation = new Vector2(transform.position.x + GetComponent<SpriteRenderer>().bounds.extents.x, transform.position.y);
+			checkLocation = new Vector2(transform.position.x + boundsCollider.bounds.extents.x, transform.position.y);
 		}
 		else
 		{
-			checkLocation = new Vector2(transform.position.x - GetComponent<SpriteRenderer>().bounds.extents.x, transform.position.y);
+			checkLocation = new Vector2(transform.position.x - boundsCollider.bounds.extents.x, transform.position.y);
 		}
 
 		RaycastHit2D[] hits = Physics2D.RaycastAll(checkLocation, this.transform.forward);
 		foreach(RaycastHit2D hit in hits)
 		{
-			if (hit.transform != null && hit.transform.GetComponent<FroggerCollider>() != null)
+			FroggerCollider froggerCollider = hit.transform.GetComponent<FroggerCollider>();
+
+			if (hit.transform != null && froggerCollider != null)
 			{
-				return true;
+				if (froggerCollider.colliderType == FroggerCollider.FroggerColliderType.All)
+					return true;
 			}
 		}
 
@@ -244,7 +284,7 @@ public class FroggerCharacter : MonoBehaviour {
 
 		// clamp character to the screen in all directions (in traditional Frogger, only X clamping would be relevant, but we are trying to make everything possible in every direction)
 		Vector3 screenPos = LugusCamera.game.WorldToScreenPoint(transform.position);
-		Bounds spriteBounds = GetComponent<SpriteRenderer>().sprite.bounds;	// size of sprite is added to / subtracted from screen edges ! Not spriterenderer.bounds, because those are in world coordinates
+		Bounds spriteBounds = boundsCollider.bounds;	// size of sprite is added to / subtracted from screen edges ! Not spriterenderer.bounds, because those are in world coordinates
 		
 		if (screenPos.x < spriteBounds.extents.x)
 		{
@@ -345,4 +385,16 @@ public class FroggerCharacter : MonoBehaviour {
 
 		currentLaneItem = laneItemUnderMe;
 	}
+
+	public void ShowCharacter(bool show)
+	{
+		foreach(Renderer r in renderers)
+		{
+			r.enabled = show;
+		}
+	}
+
+
+
+
 }

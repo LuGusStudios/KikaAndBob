@@ -2,12 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(BoxCollider2D))]
 public abstract class FroggerSurface : MonoBehaviour {
 
 	public List<AudioClip> enterSounds = new List<AudioClip>();
 	protected bool onSurface = false;
+	protected BoxCollider2D boxCollider2D = null;
+
+	protected void Awake()
+	{
+		SetUpLocal();
+	}
 	
+	public virtual void SetUpLocal()
+	{
+		boxCollider2D = GetComponent<BoxCollider2D>();
+	}
 
 	public void Enter(FroggerCharacter character)
 	{
