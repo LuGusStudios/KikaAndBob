@@ -22,10 +22,51 @@ public class RunnerInteractionZone : MonoBehaviour
 
 			Gizmos.color = Color.red;
 
-			Vector3 start = transform.position.xAdd( -0.5f * sectionWidth );
-			Vector3 stop = start.xAdd( sectionWidth * sectionSpan );
+			float zoneWidth = sectionWidth * sectionSpan;
+			Vector3 start = transform.position.xAdd( -0.5f * zoneWidth );
+			Vector3 stop = start.xAdd( zoneWidth );
 
 			Gizmos.DrawLine( start, stop );
+
+
+			zoneWidth *= 0.8f;
+
+			start = transform.position.xAdd( -0.5f * zoneWidth );
+			stop = start.xAdd( zoneWidth );
+			
+			Gizmos.DrawLine( start.yAdd(0.4f), stop.yAdd(0.4f) );
+			
+			zoneWidth *= 0.5f;
+			
+			start = transform.position.xAdd( -0.5f * zoneWidth );
+			stop = start.xAdd( zoneWidth );
+			
+			Gizmos.DrawLine( start.yAdd(0.8f), stop.yAdd(0.8f) );
+
+
+			
+			Gizmos.color = Color.green;
+
+			float sectionHeight =  background.renderer.bounds.size.y;
+			float zoneHeight = sectionHeight * sectionSpan;
+			start = transform.position.yAdd( -0.5f * zoneHeight );
+			stop = start.yAdd( zoneHeight );
+
+			Gizmos.DrawLine( start, stop );
+
+
+			zoneHeight *= 0.8f;
+			start = transform.position.yAdd( -0.5f * zoneHeight );
+			stop = start.yAdd( zoneHeight );
+
+			Gizmos.DrawLine( start.xAdd(0.4f), stop.xAdd(0.4f) );
+
+			
+			zoneHeight *= 0.5f;
+			start = transform.position.yAdd( -0.5f * zoneHeight );
+			stop = start.yAdd( zoneHeight );
+			
+			Gizmos.DrawLine( start.xAdd(0.8f), stop.xAdd(0.8f) );
 		}
 	}
 

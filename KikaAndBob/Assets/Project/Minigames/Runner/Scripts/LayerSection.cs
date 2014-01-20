@@ -60,7 +60,7 @@ public class LayerSection : MonoBehaviour
 					}
 					else
 					{
-						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name);
+						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name + " // " + nameID);
 					}
 				}
 			}
@@ -247,7 +247,11 @@ public class LayerSection : MonoBehaviour
 	{
 		if( spawner == null )
 		{
-			Debug.LogError(name + " : No spawner known for this LayerSection! ");
+			spawner = this.transform.parent.GetComponent<LayerSpawner>();
+		}
+		if( spawner == null )
+		{
+			Debug.LogError(transform.Path () + " : No spawner known for this LayerSection! ");
 		}
 	}
 	

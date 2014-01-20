@@ -2,95 +2,24 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using SmoothMoves;
+using KikaAndBob.Runner;
 
-public class RunnerCharacterAnimatorHorizontal : MonoBehaviour 
-{
-	public BoneAnimation[] animationContainers;
-	public BoneAnimation currentAnimationContainer = null;
-	public string currentAnimationClip = "";
-	public string currentAnimationPath = "";
-	
-	public RunnerCharacterControllerHorizontal character = null;
+public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator 
+{	
+	public IRunnerCharacterController_JumpSlide character = null;
 
 	public string runningAnimation = "RUNNING/KikaSide_RunningSprites";
 	public string jumpAnimation = "OTHER/KikaSide_JumpShort";
 	public string hitAnimation = "OTHER/KikaSide_Hit";
 	public string slideAnimation = "OTHER/KikaSide_Slide";
 
-	public void PlayAnimation(string animationPath)
+	public override void SetupGlobal()
 	{
-		string[] parts = animationPath.Split('/');
-		if( parts.Length != 2 )
-		{
-			Debug.LogError(name + " : AnimationPath should be a string with a single / as separator! " + animationPath );
-			return;
-		}
+		base.SetupGlobal();
 
-		string containerName = parts[0];
-		string clipName = parts[1];
-
-		currentAnimationContainer = null;
-		foreach( BoneAnimation container in animationContainers )
-		{
-			if( container.name == containerName )
-			{
-				currentAnimationContainer = container;
-				currentAnimationContainer.gameObject.SetActive(true);
-			}
-			else
-			{
-				container.gameObject.SetActive(false);
-			}
-		}
-		
-		if( currentAnimationContainer == null )
-		{
-			Debug.LogError(name + " : No animationContainer found for name " + containerName);
-			currentAnimationContainer = animationContainers[0];
-		}
-
-		currentAnimationPath = animationPath;
-		currentAnimationClip = clipName;
-
-		if( !hitRoutineBusy )
-		{
-			//Debug.LogError("PLAY ANIMATION " + currentAnimationContainer.name + "/" + clipName);
-			currentAnimationContainer.Stop();
-			//Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
-			currentAnimationContainer.Play(clipName);//CrossFade( clipName, 0.5f );
-		}
-	}
-
-	public void PlayAnimationDelayed(string animationPath, float delay)
-	{
-		LugusCoroutines.use.StartRoutine( PlayAnimationDelayedRoutine(animationPath, delay) );
-	}
-
-	protected IEnumerator PlayAnimationDelayedRoutine(string animationPath, float delay)
-	{
-		yield return new WaitForSeconds(delay);
-
-		PlayAnimation( animationPath );
-	}
-
-	public void SetupLocal()
-	{
-		if( animationContainers.Length == 0 )
-		{
-			animationContainers = transform.GetComponentsInChildren<BoneAnimation>();
-		}
-		
-		if( animationContainers.Length == 0 )
-		{
-			Debug.LogError(name + " : no BoneAnimations found for this animator!");
-		}
-	}
-	
-	public void SetupGlobal()
-	{
 		if( character == null )
 		{
-			character = RunnerCharacterControllerHorizontal.use;
+			character = RunnerCharacterController.jumpSlide;
 		}
 		
 		if( character == null )
@@ -101,7 +30,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 		{
 			character.onJump += OnJump;
 			character.onSlide += OnSlide;
-			character.onHit  += OnHit;
+			( (IRunnerCharacterController) character).onHit  += OnHit;
 		}
 		
 		PlayAnimation(runningAnimation);
@@ -142,9 +71,6 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 			PlayAnimation( runningAnimation );
 		}
 	}
-	       
-
-	protected bool hitRoutineBusy = false;
 
 	public void OnHit(RunnerPickup pickup)
 	{
@@ -169,12 +95,14 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 
 		hitRoutineBusy = true;
 
-		Color originalColor = Color.white;
-		Color color = Color.red; 
-
 		// we want the running animation to start playing before the invulnerability (red blinking) is done
 		LugusCoroutines.use.StartRoutine( HitAnimationRoutine (0.3f) );
 
+		LugusCoroutines.use.StartRoutine( SmoothMovesUtil.Blink(animationContainers, Color.red, 1.5f, 5) );
+
+		yield break;
+
+		/*
 		float duration = 1.5f; 
 		int iterations = 5;
 		float partDuration = duration / (float) iterations;
@@ -228,6 +156,7 @@ public class RunnerCharacterAnimatorHorizontal : MonoBehaviour
 
 		foreach( BoneAnimation container in animationContainers )
 			container.SetMeshColor( originalColor );
+		*/
 	}
 
 	

@@ -21,7 +21,7 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 
 	public void Level0()
 	{
-		RunnerCharacterControllerHorizontal character = RunnerCharacterControllerHorizontal.use;
+		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 
 		character.speedRange = new DataRange(13,13);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
@@ -30,7 +30,7 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerHorizontal character = RunnerCharacterControllerHorizontal.use;
+		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 		
 		character.speedRange = new DataRange(13,20);
 		character.timeToMaxSpeed = 120;
@@ -40,7 +40,7 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerHorizontal character = RunnerCharacterControllerHorizontal.use;
+		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 		
 		character.speedRange = new DataRange(16,20);
 		character.timeToMaxSpeed = 60;

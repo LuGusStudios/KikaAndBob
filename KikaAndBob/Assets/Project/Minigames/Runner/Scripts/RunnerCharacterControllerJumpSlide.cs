@@ -2,24 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public interface RunnerCharacterController
-{
-	void OnPickupHit(RunnerPickup pickup);
 
-	DataRange SpeedRange();
-	Vector2 Velocity();
-
-	Vector3 SpeedScale(); // to be used in ParallaxMover
-}
-
-public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<RunnerCharacterControllerHorizontal>, RunnerCharacterController
+public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerCharacterControllerJumpSlide>, IRunnerCharacterController, IRunnerCharacterController_JumpSlide
 {
 	//public float speed = 13.0f;
 	public DataRange speedRange = new DataRange(13.0f, 26.0f);
 	public DataRange SpeedRange(){ return speedRange; }
 	public Vector2 Velocity(){ return rigidbody2D.velocity; }
 	public float timeToMaxSpeed = 60.0f;
-	public float jumpForce = 10.0f; 
+	public float jumpForce = 30.0f; 
 
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
@@ -40,15 +31,10 @@ public class RunnerCharacterControllerHorizontal : LugusSingletonExisting<Runner
 	protected float startTime = -1.0f;
 
 	public Transform groundCheck = null;
-
-	public delegate void OnJump(bool start);
-	public OnJump onJump;
 	
-	public delegate void OnSlide(bool start);
-	public OnSlide onSlide;
-
-	public delegate void OnHit(RunnerPickup pickup);
-	public OnHit onHit;
+	public event KikaAndBob.Runner.OnHit onHit;
+	public event KikaAndBob.Runner.OnJump onJump;
+	public event KikaAndBob.Runner.OnSlide onSlide;
 
 
 	public void OnPickupHit(RunnerPickup pickup)
