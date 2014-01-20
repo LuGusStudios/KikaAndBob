@@ -64,4 +64,9 @@ public class DartsHider : IDartsHitable
 	{
 	
 	}
+
+	public override void Disable ()
+	{
+		gameObject.transform.position = hiddenPosition;
+	}
 }

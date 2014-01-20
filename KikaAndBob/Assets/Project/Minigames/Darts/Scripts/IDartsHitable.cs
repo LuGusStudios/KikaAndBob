@@ -9,6 +9,8 @@ public abstract class IDartsHitable : MonoBehaviour
 
 	public DartsFunctionalityGroup group = null;
 
+	public int score = 100;
+
 	protected int _hitCount = 0;
 	public int HitCount
 	{
@@ -65,6 +67,9 @@ public abstract class IDartsHitable : MonoBehaviour
 
 	public IEnumerator AutoHideRoutine(float delay)
 	{
+		if (delay <= 0)
+			yield break;
+
 		yield return new WaitForSeconds(delay);
 
 		if( Shown )
@@ -74,5 +79,22 @@ public abstract class IDartsHitable : MonoBehaviour
 	public abstract void Show();
 	public abstract void Hide();
 
+	// standard the same as Hide() - can be used to define a "fast" hide method, e.g. not animated
+	public virtual void Disable()
+	{
+		Hide();
+	}
+
+	// standard does nothing, but can be used to define custom behavior for start a level 
+	// (e.g. make this object visible, but don't immediately set Shown (see DartsBarrel.cs)
+	public virtual void Enable()
+	{
+	}
+	
 	public abstract void OnHit();
+
+	public virtual int GetScore()
+	{
+		return score;
+	}
 }
