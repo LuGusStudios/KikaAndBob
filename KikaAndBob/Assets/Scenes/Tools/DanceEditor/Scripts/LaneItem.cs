@@ -11,6 +11,9 @@ namespace DanceEditor
 	}
 }
 
+/**
+ * Simple struct that contains the time and duration of the item.
+ **/
 public class LaneItem
 {
 	public const float singleDuration = 0.2f;

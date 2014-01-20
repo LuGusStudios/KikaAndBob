@@ -81,7 +81,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		GetLane("Lane1").defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
 		GetLane("Lane2").defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
 		GetLane("Lane3").defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
-		LaneLoader.LoadLanes();
+		LaneLoader.LoadLanes("ChinaSong02");
 
 		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
 	}

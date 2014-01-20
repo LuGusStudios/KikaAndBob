@@ -2,14 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * Maintains a list of lanes and manages the input for the lanes and their action points.
+ * Draws the Lanes and Action Point windows and the UI elements for each lane.
+ **/
 public class LaneManager : LugusSingletonRuntime<LaneManager>
 {
-	public Vector2 screenOffset = new Vector2(10, 10);
-	public float laneSpacing = 0.5f;
+	public Vector2 screenOffset = new Vector2(10, 10);	// Screen offset from the upper-left corner of the screen
+	public float laneSpacing = 0.5f;					// Global space that is used to place the lanes apart
 
-	public Lane lanePrefab = null;
-	public LaneItemRenderer laneItemRendererPrefab = null;
-	public Transform hitLine = null;
+	public Lane lanePrefab = null;							// Prefab of a lane, used when a new one is created
+	public LaneItemRenderer laneItemRendererPrefab = null;	// Prefab of a lane item renderer, used when a new one is created
 
 	public List<Lane> Lanes
 	{
@@ -19,9 +22,12 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		}
 	}
 
-	protected List<Lane> _lanes = new List<Lane>();
-	protected Lane _currentLane = null;
-	protected LaneItemRenderer _currentLaneItem = null;
+	protected List<Lane> _lanes = new List<Lane>();			// List of lanes shown on the screen
+	protected Lane _currentLane = null;						// Current selected lane
+	protected LaneItemRenderer _currentLaneItem = null;		// Current selected action point
+
+	protected bool _showConfirmation = false;	// Used in displaying a removal confirmation window
+	protected Lane _laneRemoval = null;			// The lane to be removed
 
 	void Start()
 	{
@@ -30,6 +36,8 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void Update()
 	{
+
+		// Delete an action point when pressing the delete key
 		if (Input.GetKeyDown(KeyCode.Delete) && (_currentLaneItem != null))
 		{
 			RemoveActionPoint();
@@ -55,7 +63,7 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		// Display title of the box
 		GUIStyle centered = new GUIStyle(GUI.skin.label);
 		centered.alignment = TextAnchor.UpperCenter;
-		GUILayout.Label("Lane Manager", centered);
+		GUILayout.Label("Lanes", centered);
 
 		if (GUILayout.Button("Create new lane"))
 			CreateLane();
@@ -71,14 +79,43 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 			float laneposy = Camera.main.WorldToScreenPoint(lane.transform.position).y;
 			laneposy = Screen.height - laneposy;
 
-			if (GUI.Button(new Rect(30, laneposy - 10, 70, 20), "Remove"))
+			if (!_showConfirmation && GUI.Button(new Rect(30, laneposy - 10, 70, 20), "Remove"))
 			{
-				RemoveLane(lane);
-				--i;
+				_showConfirmation = true;
+				_laneRemoval = lane;
 			}
 
 			GUI.Label(new Rect(110, laneposy - 10, 100, 20), "Lane " + (i + 1).ToString());
 		}
+
+		// When requested to remove a lane, show the confirmation dialog
+		if (_showConfirmation)
+		{
+			GUILayout.Window(0, new Rect(Screen.width / 2f - 100f, Screen.height / 2f - 25f, 200, 50), RemoveLaneConfirmationWindow, "Remove Lane");
+		}
+	}
+
+	void RemoveLaneConfirmationWindow(int id)
+	{
+		// A small window asking for confirmation to remove the lane
+
+		GUILayout.Label("Are you sure you want to remove the lane?");
+		GUILayout.BeginHorizontal();
+
+		if (GUILayout.Button("Yes"))
+		{
+			RemoveLane(_laneRemoval);
+			_showConfirmation = false;
+			_laneRemoval = null;
+		}
+
+		if (GUILayout.Button("No"))
+		{
+			_showConfirmation = false;
+			_laneRemoval = null;
+		}
+
+		GUILayout.EndHorizontal();
 	}
 
 	void DrawLaneItemGUI()
@@ -161,6 +198,10 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void CreateLane()
 	{
+		// Creates a new lane and appends it at the end of the list (at the bottom of the screen)
+		// Each newly created lane has an empty parent object. This is used to move the LaneItemRenderers 
+		// independent of the lane's scale
+
 		if (_currentLane != null)
 			_currentLane.Highlight = false;
 
@@ -181,6 +222,8 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void RemoveLane()
 	{
+		// Destroys a lane and all of its associated LaneItemRenderers by destroying the parent container
+
 		if (_currentLane == null)
 			return;
 
@@ -202,6 +245,8 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void RemoveLane(Lane lane)
 	{
+		// Destroys a lane and all of its associated LaneItemRenderers by destroying the parent container
+
 		if (lane == _currentLane)
 		{
 			RemoveLane();
@@ -216,18 +261,20 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void RepositionLanes()
 	{
+		// Repositions the lanes around the hit line.
+
 		if (_lanes.Count == 0)
 		{
-			hitLine.renderer.enabled = false;
+			HitLine.use.renderer.enabled = false;
 			return;
 		}
-	
-		// Reposition all lanes so that they are centered around the hit line
+		
 		Lane lane = _lanes[0];
 		float height = lane.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2.0f * lane.transform.localScale.y;
-		Vector2 position = new Vector2(0, hitLine.position.y + ((height + laneSpacing) * (_lanes.Count - 1) / 2));
+		Vector2 position = new Vector2(0, HitLine.use.transform.position.y + ((height + laneSpacing) * (_lanes.Count - 1) / 2));
 		float delta = - (height + laneSpacing);
 
+		// Reposition all lanes so that they are centered around the hit line
 		for (int i = 0; i < _lanes.Count; ++i)
 		{
 			_lanes[i].transform.position = position;
@@ -235,14 +282,16 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		}
 
 		// Scale the hit line
-		hitLine.renderer.enabled = true;
-		Vector3 newScale = hitLine.transform.localScale;
+		HitLine.use.renderer.enabled = true;
+		Vector3 newScale = HitLine.use.transform.localScale;
 		newScale.y = (height + laneSpacing) * _lanes.Count;
-		hitLine.transform.localScale = newScale;
+		HitLine.use.transform.localScale = newScale;
 	}
 
 	void RemoveActionPoint()
 	{
+		// Remove the currently selected Action Point
+
 		_currentLane.LaneItems.Remove(_currentLaneItem.Item);
 		_currentLane.LaneItemRenderers.Remove(_currentLaneItem);
 		GameObject.Destroy(_currentLaneItem.gameObject);
@@ -256,6 +305,9 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	public void SetCurrentLane(Lane currentLane)
 	{
+		// Set the given lane as the currently selected lane
+		// The previous lane's highlight is removed
+
 		if (_currentLane != null)
 			_currentLane.Highlight = false;
 
@@ -265,6 +317,9 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	public void SetCurrentLaneItem(LaneItemRenderer currentLaneItem)
 	{
+		// Set the givel lane item as the selected lane item
+		// The previous lane item's highlight is removed
+
 		if (_currentLaneItem != null)
 			_currentLaneItem.HighLight = false;
 
@@ -279,6 +334,8 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	public void CreateLane(TinyXmlReader reader)
 	{
+		// Create a new lane, and populate it with lane items from the xml data
+
 		CreateLane();
 		_currentLane.FromXML(reader);
 	}
@@ -291,5 +348,7 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		_lanes.Clear();
 		_currentLane = null;
 		_currentLaneItem = null;
+		_showConfirmation = false;
+		_laneRemoval = null;
 	}
 }

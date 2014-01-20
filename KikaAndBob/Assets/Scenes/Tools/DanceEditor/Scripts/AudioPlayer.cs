@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * Maintains the logic for playing and search in the audio file.
+ **/
 [RequireComponent(typeof(AudioSource))]
 public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 {
-	public Vector2 screenOffset = new Vector2(10, 10);
+	public Vector2 screenOffset = new Vector2(10, 10);	// Screen offset from the lower-left corner of the screen
 	public AudioSource Source
 	{
 		get
@@ -39,8 +42,8 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 		}
 	}
 	
-	protected AudioSource _source = null;
-	protected float _seekTime = 0.0f;
+	protected AudioSource _source = null;	// AudioSource that contains the audio to be played
+	protected float _seekTime = 0.0f;		// Time used to search withing the audio file
 
 	void Awake()
 	{
@@ -50,6 +53,8 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 
 	void Update()
 	{
+
+		// Start or stop playing when pressing the space-bar
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			if (_source.isPlaying)
@@ -63,7 +68,6 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 	{
 		float width = Screen.width - (screenOffset.x * 2.0f);
 		float height = 75.0f;
-
 		float xpos = screenOffset.x;
 		float ypos = Screen.height - screenOffset.y - height;
 
@@ -123,7 +127,6 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 
 	void SliderGUI()
 	{
-
 		// Make the seconds and minutes strings to display the time played
 		string minutes = "--", seconds = "--", totalMinutes = "--", totalSeconds = "--";
 		if (_source.clip != null)
@@ -189,6 +192,8 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 
 	public void Clear()
 	{
+		// Reset the audio player
+
 		_source.Stop();
 		_source.time = 0f;
 		_seekTime = 0f;

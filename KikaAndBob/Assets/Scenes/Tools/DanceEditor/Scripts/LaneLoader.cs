@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * Static class for loading the data found in action files
+ * and putting them in the lanes.
+ **/
 public class LaneLoader {
 
-	public static void LoadLanes()
+	public static void LoadLanes(string assetName)
 	{
 
 		// Load the action file from Resources and start parsing.
@@ -11,7 +15,7 @@ public class LaneLoader {
 		// The lanes in the editor are numbered from top to bottom.
 		// The game's (you just lost it) lanes are numbered from bottom to top.
 
-		string rawdata = LugusResources.use.Shared.providers[0].GetText(LugusResources.use.Shared.URL, "ChinaSong02").text;
+		string rawdata = LugusResources.use.Shared.providers[0].GetText(LugusResources.use.Shared.URL, assetName).text;
 		TinyXmlReader parser = new TinyXmlReader(rawdata);
 		DanceHeroLevel.use.mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
 

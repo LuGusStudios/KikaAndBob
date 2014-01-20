@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * The visual representation of an action point on the screen.
+ * Can be dragged around with the mouse.
+ * Changes color when selected.
+ **/
 [RequireComponent(typeof(BoxCollider2D))]
 public class LaneItemRenderer : MonoBehaviour {
 
-	public static float Speed = 1.0f;
+	public static float Speed = 1.0f;	// Speed of which the Action Points move across the screen
 
+	// Creates a visual representation of the Action Point
 	public static LaneItemRenderer Create (Lane lane, LaneItem item)
 	{
 		LaneItemRenderer renderer = GameObject.Instantiate(LaneManager.use.laneItemRendererPrefab) as LaneItemRenderer;
@@ -86,25 +92,27 @@ public class LaneItemRenderer : MonoBehaviour {
 	}
 
 	#region Protected
-	protected Lane _lane = null;
-	protected LaneItem _item = null;
+	protected Lane _lane = null;		// Lane to which this renderer is connected to
+	protected LaneItem _item = null;	// Action Point to which this renderer is connected to
 
-	protected SpriteRenderer _leftSprite = null;
+	protected SpriteRenderer _leftSprite = null;	// Textures used when not highlighted
 	protected SpriteRenderer _midSprite = null;
 	protected SpriteRenderer _rightSprite = null;
 
-	protected SpriteRenderer _leftSpriteHL = null;
+	protected SpriteRenderer _leftSpriteHL = null;	// Textures used when the renderer is the selected item
 	protected SpriteRenderer _midSpriteHL = null;
 	protected SpriteRenderer _rightSpriteHL = null;
 
-	protected bool _highLight = false;
-	protected bool _changed = false;
+	protected bool _highLight = false;	// Denotes whether this item is selected, or not
+	protected bool _changed = false;	// Denotes whether something has changed that might have an effect on the visual representation
 
-	protected float _xPosOffset = 0.0f;
+	protected float _xPosOffset = 0.0f;	// The offset of the mouse when dragging the item around
 	#endregion
 
 	void Start()
 	{
+
+		// Search for the textures used by the renderer
 		_midSprite = this.transform.FindChild("hitcircle_mid").GetComponent<SpriteRenderer>();
 		_leftSprite = this.transform.FindChild("hitcircle_left").GetComponent<SpriteRenderer>();
 		_rightSprite = this.transform.FindChild("hitcircle_right").GetComponent<SpriteRenderer>();
@@ -133,6 +141,7 @@ public class LaneItemRenderer : MonoBehaviour {
 			return;
 		}
 
+		// Update its visual representation when a change has been detected
 		if (_changed)
 		{
 			SetHighlight();
@@ -140,12 +149,13 @@ public class LaneItemRenderer : MonoBehaviour {
 			_changed = false;
 		}
 
+		// Position the item correctly
 		TimeToPosition();
 	}
 
 	void TimeToPosition()
 	{
-		// Determine the hit circle's global position in its lane
+		// Determine the renderer's global position in its lane
 		float ypos = _lane.transform.position.y;
 		float hlxpos = HitLine.use.transform.position.x;
 		float diffTime = AudioPlayer.use.SeekTime - _item.Time;
@@ -156,6 +166,7 @@ public class LaneItemRenderer : MonoBehaviour {
 
 	void PositionToTime()
 	{
+		// Determine the time of this item on the basis of its position
 		float seekTime = AudioPlayer.use.SeekTime;
 		float hlxpos = HitLine.use.transform.position.x;
 		float diffPos = hlxpos - transform.position.x;
@@ -174,6 +185,7 @@ public class LaneItemRenderer : MonoBehaviour {
 
 	void OnMouseDrag()
 	{
+		// Drag the item around
 		Vector3 mousePos = Input.mousePosition;
 		Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos + new Vector3(_xPosOffset, 0.0f, 0.0f));
 
@@ -188,6 +200,8 @@ public class LaneItemRenderer : MonoBehaviour {
 
 	void SortItem()
 	{
+		// Sort the item of this renderer in the list of its lane parent
+
 		int currentIndex = _lane.LaneItems.IndexOf(_item);
 
 		// Check the previous index's time and swap them if necessary
@@ -215,6 +229,11 @@ public class LaneItemRenderer : MonoBehaviour {
 
 	void DetermineLength()
 	{
+		// Determines the visual length of the item when the duration of the item has been changed
+		// The right texture always stays at the item's position
+		// The left texture is placed at the location that is determined by the duration of the item
+		// The middle texture is strecthed accoring to the duration of the item
+
 		if (Item.Type == DanceEditor.LaneItemType.SINGLE)
 		{
 			_leftSprite.transform.position = this.transform.position;
@@ -269,6 +288,8 @@ public class LaneItemRenderer : MonoBehaviour {
 
 	void SetHighlight()
 	{
+		// Swaps the highlight texture and non-highlight textures
+
 		if (_highLight)
 		{
 			_midSprite.gameObject.SetActive(false);

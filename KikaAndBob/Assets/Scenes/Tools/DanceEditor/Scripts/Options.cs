@@ -3,6 +3,10 @@ using System.IO;
 using System.Text;
 using System.Collections;
 
+/**
+ * Shows the UI to load and save the action files.
+ * Autosaves the state of the editor to an additional actionfile.
+ **/
 public class Options : LugusSingletonRuntime<Options>
 {
 	public Vector2 screenOffset = new Vector2(10, 10);
@@ -13,31 +17,42 @@ public class Options : LugusSingletonRuntime<Options>
 
 	void Start()
 	{
+		_autoSaveTimer = autoSaveTimerDefault;
+
 		LugusConfigProfileDefault profile = new LugusConfigProfileDefault("System");
+		LugusConfig.use.System = profile;
 		profile.Load();
 
-		LugusConfig.use.System = profile;
+		if (!profile.Exists("ActionFile") || !profile.Exists("AudioClip"))
+		{
+			Debug.LogError("No config file could be found!\nMake sure there is Config directory at location " + Application.dataPath + " and that there is config file named System.xml in that directory.");
+			return;
+		}
 
 		Load();
-
 		_autoSaveTimer = profile.GetInt("AutoSaveTimer", autoSaveTimerDefault);
 	} 
 
 	void Update()
 	{
+
+		// Ctrl + S => save to original document
 		if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
 			Input.GetKeyDown(KeyCode.S))
 			Save();
 
+		// Ctrl + R => reload original document
 		if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
 			Input.GetKeyDown(KeyCode.R))
 			ReloadOriginal();
 
+		// Autosave the document when the timer runs out
 		_autoSaveTimer -= Time.deltaTime;
 		if (_autoSaveTimer <= 0.0f)
 		{
 			_autoSaveTimer = LugusConfig.use.System.GetInt("AutoSaveTimer", autoSaveTimerDefault);
 			SaveActionFile(LugusConfig.use.System.GetString("ActionFile", string.Empty) + "_auto");
+			Debug.Log("Auto saved document.");
 		}
 	}
 
@@ -56,7 +71,7 @@ public class Options : LugusSingletonRuntime<Options>
 		centered.alignment = TextAnchor.UpperCenter;
 		GUILayout.Label("Options", centered);
 
-		if (GUILayout.Button("Save"))
+		if (GUILayout.Button("Save Original"))
 			Save();
 
 		if (GUILayout.Button("Load Original"))
@@ -139,6 +154,8 @@ public class Options : LugusSingletonRuntime<Options>
 		StreamWriter writer = new StreamWriter(fullpath);
 		writer.Write(lanesdata);
 		writer.Close();
+
+		Debug.Log("Saved document to file " + name + ".xml");
 	}
 
 	void LoadAudioFile(string name)
@@ -205,7 +222,9 @@ public class Options : LugusSingletonRuntime<Options>
 		else
 		{
 			Debug.Log("LoadActionFile(name): The action file " + name + " does not exist. The file will be created when saving data.");
+			return;
 		}
-	}
 
+		Debug.Log("Loaded action file " + name + ".xml");
+	}
 }

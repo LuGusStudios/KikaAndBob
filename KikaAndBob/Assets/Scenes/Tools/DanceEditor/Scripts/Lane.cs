@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+/**
+ * Maintains a list of LaneItems.
+ * Is responsible for spawning and removing LaneItemRenderers.
+ * Changes color when selected.
+ **/
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class Lane : MonoBehaviour
 {

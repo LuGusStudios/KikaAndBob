@@ -45,21 +45,25 @@ public class Bookmark
 		Time = time;
 	}
 }
+
+/**
+ * Maintains a list of bookmarks and the controls to create and remove them.
+ **/
 public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 {
-	public Vector2 screenOffset = new Vector2(10, 10);
+	public Vector2 screenOffset = new Vector2(10, 10);			// Offset from the upper-right corner of the screen
 
-	public List<Bookmark> bookmarks = new List<Bookmark>();
+	public List<Bookmark> bookmarks = new List<Bookmark>();		// List of bookmarks
 
-	protected string _newBookmarkName = "";
+	protected string _newBookmarkName = "";						// String used in creating new bookmarks
 
 	void OnGUI()
 	{
-		int xpos = Screen.width - 200 - (int)screenOffset.x;
-		int ypos = (int)screenOffset.y;
-
 		int width = 200;
 		int height = 75 + bookmarks.Count * 25;
+		int xpos = Screen.width - width - (int)screenOffset.x;
+		int ypos = (int)screenOffset.y;
+		
 
 		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
 		GUILayout.BeginVertical();
@@ -104,6 +108,12 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 
 	public string ToXML(int depth)
 	{
+		// Writes bookmarks away in the following format:
+		// <Bookmark>
+		//		<Name>Name of bookmark</Name>
+		//		<Time>16.123</Time>
+		// </Bookmark>
+
 		string data = string.Empty;
 
 		string bookmarkTabs = string.Empty;
@@ -123,6 +133,14 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 
 	public void FromXML(TinyXmlReader xml)
 	{
+		// Reads data from the xml parser until it encounters the closing tag of Bookmarks.
+		// Expects data of the following form for parsing:
+		// <Bookmark>
+		//		<Name>Name of bookmark</Name>
+		//		<Time>16.123</Time>
+		// </Bookmark>
+
+
 		if (xml.tagName != "Bookmarks")
 			return;
 
@@ -151,12 +169,16 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 
 	public void Clear()
 	{
+		// Reset the bookmarks toolbar by removing everything
+
 		_newBookmarkName = string.Empty;
 		bookmarks.Clear();
 	}
 
 	protected void LoadBookmark(Bookmark bookmark)
 	{
+		// Sets the current time of the audiosource according to the time in the bookmark
+
 		if (bookmark == null)
 			return;
 
@@ -165,6 +187,7 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 
 	protected void CreateBookmark(string name, float time)
 	{
+		// Add a bookmark with a certain name and time to the list of bookmarks
 		Bookmark bookmark = new Bookmark(name, time);
 
 		if (bookmarks.Count == 0)
