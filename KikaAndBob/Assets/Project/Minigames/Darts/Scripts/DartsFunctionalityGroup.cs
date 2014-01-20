@@ -5,10 +5,11 @@ using System.Collections.Generic;
 public class DartsFunctionalityGroup : MonoBehaviour 
 {
 	public List<IDartsHitable> hitables = new List<IDartsHitable>();
-
 	public float itemsOnScreen = 1.0f;
 	public float minTimeBetweenShows = 1.0f;
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
+
+	protected ILugusCoroutineHandle spawnRoutine = null;
 
 	public void SetupLocal()
 	{
@@ -32,9 +33,6 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		{
 			hitable.Hide();
 		}
-
-
-		LugusCoroutines.use.StartRoutine( SpawnRoutine() );
 	}
 
 	public int shownCount = 0;
@@ -42,7 +40,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public void HitableHit(IDartsHitable hitable)
 	{
 		Debug.Log ("HIT POSITION " + hitable.transform.position);
-		DartsScoreManager.use.ShowScore(100, hitable.transform.position, 1.0f, null, Color.red);
+		DartsScoreManager.use.ShowScore(hitable.GetScore(), hitable.transform.position, 1.0f, null, Color.red);
 	}
 
 	public void HitableHidden(IDartsHitable hitable)
@@ -115,11 +113,25 @@ public class DartsFunctionalityGroup : MonoBehaviour
 				if( next != null )
 				{
 					next.Show();
+
+
 					next.AutoHide( autoHideTimes.Random() );
 				}
 			}
 
-			yield return new WaitForSeconds( 0.1f );
+		//	yield return new WaitForSeconds( 0.1f );
+			float timer = 0;
+
+			while(timer < 0.1f)
+			{
+				timer += Time.deltaTime;
+
+				yield return new WaitForEndOfFrame();
+
+				if (LugusInput.use.down)
+					break;
+			}
+
 		}
 	}
 	
@@ -135,5 +147,31 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	
 	protected void Update () 
 	{
+	}
+
+	public void SetEnabled(bool enabled)
+	{
+		if (!enabled)
+		{
+			foreach(IDartsHitable target in hitables)
+			{
+				target.Disable();
+			}
+
+			if (spawnRoutine != null && spawnRoutine.Running)
+			{
+				print ("fjsgz;kdl");
+				spawnRoutine.StopRoutine();
+			}
+		}
+		else
+		{
+			if (spawnRoutine != null && spawnRoutine.Running)
+				spawnRoutine.StopRoutine();
+
+			spawnRoutine = LugusCoroutines.use.StartRoutine(SpawnRoutine());
+		}
+
+		this.enabled = enabled;
 	}
 }
