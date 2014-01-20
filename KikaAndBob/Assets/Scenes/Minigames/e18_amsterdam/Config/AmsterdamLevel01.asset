@@ -60,13 +60,15 @@ MonoBehaviour:
     backgroundScrollingSpeed: 2
     spawnItems: []
   - laneID: LaneWater
-    goRight: 1
+    goRight: 0
     speed: 2
     minGapDistance: 4
     maxGapDistance: 8
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 1.5
-    spawnItems: []
+    spawnItems:
+    - spawnID: Buoy
+      positioning: 0
   - laneID: LaneWaterEnd
     goRight: 1
     speed: 2
