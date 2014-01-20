@@ -9,15 +9,25 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 	protected int playerChaseCount = 5;		// how many tiles will the enemy chase the player without seeing them directly
 	protected int playerChaseCounter = 0; 	// how many tiles the enemy has chased the player without seeing them directly
 
-	protected override void SetDefaultTargetTiles()
+	public override void SetDefaultTargetTiles(Vector2[] defaultTargetTiles)
 	{
 		patrolIndex = 0;
-		patrolPath.Add(PacmanLevelManager.use.GetTile(1,1));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(1,11));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(11,11));
-		patrolPath.Add(PacmanLevelManager.use.GetTile(11,1));
 
-		defaultTargetTile = patrolPath[patrolIndex];
+		foreach(Vector2 indices in defaultTargetTiles)
+		{
+			PacmanTile tile = PacmanLevelManager.use.GetTile(indices);
+			
+			if (tile != null)
+				patrolPath.Add(tile);
+		}
+
+		if (patrolPath.Count > 0)
+			defaultTargetTile = patrolPath[patrolIndex];
+		else
+		{
+			defaultTargetTile = PacmanLevelManager.use.GetTile(0, 0);
+			Debug.LogError("Patrolling character: " + this.gameObject.name + " did not receive any valid patrol points!");
+		}
 	}
 
 	public override void DestinationReached()
@@ -36,17 +46,17 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 
 			targetTile = tiles[Random.Range(0, tiles.Length - 1)];
 
-			allowUTurns = false;		// don't allow u-turns now; could run head first into the player
+		//	allowUTurns = false;		// don't allow u-turns now; could run head first into the player
 		}
 		else
 		{
-			// TO DO: Turn on or not? Changes behavior quite a lot.
-			allowUTurns = false;	
+//			// TO DO: Turn on or not? Changes behavior quite a lot.
+//			allowUTurns = false;	
 
 			// if the player was detected, chase him
 			if (playerFound)
 			{
-				PlayerDetectedEffect();
+				PlayerSeenEffect();
 				playerChaseCounter = 0;
 				targetTile = player.currentTile;
 				//Debug.Log("Player detected! Giving chase.");
@@ -56,7 +66,7 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 				// if enemy has only just lost sight of the player, try chasing him for a number of tiles (playerChaseCount)
 				if (playerChaseCounter < playerChaseCount)
 				{
-					PlayerDetectedEffect();
+					PlayerSeenEffect();
 					playerChaseCounter++;
 					targetTile = player.currentTile;
 					//Debug.Log("Player lost! Trying to find them back.");
@@ -65,23 +75,28 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 				{
 					NeutralEffect();
 
-					// turn off player sighted effect
+					// turn off player sighted effect TO DO: Remove
 					transform.localScale = originalScale;
-					//Debug.Log("Player not detected! Continuing patrol.");
-					foreach (PacmanTile patrolTile in patrolPath)
+
+					if (patrolPath.Count > 0)
 					{
-						// if patrol waypoint was reached, find next
-						if (currentTile == patrolTile)
+						//Debug.Log("Player not detected! Continuing patrol.");
+						foreach (PacmanTile patrolTile in patrolPath)
 						{
-							//Debug.Log("Patrol point reached: " + patrolTile);
-							patrolIndex++;
-							if (patrolIndex >= patrolPath.Count)
+							// if patrol waypoint was reached, find next
+							if (currentTile == patrolTile)
 							{
-								patrolIndex = 0;
+								//Debug.Log("Patrol point reached: " + patrolTile);
+								patrolIndex++;
+								if (patrolIndex >= patrolPath.Count)
+								{
+									patrolIndex = 0;
+								}
 							}
 						}
+			
+						targetTile = patrolPath[patrolIndex];
 					}
-					targetTile = patrolPath[patrolIndex];
 				}
 			}
 		}
@@ -98,12 +113,12 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 
 		// figure out if target tile is to the right or to the left of the current position
 		if (moveTargetTile.gridIndices.x > currentTile.gridIndices.x)
-			ChangeSpriteDirection(CharacterDirections.Right);
+			ChangeSpriteFacing(CharacterDirections.Right);
 		else if (moveTargetTile.gridIndices.x < currentTile.gridIndices.x)
-			ChangeSpriteDirection(CharacterDirections.Left);
+			ChangeSpriteFacing(CharacterDirections.Left);
 		else if (moveTargetTile.gridIndices.y < currentTile.gridIndices.y)
-			ChangeSpriteDirection(CharacterDirections.Down);
+			ChangeSpriteFacing(CharacterDirections.Down);
 		else if (moveTargetTile.gridIndices.y > currentTile.gridIndices.y)
-			ChangeSpriteDirection(CharacterDirections.Up);
+			ChangeSpriteFacing(CharacterDirections.Up);
 	}
 }

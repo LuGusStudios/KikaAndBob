@@ -8,7 +8,6 @@ public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault
 public class PacmanGameManagerDefault : MonoBehaviour {
 
 	public bool gameRunning = false;
-	public Vector2 enemySpawnLocation = new Vector2(5, 5);
 	protected float timer = 120;
 	protected int lives = 3;
 	protected bool gameDone = false;
@@ -47,6 +46,9 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// starts a completely new level
 	public void StartNewGame(int levelIndex)
 	{
+		PacmanPickups.use.ClearPickups();
+		PacmanCameraFollower.use.ResetCamera();
+
 		PacmanLevelManager.use.BuildLevel(levelIndex);
 		
 		// find and reset any player characters
@@ -65,7 +67,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		ResetPlayerChars();
 
-
 		// find and reset enemy characters
 		enemies.Clear();
 		enemies = new List<PacmanEnemyCharacter>(level.GetComponentsInChildren<PacmanEnemyCharacter>(true));
@@ -79,18 +80,22 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		{
 			updater.Activate();
 		}
-	
 
 		// reset sound effects
 		PacmanSoundEffects.use.Reset(enemies);
 
-
 		// reset lives
 		lives = 3;
 		PacmanGUIManager.use.UpdateLives(lives);
-
+	//	PacmanGUIManager.use.UpdateKeyGUIItems();
 
 		gameRunning = true;
+	}
+
+	// TO DO: make this useful
+	public PacmanPlayerCharacter GetActivePlayer()
+	{
+		return playerChars[0];
 	}
 
 	// starts new round in the same level

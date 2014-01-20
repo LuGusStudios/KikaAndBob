@@ -60,7 +60,7 @@ public class LayerSection : MonoBehaviour
 					}
 					else
 					{
-						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name);
+						Debug.LogError(name + " : No sprite found for baseLayer with name " + layer.name + " // " + nameID);
 					}
 				}
 			}
@@ -75,7 +75,24 @@ public class LayerSection : MonoBehaviour
 		RunnerInteractionZone[] zones = transform.GetComponentsInChildren<RunnerInteractionZone>();
 		foreach( RunnerInteractionZone zone in zones )
 		{
-			GameObject.Destroy( zone.gameObject );
+			if( zone.autoDestroy )
+			{
+				GameObject.Destroy( zone.gameObject );
+			}
+			else 
+			{
+				// no autodestroy, but can't keep it in this section either...
+				// de-couple and make sure it keeps moving if necessary
+				zone.transform.parent = this.transform.parent; // keep it in the system, because when we reset the whole level to prevent x-overflow, this things needs to go along :)
+				
+				RunnerMover mover = GetComponent<RunnerMover>();
+				if( mover != null )
+				{
+					RunnerMover mover2 = zone.GetComponent<RunnerMover>();
+					mover2.speed = mover.speed;
+					mover2.direction = mover.direction;
+				}
+			}
 		}
 
 
@@ -89,78 +106,93 @@ public class LayerSection : MonoBehaviour
 
 		if( spawner.detailLayer.Length > 0 )
 		{
-			GameObject detail = new GameObject("Detail");
-			details.Add( detail );
+			// ex. intensity is 2.5
+			// that means we will sometimes have 2, sometimes 3 details
+			// split between whole (2) and fraction (0.5) and use different methods of deciding how to spawn
+			int wholeCount = Mathf.FloorToInt(spawner.detailSpawnIntensity);
+			float fractionCount = spawner.detailSpawnIntensity - wholeCount;
 
-			detail.transform.parent = this.transform;
-			// TODO: possibly make this better by just adding a "Detail" parent object in each layer?
-			if( baseLayers.Count == 1 )
-			{
-				detail.transform.position = baseLayers[0].position;
-			}
-			else
-			{
-				detail.transform.position = this.transform.position;
-			}
+			for( int i = 0; i < wholeCount; ++i )
+				SpawnDetail();
 
-			// place the detail slightly to the front so it's on top of the base layers
-			detail.transform.position = detail.transform.position.zAdd( -5.0f );
-
-			// /2.0f because position is already in the center 
-			// 0.3 to make sure we don't spawn past the right edge (which would pop the elements when the current section would be recycled)
-			// TODO: improve this: check the bounds of the sprite renderer to make sure it doesn't exit the section on the right, and not too much on the left
-			if( spawner.detailsRandomX )
-			{
-				detail.transform.position = detail.transform.position.xAdd ( (width / 2.0f) * Random.Range(-1.0f, 0.3f) ); 
-			}
-			if( spawner.detailsRandomY )
-			{
-				detail.transform.position = detail.transform.position.yAdd( new DataRange(-2.0f, 0.5f).Random() );
-			}
-
-			if( baseLayers.Count == 1 )
-			{
-				detail.transform.localScale = baseLayers[0].localScale;
-			}
-
-			
-			SpriteRenderer srend = detail.AddComponent<SpriteRenderer>();
-			srend.sprite = spawner.detailLayer[ Random.Range(0, spawner.detailLayer.Length) ];
-			
-			// figure out the y position of the detail
-			// for this: figure out the pivot point of the sprite
-			// if center.y == 0.0f : pivot is center
-			// if center.y == extents.y : pivot is BOTTOM (not top, as you might expect : inverted y axis logic)
-			// if center.y == -extens.y : pivot is TOP
-
-			//if( !spawner.detailsRandomY )
-			//{
-				if( srend.sprite.bounds.center.y == srend.sprite.bounds.extents.y )
-				{
-					// pivot is BOTTOM : hug the underside of the layer
-					
-					detail.transform.position = detail.transform.position.yAdd( -1.0f * (this.height / 2.0f) );
-				}
-				else if( srend.sprite.bounds.center.y == (-1 * srend.sprite.bounds.extents.y) )
-				{
-					// pivot is TOP: hug top side of the layer
-					detail.transform.position = detail.transform.position.yAdd((height / 2.0f) );
-				}
-			//}
-			
-			//Debug.Log ("EXTENTS : " + srend.sprite.name + " -> " + srend.sprite.bounds.center + " // " + srend.sprite.bounds.extents);
-			
-			ParallaxMover mover = this.GetComponent<ParallaxMover>();
-			if( mover != null )
-			{
-				ParallaxMover moverDetail = detail.AddComponent<ParallaxMover>();
-				if( moverDetail.speed.x != 0.0f )
-					moverDetail.speed = new Vector3(-1.0f, 0.0f, 0.0f);
-				if( moverDetail.speed.y != 0.0f )
-					moverDetail.speed = new Vector3(0.0f, -1.0f, 0.0f);
-				
-			} 
+			if( Random.value < fractionCount )
+				SpawnDetail();
 		}
+	}
+
+	protected void SpawnDetail()
+	{
+		GameObject detail = new GameObject("Detail");
+		details.Add( detail );
+		
+		detail.transform.parent = this.transform;
+		// TODO: possibly make this better by just adding a "Detail" parent object in each layer?
+		if( baseLayers.Count == 1 )
+		{
+			detail.transform.position = baseLayers[0].position; 
+		}
+		else
+		{
+			detail.transform.position = this.transform.position; 
+		}
+		
+		// place the detail slightly to the front so it's on top of the base layers
+		detail.transform.position = detail.transform.position.zAdd( -5.0f );
+		
+		// /2.0f because position is already in the center 
+		// 0.3 to make sure we don't spawn past the right edge (which would pop the elements when the current section would be recycled)
+		// TODO: improve this: check the bounds of the sprite renderer to make sure it doesn't exit the section on the right, and not too much on the left
+		if( spawner.detailsRandomX )
+		{
+			detail.transform.position = detail.transform.position.xAdd ( (width / 2.0f) * Random.Range(-1.0f, 0.3f) ); 
+		}
+		if( spawner.detailsRandomY )
+		{
+			detail.transform.position = detail.transform.position.yAdd( new DataRange(-2.0f, 0.5f).Random() );
+		}
+		
+		if( baseLayers.Count == 1 )
+		{
+			detail.transform.localScale = baseLayers[0].localScale;
+		}
+		
+		
+		SpriteRenderer srend = detail.AddComponent<SpriteRenderer>();
+		srend.sprite = spawner.detailLayer[ Random.Range(0, spawner.detailLayer.Length) ];
+		
+		// figure out the y position of the detail
+		// for this: figure out the pivot point of the sprite
+		// if center.y == 0.0f : pivot is center
+		// if center.y == extents.y : pivot is BOTTOM (not top, as you might expect : inverted y axis logic)
+		// if center.y == -extens.y : pivot is TOP
+		
+		//if( !spawner.detailsRandomY )
+		//{
+		if( srend.sprite.bounds.center.y == srend.sprite.bounds.extents.y )
+		{
+			// pivot is BOTTOM : hug the underside of the layer
+			
+			detail.transform.position = detail.transform.position.yAdd( -1.0f * (this.height / 2.0f) );
+		}
+		else if( srend.sprite.bounds.center.y == (-1 * srend.sprite.bounds.extents.y) )
+		{
+			// pivot is TOP: hug top side of the layer
+			detail.transform.position = detail.transform.position.yAdd((height / 2.0f) );
+		}
+		//}
+		
+		//Debug.Log ("EXTENTS : " + srend.sprite.name + " -> " + srend.sprite.bounds.center + " // " + srend.sprite.bounds.extents);
+		
+		ParallaxMover mover = this.GetComponent<ParallaxMover>();
+		if( mover != null )
+		{
+			ParallaxMover moverDetail = detail.AddComponent<ParallaxMover>();
+			if( mover.speed.x != 0.0f )
+				moverDetail.speed = new Vector3(-1.0f, 0.0f, 0.0f);
+			if( mover.speed.y != 0.0f )
+				moverDetail.speed = new Vector3(0.0f, -1.0f, 0.0f);
+			
+		} 
 	}
 
 	protected void RecalculateDimensions()
@@ -215,7 +247,11 @@ public class LayerSection : MonoBehaviour
 	{
 		if( spawner == null )
 		{
-			Debug.LogError(name + " : No spawner known for this LayerSection! ");
+			spawner = this.transform.parent.GetComponent<LayerSpawner>();
+		}
+		if( spawner == null )
+		{
+			Debug.LogError(transform.Path () + " : No spawner known for this LayerSection! ");
 		}
 	}
 	
