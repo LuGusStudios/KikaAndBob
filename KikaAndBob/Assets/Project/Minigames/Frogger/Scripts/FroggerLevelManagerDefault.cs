@@ -103,6 +103,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			laneScript.minGapDistance = laneDefinition.minGapDistance;
 			laneScript.maxGapDistance = laneDefinition.maxGapDistance;
 			laneScript.repeatAllowFactor = laneDefinition.repeatAllowFactor;
+			laneScript.scrollingSpeed = laneDefinition.backgroundScrollingSpeed;
 			laneScript.dynamicSpawnItems = FindMovingLaneItems(laneDefinition.spawnItems);
 			laneScript.staticSpawnItems = FindStaticLaneItems(laneDefinition.spawnItems, laneGameObject);
 
@@ -117,7 +118,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			}
 	
 			// initially fill lane with lane items
-			laneScript.FillLane();
+			laneScript.SetUpLane();
 
 			lanes.Add(laneScript);
 

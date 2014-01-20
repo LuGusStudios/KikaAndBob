@@ -121,7 +121,7 @@ public class FroggerCharacter : MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log("Character is trying to move to the lane: " + targetLaneIndex + " and it is already on that lane! Stopping.");
+			//Debug.Log("Character is trying to move to the lane: " + targetLaneIndex + " and it is already on that lane! Stopping.");
 			return;
 		}
 	}

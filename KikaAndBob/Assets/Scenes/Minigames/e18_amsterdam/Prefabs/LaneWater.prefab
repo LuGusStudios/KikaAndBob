@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 61: {fileID: 6100000}
   m_Layer: 0
-  m_Name: LaneDirt
+  m_Name: LaneWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.68069839, z: .438849151}
+  m_LocalPosition: {x: 15.1818027, y: 1.80550122, z: 1.80168605}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -38,8 +38,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 20.4799995, y: 1.48555601}
-  m_Center: {x: 0, y: -.157959938}
+  m_Size: {x: 20.4799995, y: 1.70577168}
+  m_Center: {x: 0, y: -.0478521585}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -48,15 +48,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
+  m_Script: {fileID: 11500000, guid: 6285a14357abf2449b4d3e4b0f66a840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enterSounds: []
   goRight: 0
-  speed: 4
-  minGapDistance: 2
-  maxGapDistance: 6
-  repeatAllowFactor: .5
+  speed: 3
+  minGapDistance: 8
+  maxGapDistance: 10
+  repeatAllowFactor: 0
+  scrollingSpeed: 0
   dynamicSpawnItems: []
 --- !u!212 &21200000
 SpriteRenderer:
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 552ae4ca44b49bd4dab6797e498c1888, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ec0b9270dcd87384dba8047521b86d14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

@@ -9,6 +9,7 @@ public abstract class FroggerLane : FroggerSurface
 	public float minGapDistance = 2;
 	public float maxGapDistance = 4;
 	public float repeatAllowFactor = 0.5f;
+	public float scrollingSpeed = 0;
 	public List<FroggerLaneItem> dynamicSpawnItems = new List<FroggerLaneItem>();
 	public Dictionary<float, FroggerLaneItem> staticSpawnItems = new Dictionary<float, FroggerLaneItem>();
 
@@ -20,6 +21,8 @@ public abstract class FroggerLane : FroggerSurface
 	protected float spawnDistance = 0;
 	protected List<FroggerLaneItem> dynamicSpawnedItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
 	protected List<FroggerLaneItem> staticSpawnedItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
+	protected Transform scrollingBackground = null;
+	protected Vector2 scrollingOffset = Vector2.zero;
 
 	private void Awake()
 	{
@@ -32,8 +35,39 @@ public abstract class FroggerLane : FroggerSurface
 		}
 	}
 	
-	public virtual void FillLane()
+	public virtual void SetUpLane()
 	{
+		// if needed, make visual copies of the lane to allow scrolling lane backgrounds
+		// only necessary if speed is something not zero
+		if (scrollingSpeed != 0)
+		{
+			Transform backgroundParent = new GameObject("BackgroundParent").transform;
+			backgroundParent.transform.position = this.transform.position;
+			backgroundParent.parent = this.transform;
+			scrollingBackground = backgroundParent;
+
+		  	SpriteRenderer originalSpriteRender = this.GetComponent<SpriteRenderer>();
+
+			Transform middleCopy = new GameObject("Copy").transform;
+			SpriteRenderer spriteRenderer = middleCopy.gameObject.AddComponent<SpriteRenderer>();
+			spriteRenderer.sprite = originalSpriteRender.sprite;
+			middleCopy.position = this.transform.position;
+			middleCopy.localEulerAngles = this.transform.localEulerAngles;
+			middleCopy.parent = backgroundParent;
+
+			GameObject go = (GameObject)Instantiate(middleCopy.gameObject);
+			Transform sideCopy = go.transform;
+			sideCopy.position = middleCopy.position;
+			sideCopy.parent = backgroundParent;
+
+			if (scrollingSpeed > 0)
+				sideCopy.Translate(new Vector3(-spriteRenderer.bounds.size.x, 0, 0), Space.World);
+			else
+				sideCopy.Translate(new Vector3(spriteRenderer.bounds.size.x, 0, 0), Space.World);
+
+			originalSpriteRender.enabled = false;
+		}
+
 		FillStaticItems();
 		FillDynamicItems();
 	}
@@ -110,9 +144,22 @@ public abstract class FroggerLane : FroggerSurface
 	{
 		return transform.position.v2() + boxCollider2D.center;
 	}
-
+	
 	private void Update()
 	{
+		// move background if there is a moving one
+		if (scrollingBackground != null)
+		{
+			scrollingOffset = scrollingOffset.x(scrollingOffset.x + (scrollingSpeed * Time.deltaTime));
+			
+			if (Mathf.Abs(scrollingOffset.x) >= GetSurfaceSize().x)
+			{
+				scrollingOffset = scrollingOffset.x(0);
+			}
+			
+			scrollingBackground.localPosition = scrollingOffset;
+		}
+
 		if (dynamicSpawnItems.Count < 1 || speed <= 0)
 			return;
 	
@@ -137,7 +184,6 @@ public abstract class FroggerLane : FroggerSurface
 				Destroy(currentItem.gameObject);
 			}
 		}
-
 	}
 
 	private GameObject SpawnLaneItem()
