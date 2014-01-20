@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class RunnerConfig_11Swiss : IRunnerConfig 
+public class RunnerConfig_10Swiss : IRunnerConfig 
 {
 	public void SetupLocal()
 	{
