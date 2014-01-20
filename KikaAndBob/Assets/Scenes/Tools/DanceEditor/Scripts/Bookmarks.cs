@@ -149,6 +149,12 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 		}
 	}
 
+	public void Clear()
+	{
+		_newBookmarkName = string.Empty;
+		bookmarks.Clear();
+	}
+
 	protected void LoadBookmark(Bookmark bookmark)
 	{
 		if (bookmark == null)

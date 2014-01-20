@@ -7,6 +7,9 @@ public class Options : LugusSingletonRuntime<Options>
 {
 	public Vector2 screenOffset = new Vector2(10, 10);
 	public string actionFolderName = "ActionFiles";
+	public int autoSaveTimerDefault = 300;
+
+	private float _autoSaveTimer = 0f;
 
 	void Start()
 	{
@@ -16,6 +19,8 @@ public class Options : LugusSingletonRuntime<Options>
 		LugusConfig.use.System = profile;
 
 		Load();
+
+		_autoSaveTimer = profile.GetInt("AutoSaveTimer", autoSaveTimerDefault);
 	} 
 
 	void Update()
@@ -23,14 +28,28 @@ public class Options : LugusSingletonRuntime<Options>
 		if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
 			Input.GetKeyDown(KeyCode.S))
 			Save();
+
+		if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
+			Input.GetKeyDown(KeyCode.R))
+			ReloadOriginal();
+
+		_autoSaveTimer -= Time.deltaTime;
+		if (_autoSaveTimer <= 0.0f)
+		{
+			_autoSaveTimer = LugusConfig.use.System.GetInt("AutoSaveTimer", autoSaveTimerDefault);
+			SaveActionFile(LugusConfig.use.System.GetString("ActionFile", string.Empty) + "_auto");
+		}
 	}
 
 	void OnGUI()
 	{
-		int xpos = Screen.width - 100 - (int)screenOffset.x;
+		int width = 200;
+		int height = 100;
+		int xpos = Screen.width - width - (int)screenOffset.x;
 		int ypos = (int)screenOffset.y;
+		
 
-		GUILayout.BeginArea(new Rect(xpos, ypos, 100, 50), GUI.skin.box);
+		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
 		GUILayout.BeginVertical();
 
 		GUIStyle centered = new GUIStyle(GUI.skin.label);
@@ -39,6 +58,13 @@ public class Options : LugusSingletonRuntime<Options>
 
 		if (GUILayout.Button("Save"))
 			Save();
+
+		if (GUILayout.Button("Load Original"))
+			ReloadOriginal();
+
+		if (GUILayout.Button("Load AutoSave"))
+			ReloadAutoSave();
+
 
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
@@ -53,6 +79,29 @@ public class Options : LugusSingletonRuntime<Options>
 	{
 		LoadAudioFile(LugusConfig.use.System.GetString("AudioClip", string.Empty));
 		LoadActionFile(LugusConfig.use.System.GetString("ActionFile", string.Empty));
+	}
+
+	void ReloadOriginal()
+	{
+		AudioPlayer.use.Clear();
+		LaneManager.use.Clear();
+		Bookmarks.use.Clear();
+
+		LoadActionFile(LugusConfig.use.System.GetString("ActionFile", string.Empty));
+	}
+
+	void ReloadAutoSave()
+	{
+		AudioPlayer.use.Clear();
+		LaneManager.use.Clear();
+		Bookmarks.use.Clear();
+
+		string actionFile = LugusConfig.use.System.GetString("ActionFile", string.Empty);
+		if (string.IsNullOrEmpty(actionFile))
+			return;
+
+		actionFile += "_auto";
+		LoadActionFile(actionFile);
 	}
 
 	void SaveActionFile(string name)

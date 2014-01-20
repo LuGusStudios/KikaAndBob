@@ -186,4 +186,11 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 	{
 		return (int)(time % 60);
 	}
+
+	public void Clear()
+	{
+		_source.Stop();
+		_source.time = 0f;
+		_seekTime = 0f;
+	}
 }

@@ -282,4 +282,14 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		CreateLane();
 		_currentLane.FromXML(reader);
 	}
+
+	public void Clear()
+	{
+		while (_lanes.Count != 0)
+			RemoveLane(_lanes[0]);
+
+		_lanes.Clear();
+		_currentLane = null;
+		_currentLaneItem = null;
+	}
 }
