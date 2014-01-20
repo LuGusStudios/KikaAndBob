@@ -451,6 +451,7 @@ MonoBehaviour:
     from: 20
     to: 25
   transitionSkyOffset: 50
+  themeTransitionInProgress: 0
 --- !u!114 &158124275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,7 +751,7 @@ PolygonCollider2D:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 228199581}
   m_Enabled: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4cdf8ba0fc60242e0bd62288ae33bdfd, type: 2}
   m_IsTrigger: 0
   m_Poly:
     m_Paths:
@@ -2354,6 +2355,7 @@ MonoBehaviour:
   normalAnimation: ALL/KikaParachute_FallingLeft
   slowAnimation: ALL/KikaParachute_Slower
   fastAnimation: ALL/KikaParachute_Faster
+  stillAnimation: ALL/KikaParachute_Slower
 --- !u!61 &573294613
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14469,7 +14471,7 @@ PolygonCollider2D:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1412837203}
   m_Enabled: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4cdf8ba0fc60242e0bd62288ae33bdfd, type: 2}
   m_IsTrigger: 0
   m_Poly:
     m_Paths:
@@ -14531,6 +14533,46 @@ PolygonCollider2D:
       - {x: 4.23909569, y: -13.9284573}
       - {x: 4.29414892, y: -13.4329786}
       - {x: 4.29414892, y: -12.8824463}
+--- !u!1 &1414444592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1414444594}
+  - 114: {fileID: 1414444593}
+  m_Layer: 0
+  m_Name: LevelTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1414444593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1414444592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf6d724c0dda4269accfecfb165fb72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sectionCount: 5
+  transitionThemes: 1
+--- !u!4 &1414444594
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1414444592}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 46.4500809, y: -.521129608, z: -7.45019531}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &1483668908
 GameObject:
   m_ObjectHideFlags: 0
@@ -16180,7 +16222,7 @@ PolygonCollider2D:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1830356382}
   m_Enabled: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4cdf8ba0fc60242e0bd62288ae33bdfd, type: 2}
   m_IsTrigger: 0
   m_Poly:
     m_Paths:
@@ -17061,7 +17103,7 @@ PolygonCollider2D:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2048871286}
   m_Enabled: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4cdf8ba0fc60242e0bd62288ae33bdfd, type: 2}
   m_IsTrigger: 0
   m_Poly:
     m_Paths:
