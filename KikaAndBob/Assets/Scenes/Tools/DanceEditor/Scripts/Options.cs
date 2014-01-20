@@ -30,11 +30,18 @@ public class Options : LugusSingletonRuntime<Options>
 		int xpos = Screen.width - 100 - (int)screenOffset.x;
 		int ypos = (int)screenOffset.y;
 
-		GUI.Box(new Rect(xpos, ypos, 100, 50), "Options");
+		GUILayout.BeginArea(new Rect(xpos, ypos, 100, 50), GUI.skin.box);
+		GUILayout.BeginVertical();
 
-		ypos += 25;
-		if (GUI.Button(new Rect(xpos + 10, ypos, 80, 20), "Save"))
+		GUIStyle centered = new GUIStyle(GUI.skin.label);
+		centered.alignment = TextAnchor.UpperCenter;
+		GUILayout.Label("Options", centered);
+
+		if (GUILayout.Button("Save"))
 			Save();
+
+		GUILayout.EndVertical();
+		GUILayout.EndArea();
 	}
 
 	void Save()
@@ -120,6 +127,8 @@ public class Options : LugusSingletonRuntime<Options>
 
 		string fullpath = Application.dataPath + "/" + actionFolderName + "/" + name + ".xml";
 
+		// When we can find the action file, start parsing it with TinyXML.
+		// Only when we find an opening tag that matches either a lane or a bookmark, we can translate it.
 		if (File.Exists(Application.dataPath + "/" + actionFolderName + "/" + name + ".xml"))
 		{
 			StreamReader reader = new StreamReader(fullpath, Encoding.Default);
@@ -129,12 +138,19 @@ public class Options : LugusSingletonRuntime<Options>
 			TinyXmlReader parser = new TinyXmlReader(rawdata);
 			while (parser.Read())
 			{
-				if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Lane"))
+
+				// When encountering other types of tags, we can skip them.
+				if (parser.tagType != TinyXmlReader.TagType.OPENING)
+					continue;
+
+				if (parser.tagName == "Lane")
 				{
 					LaneManager.use.CreateLane(parser);
 				}
-				else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Bookmarks"))
+				else if (parser.tagName == "Bookmarks")
+				{
 					Bookmarks.use.FromXML(parser);
+				}
 			}
 		}
 		else
@@ -142,4 +158,5 @@ public class Options : LugusSingletonRuntime<Options>
 			Debug.Log("LoadActionFile(name): The action file " + name + " does not exist. The file will be created when saving data.");
 		}
 	}
+
 }

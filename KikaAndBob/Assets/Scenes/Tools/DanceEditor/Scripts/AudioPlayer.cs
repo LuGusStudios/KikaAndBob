@@ -66,22 +66,46 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 
 		float xpos = screenOffset.x;
 		float ypos = Screen.height - screenOffset.y - height;
-		GUI.Box(new Rect(screenOffset.x, ypos, width, height), "Audio Player");
 
-		// Buttons
-		ypos += 25;
+		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
+		GUILayout.BeginVertical();
+
+		// Display title of the box
+		GUIStyle centered = new GUIStyle(GUI.skin.label);
+		centered.alignment = TextAnchor.UpperCenter;
+		GUILayout.Label("Audio Player", centered);
+
+		// Display the buttons and title of the song
+		ButtonGUI();
+
+		// Display the current time of playing and the search slider
+		SliderGUI();
+
+		GUILayout.EndVertical();
+		GUILayout.EndArea();
+	}
+
+	void ButtonGUI()
+	{
+		// Display the Play-Stop buttons
+
+		GUILayoutOption[] buttonOptions = new GUILayoutOption[1];
+		buttonOptions[0] = GUILayout.Width(50);
+		GUILayout.BeginHorizontal();
+
+		// Button should change name when music is playing or not
 		if (_source.isPlaying)
 		{
-			if (GUI.Button(new Rect(xpos + 10, ypos, 80, 20), "Pause"))
+			if (GUILayout.Button("Pause", buttonOptions))
 				_source.Pause();
 		}
 		else
 		{
-			if (GUI.Button(new Rect(xpos + 10, ypos, 80, 20), "Play"))
+			if (GUILayout.Button("Play", buttonOptions))
 				_source.Play();
 		}
 
-		if (GUI.Button(new Rect(xpos + 110, ypos, 80, 20), "Stop"))
+		if (GUILayout.Button("Stop", buttonOptions))
 		{
 			_source.Stop();
 			_seekTime = 0.0f;
@@ -89,16 +113,18 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 		}
 
 		// Song that is playing
-		xpos += 200;
 		string clipname = string.Empty;
 		if (_source.clip != null)
 			clipname = _source.clip.name;
 
-		GUI.Label(new Rect(xpos + 10, ypos, width - 200, 20), "Current Audio Clip: " + clipname);
+		GUILayout.Label("Current Audio Clip: " + clipname);
+		GUILayout.EndHorizontal();
+	}
 
-		// Display play time
-		ypos += 25;
-		xpos = screenOffset.x;
+	void SliderGUI()
+	{
+
+		// Make the seconds and minutes strings to display the time played
 		string minutes = "--", seconds = "--", totalMinutes = "--", totalSeconds = "--";
 		if (_source.clip != null)
 		{
@@ -113,29 +139,32 @@ public class AudioPlayer : LugusSingletonRuntime<AudioPlayer>
 			totalSeconds = totalSeconds.Length == 1 ? "0" + totalSeconds : totalSeconds;
 		}
 
-		GUI.Label(new Rect(screenOffset.x + 10, ypos, 180, 20), "Play time: " + minutes + "." + seconds + " | " + totalMinutes + "." + totalSeconds);
+		GUILayout.BeginHorizontal();
+		GUILayoutOption[] sliderOptions = new GUILayoutOption[1];
+		sliderOptions[0] = GUILayout.ExpandWidth(false);
+		GUILayout.Label("Play time: " + minutes + "." + seconds + " | " + totalMinutes + "." + totalSeconds, sliderOptions);
 
-		// Display search slider
-		xpos += 200;
+		// Display the search slider
 		if (_source.clip != null)
 		{
 			if (_source.isPlaying)
 			{
-				GUI.HorizontalSlider(new Rect(xpos + 10, ypos, width - 220, 20), _source.time, 0.0f, _source.clip.length);
+				GUILayout.HorizontalSlider(_source.time, 0.0f, _source.clip.length);
 				_seekTime = _source.time;
 			}
 			else
 			{
-				_seekTime = GUI.HorizontalSlider(new Rect(xpos + 10, ypos, width - 220, 20), _seekTime, 0.0f, _source.clip.length);
+				_seekTime = GUILayout.HorizontalSlider(_seekTime, 0.0f, _source.clip.length);
 				_source.time = _seekTime;
 			}
 		}
 		else
 		{
-			GUI.HorizontalSlider(new Rect(xpos + 10, ypos, width - 220, 20), 0.0f, 0.0f, 0.0f);
+			GUILayout.HorizontalSlider(0.0f, 0.0f, 0.0f);
 		}
+		GUILayout.EndHorizontal();
 
-		// Display the playtime above the hit line
+		// Display the time above the hit line
 		if (HitLine.use.renderer.enabled)
 		{
 			Vector3 hltoppos = HitLine.use.transform.position + new Vector3(0.0f, HitLine.use.transform.localScale.y / 2.0f, 0.0f);

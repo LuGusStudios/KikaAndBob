@@ -28,6 +28,14 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		RepositionLanes();
 	}
 
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Delete) && (_currentLaneItem != null))
+		{
+			RemoveActionPoint();
+		}
+	}
+
 	void OnGUI()
 	{
 		DrawLanesGUI();
@@ -36,14 +44,26 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 	void DrawLanesGUI()
 	{
+		float xpos = screenOffset.x;
 		float ypos = screenOffset.y;
-		float boxHeight = 50;
-		GUI.Box(new Rect(screenOffset.x, ypos, 200, boxHeight), "Lane Manager");
+		float width = 200;
+		float height = 50;
 
-		ypos += 25;
-		if (GUI.Button(new Rect(screenOffset.x + 10, ypos, 180, 20), "Create new lane"))
+		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
+		GUILayout.BeginVertical();
+
+		// Display title of the box
+		GUIStyle centered = new GUIStyle(GUI.skin.label);
+		centered.alignment = TextAnchor.UpperCenter;
+		GUILayout.Label("Lane Manager", centered);
+
+		if (GUILayout.Button("Create new lane"))
 			CreateLane();
 
+		GUILayout.EndVertical();
+		GUILayout.EndArea();
+
+		// Add name and remove button at the location of each lane
 		for (int i = 0; i < _lanes.Count; ++i)
 		{
 			Lane lane = _lanes[i];
@@ -66,15 +86,28 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		if ((_currentLane == null) || (_currentLaneItem == null))
 			return;
 
-		float xpos = screenOffset.x + 220;
+		float xpos = screenOffset.x + 210;
 		float ypos = screenOffset.y;
-
+		float width = 200;
+		float height = 150;
 		int itemIndex = _currentLane.LaneItems.FindIndex(l => l == _currentLaneItem.Item);
-		GUI.Box(new Rect(xpos, ypos, 200, 150), "Action point " + (itemIndex + 1).ToString());
 
-		ypos += 25;
-		GUI.Label(new Rect(xpos + 10, ypos, 140, 20), "Time (seconds)");
-		string newTimeStr = GUI.TextField(new Rect(xpos + 130, ypos, 60, 20), _currentLaneItem.Item.Time.ToString("0.000"));
+		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
+		GUILayout.BeginVertical();
+
+		// Display the title of the box
+		GUIStyle centered = new GUIStyle(GUI.skin.label);
+		centered.alignment = TextAnchor.UpperCenter;
+		GUILayout.Label("Action Point " + (itemIndex + 1).ToString(), centered);
+
+		// Display the time at which the action point is located
+		GUILayout.BeginHorizontal();
+		GUILayoutOption[] options = new GUILayoutOption[1];
+		options[0] = GUILayout.Width(95);
+
+		GUILayout.Label("Time", options);
+
+		string newTimeStr = GUILayout.TextField(_currentLaneItem.Item.Time.ToString("0.000"), options);
 		float newTime;
 		if (float.TryParse(newTimeStr, out newTime))
 		{
@@ -85,17 +118,22 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 			_currentLaneItem.Time = newTime;
 		}
+		GUILayout.EndHorizontal();
 
-		ypos += 25;
-		GUI.Label(new Rect(xpos + 10, ypos, 140, 20), "Type");
+		// Display the type of the action point
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Type", options);
 		if (_currentLaneItem.Item.Type == DanceEditor.LaneItemType.SINGLE)
-			GUI.Label(new Rect(xpos + 130, ypos, 60, 20), "Single");
+			GUILayout.Label("Single", options);
 		else if (_currentLaneItem.Item.Type == DanceEditor.LaneItemType.STREAK)
-			GUI.Label(new Rect(xpos + 130, ypos, 60, 20), "Streak");
+			GUILayout.Label("Streak", options);
 
-		ypos += 25;
-		GUI.Label(new Rect(xpos + 10, ypos, 140, 20), "Duration (seconds)");
-		string newDurationStr = GUI.TextField(new Rect(xpos + 130, ypos, 60, 20), _currentLaneItem.Item.Duration.ToString("0.000"));
+		GUILayout.EndHorizontal();
+
+		// Display the duration of the action point
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Duration", options);
+		string newDurationStr = GUILayout.TextField(_currentLaneItem.Item.Duration.ToString("0.000"), options);
 		float newDuration;
 		if (float.TryParse(newDurationStr, out newDuration))
 		{
@@ -106,18 +144,19 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 
 			_currentLaneItem.Duration = newDuration;
 		}
+		GUILayout.EndHorizontal();
 
-		ypos += 25;
-		_currentLaneItem.Duration = GUI.HorizontalSlider(new Rect(xpos + 10, ypos, 180, 20), _currentLaneItem.Duration, LaneItem.singleDuration, LaneItem.maxStreakDuration);
+		// Add a slider to modify the duration of the action point
+		_currentLaneItem.Duration = GUILayout.HorizontalSlider(_currentLaneItem.Duration, LaneItem.singleDuration, LaneItem.maxStreakDuration);
 
-		ypos += 25;
-		if (GUI.Button(new Rect(xpos + 10, ypos, 80, 20), "Remove"))
+		// Remove button for the action point
+		if (GUILayout.Button("Remove"))
 		{
-			_currentLane.LaneItems.Remove(_currentLaneItem.Item);
-			_currentLane.LaneItemRenderers.Remove(_currentLaneItem);
-			GameObject.Destroy(_currentLaneItem.gameObject);
-			ClearCurrentLaneItemData();
+			RemoveActionPoint();
 		}
+
+		GUILayout.EndVertical();
+		GUILayout.EndArea();
 	}
 
 	void CreateLane()
@@ -200,6 +239,14 @@ public class LaneManager : LugusSingletonRuntime<LaneManager>
 		Vector3 newScale = hitLine.transform.localScale;
 		newScale.y = (height + laneSpacing) * _lanes.Count;
 		hitLine.transform.localScale = newScale;
+	}
+
+	void RemoveActionPoint()
+	{
+		_currentLane.LaneItems.Remove(_currentLaneItem.Item);
+		_currentLane.LaneItemRenderers.Remove(_currentLaneItem);
+		GameObject.Destroy(_currentLaneItem.gameObject);
+		ClearCurrentLaneItemData();
 	}
 
 	void ClearCurrentLaneItemData()

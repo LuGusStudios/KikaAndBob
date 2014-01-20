@@ -53,27 +53,34 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 
 	protected string _newBookmarkName = "";
 
-	/*void Start()
-	{
-		bookmarks.Add(new Bookmark("Testje", 24.5f));
-	}*/
-
 	void OnGUI()
 	{
+		int xpos = Screen.width - 200 - (int)screenOffset.x;
+		int ypos = (int)screenOffset.y;
+
+		int width = 200;
 		int height = 75 + bookmarks.Count * 25;
 
-		GUILayout.BeginArea(new Rect(screenOffset.x, screenOffset.y, 200, height), GUI.skin.box);
+		GUILayout.BeginArea(new Rect(xpos, ypos, width, height), GUI.skin.box);
 		GUILayout.BeginVertical();
-		GUILayout.Label("Bookmarks");
+
+		// Display title of the box
+		GUIStyle centered = new GUIStyle(GUI.skin.label);
+		centered.alignment = TextAnchor.UpperCenter;
+		GUILayout.Label("Bookmarks", centered);
+
 		// Draw the buttons for the bookmarks
+		GUILayoutOption[] buttonOptions = new GUILayoutOption[1];
+		buttonOptions[0] = GUILayout.Width(95);
+
 		for (int i = 0; i < bookmarks.Count; ++i )
 		{
 			Bookmark bookmark = bookmarks[i];
 			GUILayout.BeginHorizontal();
-			if (GUILayout.Button(bookmark.Name))
+			if (GUILayout.Button(bookmark.Name, buttonOptions))
 				LoadBookmark(bookmark);
 
-			if (GUILayout.Button("Remove"))
+			if (GUILayout.Button("Remove", buttonOptions))
 			{
 				bookmarks.RemoveAt(i);
 				--i;
@@ -82,11 +89,11 @@ public class Bookmarks : LugusSingletonRuntime<Bookmarks>
 			GUILayout.EndHorizontal();
 		}
 
-		// Create buttons to create a bookmark
+		// Draw buttons to create a bookmark
 		GUILayout.Label("Create a bookmark:");
 		GUILayout.BeginHorizontal();
-		_newBookmarkName = GUILayout.TextField(_newBookmarkName, 16);
-		if (GUILayout.Button("Create"))
+		_newBookmarkName = GUILayout.TextField(_newBookmarkName, 16, buttonOptions);
+		if (GUILayout.Button("Create", buttonOptions))
 			CreateBookmark(_newBookmarkName, AudioPlayer.use.SeekTime);
 
 		GUILayout.EndHorizontal();
