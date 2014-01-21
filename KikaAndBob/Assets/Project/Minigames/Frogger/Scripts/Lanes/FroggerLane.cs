@@ -9,31 +9,73 @@ public abstract class FroggerLane : FroggerSurface
 	public float minGapDistance = 2;
 	public float maxGapDistance = 4;
 	public float repeatAllowFactor = 0.5f;
+	public float scrollingSpeed = 0;
 	public List<FroggerLaneItem> dynamicSpawnItems = new List<FroggerLaneItem>();
 	public Dictionary<float, FroggerLaneItem> staticSpawnItems = new Dictionary<float, FroggerLaneItem>();
 
 	protected float height = 200;
 	protected Vector2 laneSize = Vector3.one;
-	protected BoxCollider2D boxCollider2D = null;
 	protected float nextInterval = 0;
 	protected int lastItemIndex = -1;
 	protected float spawnDistance = 0;
 	protected List<FroggerLaneItem> dynamicSpawnedItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
 	protected List<FroggerLaneItem> staticSpawnedItems = new List<FroggerLaneItem>();	// includes all items that need to be moved (e.g. excludes things like rocks)
+	protected Transform scrollingBackground = null;
+	protected Vector2 scrollingOffset = Vector2.zero;
 
-	private void Awake()
+	protected void Awake()
 	{
-		boxCollider2D = GetComponent<BoxCollider2D>();
+		SetUpLocal();
+	}
+
+	public override void SetUpLocal()
+	{
+		base.SetUpLocal();
 		
 		if (boxCollider2D != null)
 		{
 			laneSize = boxCollider2D.size;
 			height = laneSize.y;
 		}
+		else
+		{
+			Debug.Log(name + ": Missing BoxCollider2D");
+		}
 	}
 	
-	public virtual void FillLane()
+	public virtual void SetUpLane()
 	{
+		// if needed, make visual copies of the lane to allow scrolling lane backgrounds
+		// only necessary if speed is something not zero
+		if (scrollingSpeed != 0)
+		{
+			Transform backgroundParent = new GameObject("BackgroundParent").transform;
+			backgroundParent.transform.position = this.transform.position;
+			backgroundParent.parent = this.transform;
+			scrollingBackground = backgroundParent;
+
+		  	SpriteRenderer originalSpriteRender = this.GetComponent<SpriteRenderer>();
+
+			Transform middleCopy = new GameObject("Copy").transform;
+			SpriteRenderer spriteRenderer = middleCopy.gameObject.AddComponent<SpriteRenderer>();
+			spriteRenderer.sprite = originalSpriteRender.sprite;
+			middleCopy.position = this.transform.position;
+			middleCopy.localEulerAngles = this.transform.localEulerAngles;
+			middleCopy.parent = backgroundParent;
+
+			GameObject go = (GameObject)Instantiate(middleCopy.gameObject);
+			Transform sideCopy = go.transform;
+			sideCopy.position = middleCopy.position;
+			sideCopy.parent = backgroundParent;
+
+			if (scrollingSpeed > 0)
+				sideCopy.Translate(new Vector3(-spriteRenderer.bounds.size.x, 0, 0), Space.World);
+			else
+				sideCopy.Translate(new Vector3(spriteRenderer.bounds.size.x, 0, 0), Space.World);
+
+			originalSpriteRender.enabled = false;
+		}
+
 		FillStaticItems();
 		FillDynamicItems();
 	}
@@ -75,6 +117,12 @@ public abstract class FroggerLane : FroggerSurface
 		if (staticSpawnItems.Count < 1)
 			return;
 
+		// just ensures this also works in the editor
+		if (boxCollider2D == null)
+		{
+			SetUpLocal();
+		}
+
 		foreach(KeyValuePair<float, FroggerLaneItem> item in staticSpawnItems)
 		{
 			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
@@ -110,9 +158,22 @@ public abstract class FroggerLane : FroggerSurface
 	{
 		return transform.position.v2() + boxCollider2D.center;
 	}
-
-	private void Update()
+	
+	protected void Update()
 	{
+		// move background if there is a moving one
+		if (scrollingBackground != null)
+		{
+			scrollingOffset = scrollingOffset.x(scrollingOffset.x + (scrollingSpeed * Time.deltaTime));
+			
+			if (Mathf.Abs(scrollingOffset.x) >= GetSurfaceSize().x)
+			{
+				scrollingOffset = scrollingOffset.x(0);
+			}
+			
+			scrollingBackground.localPosition = scrollingOffset;
+		}
+
 		if (dynamicSpawnItems.Count < 1 || speed <= 0)
 			return;
 	
@@ -137,11 +198,16 @@ public abstract class FroggerLane : FroggerSurface
 				Destroy(currentItem.gameObject);
 			}
 		}
-
 	}
 
 	private GameObject SpawnLaneItem()
 	{
+		// just ensures this also works in the editor
+		if (boxCollider2D == null)
+		{
+			SetUpLocal();
+		}
+
 		// create random item
 		int index = Random.Range(0, dynamicSpawnItems.Count);
 

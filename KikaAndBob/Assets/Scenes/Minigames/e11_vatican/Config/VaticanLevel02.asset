@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b28dfe5ee59229a42a5e1021d65930ff, type: 3}
+  m_Name: VaticanLevel02
+  m_EditorClassIdentifier: 
+  backgroundMusicName: VaticanBackground
+  width: 13
+  height: 30
+  cameraTracksPlayer: 1
+  level: xxxxxxxxxxxxxxoooxopoxoooxxoooxoooxoooxxoooxoooxoooxxxoxxoooxxoxxxpooxxoxxoopxxoxooxoxooxoxxoxooopoooxoxxoxxxoooxxxoxxoooooxoooooxxoxxxoxoxxxoxxpooooxoooopxxxxxxopoxxxxxxpooxxoxxoooxxoooooooooooxxxxxxoooxxxxxxxxxxxoxxxxxxooooxxoxxooooooooxoooxooooooooxxoxxooooooooxoooxooooooooxxoxxooooooooxoooxooooooooxxoxxoooooxxxxoooxxxxooxoooooooopxooxooooxooooxooxxxxopoxxxxoooooxoooxooooooooxxoxxoooo
+  characters:
+  - id: Kika
+    speed: 2
+    xLocation: 6
+    yLocation: 0
+    spawnDelay: 0
+    startDirection: 0
+    defaultTargetTiles: []
+  - id: GuardPatrol
+    speed: 2
+    xLocation: 8
+    yLocation: 4
+    spawnDelay: 0
+    startDirection: 8
+    defaultTargetTiles:
+    - {x: 2, y: 4}
+    - {x: 10, y: 4}
+  - id: GuardStatic
+    speed: 1
+    xLocation: 5
+    yLocation: 7
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles: []
+  - id: GuardStatic
+    speed: .5
+    xLocation: 7
+    yLocation: 9
+    spawnDelay: 0
+    startDirection: 4
+    defaultTargetTiles: []
+  - id: GuardStatic
+    speed: 2
+    xLocation: 5
+    yLocation: 11
+    spawnDelay: 0
+    startDirection: 8
+    defaultTargetTiles: []
+  - id: GuardStatic
+    speed: 2
+    xLocation: 3
+    yLocation: 16
+    spawnDelay: 0
+    startDirection: 4
+    defaultTargetTiles: []
+  - id: GuardStatic
+    speed: 2
+    xLocation: 9
+    yLocation: 16
+    spawnDelay: 0
+    startDirection: 4
+    defaultTargetTiles: []
+  - id: GuardPatrol
+    speed: 2
+    xLocation: 11
+    yLocation: 20
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles:
+    - {x: 11, y: 20}
+    - {x: 7, y: 20}
+  - id: GuardPatrol
+    speed: 2
+    xLocation: 1
+    yLocation: 20
+    spawnDelay: 0
+    startDirection: 8
+    defaultTargetTiles:
+    - {x: 1, y: 20}
+    - {x: 5, y: 20}
+  - id: GuardPatrol
+    speed: 1
+    xLocation: 3
+    yLocation: 22
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles:
+    - {x: 3, y: 22}
+    - {x: 9, y: 22}
+  updaters: []
+  tileItems:
+  - id: Exit
+    tileCoordinates: {x: 6, y: 0}
+  - id: Key01
+    tileCoordinates: {x: 2, y: 4}
+  - id: Door01
+    tileCoordinates: {x: 6, y: 6}
+  - id: Key01
+    tileCoordinates: {x: 11, y: 16}
+  - id: Door01
+    tileCoordinates: {x: 10, y: 25}
+  - id: Door01
+    tileCoordinates: {x: 6, y: 16}
+  - id: Key01
+    tileCoordinates: {x: 2, y: 27}
+  - id: Key02
+    tileCoordinates: {x: 10, y: 27}
+  - id: Door02
+    tileCoordinates: {x: 6, y: 23}

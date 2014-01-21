@@ -7,7 +7,7 @@ public class FroggerLaneItem : FroggerSurface
 												// if false, item ends up before player (e.g. "cars", obstacles)
 	public bool goRight = false;
 
-	public AudioClip lanePresenceSound = null;
+	public string lanePresenceSoundKey = null;
 
 	protected float coveredDistance = 0;
 	protected float laneLength = 0;

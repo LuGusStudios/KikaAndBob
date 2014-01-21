@@ -3,20 +3,29 @@ using System.Collections;
 using SmoothMoves;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(PacmanCharacterAnimator))]
 public abstract class PacmanCharacter : MonoBehaviour {
-	
-	protected GameTile moveTargetTile;			// the tile we are immediately moving to
-	protected Vector3 startPosition = Vector3.zero;
+
+	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
+	public string walkSoundKey = "";
+	public float spawnDelay = 0;
+
+	protected PacmanTile moveTargetTile;			// the tile we are immediately moving to
+	protected Vector3 moveStartPosition = Vector3.zero;
+	protected Vector2 spawnLocation = Vector2.zero;
 	protected float movementTimer = 0;
 	protected float movementDuration = 0;
-	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
 	protected bool moving = false;
 	protected bool horizontalMovement = false;
-	public GameTile currentTile = null;
-	protected GameTile startTile;
+	protected bool alreadyTeleported = false;
+
+	public PacmanTile currentTile = null;
+	protected PacmanTile startTile;
 	protected CharacterDirections currentDirection;
+	protected CharacterDirections startDirection;
 	protected BoneAnimation currentAnimation = null;
-	protected BoneAnimation[] boneAnimations = null;
+
+	protected PacmanCharacterAnimator characterAnimator = null;
 		
 	public enum CharacterDirections
 	{
@@ -32,40 +41,34 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		return currentDirection;
 	}
 
-	void Awake()
+	protected void Awake()
 	{
-
+		SetUpLocal();
 	}
 
-	void FindAnimations()
+	protected void Start()
 	{
-		// this only needs to be done once, but it's handy to be able to call from various places to ensure these are always assigned
-		if (boneAnimations == null || boneAnimations.Length <= 0)
+		SetUpGlobal();
+	}
+
+	public virtual void SetUpLocal()
+	{
+		if (characterAnimator == null)
 		{
-			// since switching between animations relies on setting child objects non-active, we can't rely on getcomponentsinchildren or something similar
-			// instead, make sure they're all active and and turn them off again if needed
-			List<BoneAnimation> foundAnimations = new List<BoneAnimation>();
-			foreach(Transform t in transform)
-			{
-				bool objectActive = t.gameObject.activeSelf;
-				if (!objectActive)
-					t.gameObject.SetActive(true);
-
-				BoneAnimation found = t.gameObject.GetComponent<BoneAnimation>();
-
-				if (found != null)
-					foundAnimations.Add(found);
-
-				if (objectActive != t.gameObject.activeSelf)
-					t.gameObject.SetActive(objectActive);
-			}
-
-			boneAnimations = foundAnimations.ToArray();
+			characterAnimator = GetComponent<PacmanCharacterAnimator>();
+		}
+		if (characterAnimator == null)
+		{
+			Debug.LogError("Missing character animator on: " + gameObject.name);
 		}
 	}
 
+	public virtual void SetUpGlobal()
+	{
+	}
+	
 	// does actual moving and calls appropriate methods when destination was reached
-	protected void UpdatePosition () 
+	protected void UpdateMovement () 
 	{		
 		if (moveTargetTile != null)
 		{
@@ -77,17 +80,17 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			else
 			{
 				movementTimer += Time.deltaTime;
-				transform.localPosition = Vector3.Lerp(startPosition, moveTargetTile.location, movementTimer/movementDuration);
+				transform.localPosition = Vector3.Lerp(moveStartPosition, moveTargetTile.location, movementTimer/movementDuration);
 			}
-		}	
+		}
 	}
 	
-	protected virtual void MoveTo(GameTile target)
+	protected virtual void MoveTo(PacmanTile target)
 	{
 		moving = true;
 		
 		ResetMovement();
-		startPosition = transform.localPosition;
+		moveStartPosition = transform.localPosition;
 		moveTargetTile = target;
 		
 		if (target == null)
@@ -96,20 +99,14 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			return;
 		}
 		
-		movementDuration = Vector3.Distance(startPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
+		movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
 		
-		UpdatePosition();	// needs to be called again, or character will pause for one frame
-	}
-	
-	public virtual void ChangeSpriteDirection(bool faceRight)
-	{
-		if (faceRight)
-			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-		else
-			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
+		UpdateMovement();	// needs to be called again, or character will pause for one frame
 	}
 
-	public virtual void ChangeSpriteDirection(CharacterDirections direction)
+	// intermediary for changing sprite and its animation - i.e. transforms CharacterDirections.Right into Left, which is just the same one flipped, or limits choices to an object that actually exists
+	// override for different rewrite rules
+	public virtual void ChangeSpriteFacing(CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
 
@@ -119,51 +116,54 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		PlayAnimation("" + adjustedDirection.ToString(), direction);
-	}
+		characterAnimator.PlayAnimation("" + adjustedDirection.ToString());
 
-	public void PlayAnimation(string clipName, CharacterDirections direction)
-	{
-		FindAnimations();
-
-		currentAnimation = null;
-		foreach( BoneAnimation animation in boneAnimations )
-		{
-			animation.gameObject.SetActive(false);
-			if( animation.name == clipName )
-			{
-				currentAnimation = animation;
-				animation.gameObject.SetActive(true);
-			}
-		}
-		
-		if( currentAnimation == null )
-		{
-			Debug.LogError(name + " : No animation found for name " + clipName);
-			currentAnimation = boneAnimations[0];
-		}
-
-		currentAnimation.Stop();
-		//	Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
-		
-		currentAnimation.Play( currentAnimation.animation.clip.name, PlayMode.StopAll );
-		
-		if( direction == CharacterDirections.Right )
+		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( currentAnimation.transform.localScale.x > 0 )
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
 			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( currentAnimation.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
 			}
 		}
-		else // moving left
+		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( currentAnimation.transform.localScale.x < 0 )
+			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
 			{
-				currentAnimation.transform.localScale = currentAnimation.transform.localScale.x( Mathf.Abs(currentAnimation.transform.localScale.x) ); 
+				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
 			}
 		}
+		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
+	}
+
+	public void SetStartDirection(CharacterDirections newDirection)
+	{
+		startDirection = newDirection;
+	}
+
+	protected virtual IEnumerator TeleportRoutine()
+	{				
+		alreadyTeleported = true;
+
+		PacmanTile targetTile = null;	
+		
+		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+		{
+			if (currentTile != tile)
+			{
+				targetTile = tile;
+				break;
+			}
+		}
+		
+		if (targetTile == null)
+		{
+			Debug.LogError("No other teleport tile found!");
+			yield break;
+		}
+		
+		transform.localPosition = targetTile.location.v3();
 	}
 
 
@@ -193,4 +193,51 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		return Mathf.RoundToInt(transform.localPosition.y);
 	}
 
+	public void EnableCharacter()
+	{
+		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = true;
+		}
+		
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = true;
+		}
+		
+		this.enabled = true;
+	}
+
+	public void DisableCharacter()
+	{
+		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+		{
+			spriteRenderer.enabled = false;
+		}
+		
+		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+		{
+			skinnedmeshRenderer.enabled = false;
+		}
+		
+		this.enabled = false;
+	}
+
+	public void SetSpawnLocation(Vector2 location)
+	{
+		spawnLocation = location;
+	}
+
+	public void PlaceAtSpawnLocation()
+	{
+		transform.localPosition = PacmanLevelManager.use.GetTile (spawnLocation).location;
+	}
+	
+	public virtual void SetDefaultTargetTiles(Vector2[] defaultTargetTiles)
+	{
+	}
+
+	public virtual void Reset()
+	{
+	}
 }
