@@ -35,11 +35,21 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 		Debug.Log("Loading level: " + levelIndex);
 
-		BuildLevel(levels[levelIndex]);
+		FroggerLevelDefinition level = levels[levelIndex];
 
-		if (!string.IsNullOrEmpty(levels[levelIndex].backgroundMusicName))
+		BuildLevel(level);
+
+		PlayLevelMusic(level);
+	}
+
+	protected void PlayLevelMusic(FroggerLevelDefinition level)
+	{
+		LugusAudio.use.SFX().StopAll();
+		LugusAudio.use.Music().StopAll();
+
+		if (!string.IsNullOrEmpty(level.backgroundMusicName))
 		{
-			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
+			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio(level.backgroundMusicName), true, musicSettings);
 		}
 		else
 		{
