@@ -25,7 +25,7 @@ public class DinnerDashBlender_02Argentina : MonoBehaviour
 
 	public void OnProcessingEnd(Consumable consumable)
 	{
-		//Debug.Log("NO LONGER PROCESSING STUFF");
+		Debug.LogWarning("NO LONGER PROCESSING STUFF");
 		boneAnimation.Play("BlenderEmpty", PlayMode.StopAll);
 	}
 

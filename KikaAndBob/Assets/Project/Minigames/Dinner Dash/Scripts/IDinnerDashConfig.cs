@@ -55,8 +55,31 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		output.Add ( two );
 		output.Add ( three );
 		output.Add ( four );
-		output.Add ( five );
+		output.Add ( five ); 
 		
+		return output; 
+	}
+
+	public List<ConsumableDefinition> RandomOrder( List<ConsumableDefinition> pool, int orderLength = 3 )
+	{
+		List<ConsumableDefinition> output = new List<ConsumableDefinition>();
+
+		orderLength = Mathf.Min( pool.Count, orderLength );
+
+		while( output.Count < orderLength )
+		{
+			ConsumableDefinition chosen = null;
+
+			do
+			{
+				chosen = pool[ Random.Range(0, pool.Count) ];
+			}
+			while( output.Contains(chosen) );
+
+			output.Add ( chosen );
+		}
+
+
 		return output;
 	}
 }

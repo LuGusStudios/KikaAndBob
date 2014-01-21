@@ -1,14 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy3 : EnemyCharacter {
-
-	protected override void SetDefaultTargetTiles()
-	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(PacmanLevelManager.use.width-1, 0);
-	}
+public class Enemy3 : PacmanEnemyCharacter {
 	
-	// green cat : find position four tiles behind player - since enemies can not normally turn around, it can still reach the player
+	// third enemy : find position four tiles behind player - since enemies can not normally turn around, it can still reach the player
 	protected override void CheckTeleportProximity()
 	{
 		if (player == null)
@@ -19,7 +14,7 @@ public class Enemy3 : EnemyCharacter {
 		
 		if (player.currentTile != null)
 		{
-			GameTile favoredTile = null;
+			PacmanTile favoredTile = null;
 			PacmanCharacter.CharacterDirections heading = player.GetDirection();
 			
 			int playerX = (int)player.currentTile.gridIndices.x;
@@ -72,7 +67,7 @@ public class Enemy3 : EnemyCharacter {
 			if (Mathf.Abs(favoredTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if target tile is (more than) half a level away in x distance
 			{
 				// if reasonably close to teleport, go there
-				foreach(GameTile tile in PacmanLevelManager.use.teleportTiles)
+				foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 				{
 					if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width *0.25f)
 					{

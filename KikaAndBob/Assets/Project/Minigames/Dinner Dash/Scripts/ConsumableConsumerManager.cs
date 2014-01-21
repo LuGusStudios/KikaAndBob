@@ -9,8 +9,9 @@ public class ConsumableConsumerManager : MonoBehaviour
 	public DataRange timeBetweenConsumers = new DataRange(4.0f, 10.0f);
 	
 	// this is to be filled up in the Start() function of the level-specific config script for the game
-	public List< List<ConsumableDefinition> > orders;
+	public List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 	protected int currentOrderIndex = 0;
+	public bool RandomOrders = false;
 	
 	// different places where the consumers can be seated at
 	// filled in automatically
@@ -83,7 +84,7 @@ public class ConsumableConsumerManager : MonoBehaviour
 	{
 		if( orders.Count == 0 )
 		{
-			Debug.LogError(name + " : no consumer orders defined for this level!");
+			Debug.LogError(name + " : no consumer orders defined for this level or no more consumer orders available!");
 			yield break;
 		}
 		
@@ -123,8 +124,16 @@ public class ConsumableConsumerManager : MonoBehaviour
 					seat.consumer = newConsumer;
 					newConsumer.place = seat;
 
-					newConsumer.order = orders[currentOrderIndex];
-					currentOrderIndex++;
+					if( RandomOrders )
+					{
+						newConsumer.order = orders[ Random.Range(0, orders.Count) ];
+						orders.Remove( newConsumer.order );
+					}
+					else
+					{
+						newConsumer.order = orders[currentOrderIndex];
+						currentOrderIndex++;
+					}
 
 					consumers.Add( newConsumer );
 				}
@@ -141,33 +150,32 @@ public class ConsumableConsumerManager : MonoBehaviour
 	
 	public void SetupLocal()
 	{
-		// assign variables that have to do with this class only
-	}
-
-	public void SetupGlobal()
-	{
 		// PLACES
 		ConsumableConsumerPlace[] allPlaces = (ConsumableConsumerPlace[]) GameObject.FindObjectsOfType( typeof(ConsumableConsumerPlace) );
-
+		
 		if( places == null )
 			places = new List<ConsumableConsumerPlace>();
-
+		
 		places.AddRange( allPlaces );
-
+		
 		if( places.Count == 0 )
 		{
 			Debug.LogError(name + " : no ConsumerPlaces known! Should be at least one in scene!");
 		}
-
+		
 		// CONSUMER PREFABS
 		GameObject consumerContainer = GameObject.Find ("Consumers");
 		ConsumableConsumer[] prefabs = consumerContainer.GetComponentsInChildren<ConsumableConsumer>();
 		consumerPrefabs.AddRange( prefabs );
-
+		
 		if( consumerPrefabs.Count == 0 )
 		{
 			Debug.LogError (name + " : No Consumer prefabs found! Should be under the \"Consumers\" GameObject in the scene!");
 		}
+	}
+
+	public void SetupGlobal()
+	{
 	}
 
 	public void Awake()

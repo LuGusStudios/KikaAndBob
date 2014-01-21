@@ -1,13 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy4 : EnemyCharacter {
-
-	protected override void SetDefaultTargetTiles()
-	{
-		defaultTargetTile = PacmanLevelManager.use.GetTile(0, PacmanLevelManager.use.height-1);
-	}
+public class Enemy4 : PacmanEnemyCharacter {
 	
-	// red cat uses default targeting mechanism, always finding player directly
-	
+	// fourth enemy uses default targeting mechanism, always finding player directly
+	// TO DO: This class is basically empty since refactor. Remove.
 }

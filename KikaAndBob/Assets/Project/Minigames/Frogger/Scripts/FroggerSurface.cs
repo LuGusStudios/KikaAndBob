@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider2D))]
 public abstract class FroggerSurface : MonoBehaviour {
 
-	private bool onSurface = false;
+	public List<AudioClip> enterSounds = new List<AudioClip>();
+	protected bool onSurface = false;
+	
 
 	public void Enter(FroggerCharacter character)
 	{
 		if (onSurface)
 			return;
-		
+
 		onSurface = true;
+
+		if (enterSounds.Count > 0)
+		{
+			LugusAudio.use.SFX().Play(enterSounds[Random.Range(0, enterSounds.Count)]);
+		}
 
 		EnterSurfaceEffect(character);
 	}
