@@ -39,7 +39,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 		if (!string.IsNullOrEmpty(levels[levelIndex].backgroundMusicName))
 		{
-			LugusAudio.use.Music().Play(LugusResources.use.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
+			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio(levels[levelIndex].backgroundMusicName), false, musicSettings);
 		}
 		else
 		{
@@ -116,13 +116,13 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 			// we can't link lane item sounds to lanes directly, since we can't predict what sort of lane items will be placed on which lane
 			// instead, LaneItems have a lanePresenceSound property which, if not null, will be added to the lane's enter sounds
-			foreach(FroggerLaneItem laneItem in laneScript.dynamicSpawnItems)
-			{
-				if (laneItem.lanePresenceSound != null && !laneScript.enterSounds.Contains(laneItem.lanePresenceSound))
-				{
-					laneScript.enterSounds.Add(laneItem.lanePresenceSound);
-				}
-			}
+//			foreach(FroggerLaneItem laneItem in laneScript.dynamicSpawnItems)
+//			{
+//				if (laneItem.lanePresenceSoundKey != null && !laneScript.enterSoundKeys.Contains(laneItem.lanePresenceSoundKey))
+//				{
+//					laneScript.enterSoundKeys.Add(laneItem.lanePresenceSoundKey);
+//				}
+//			}
 	
 			// initially fill lane with lane items
 			laneScript.SetUpLane();
@@ -196,7 +196,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 			if (foundPrefab == null)
 			{
-				Debug.LogError(laneItemDefinition + " was not found as a lane item prefab.");
+				Debug.LogError(laneItemDefinition.spawnID + " was not found as a lane item prefab.");
 				continue;
 			}
 

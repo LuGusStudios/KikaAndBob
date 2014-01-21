@@ -22,6 +22,16 @@ MonoBehaviour:
     backgroundScrollingSpeed: 0
     spawnItems: []
   - laneID: LaneDikeMiddle
+    goRight: 1
+    speed: 5
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Cyclist
+      positioning: 0
+  - laneID: LaneDikeMiddle
     goRight: 0
     speed: 5
     minGapDistance: 4
@@ -58,7 +68,7 @@ MonoBehaviour:
     - spawnID: FenceTop
       positioning: .980000019
   - laneID: LaneWater
-    goRight: 1
+    goRight: 0
     speed: 1.5
     minGapDistance: 4
     maxGapDistance: 8
@@ -75,7 +85,7 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 2
     spawnItems:
-    - spawnID: Submarine
+    - spawnID: PaddleBoat
       positioning: 0
   - laneID: LaneWater
     goRight: 0
@@ -89,13 +99,15 @@ MonoBehaviour:
       positioning: 0
   - laneID: LaneWaterEnd
     goRight: 1
-    speed: 2
+    speed: 3
     minGapDistance: 4
     maxGapDistance: 8
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 1
-    spawnItems: []
-  - laneID: LaneDikeBottom
+    spawnItems:
+    - spawnID: PaddleBoat
+      positioning: 0
+  - laneID: LaneDikeWin
     goRight: 1
     speed: 2
     minGapDistance: 4

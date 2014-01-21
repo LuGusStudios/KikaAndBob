@@ -27,6 +27,11 @@ public class FroggerLaneWater : FroggerLane
 		if (splash == null)
 			yield break;
 
+//		if (enterSoundKeys.Count > 0)
+//		{
+//			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(enterSoundKeys[Random.Range(0, enterSoundKeys.Count)]));
+//		}
+
 		character.ShowCharacter(false);
 
 		GameObject splashCopy = (GameObject) Instantiate(splash.gameObject);

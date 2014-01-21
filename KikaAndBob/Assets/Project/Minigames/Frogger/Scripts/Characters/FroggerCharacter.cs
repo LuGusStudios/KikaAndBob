@@ -394,7 +394,8 @@ public class FroggerCharacter : MonoBehaviour {
 		}
 	}
 
-
-
-
+	public void Blink(Color color, float duration, int count)
+	{
+		LugusCoroutines.use.StartRoutine(SmoothMovesUtil.Blink(boneAnimations, color, duration, count));
+	}
 }
