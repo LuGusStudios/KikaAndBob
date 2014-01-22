@@ -2,9 +2,12 @@
 using System.Collections;
 
 // Most often: A machine that processes the food
+// difference from Processor is that this one creates a new consumable instead of re-using the original one
+// originally made for New York: Macaroni can result in either macaroni with ketchup or with cheese
+// so we need 2 consumables from 1 ConsumableDefinition, so the MacaroniCheesePot needs to create MacaroniCheese consumable instead of normal Macaroni
 
 
-public class ConsumableProcessor : IConsumableUser 
+public class ConsumableConvertor : IConsumableUser 
 {
 	public enum State
 	{
@@ -20,13 +23,15 @@ public class ConsumableProcessor : IConsumableUser
 	public Lugus.ConsumableState fromState = Lugus.ConsumableState.NONE;
 	public Lugus.ConsumableState toState = Lugus.ConsumableState.NONE;
 
+	public Consumable convertToThis = null;
+
 	public float processingTime = 3.0f;
 	public string processingSound = "";
 
 	protected Sprite idleTexture = null;
 	public Sprite processingTexture = null;
 
-	public ConsumableProcessor.State state = ConsumableProcessor.State.Idle;
+	public ConsumableConvertor.State state = ConsumableConvertor.State.Idle;
 	public Consumable currentConsumable = null;
 
 	public delegate void OnProcessing(Consumable consumable);
@@ -43,7 +48,6 @@ public class ConsumableProcessor : IConsumableUser
 			// 1. check if the Mover has a consumable we can process (fromState + definition)
 			// if it has multiple: just take the first one we see
 			Consumable subject = null;
-			// TODO:
 			foreach( ConsumableDefinition def in consumables )
 			{
 				subject = DinnerDashManager.use.Mover.TakeConsumable( def, fromState );
@@ -92,32 +96,36 @@ public class ConsumableProcessor : IConsumableUser
 	protected IEnumerator ProcessingRoutine(Consumable subject)
 	{
 		state = State.Processing;
-		currentConsumable = subject;
 
-		subject.transform.parent = this.transform.parent;
-		//subject.renderer.sortingOrder = this.renderer.sortingOrder;
+
+
+
+		currentConsumable = (Consumable) GameObject.Instantiate( convertToThis );
+		currentConsumable.State = subject.State;
+
+		currentConsumable.transform.parent = this.transform.parent;
+		currentConsumable.renderer.enabled = false;
+		
+		// we no longer need to passed-in consumable, since we're creating a new one ourselves from convertToThis
+		GameObject.Destroy( subject.gameObject );
+
 
 		Transform spawnLocation = transform.FindChild("SpawnLocation");
 		if( spawnLocation != null )
 		{
-			subject.transform.position = spawnLocation.position;
+			currentConsumable.transform.position = spawnLocation.position;
 		}
 		else 
 		{
-			subject.transform.position = this.transform.position + new Vector3(10,10, 0);
+			currentConsumable.transform.position = this.transform.position + new Vector3(10,10, 0);
 		}
 
-
-		subject.renderer.enabled = false;
 
 		if( processingTexture != null )
 			GetComponent<SpriteRenderer>().sprite = processingTexture;
 
-		// TODO: show graphic update of the subject being placed "inside" the processor
-		// TODO: show graphical update indicating we're busy
-
 		if( onProcessingStart != null )
-			onProcessingStart( subject );
+			onProcessingStart( currentConsumable );
 
 		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(processingSound) );
 
@@ -125,7 +133,7 @@ public class ConsumableProcessor : IConsumableUser
 		
 		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
 		
-		subject.GetComponent<SpriteRenderer>().enabled = true;
+		currentConsumable.renderer.enabled = true;
 
 		currentConsumable.State = toState;
 		state = State.Done;
@@ -135,9 +143,7 @@ public class ConsumableProcessor : IConsumableUser
 			GetComponent<SpriteRenderer>().sprite = idleTexture;
 
 		if( onProcessingStart != null )
-			onProcessingEnd( subject );
-
-		// TODO: indicate food is ready for pickup (graphically!)
+			onProcessingEnd( currentConsumable );
 	}
 
 	public void SetupLocal()
@@ -152,8 +158,12 @@ public class ConsumableProcessor : IConsumableUser
 			Debug.LogError(name + " : no consumables found that can be processed here!");
 		}
 
-		if( GetComponent<SpriteRenderer>() != null )
-			idleTexture = GetComponent<SpriteRenderer>().sprite;
+		if( convertToThis == null )
+		{
+			Debug.LogError(name + " : no consumable found to convert to!");
+		}
+
+		idleTexture = GetComponent<SpriteRenderer>().sprite;
 	}
 	
 	public void SetupGlobal()

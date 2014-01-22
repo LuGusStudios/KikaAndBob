@@ -4,41 +4,49 @@ using System.Collections.Generic;
 
 public class DinnerDashConfig_12NewYork : IDinnerDashConfig 
 {
-	public ConsumableDefinition burger = null;
-	public ConsumableDefinition burgerLong = null;
+	public ConsumableDefinition pastaBox = null;
+	public ConsumableDefinition bread = null;
 	public ConsumableDefinition orange = null;
 	public ConsumableDefinition tomato = null;
 	public ConsumableDefinition iceCream = null;
-	public ConsumableDefinition stew = null;
+	public ConsumableDefinition macaroni = null;
+	public ConsumableDefinition macaroniCheese = null;
+	public ConsumableDefinition wine = null;
 
 	// processors
 	public GameObject Blender = null;
-	public GameObject StewPot = null;
+	public GameObject MacaroniPot = null;
+	public GameObject MacaroniCheesePot = null;
 
 	// producers
 	public GameObject IceCreamMachine = null;
-	public GameObject BurgerProducer = null;
-	public GameObject BurgerLongProducer = null;
+	public GameObject PastaBoxProducer = null;
+	public GameObject BreadProducer = null;
 	public GameObject OrangeProducer = null;
 	public GameObject TomatoProducer = null;
-	public GameObject VegetableProducer = null;
+	public GameObject MacaroniProducer = null;
+	public GameObject WineProducer = null;
 
 	protected void Awake()
 	{
 		if( Blender == null )
 			Blender = GameObject.Find ("Juicer");
 
-		if( StewPot == null )
-			StewPot = GameObject.Find ("StewPot");
+		if( MacaroniPot == null )
+			MacaroniPot = GameObject.Find ("MacaroniPot");
+		
+		if( MacaroniCheesePot == null )
+			MacaroniCheesePot = GameObject.Find ("MacaroniCheesePot");
+
 		
 		if( IceCreamMachine == null )
 			IceCreamMachine = GameObject.Find ("IceCreamMachine");
 
-		if( BurgerProducer == null )
-			BurgerProducer = GameObject.Find ("Producers/Burger");
+		if( PastaBoxProducer == null )
+			PastaBoxProducer = GameObject.Find ("Producers/PastaBox");
 		
-		if( BurgerLongProducer == null )
-			BurgerLongProducer = GameObject.Find ("Producers/BurgerLong");
+		if( BreadProducer == null )
+			BreadProducer = GameObject.Find ("Producers/Bread");
 		
 		if( OrangeProducer == null )
 			OrangeProducer = GameObject.Find ("Producers/Orange");
@@ -46,8 +54,11 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		if( TomatoProducer == null )
 			TomatoProducer = GameObject.Find ("Producers/Tomato");
 		
-		if( VegetableProducer == null )
-			VegetableProducer = GameObject.Find ("Producers/Stew");
+		if( MacaroniProducer == null )
+			MacaroniProducer = GameObject.Find ("Producers/Macaroni");
+		
+		if( WineProducer == null )
+			WineProducer = GameObject.Find ("Producers/Wine");
 	}
 
 	// Use this for initialization
@@ -88,8 +99,8 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 
 	public void Level0()
 	{
-		// level 0 : only bob with the 2 burgers
-		DisableObjects( new GameObject[]{ StewPot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, VegetableProducer } );
+		// level 0 : only bob with the pastabox and bread
+		DisableObjects( new GameObject[]{ MacaroniPot, WineProducer, MacaroniCheesePot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, MacaroniProducer } );
 
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 
@@ -98,9 +109,9 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 
-		orders.Add( CreateOrder(burger) );
-		orders.Add( CreateOrder(burgerLong) );
-		orders.Add( CreateOrder(burger, burgerLong) );
+		orders.Add( CreateOrder(pastaBox) );
+		orders.Add( CreateOrder(bread) );
+		orders.Add( CreateOrder(pastaBox, bread) );
 
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
@@ -112,8 +123,8 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 
 	public void Level1()
 	{
-		// level 1 : introduce stew
-		DisableObjects( new GameObject[]{ Blender, IceCreamMachine, OrangeProducer, TomatoProducer } );
+		// level 1 : introduce macaroni and wine
+		DisableObjects( new GameObject[]{ Blender, MacaroniCheesePot, IceCreamMachine, OrangeProducer, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 		
@@ -122,10 +133,10 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(stew) );
-		orders.Add( CreateOrder(burger) );
-		orders.Add( CreateOrder(stew, burgerLong) );
-		orders.Add( CreateOrder(stew) );
+		orders.Add( CreateOrder(macaroni) );
+		orders.Add( CreateOrder(pastaBox, wine) );
+		orders.Add( CreateOrder(macaroni, bread) );
+		orders.Add( CreateOrder(macaroni, wine) );
 		
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
@@ -136,7 +147,7 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 	}
 	public void Level2()
 	{
-		// level 2 : introduce blender
+		// level 2 : introduce blender and macaroniCheese
 		DisableObjects( new GameObject[]{ IceCreamMachine, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
@@ -146,10 +157,11 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(orange) );
-		orders.Add( CreateOrder(orange, burgerLong) );
-		orders.Add( CreateOrder(stew, burger) );
-		orders.Add( CreateOrder(stew, orange) );
+		orders.Add( CreateOrder(macaroniCheese) );
+		orders.Add( CreateOrder(orange, pastaBox) );
+		orders.Add( CreateOrder(macaroniCheese, wine) );
+		orders.Add( CreateOrder(macaroni, orange) );
+		orders.Add( CreateOrder(macaroniCheese) );
 		
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
@@ -167,11 +179,11 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(stew, burgerLong, iceCream) );
-		orders.Add( CreateOrder(stew) );
-		orders.Add( CreateOrder(burger, orange) );
+		orders.Add( CreateOrder(macaroni, wine, iceCream) );
+		orders.Add( CreateOrder(macaroniCheese) );
+		orders.Add( CreateOrder(pastaBox, tomato) );
 		orders.Add( CreateOrder(iceCream) );
-		orders.Add( CreateOrder(tomato, burgerLong) );
+		orders.Add( CreateOrder(orange, macaroni, iceCream) );
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = true;
 		DinnerDashManager.use.consumerManager.orders = orders;
@@ -188,7 +200,7 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 
-		ConsumableDefinition[] poolArray = new ConsumableDefinition[]{ burger, burgerLong, orange, tomato, iceCream, stew };
+		ConsumableDefinition[] poolArray = new ConsumableDefinition[]{ pastaBox, bread, orange, tomato, iceCream, macaroni, macaroniCheese, wine };
 		List<ConsumableDefinition> pool = new List<ConsumableDefinition>();
 		pool.AddRange( poolArray );
 
