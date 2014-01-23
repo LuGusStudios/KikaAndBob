@@ -10,9 +10,12 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	public delegate void OnDisplayModifier();
 	public OnDisplayModifier onDisplayModifier = null;
 
-	public delegate void OnScoreUpdated();
-	public OnScoreUpdated onScoreUpdated = null;
+	public delegate void OnScoreRaised(DanceHeroLane lane);
+	public OnScoreRaised onScoreRaised = null;
 
+	public delegate void OnScoreLowered(DanceHeroLane lane);
+	public OnScoreRaised onScoreLowered = null;
+	
 	protected int failCount = 0;
 	protected int succesCount = 0;
 	protected int scorePerHit = 10;
@@ -20,7 +23,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected float scoreModifier = 1;
 	protected int scoreModifierStep = 1;
 	protected int nextMessageIndex = 1;
-
 	protected float scoreIncreaseStep = 0.2f;
 	protected TextMesh scoreDisplay = null;
 	protected TextMesh message = null;
@@ -71,6 +73,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		return scoreModifier;
 	}
 
+	public int GetScore()
+	{
+		return score;
+	}
 
 	public void UpdateScore(bool succes, DanceHeroLane lane, int amount = 1)
 	{
@@ -81,9 +87,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			scoreValue += amount;
 			succesCount += amount;
 
-			scoreModifier += (scoreIncreaseStep);
+			scoreModifier += scoreIncreaseStep;
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
-			scoreAdd =  Mathf.RoundToInt((float)scorePerHit * scoreModifier);
+			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
 			DisplayScoreGainAtLane(lane, scoreAdd);
 
@@ -134,8 +140,16 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		scoreDisplay.text = score.ToString();
 
-		if (onScoreUpdated != null)
-			onScoreUpdated();
+		if (succes)
+		{
+			if (onScoreRaised != null)
+				onScoreRaised(lane);
+		}
+		else
+		{
+			if (onScoreLowered != null)
+				onScoreLowered(lane);
+		}
 	}
 
 	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain)

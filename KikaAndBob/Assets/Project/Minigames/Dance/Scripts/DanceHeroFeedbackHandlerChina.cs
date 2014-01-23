@@ -27,15 +27,14 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	{
 		feedback = GetComponent<DanceHeroFeedback>();
 
-		print(feedback);
-
 		if (feedback == null)
 		{
 			Debug.LogError(name + ": Missing feedback script."); 
 		}
 
 		feedback.onDisplayModifier += OnDisplayModifier;
-		feedback.onScoreUpdated += OnScoreUpdated;
+		feedback.onScoreRaised += OnScoreUpdated;
+		feedback.onScoreLowered += OnScoreLowered;
 
 		Transform guiParent = GameObject.Find("GUI").transform;
 
@@ -64,12 +63,11 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 		Destroy(modifierDisplay, 0.5f);
 	}
 
-	// blend three animations for value
-	protected void OnScoreUpdated()
+	protected void ChangeBobAnim()
 	{
 		float step = feedback.maxScoreModifier / 3;
 		float scoreModifier = feedback.GetScoreModifier();
-
+		
 		// between 2/3rd - full , win anim
 		if (scoreModifier >= step * 2)
 		{
@@ -120,6 +118,17 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 		//			bobAnim.Blend(animationIdle, 1 - animWeight);
 		//			bobAnim.Blend(animationStruggle, animWeight);
 		//		}
+	}
+
+	protected void OnScoreLowered(DanceHeroLane lane)
+	{
+		ChangeBobAnim();
+	}
+
+	// blend three animations for value
+	protected void OnScoreUpdated(DanceHeroLane lane)
+	{
+		ChangeBobAnim();
 	}
 	
 

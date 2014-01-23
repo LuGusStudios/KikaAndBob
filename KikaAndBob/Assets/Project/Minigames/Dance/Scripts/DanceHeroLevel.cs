@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel> 
 {
+	public delegate void OnLevelStarted();
+	public OnLevelStarted onLevelStarted = null;
+
+	public delegate void OnLevelFinished();
+	public OnLevelFinished onLevelFinished = null;
+
 	public enum TimeProgressionMode
 	{
 		NONE = -1,
@@ -73,13 +79,18 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	{
 		//LoadLevelMetallica();
 
-		if (endLevelRoutine != null && endLevelRoutine.Running)
-			endLevelRoutine.StopRoutine();
-
 		cumulativeDelay = 0;
 		LoadLevelChina();
 
+		if (endLevelRoutine != null && endLevelRoutine.Running)
+			endLevelRoutine.StopRoutine();
+
 		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
+
+		if (onLevelStarted != null)
+		{
+			onLevelStarted();
+		}
 	}
 
 	protected void LoadLevelChina()
@@ -192,6 +203,11 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	
 	protected void LevelFinished()
 	{
+		if (onLevelFinished != null)
+		{
+			onLevelFinished();
+		}
+
 		Debug.Log("Level finished!");
 	}
 	
