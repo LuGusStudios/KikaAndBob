@@ -33,7 +33,7 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 		}
 
 		feedback.onDisplayModifier += OnDisplayModifier;
-		feedback.onScoreRaised += OnScoreUpdated;
+		feedback.onScoreRaised += OnScoreRaised;
 		feedback.onScoreLowered += OnScoreLowered;
 
 		Transform guiParent = GameObject.Find("GUI").transform;
@@ -126,7 +126,7 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	}
 
 	// blend three animations for value
-	protected void OnScoreUpdated(DanceHeroLane lane)
+	protected void OnScoreRaised(DanceHeroLane lane)
 	{
 		ChangeBobAnim();
 	}
