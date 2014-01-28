@@ -1537,6 +1537,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 174094140}
   - 114: {fileID: 174094141}
+  - 114: {fileID: 174094142}
   m_Layer: 0
   m_Name: Lane1
   m_TagString: Untagged
@@ -1572,10 +1573,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   actionPoint: {fileID: 0}
-  attackAnimation: MonkAttack
-  idleAnimation: 
   scoreDisplay: {fileID: 0}
   defaultActionType: -1
+--- !u!114 &174094142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 174094139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12e068387861ed4b871fb4cf4edd591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackAnimation: MonkAttack
+  idleAnimation: 
   characterAnim: {fileID: 0}
 --- !u!1 &207734262
 GameObject:
@@ -3196,6 +3208,7 @@ GameObject:
   - 114: {fileID: 553862390}
   - 114: {fileID: 553862391}
   - 114: {fileID: 553862392}
+  - 114: {fileID: 553862393}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -3314,6 +3327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreValue: 7
+  maxScoreModifier: 9
 --- !u!114 &553862392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3327,6 +3341,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+--- !u!114 &553862393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 553862386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36f4fe3e2f693343b2b631f7a359421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &564750367
 GameObject:
   m_ObjectHideFlags: 0
@@ -10020,6 +10045,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1116851658}
   - 114: {fileID: 1116851659}
+  - 114: {fileID: 1116851660}
   m_Layer: 0
   m_Name: Lane3
   m_TagString: Untagged
@@ -10055,10 +10081,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   actionPoint: {fileID: 0}
-  attackAnimation: PandaAttack
-  idleAnimation: 
   scoreDisplay: {fileID: 0}
   defaultActionType: -1
+--- !u!114 &1116851660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1116851657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12e068387861ed4b871fb4cf4edd591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackAnimation: PandaAttack
+  idleAnimation: 
   characterAnim: {fileID: 0}
 --- !u!1 &1182547071
 GameObject:
@@ -10123,6 +10160,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1200787832}
   - 114: {fileID: 1200787833}
+  - 114: {fileID: 1200787834}
   m_Layer: 0
   m_Name: Lane2
   m_TagString: Untagged
@@ -10158,10 +10196,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   actionPoint: {fileID: 0}
-  attackAnimation: Poacher_Attack
-  idleAnimation: 
   scoreDisplay: {fileID: 0}
   defaultActionType: -1
+--- !u!114 &1200787834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1200787831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12e068387861ed4b871fb4cf4edd591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackAnimation: Poacher_Attack
+  idleAnimation: 
   characterAnim: {fileID: 0}
 --- !u!1 &1201961267
 GameObject:
@@ -20456,7 +20505,6 @@ GameObject:
   - 114: {fileID: 1635872961}
   - 111: {fileID: 1635872962}
   - 137: {fileID: 1635872959}
-  - 114: {fileID: 1635872958}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -20477,19 +20525,6 @@ Transform:
   - {fileID: 869395480}
   - {fileID: 1852221146}
   m_Father: {fileID: 1116851658}
---- !u!114 &1635872958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1635872956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dcf112720cd9463aa07edcb9c60bc39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clipName: PandaIdle
-  clip: {fileID: 0}
 --- !u!137 &1635872959
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
