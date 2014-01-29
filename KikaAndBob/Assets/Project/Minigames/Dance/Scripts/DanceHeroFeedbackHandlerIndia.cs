@@ -17,6 +17,8 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected Vector3 snakePosition1;
 	protected Vector3 snakePosition2;
 	protected Vector3 snakePosition3;
+	protected ILugusCoroutineHandle flutePlayRoutine = null;
+
 
 	
 	protected void Awake()
@@ -27,6 +29,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected void Start() 
 	{
 		SetupGlobal();
+		flute.gameObject.MoveTo(flute.position + new Vector3(0, 0.1f, 0)).Time(1f).EaseType(iTween.EaseType.easeInOutQuad).Looptype(iTween.LoopType.pingPong).Execute();
 	}
 	
 	public void SetupLocal()
@@ -74,8 +77,8 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	public void OnDisplayModifier()
 	{
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
-		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 6, 1);
-		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 6.0f, 1);
+		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
 		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		Destroy(modifierDisplay, 0.5f);
 	}
@@ -83,12 +86,36 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected void OnScoreRaised(DanceHeroLane lane)
 	{
 		ChangeSnakeAnim();
+		AnimateFlute();
 	}
 	
 	protected void OnScoreLowered(DanceHeroLane lane)
 	{
 		ChangeSnakeAnim();
+		//AnimateFlute();
 	}
+
+	protected void AnimateFlute()
+	{
+		if (flutePlayRoutine != null && !flutePlayRoutine.Running)
+		{
+			flutePlayRoutine.StopRoutine();
+			iTween.Stop(flute.gameObject);
+		}
+
+		flutePlayRoutine = LugusCoroutines.use.StartRoutine(AnimateFluteRoutine());
+	}
+	
+	protected IEnumerator AnimateFluteRoutine()
+	{
+		flute.localScale = Vector3.one;
+		flute.gameObject.ScaleTo(new Vector3(1.0f, 1.02f, 1.0f)).Time(0.25f).EaseType(iTween.EaseType.easeOutBack).Execute();
+		yield return new WaitForSeconds(0.25f);
+		flute.localScale = Vector3.one;
+	}
+
+
+
 
 	protected void ChangeSnakeAnim()
 	{

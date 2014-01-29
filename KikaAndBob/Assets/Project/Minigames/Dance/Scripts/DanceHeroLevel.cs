@@ -129,65 +129,19 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		lane1.AddItem( 0.3f );
 		lane3.AddItem( 0.3f, 1 );
 
-		// just placeholder stuff
-
+		// copy below
+		lane2.AddItem( 1.3f );
+		lane3.AddItem( 0.4f );
+		
+		lane2.AddItem( 1f );
+		lane1.AddItem( 0.3f );
 		lane2.AddItem( 0.3f );
+		lane3.AddItem( 0.7f );
+		
+		lane1.AddItem( 1.2f );
 		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );		
-		lane2.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-
-
-
+		lane3.AddItem( 0.3f );
+		lane2.AddItem( 0.3f, 1 );
 	}
 
 	protected void LoadLevel1()
