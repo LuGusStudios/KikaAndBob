@@ -30,6 +30,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public Direction direction = Direction.EAST;
 
 	public float sectionSpanMultiplier = 1.0f;
+	public float maximumDifficulty = 6;
 
 	//protected int nextZoneCountdown = 0;
 	protected float sectionSpanOverflow = 0.0f;
@@ -42,7 +43,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			return;
 		}
 
-		//Debug.LogError("SECTION SWITCH ACCEPTED");
+		//Debug.LogError("SECTION SWITCH ACCEPTED " + zones.Count);
+
+		//return;
 
 		float sectionSpan = sectionSpanOverflow;
 
@@ -56,22 +59,45 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 				break;
 
 			RunnerInteractionZone zonePrefab = null;
+			int maxIterations = 100;
+			int iteration = 0;
 			do
 			{
 				zonePrefab = zones[ Random.Range(0, zones.Count) ];
-				 
-				if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+
+				// for example if all zones are too difficult
+				// won't happen in "real" situations, but can easily happen in testing if we're not carefull
+				if( iteration >= maxIterations )
+				{
 					lastSpawned = null;
+				}
+				else
+				{
+					if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+					{
+						lastSpawned = null;
+					}
+					else
+					{
+						// if too difficult: skip this one
+						if( zonePrefab.difficulty > maximumDifficulty )
+							zonePrefab = lastSpawned;
+					}
+				}
+
+				++iteration;
 			}
 			while( zonePrefab == lastSpawned ); 
 
 			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
 
-			if( sectionSpan + newSectionSpan > 0.9f ) // not 1.0f but 0.9f, to provide some extra padding
+			if( (sectionSpan + newSectionSpan > 0.9f) && zonePrefab.autoDestroy ) // not 1.0f but 0.9f, to provide some extra padding
 			{
 				// if we spawn the zones outside of the section, chances are big they will "disappear" at the end
 				// because they are parented to the section, which is being re-used constantly
 				// so: make sure the zones don't surpass the section's area on the end side
+
+				// unless autoDestroy is OFF: then we don't need to worry about disappearances out of time :)
 				
 				//Debug.LogError("DISMISSED " + zonePrefab.name + " with span " + newSectionSpan );
 				break;
@@ -130,7 +156,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		sectionSpanOverflow = sectionSpan - 1.0f; // what remains for the next section
 		sectionSpanOverflow = Mathf.Max ( sectionSpanOverflow, -0.4f ); // make sure we don't spawn too far in the "previous" section or we might see some popping there
 
-		Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
+		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
 	}
 
 	public void SetupLocal()
@@ -151,16 +177,24 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 		if( zones.Count == 0 )
 		{
-			GameObject zoneContainer = GameObject.Find ("Zones");
-
-			zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>() );
+			CacheInteractionZones();
 		}
-		
+
 		if( zones.Count == 0 )
 		{
 			Debug.LogError(name + " : no InteractionZones found!");
 		}
+	}
 
+	public void CacheInteractionZones()
+	{
+		if( zones.Count > 0 )
+			zones.Clear();
+
+		GameObject zoneContainer = GameObject.Find ("Zones");
+		
+		zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>(true) );
+		
 		foreach( RunnerInteractionZone zone in zones )
 		{
 			zone.gameObject.SetActive(false);

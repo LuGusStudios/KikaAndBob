@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
+  m_Name: AmsterdamLevel02
+  m_EditorClassIdentifier: 
+  backgroundMusicName: 
+  lanes:
+  - laneID: LaneDikeMiddle
+    goRight: 1
+    speed: 0
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneDikeTop
+    goRight: 1
+    speed: 0
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: LanternTop
+      positioning: .25
+    - spawnID: LanternTop
+      positioning: .75
+  - laneID: LaneWater
+    goRight: 1
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .5
+    backgroundScrollingSpeed: 2
+    spawnItems:
+    - spawnID: PaddleBoat
+      positioning: 0
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 0
+    speed: 2.5
+    minGapDistance: 2
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: -2
+    spawnItems:
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 1
+    speed: 4
+    minGapDistance: 6
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 2.5
+    spawnItems:
+    - spawnID: PaddleBoat
+      positioning: 0
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneWaterEnd
+    goRight: 0
+    speed: 3
+    minGapDistance: 2
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 1.5
+    spawnItems:
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneDikeBottom
+    goRight: 1
+    speed: 6
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: FenceBottom
+      positioning: .0500000007
+    - spawnID: LanternBottom
+      positioning: .112000003
+    - spawnID: FenceBottom
+      positioning: .300000012
+    - spawnID: FenceBottom
+      positioning: .414999992
+    - spawnID: LanternBottom
+      positioning: .474999994
+    - spawnID: LanternBottom
+      positioning: .689999998
+    - spawnID: FenceBottom
+      positioning: .746999979
+    - spawnID: FenceBottom
+      positioning: .861999989
+    - spawnID: PoleBottom
+      positioning: .916999996
+    - spawnID: Cyclist
+      positioning: 0
+  - laneID: LaneDikeMiddle
+    goRight: 0
+    speed: 5
+    minGapDistance: 1
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Manhole
+      positioning: .330000013
+    - spawnID: Manhole
+      positioning: .660000026
+  - laneID: LaneDikeTop
+    goRight: 1
+    speed: 3
+    minGapDistance: 1
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: LanternTop
+      positioning: .00100000005
+    - spawnID: FenceTop
+      positioning: .0549999997
+    - spawnID: FenceTop
+      positioning: .170000002
+    - spawnID: LanternTop
+      positioning: .231999993
+    - spawnID: LanternTop
+      positioning: .449999988
+    - spawnID: FenceTop
+      positioning: .504999995
+    - spawnID: FenceTop
+      positioning: .620000005
+    - spawnID: LanternTop
+      positioning: .681999981
+    - spawnID: LanternTop
+      positioning: .899999976
+    - spawnID: FenceTop
+      positioning: .954999983
+    - spawnID: Cyclist
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 0
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 2
+    spawnItems:
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneWater
+    goRight: 1
+    speed: 2
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: -3
+    spawnItems:
+    - spawnID: PaddleBoat
+      positioning: 0
+  - laneID: LaneWaterEnd
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 3
+    spawnItems:
+    - spawnID: PaddleBoat
+      positioning: 0
+    - spawnID: Buoy
+      positioning: 0
+  - laneID: LaneDikeWin
+    goRight: 1
+    speed: 0
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneEnd
+    goRight: 1
+    speed: 0
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []

@@ -385,6 +385,7 @@ MonoBehaviour:
   sectionSpan: .349999994
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &158124271
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,6 +394,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 158124273}
+  - 114: {fileID: 158124278}
   - 114: {fileID: 158124272}
   - 114: {fileID: 158124274}
   - 114: {fileID: 158124275}
@@ -465,6 +467,7 @@ MonoBehaviour:
   groundLayer: {fileID: 0}
   direction: 4
   sectionSpanMultiplier: .5
+  maximumDifficulty: 6
 --- !u!114 &158124276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +497,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+--- !u!114 &158124278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 158124271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc3bb486574fe457a88da955caf26a5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &169444295
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +555,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &174751356
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,6 +614,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 1
   brothers: []
+  scaleOnly: 0
 --- !u!212 &174751360
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -807,6 +823,7 @@ GameObject:
   - 212: {fileID: 236446466}
   - 61: {fileID: 236446465}
   - 114: {fileID: 236446464}
+  - 114: {fileID: 236446467}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -875,6 +892,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &236446467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1350794620}
+  m_GameObject: {fileID: 236446462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &248222532
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +998,7 @@ GameObject:
   - 212: {fileID: 277908594}
   - 61: {fileID: 277908593}
   - 114: {fileID: 277908592}
+  - 114: {fileID: 277908595}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -1032,6 +1067,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &277908595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 2096795551}
+  m_GameObject: {fileID: 277908590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &311969040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,6 +1258,7 @@ MonoBehaviour:
   flipY: 0
   brothers:
   - {fileID: 428931181}
+  scaleOnly: 0
 --- !u!1 &327766395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1383,6 +1436,7 @@ GameObject:
   - 212: {fileID: 379022161}
   - 61: {fileID: 379022160}
   - 114: {fileID: 379022159}
+  - 114: {fileID: 379022158}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -1401,6 +1455,23 @@ Transform:
   m_LocalScale: {x: .217612758, y: .217612758, z: .217612758}
   m_Children: []
   m_Father: {fileID: 169444296}
+--- !u!114 &379022158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1703985318}
+  m_GameObject: {fileID: 379022156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!114 &379022159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1811,6 +1882,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!1 &465578333
@@ -1887,8 +1959,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .449999988
-  difficulty: 2
+  difficulty: 1
   themes: []
+  autoDestroy: 1
 --- !u!1 &495759212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2278,7 +2351,6 @@ MonoBehaviour:
   currentAnimationContainer: {fileID: 0}
   currentAnimationClip: 
   currentAnimationPath: 
-  character: {fileID: 0}
   normalAnimation: ALL/KikaParachute_FallingLeft
   slowAnimation: ALL/KikaParachute_Slower
   fastAnimation: ALL/KikaParachute_Faster
@@ -10818,6 +10890,7 @@ GameObject:
   - 212: {fileID: 649660357}
   - 61: {fileID: 649660356}
   - 114: {fileID: 649660355}
+  - 114: {fileID: 649660358}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -10886,6 +10959,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &649660358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 392967185}
+  m_GameObject: {fileID: 649660353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &667803719
 GameObject:
   m_ObjectHideFlags: 0
@@ -11289,6 +11379,7 @@ MonoBehaviour:
   sectionSpan: .349999994
   difficulty: 1
   themes: []
+  autoDestroy: 1
 --- !u!43 &865160557
 Mesh:
   m_ObjectHideFlags: 0
@@ -12636,6 +12727,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!1 &880532659
 GameObject:
   m_ObjectHideFlags: 0
@@ -12698,6 +12790,7 @@ GameObject:
   - 212: {fileID: 895154217}
   - 61: {fileID: 895154216}
   - 114: {fileID: 895154215}
+  - 114: {fileID: 895154218}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -12766,6 +12859,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &895154218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1865967466}
+  m_GameObject: {fileID: 895154213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &904074421
 GameObject:
   m_ObjectHideFlags: 0
@@ -12835,6 +12945,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 1
   brothers: []
+  scaleOnly: 0
 --- !u!114 &904074425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12918,6 +13029,7 @@ MonoBehaviour:
   sectionSpan: .5
   difficulty: 4
   themes: []
+  autoDestroy: 1
 --- !u!1 &989305271
 GameObject:
   m_ObjectHideFlags: 0
@@ -12978,6 +13090,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!212 &989305275
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13181,6 +13294,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!1001 &1113149738
 Prefab:
   m_ObjectHideFlags: 0
@@ -13306,6 +13420,7 @@ GameObject:
   - 212: {fileID: 1167766655}
   - 61: {fileID: 1167766654}
   - 114: {fileID: 1167766653}
+  - 114: {fileID: 1167766652}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -13324,6 +13439,23 @@ Transform:
   m_LocalScale: {x: .217612758, y: .217612758, z: .217612758}
   m_Children: []
   m_Father: {fileID: 169444296}
+--- !u!114 &1167766652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 721955170}
+  m_GameObject: {fileID: 1167766650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!114 &1167766653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13637,6 +13769,7 @@ MonoBehaviour:
   flipY: 0
   brothers:
   - {fileID: 1811573387}
+  scaleOnly: 0
 --- !u!212 &1189657150
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13919,6 +14052,7 @@ MonoBehaviour:
   sectionSpan: .5
   difficulty: 4
   themes: []
+  autoDestroy: 1
 --- !u!1 &1286933889
 GameObject:
   m_ObjectHideFlags: 0
@@ -14065,6 +14199,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 1
   brothers: []
+  scaleOnly: 0
 --- !u!212 &1352838884
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14199,6 +14334,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!212 &1380769966
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14456,6 +14592,7 @@ GameObject:
   - 212: {fileID: 1504229985}
   - 61: {fileID: 1504229984}
   - 114: {fileID: 1504229983}
+  - 114: {fileID: 1504229982}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14474,6 +14611,23 @@ Transform:
   m_LocalScale: {x: .217612758, y: .217612758, z: .217612758}
   m_Children: []
   m_Father: {fileID: 169444296}
+--- !u!114 &1504229982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1982355607}
+  m_GameObject: {fileID: 1504229980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!114 &1504229983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14535,6 +14689,7 @@ GameObject:
   - 212: {fileID: 1510030316}
   - 61: {fileID: 1510030315}
   - 114: {fileID: 1510030314}
+  - 114: {fileID: 1510030313}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14553,6 +14708,23 @@ Transform:
   m_LocalScale: {x: .217612416, y: .217612416, z: .217612416}
   m_Children: []
   m_Father: {fileID: 169444296}
+--- !u!114 &1510030313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 2114778102}
+  m_GameObject: {fileID: 1510030311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!114 &1510030314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14642,6 +14814,7 @@ GameObject:
   - 212: {fileID: 1538485153}
   - 61: {fileID: 1538485152}
   - 114: {fileID: 1538485151}
+  - 114: {fileID: 1538485154}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14710,6 +14883,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1538485154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 2091665076}
+  m_GameObject: {fileID: 1538485149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &1545999607
 GameObject:
   m_ObjectHideFlags: 0
@@ -14755,6 +14945,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 1
   brothers: []
+  scaleOnly: 0
 --- !u!212 &1545999610
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15061,6 +15252,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!1 &1618772855
 GameObject:
   m_ObjectHideFlags: 0
@@ -15124,6 +15316,7 @@ GameObject:
   - 212: {fileID: 1647300658}
   - 61: {fileID: 1647300657}
   - 114: {fileID: 1647300656}
+  - 114: {fileID: 1647300655}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -15142,6 +15335,23 @@ Transform:
   m_LocalScale: {x: .217612758, y: .217612758, z: .217612758}
   m_Children: []
   m_Father: {fileID: 169444296}
+--- !u!114 &1647300655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 338003564}
+  m_GameObject: {fileID: 1647300653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!114 &1647300656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15435,6 +15645,7 @@ MonoBehaviour:
   sectionSpan: .349999994
   difficulty: 3
   themes: []
+  autoDestroy: 1
 --- !u!1 &1714511229
 GameObject:
   m_ObjectHideFlags: 0
@@ -16291,6 +16502,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!1 &1959913472
 GameObject:
   m_ObjectHideFlags: 0
@@ -16386,6 +16598,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!1001 &1982355607
@@ -16491,6 +16704,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!1 &1994281204
@@ -16536,6 +16750,7 @@ MonoBehaviour:
   sectionSpan: .600000024
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &2001985982
 GameObject:
   m_ObjectHideFlags: 0
@@ -16737,6 +16952,7 @@ MonoBehaviour:
   flipX: 1
   flipY: 0
   brothers: []
+  scaleOnly: 0
 --- !u!1 &2046096341
 GameObject:
   m_ObjectHideFlags: 0
@@ -17433,6 +17649,7 @@ MonoBehaviour:
   sectionSpan: .5
   difficulty: 3
   themes: []
+  autoDestroy: 1
 --- !u!1 &2139386737
 GameObject:
   m_ObjectHideFlags: 0
@@ -17461,8 +17678,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .400000006
-  difficulty: 4
+  difficulty: 3
   themes: []
+  autoDestroy: 1
 --- !u!4 &2139386739
 Transform:
   m_ObjectHideFlags: 0

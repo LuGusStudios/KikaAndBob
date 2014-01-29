@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 11231829}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.83547592, y: -.722156525, z: 0}
+  m_LocalPosition: {x: 1.83547592, y: -1.43257904, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1961147042}
@@ -135,8 +135,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Size: {x: 2.94108963, y: 8.19046116}
-  m_Center: {x: .703598022, y: -.907875061}
+  m_Size: {x: 2.94108963, y: 8.93316841}
+  m_Center: {x: .703598022, y: -.536514282}
 --- !u!114 &11231833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -718,6 +718,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 158124273}
+  - 114: {fileID: 158124278}
   - 114: {fileID: 158124272}
   - 114: {fileID: 158124274}
   - 114: {fileID: 158124275}
@@ -793,6 +794,7 @@ MonoBehaviour:
   groundLayer: {fileID: 0}
   direction: 1
   sectionSpanMultiplier: 1
+  maximumDifficulty: 6
 --- !u!114 &158124276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,6 +824,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+--- !u!114 &158124278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 158124271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77793897b0ca94815a4d4c913f484fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &159401835
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,6 +883,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 1
   themes: []
+  autoDestroy: 1
 --- !u!1 &178530799
 GameObject:
   m_ObjectHideFlags: 0
@@ -3256,6 +3270,7 @@ GameObject:
   - 212: {fileID: 236446466}
   - 61: {fileID: 236446465}
   - 114: {fileID: 236446464}
+  - 114: {fileID: 236446467}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -3271,7 +3286,7 @@ Transform:
   m_GameObject: {fileID: 236446462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.37860489, y: 4.36558723, z: 0}
-  m_LocalScale: {x: .266168594, y: .266168594, z: .266168594}
+  m_LocalScale: {x: .266169012, y: .266169012, z: .266169012}
   m_Children: []
   m_Father: {fileID: 1001184648}
 --- !u!114 &236446464
@@ -3324,6 +3339,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &236446467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1350794620}
+  m_GameObject: {fileID: 236446462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!43 &259422186
 Mesh:
   m_ObjectHideFlags: 0
@@ -3808,7 +3840,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 262693910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.32723999, y: .902591705, z: 0}
+  m_LocalPosition: {x: -.32723999, y: .581203461, z: 0}
   m_LocalScale: {x: 1.20998502, y: .60309571, z: 1.20998502}
   m_Children: []
   m_Father: {fileID: 1348466223}
@@ -3842,7 +3874,7 @@ SpriteRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 262693910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_LightmapIndex: 255
@@ -3870,6 +3902,7 @@ GameObject:
   - 212: {fileID: 277908594}
   - 61: {fileID: 277908593}
   - 114: {fileID: 277908592}
+  - 114: {fileID: 277908595}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -3938,6 +3971,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &277908595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 2096795551}
+  m_GameObject: {fileID: 277908590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &291072848
 GameObject:
   m_ObjectHideFlags: 0
@@ -4085,6 +4135,56 @@ Transform:
   m_Children:
   - {fileID: 1383420997}
   m_Father: {fileID: 1969489149}
+--- !u!1 &349420993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 349420994}
+  - 212: {fileID: 349420995}
+  m_Layer: 0
+  m_Name: Fence02Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &349420994
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 349420993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.55451965, y: 2.2265358, z: 0}
+  m_LocalScale: {x: .766862869, y: .642246604, z: .766862869}
+  m_Children: []
+  m_Father: {fileID: 1348466223}
+--- !u!212 &349420995
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 349420993}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: ff9356b4325374a5ca27805ba4033936, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &352620589
 GameObject:
   m_ObjectHideFlags: 0
@@ -4096,6 +4196,7 @@ GameObject:
   - 212: {fileID: 352620593}
   - 61: {fileID: 352620592}
   - 114: {fileID: 352620591}
+  - 114: {fileID: 352620594}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -4164,6 +4265,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &352620594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 259777814}
+  m_GameObject: {fileID: 352620589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &368220709
 GameObject:
   m_ObjectHideFlags: 0
@@ -8201,6 +8319,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!1 &500501905
@@ -8299,6 +8418,7 @@ GameObject:
   - 212: {fileID: 525904950}
   - 61: {fileID: 525904949}
   - 114: {fileID: 525904948}
+  - 114: {fileID: 525904951}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -8367,6 +8487,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &525904951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 752140359}
+  m_GameObject: {fileID: 525904946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &531898749
 GameObject:
   m_ObjectHideFlags: 0
@@ -8658,12 +8795,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 573294607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c576c480163a044bc8192b589907ef2d, type: 3}
+  m_Script: {fileID: 11500000, guid: 85fbf6c9e94334b04801f723d860906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speedRange:
     from: 13
-    to: 20
+    to: 26
   timeToMaxSpeed: 60
   jumpForce: 30
   speedPercentage: 0
@@ -8715,14 +8852,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 573294607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb9f245d14e6f4184897394aefb796cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 48889495f54ed4f94af4c8b36f7a2dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animationContainers: []
   currentAnimationContainer: {fileID: 0}
   currentAnimationClip: 
   currentAnimationPath: 
-  character: {fileID: 0}
   runningAnimation: RUNNING/KikaSide_RunningSprites
   jumpAnimation: OTHER/KikaSide_JumpShort
   hitAnimation: OTHER/KikaSide_Hit
@@ -9671,6 +9807,7 @@ GameObject:
   - 212: {fileID: 649660357}
   - 61: {fileID: 649660356}
   - 114: {fileID: 649660355}
+  - 114: {fileID: 649660358}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -9739,6 +9876,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &649660358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 392967185}
+  m_GameObject: {fileID: 649660353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &655277268
 GameObject:
   m_ObjectHideFlags: 0
@@ -9839,6 +9993,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &704142123
 GameObject:
   m_ObjectHideFlags: 0
@@ -14247,6 +14402,7 @@ GameObject:
   - 212: {fileID: 895154217}
   - 61: {fileID: 895154216}
   - 114: {fileID: 895154215}
+  - 114: {fileID: 895154218}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14315,6 +14471,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &895154218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1865967466}
+  m_GameObject: {fileID: 895154213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &916359425
 GameObject:
   m_ObjectHideFlags: 0
@@ -14413,6 +14586,7 @@ GameObject:
   - 212: {fileID: 980855989}
   - 61: {fileID: 980855988}
   - 114: {fileID: 980855987}
+  - 114: {fileID: 980855990}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14481,6 +14655,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &980855990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 188871110}
+  m_GameObject: {fileID: 980855985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &1001184647
 GameObject:
   m_ObjectHideFlags: 0
@@ -14528,6 +14719,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 1
   themes: []
+  autoDestroy: 1
 --- !u!1 &1034200956
 GameObject:
   m_ObjectHideFlags: 0
@@ -14566,6 +14758,7 @@ GameObject:
   - 212: {fileID: 1057097103}
   - 61: {fileID: 1057097102}
   - 114: {fileID: 1057097101}
+  - 114: {fileID: 1057097104}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14581,7 +14774,7 @@ Transform:
   m_GameObject: {fileID: 1057097099}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.13183975, y: 7.18877029, z: 0}
-  m_LocalScale: {x: .266168594, y: .266168594, z: .266168594}
+  m_LocalScale: {x: .266169012, y: .266169012, z: .266169012}
   m_Children: []
   m_Father: {fileID: 1961147042}
 --- !u!114 &1057097101
@@ -14634,6 +14827,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1057097104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1120099343}
+  m_GameObject: {fileID: 1057097099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &1057800825
 GameObject:
   m_ObjectHideFlags: 0
@@ -14726,6 +14936,7 @@ GameObject:
   - 212: {fileID: 1103923428}
   - 61: {fileID: 1103923427}
   - 114: {fileID: 1103923426}
+  - 114: {fileID: 1103923429}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -14794,6 +15005,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1103923429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1129060374}
+  m_GameObject: {fileID: 1103923424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1001 &1120099343
 Prefab:
   m_ObjectHideFlags: 0
@@ -14957,6 +15185,7 @@ GameObject:
   - 212: {fileID: 1166515938}
   - 61: {fileID: 1166515937}
   - 114: {fileID: 1166515936}
+  - 114: {fileID: 1166515939}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -15025,6 +15254,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1166515939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 1634832517}
+  m_GameObject: {fileID: 1166515934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &1184072579
 GameObject:
   m_ObjectHideFlags: 0
@@ -15325,8 +15571,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .699999988
-  difficulty: 4
+  difficulty: 3
   themes: []
+  autoDestroy: 1
 --- !u!43 &1243106571
 Mesh:
   m_ObjectHideFlags: 0
@@ -17463,6 +17710,8 @@ Transform:
   - {fileID: 262693911}
   - {fileID: 546261701}
   - {fileID: 1509414182}
+  - {fileID: 1393045393}
+  - {fileID: 349420994}
   m_Father: {fileID: 22430978}
 --- !u!114 &1348466224
 MonoBehaviour:
@@ -17476,8 +17725,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sectionSpan: .699999988
-  difficulty: 2
+  difficulty: 3
   themes: []
+  autoDestroy: 1
 --- !u!1001 &1350794620
 Prefab:
   m_ObjectHideFlags: 0
@@ -17776,6 +18026,56 @@ Transform:
   m_Children:
   - {fileID: 291072849}
   m_Father: {fileID: 36130180}
+--- !u!1 &1393045392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1393045393}
+  - 212: {fileID: 1393045394}
+  m_Layer: 0
+  m_Name: Fence02Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1393045393
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1393045392}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.55229187, y: 2.48163986, z: -300}
+  m_LocalScale: {x: .766862869, y: .642246604, z: .766862869}
+  m_Children: []
+  m_Father: {fileID: 1348466223}
+--- !u!212 &1393045394
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1393045392}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: bdb8238a2aa6a41dfba1336c9e0d2d23, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1396512890
 GameObject:
   m_ObjectHideFlags: 0
@@ -18025,6 +18325,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 4
   themes: []
+  autoDestroy: 1
 --- !u!1 &1509414181
 GameObject:
   m_ObjectHideFlags: 0
@@ -18040,7 +18341,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1509414182
 Transform:
   m_ObjectHideFlags: 0
@@ -18141,6 +18442,7 @@ GameObject:
   - 212: {fileID: 1538485153}
   - 61: {fileID: 1538485152}
   - 114: {fileID: 1538485151}
+  - 114: {fileID: 1538485154}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -18209,6 +18511,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1538485154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 2091665076}
+  m_GameObject: {fileID: 1538485149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &1560790441
 GameObject:
   m_ObjectHideFlags: 0
@@ -18379,6 +18698,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 4
   themes: []
+  autoDestroy: 1
 --- !u!1 &1630572294
 GameObject:
   m_ObjectHideFlags: 0
@@ -19211,6 +19531,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &1840309118
 GameObject:
   m_ObjectHideFlags: 0
@@ -27788,6 +28109,7 @@ MonoBehaviour:
   sectionSpan: .699999988
   difficulty: 2
   themes: []
+  autoDestroy: 1
 --- !u!1 &1969489148
 GameObject:
   m_ObjectHideFlags: 0
@@ -27834,6 +28156,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!1 &1983618908
@@ -27932,6 +28255,7 @@ MonoBehaviour:
   nextSection: {fileID: 0}
   baseLayer: []
   detailLayer: []
+  detailSpawnIntensity: 1
   detailsRandomY: 1
   detailsRandomX: 1
 --- !u!43 &2001984352
@@ -29794,6 +30118,7 @@ GameObject:
   - 212: {fileID: 2040719968}
   - 61: {fileID: 2040719966}
   - 114: {fileID: 2040719967}
+  - 114: {fileID: 2040719969}
   m_Layer: 0
   m_Name: FeatherPickup
   m_TagString: Untagged
@@ -29809,7 +30134,7 @@ Transform:
   m_GameObject: {fileID: 2040719964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.210186, y: 2.65853691, z: 0}
-  m_LocalScale: {x: .266168594, y: .266168594, z: .266168594}
+  m_LocalScale: {x: .266169012, y: .266169012, z: .266169012}
   m_Children: []
   m_Father: {fileID: 159401836}
 --- !u!61 &2040719966
@@ -29862,6 +30187,23 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &2040719969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: aacecb6cbe4394055906eeb0d9708731,
+    type: 2}
+  m_PrefabInternal: {fileID: 141616273}
+  m_GameObject: {fileID: 2040719964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acf111f6367647848c42d8ace4542ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipChance: .5
+  flipX: 1
+  flipY: 0
+  brothers: []
+  scaleOnly: 1
 --- !u!1 &2071834587
 GameObject:
   m_ObjectHideFlags: 0

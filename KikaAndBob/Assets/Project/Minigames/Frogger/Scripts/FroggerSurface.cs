@@ -2,12 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(BoxCollider2D))]
 public abstract class FroggerSurface : MonoBehaviour {
 
-	public List<AudioClip> enterSounds = new List<AudioClip>();
+	public List<string> enterSoundKeys = new List<string>();
 	protected bool onSurface = false;
+	protected BoxCollider2D boxCollider2D = null;
+
+	protected void Awake()
+	{
+		SetUpLocal();
+	}
 	
+	public virtual void SetUpLocal()
+	{
+		boxCollider2D = GetComponent<BoxCollider2D>();
+	}
 
 	public void Enter(FroggerCharacter character)
 	{
@@ -16,9 +26,14 @@ public abstract class FroggerSurface : MonoBehaviour {
 
 		onSurface = true;
 
-		if (enterSounds.Count > 0)
+		if (enterSoundKeys.Count > 0)
 		{
-			LugusAudio.use.SFX().Play(enterSounds[Random.Range(0, enterSounds.Count)]);
+			int randomIndex = Random.Range(0, enterSoundKeys.Count);
+
+			if (!string.IsNullOrEmpty(enterSoundKeys[randomIndex]))
+			{
+				LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(enterSoundKeys[randomIndex]));
+			}
 		}
 
 		EnterSurfaceEffect(character);
