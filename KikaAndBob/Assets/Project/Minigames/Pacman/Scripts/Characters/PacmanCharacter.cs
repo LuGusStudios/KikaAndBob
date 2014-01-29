@@ -95,7 +95,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		
 		if (target == null)
 		{
-			Debug.LogWarning("Character move target tile was null!");
+			Debug.LogWarning("PacmanCharacter: Character move target tile was null!");
 			return;
 		}
 		
