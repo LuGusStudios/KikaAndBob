@@ -4,7 +4,7 @@ using SmoothMoves;
 
 public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
-	public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
+	//public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
 	public float maxScoreModifier = 9.0f;
 
 	public delegate void OnDisplayModifier();
@@ -36,6 +36,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		"Wow!",
 		"Amazing!"
 	};
+	protected string missedMessage = "OUCH!";
 	
 	void Awake()
 	{
@@ -84,7 +85,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		if (succes)
 		{
-			scoreValue += amount;
+			//scoreValue += amount;
 			succesCount += amount;
 
 			scoreModifier += scoreIncreaseStep;
@@ -118,10 +119,17 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			}
 
 			if (showChange)
-				DisplayMessage("OUCH!");
+				DisplayMessage(missedMessage);
 
-			scoreValue -= amount;
+//			scoreValue -= amount;
 			failCount += amount;
+
+			score -= (int)((scorePerHit * maxScoreModifier) * 0.5f);
+
+			if (score < 0)
+			{
+				score = 0;
+			}
 
 			scoreModifier = 1;
 			scoreModifierStep = 1;
@@ -134,7 +142,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			}
 		}
 
-		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
+		//scoreValue = Mathf.Clamp(scoreValue, 0, 14);
 
 		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
