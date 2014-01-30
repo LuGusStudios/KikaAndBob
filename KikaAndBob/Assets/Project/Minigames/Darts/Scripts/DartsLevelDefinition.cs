@@ -23,4 +23,5 @@ public class DartsGroupDefinition
 	public float itemsOnScreen = 1.0f;
 	public float minTimeBetweenShows = 1.0f;
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
+	public bool avoidRepeat = false;
 }
