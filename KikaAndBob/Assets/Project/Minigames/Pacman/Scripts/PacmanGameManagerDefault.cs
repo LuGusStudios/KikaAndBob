@@ -12,7 +12,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	protected int lives = 3;
 	protected bool gameDone = false;
 	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
-	protected PacmanPlayerCharacter player;
+	protected PacmanPlayerCharacter activePlayer;
 	protected Transform level = null;
 	protected List<PacmanPlayerCharacter> playerChars = new List<PacmanPlayerCharacter>();
 	protected int currentLevelIndex = 0;
@@ -29,7 +29,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 	protected void Start()
 	{
-		StartNewGame();
+		StartNewLevel();
 	}
 
 	public List<PacmanPlayerCharacter> GetPlayerChars()
@@ -38,13 +38,13 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	}
 
 	// starts a completely new level
-	public void StartNewGame()
+	public void StartNewLevel()
 	{
-		StartNewGame(currentLevelIndex);
+		StartNewLevel(currentLevelIndex);
 	}
 
 	// starts a completely new level
-	public void StartNewGame(int levelIndex)
+	public void StartNewLevel(int levelIndex)
 	{
 		PacmanPickups.use.ClearPickups();
 		PacmanCameraFollower.use.ResetCamera();
@@ -53,11 +53,14 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		
 		// find and reset any player characters
 		playerChars.Clear();
-		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>(true));
+		// NOTE: GetComponentsInChildren skips inactive objects! This is intentional because the Destroy method used to clear the level does not act immediately.
+		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>());
+
+		Debug.Log(playerChars.Count);
 
 		if (playerChars.Count >= 1)
 		{
-			player = playerChars[0];
+			activePlayer = playerChars[0];
 		}
 		else
 		{
@@ -69,7 +72,8 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		// find and reset enemy characters
 		enemies.Clear();
-		enemies = new List<PacmanEnemyCharacter>(level.GetComponentsInChildren<PacmanEnemyCharacter>(true));
+		// NOTE: GetComponentsInChildren skips inactive objects! This is intentional because the Destroy method used to clear the level does not act immediately.
+		enemies = new List<PacmanEnemyCharacter>(level.GetComponentsInChildren<PacmanEnemyCharacter>());
 		ResetEnemies();
 
 		// start character spawn routine (will only enable certain enemies after a time set in the level definition has passed)
@@ -90,12 +94,15 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	//	PacmanGUIManager.use.UpdateKeyGUIItems();
 
 		gameRunning = true;
+
+		Debug.Log("Finished starting up new level.");
 	}
 
 	// TO DO: make this useful
+	// Idea is to allow multiple characters, e.g. Kika and Bob, but only one is active at a time
 	public PacmanPlayerCharacter GetActivePlayer()
 	{
-		return playerChars[0];
+		return activePlayer;
 	}
 
 	// starts new round in the same level
@@ -108,6 +115,8 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		PacmanLevelManager.use.StartCharacterSpawnRoutine();
 		
 		gameRunning = true;
+
+		Debug.Log("Finished starting up new round.");
 	}
 	
 	protected void ResetPlayerChars()
@@ -175,7 +184,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		{
 			PacmanGUIManager.use.ShowGameOverMessage();
 			yield return new WaitForSeconds(1f);
-			StartNewGame();
+			StartNewLevel();
 			Debug.Log("You lost the game!");
 		}
 	}

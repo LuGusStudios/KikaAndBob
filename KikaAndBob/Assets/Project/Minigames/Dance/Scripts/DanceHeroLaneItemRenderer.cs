@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class DanceHeroLaneItemRenderer : MonoBehaviour 
 {
+	public delegate void OnUpdateScore();
+	public OnUpdateScore onUpdateScore;
+
 	public static DanceHeroLaneItemRenderer Create(DanceHeroLaneItem item)
 	{
 		DanceHeroLane lane = item.lane;
@@ -109,22 +112,6 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
-
-		foreach(Transform t in actionPoints)
-		{
-			Vector3 originalScale = t.localScale;
-			t.localScale = Vector3.zero;
-			float timeToReachCharacter = item.lane.characterAnim.transform.localPosition.x / item.lane.speed;
-
-			t.gameObject.ScaleTo(originalScale).Time(0.5f).EaseType(iTween.EaseType.spring).Delay(timeToReachCharacter).Execute();
-
-
-			ParticleSystem particles = t.GetComponentInChildren<ParticleSystem>();
-			particles.startDelay = timeToReachCharacter;
-			particles.Play();
-			
-
-		}
 	}
 	
 	protected void Update () 
@@ -232,7 +219,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 	protected void DetectSingle(bool keyDown, Transform actionPoint)
 	{
-		DanceHeroFeedback.use.HighLightLane(this.item.lane.actionPoint);
+		item.lane.HighLightLane(item.lane.actionPoint);
+	//	DanceHeroFeedbackChina.use.HighLightLane(this.item.lane.actionPoint);
 		DanceHeroFeedback.use.UpdateScore(true, item.lane);
 		hit = true;
 
@@ -257,7 +245,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		// TODO: what if point 0 and up... hmz
 		if( currentActionPointIndex == 0 && keyDown )
 		{
-			DanceHeroFeedback.use.HighLightLane(item.lane.actionPoint);
+			item.lane.HighLightLane(item.lane.actionPoint);
+			//DanceHeroFeedbackChina.use.HighLightLane(
 
 			// we've hit the first actionPoint and pressed button down: ideal
 			
@@ -269,7 +258,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		if( currentActionPointIndex == 1 && !keyDown ) // keyUp
 		{
 			hit = true;
-			DanceHeroFeedback.use.HighLightLane(item.lane.actionPoint);
+
+			item.lane.HighLightLane(item.lane.actionPoint);
+		//	DanceHeroFeedbackChina.use.HighLightLane(item.lane.actionPoint);
 			DanceHeroFeedback.use.UpdateScore(true, item.lane);
 
 			DeleteActionPoint(actionPoint);

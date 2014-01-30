@@ -113,7 +113,7 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 	public void Level0()
 	{
 		// level 0 : only bob with the pumpkin
-		DisableObjects( new GameObject[]{ MacaroniPot, WineProducer, IceCreamMachine, MilkProducer, ColaProducer, MacaroniProducer } );
+		DisableObjects( new GameObject[]{ IceCreamMachine, PastryProducer, MeatProducer, Meat2Producer, MacaroniProducer, WineProducer, ColaProducer, CheeseProducer, MilkProducer, MacaroniPot } );
 
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 
@@ -136,9 +136,9 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 
 	public void Level1()
 	{
-		// level 1 : introduce macaroni and wine
-		DisableObjects( new GameObject[]{ IceCreamMachine } );
-		
+		// level 1 : just the dairy
+		DisableObjects( new GameObject[]{ IceCreamMachine, PastryProducer, MeatProducer, Meat2Producer, WineProducer, ColaProducer } );
+
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 		
 		
@@ -146,11 +146,12 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(macaroni) );
-		orders.Add( CreateOrder(pumpkin, wine) );
+		orders.Add( CreateOrder(cheese) );
+		orders.Add( CreateOrder(macaroni, milk) );
+		orders.Add( CreateOrder(pumpkin, cheese) );
 		orders.Add( CreateOrder(macaroni, bread) );
-		orders.Add( CreateOrder(macaroni, wine) );
-		
+		orders.Add( CreateOrder(milk) );
+
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
@@ -160,9 +161,9 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 	}
 	public void Level2()
 	{
-		// level 2 : introduce blender and macaroni
-		DisableObjects( new GameObject[]{ IceCreamMachine } );
-		
+		// level 2 : just the meat
+		DisableObjects( new GameObject[]{ IceCreamMachine, PastryProducer, MacaroniProducer, CheeseProducer, MilkProducer, MacaroniPot } );
+
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 		
 		
@@ -170,15 +171,16 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 
-		orders.Add( CreateOrder(cola, pumpkin) );
-		orders.Add( CreateOrder(macaroni, wine) );
-		orders.Add( CreateOrder(macaroni, milk) );
-		orders.Add( CreateOrder(macaroni) );
+		orders.Add( CreateOrder(meat, cola) );
+		orders.Add( CreateOrder(meat2, wine) );
+		orders.Add( CreateOrder(pumpkin, meat) );
+		orders.Add( CreateOrder(meat2, bread, wine) );
+		orders.Add( CreateOrder(meat, pumpkin, cola) );
 		
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 3;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
 	}
@@ -187,20 +189,20 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 	{
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-		
+		 
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
 		orders.Add( CreateOrder(macaroni, wine, iceCream) );
-		orders.Add( CreateOrder(macaroni) );
-		orders.Add( CreateOrder(pumpkin, milk) );
-		orders.Add( CreateOrder(iceCream) );
-		orders.Add( CreateOrder(cola, macaroni, iceCream) );
+		orders.Add( CreateOrder(meat, cola, bread) );
+		orders.Add( CreateOrder(iceCream, milk) );
+		orders.Add( CreateOrder(pumpkin, pastry) );
+		orders.Add( CreateOrder(cola, macaroni) );
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = true;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
-		
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 10.0f);
 	}
 
@@ -212,18 +214,36 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 
-		ConsumableDefinition[] poolArray = new ConsumableDefinition[]{ pumpkin, bread, milk, cheese, iceCream, pastry, macaroni, wine, cola, meat, meat2 };
-		List<ConsumableDefinition> pool = new List<ConsumableDefinition>();
-		pool.AddRange( poolArray );
+		ConsumableDefinition[] commonArray = new ConsumableDefinition[]{ pumpkin, bread, pastry, wine, cola };
+		//List<ConsumableDefinition> common = new List<ConsumableDefinition>();
+		//common.AddRange( commonArray );
+		
+		ConsumableDefinition[] meatArray = new ConsumableDefinition[]{ meat, meat2 };
+		List<ConsumableDefinition> meats = new List<ConsumableDefinition>();
+		meats.AddRange( meatArray );
+		meats.AddRange( commonArray );
+		
+		ConsumableDefinition[] dairyArray = new ConsumableDefinition[]{ milk, cheese, macaroni, iceCream };
+		List<ConsumableDefinition> dairy = new List<ConsumableDefinition>();
+		dairy.AddRange( dairyArray );
+		dairy.AddRange( commonArray );
 
-		for( int i = 0; i < 100; ++i )
+
+		for( int i = 0; i < 100; ++i ) 
 		{
-			orders.Add ( RandomOrder (pool, Random.Range(1,4)) );
+			if( Random.value < 0.5f )
+			{
+				orders.Add ( RandomOrder (meats, Random.Range(1,4)) );
+			}
+			else
+			{
+				orders.Add ( RandomOrder (dairy, Random.Range(1,4)) );
+			}
 		}
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false; // orders are already random
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
 	}
