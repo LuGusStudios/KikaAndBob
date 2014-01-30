@@ -109,35 +109,10 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 			GameObject checkMarkNew = (GameObject) GameObject.Instantiate( checkMark );
 			checkMarkNew.transform.parent = user.transform;
 			checkMarkNew.name = "CheckMark";
-			//checkMarkNew.transform.localPosition = Vector3.zero;
 
-			Vector3 checkMarkPos = Vector3.zero;
-			BoxCollider2D boxCollider = user.GetComponent<BoxCollider2D>();
-			if( boxCollider == null )
-			{
-				checkMarkPos = user.transform.position + new Vector3(50.0f, 50.0f, 0.0f);
-			}
-			else
-			{
+			Vector3 checkMarkPos = user.GetCheckmarkPosition();
 
-				// position checkmark at top left corner of the bounding box
-				float xOffset = (boxCollider.size.x / 2.0f) + boxCollider.center.x;
-				float yOffset = ((-1.0f * boxCollider.size.y) / 2.0f) - boxCollider.center.y; 
-
-				xOffset *= -1.0f;
-				yOffset *= -1.0f;
-
-				//xOffset *= user.transform.localScale.x;
-				//yOffset *= user.transform.localScale.y;
-
-				checkMarkPos = user.transform.TransformPoint( new Vector3(xOffset, yOffset, 0.0f ) );
-				//xOffset = user.transform.position.x - offsets.x;
-				//yOffset = user.transform.position.y - offsets.y;
-
-				//Debug.LogError("CENTER : " + boxCollider.center + " / SIZE: " + boxCollider.size + " / " + xOffset + "," + yOffset); 
-			}
-
-			checkMarkNew.transform.position = checkMarkPos;//user.transform.position.xAdd(xOffset).yAdd (yOffset);
+			checkMarkNew.transform.position = checkMarkPos;
 
 			checkMarkNew.transform.position = checkMarkNew.transform.position.z(-400.0f);
 		}
