@@ -8,6 +8,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected DanceHeroFeedback feedback = null;
 	protected GameObject modifierDisplayPrefab = null;
 	protected Transform flute = null;
+	protected Transform fluteParent = null;
 	protected BoneAnimation snake = null;
 
 	protected string snakeStage1 = "Snake_Stage1";
@@ -18,7 +19,8 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected Vector3 snakePosition2;
 	protected Vector3 snakePosition3;
 	protected ILugusCoroutineHandle flutePlayRoutine = null;
-
+	private float smallFluteAnimDuration = 0.3f;
+	private float largeFluteAnimDuration = 0.5f;
 
 	
 	protected void Awake()
@@ -29,7 +31,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected void Start() 
 	{
 		SetupGlobal();
-		flute.gameObject.MoveTo(flute.position + new Vector3(0, 0.1f, 0)).Time(1f).EaseType(iTween.EaseType.easeInOutQuad).Looptype(iTween.LoopType.pingPong).Execute();
+		fluteParent.gameObject.MoveTo(flute.position + new Vector3(0, 0.1f, 0)).Time(1f).EaseType(iTween.EaseType.easeInOutQuad).Looptype(iTween.LoopType.pingPong).Execute();
 	}
 	
 	public void SetupLocal()
@@ -53,7 +55,13 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		if (modifierDisplayPrefab == null)
 			Debug.LogError("No modifier display found in scene.");
 
-		flute = GameObject.Find("Flute").transform;
+		fluteParent = GameObject.Find("FluteParent").transform;
+		if (fluteParent == null)
+		{
+			Debug.LogError("No flute parent found!");
+		}
+
+		flute = fluteParent.transform.FindChild("Flute");
 		if (flute == null)
 		{
 			Debug.LogError("No flute found!");
@@ -77,16 +85,20 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	public void OnDisplayModifier()
 	{
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
-		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 6.0f, 1);
-		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 17.0f, 1);
+		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 4.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(1f).Execute();
 		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
+		modifierDisplay.ScaleTo(modifierDisplay.transform.localScale * 2.0f).Time(1f).Execute();
+
 		Destroy(modifierDisplay, 0.5f);
+
+		AnimateFlute(true);
 	}
 	
 	protected void OnScoreRaised(DanceHeroLane lane)
 	{
 		ChangeSnakeAnim();
-		AnimateFlute();
+		AnimateFlute(false);
 	}
 	
 	protected void OnScoreLowered(DanceHeroLane lane)
@@ -95,23 +107,45 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		//AnimateFlute();
 	}
 
-	protected void AnimateFlute()
+	protected void AnimateFlute(bool big)
 	{
-		if (flutePlayRoutine != null && !flutePlayRoutine.Running)
+		if (flutePlayRoutine != null && flutePlayRoutine.Running)
 		{
-			flutePlayRoutine.StopRoutine();
-			iTween.Stop(flute.gameObject);
+			return;
 		}
 
-		flutePlayRoutine = LugusCoroutines.use.StartRoutine(AnimateFluteRoutine());
+		iTween.Stop(flute.gameObject);
+
+		if (!big)
+			flutePlayRoutine = LugusCoroutines.use.StartRoutine(AnimateFluteRoutineSmall());
+		else
+			flutePlayRoutine = LugusCoroutines.use.StartRoutine(AnimateFluteRoutineBig());
 	}
 	
-	protected IEnumerator AnimateFluteRoutine()
+	protected IEnumerator AnimateFluteRoutineSmall()
 	{
+		float halfTime = smallFluteAnimDuration * 0.5f;
+
 		flute.localScale = Vector3.one;
-		flute.gameObject.ScaleTo(new Vector3(1.0f, 1.02f, 1.0f)).Time(0.25f).EaseType(iTween.EaseType.easeOutBack).Execute();
-		yield return new WaitForSeconds(0.25f);
+
+		flute.gameObject.ScaleTo(new Vector3(0.98f, 1.01f, 1.0f)).Time(halfTime).EaseType(iTween.EaseType.linear).Execute();
+		yield return new WaitForSeconds(halfTime);
+
+		flute.gameObject.ScaleTo(Vector3.one).Time(halfTime).EaseType(iTween.EaseType.linear).Execute();
+		yield return new WaitForSeconds(halfTime);
+	}
+
+	protected IEnumerator AnimateFluteRoutineBig()
+	{
+		float halfTime = largeFluteAnimDuration * 0.5f;
+
 		flute.localScale = Vector3.one;
+
+		flute.gameObject.ScaleTo(new Vector3(0.96f, 1.05f, 1.0f)).Time(halfTime).EaseType(iTween.EaseType.linear).Execute();
+		yield return new WaitForSeconds(halfTime);
+
+		flute.gameObject.ScaleTo(Vector3.one).Time(halfTime).EaseType(iTween.EaseType.linear).Execute();
+		yield return new WaitForSeconds(halfTime);
 	}
 
 
