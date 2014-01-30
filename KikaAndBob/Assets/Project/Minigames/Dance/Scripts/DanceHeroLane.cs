@@ -7,18 +7,21 @@ using SmoothMoves;
 public class DanceHeroLane : MonoBehaviour 
 {
 	public List<DanceHeroLaneItem> items = new List<DanceHeroLaneItem>();
-
 	public float speed = 4;
 	public Transform actionPoint = null;
-	public string attackAnimation = null;
-	public string idleAnimation = null;
 	public Transform scoreDisplay = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
 	
-	[HideInInspector]
-	public BoneAnimation characterAnim = null;
-	// public GameObject character = null;
+//	[HideInInspector]
+//	public BoneAnimation characterAnim = null;
+//	// public GameObject character = null;
+
+	public delegate void OnItemSpawned(DanceHeroLaneItemRenderer laneItemRenderer);
+	public OnItemSpawned onItemSpawned = null;
+
+	public delegate void OnLaneBegin();
+	public OnLaneBegin onLaneBegin = null;
 
 	protected float totalDelay = 0.0f;
 
@@ -68,7 +71,9 @@ public class DanceHeroLane : MonoBehaviour
 	public void Begin()
 	{
 		LugusCoroutines.use.StartRoutine( LaneRoutine() );
-		characterAnim.Play(idleAnimation);
+
+		if (onLaneBegin != null)
+			onLaneBegin();
 	}
 
 	protected IEnumerator LaneRoutine()
@@ -84,14 +89,6 @@ public class DanceHeroLane : MonoBehaviour
 			//Debug.LogError(Time.frameCount + " Lane " + this.name + " waited for " + item.delay + " seconds");
 
 			SpawnItem( item );
-
-
-			// only play a new fight anim if the previous one isn't still playing
-			if (!characterAnim.IsPlaying(attackAnimation))
-			{
-				characterAnim.PlayQueued(attackAnimation, QueueMode.PlayNow, PlayMode.StopAll);
-				characterAnim.PlayQueued(idleAnimation, QueueMode.CompleteOthers);
-			}
 
 			++currentItemIndex;
 		}
@@ -112,7 +109,10 @@ public class DanceHeroLane : MonoBehaviour
 
 	protected void SpawnItem(DanceHeroLaneItem item)
 	{
-		DanceHeroLaneItemRenderer.Create( item );
+		DanceHeroLaneItemRenderer itemRenderer = DanceHeroLaneItemRenderer.Create( item );
+
+		if (onItemSpawned != null)
+			onItemSpawned(itemRenderer);
 	}
 
 	public void SetupLocal()
@@ -127,31 +127,6 @@ public class DanceHeroLane : MonoBehaviour
 			Debug.LogError(name + " : no ActionPoint known for this lane!");
 		}
 
-		if( characterAnim == null )
-		{
-			characterAnim = transform.FindChild("Character").GetComponent<BoneAnimation>();
-		}
-		
-		if( characterAnim == null )
-		{
-			Debug.LogError(name + " : no character known for this lane!");
-		}
-
-		if (string.IsNullOrEmpty(attackAnimation))
-		{
-			Debug.LogError(name + "Attack animation name is not entered.");
-		}
-
-		if(string.IsNullOrEmpty(idleAnimation))
-		{
-			idleAnimation = characterAnim.GetComponent<DefaultBoneAnimation>().clipName;
-		}
-
-		if(string.IsNullOrEmpty(idleAnimation))
-		{
-			Debug.LogError(name + "Idle animation name is not entered or default bone animation component is missing.");
-		}
-
 		if( scoreDisplay == null )
 		{
 			scoreDisplay = transform.FindChild("ScoreDisplay");
@@ -161,7 +136,6 @@ public class DanceHeroLane : MonoBehaviour
 		{
 			Debug.LogError(name + " : no Score Display found for this lane!");
 		}
-
 	}
 	
 	public void SetupGlobal()
@@ -182,5 +156,43 @@ public class DanceHeroLane : MonoBehaviour
 	protected void Update () 
 	{
 	
+	}
+
+	public void HighLightLane(Transform actionPoint)
+	{
+		LugusCoroutines.use.StartRoutine(LaneHighlight(actionPoint));
+	}
+
+	IEnumerator LaneHighlight(Transform actionPoint)
+	{
+		Transform highlight = actionPoint.FindChild("Highlight");
+		
+		float alpha = 0;
+		float effectTime = 0.5f;
+		
+		highlight.gameObject.SetActive(true);
+		
+		iTween.RotateBy(highlight.gameObject, iTween.Hash(
+			"amount", new Vector3(0, 0, -0.5f),
+			"time", effectTime,
+			"easetype", iTween.EaseType.easeInOutQuad));
+		
+	//	LugusAudio.use.SFX().Play(laneHitSound);
+		
+		while(alpha < 1)
+		{
+			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+			alpha += (1 / (effectTime * 0.5f)) * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		
+		while(alpha > 0 )
+		{
+			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+			alpha -= (1 / (effectTime * 0.5f)) * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		
+		highlight.gameObject.SetActive(false);
 	}
 }

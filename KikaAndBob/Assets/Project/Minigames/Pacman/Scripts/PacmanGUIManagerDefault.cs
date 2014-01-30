@@ -105,7 +105,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 		child.gameObject.SetActive(false);
 
-		PacmanGameManager.use.StartNewGame();
+		PacmanGameManager.use.StartNewLevel();
 	}
 
 	// this will get called each time a new key index has been added

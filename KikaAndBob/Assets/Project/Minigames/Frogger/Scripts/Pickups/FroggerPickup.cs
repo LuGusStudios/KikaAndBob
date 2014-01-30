@@ -18,8 +18,7 @@ public class FroggerPickup : FroggerLaneItem
 
 		bool foundAll = true;
 
-		print( FindObjectsOfType(typeof(FroggerPickup)).Length);
-
+		// could cache these at the level start, but this we can also add pickups at runtime if need be
 		foreach(FroggerPickup p in (FroggerPickup[]) FindObjectsOfType(typeof(FroggerPickup)))
 		{
 			if (p.GetPickedUp() == false)

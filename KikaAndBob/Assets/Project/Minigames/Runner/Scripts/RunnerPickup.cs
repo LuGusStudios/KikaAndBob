@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -22,14 +22,14 @@ public class RunnerPickup : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other) 
 	{
-		RunnerCharacterController controller = other.transform.GetComponent( typeof(RunnerCharacterController) ) as RunnerCharacterController;
+		IRunnerCharacterController controller = other.transform.GetComponent( typeof(IRunnerCharacterController) ) as IRunnerCharacterController;
 		if( controller != null )
 		{
 			ProcessHit( controller );
 		}
 	}
 
-	public virtual void ProcessHit(RunnerCharacterController character)
+	public virtual void ProcessHit(IRunnerCharacterController character)
 	{
 		character.OnPickupHit(this);
 		
@@ -50,6 +50,10 @@ public class RunnerPickup : MonoBehaviour
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
+		if( this.collider2D == null || !this.collider2D.isTrigger )
+		{
+			Debug.LogError(transform.Path() + " : RunnerPickup has no collider or the collider is not set as Trigger!!");
+		}
 	}
 	
 	public void SetupGlobal()

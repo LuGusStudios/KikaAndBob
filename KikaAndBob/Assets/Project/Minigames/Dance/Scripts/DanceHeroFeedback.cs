@@ -5,10 +5,17 @@ using SmoothMoves;
 public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
-	protected BoneAnimation bobAnim = null;
-	protected string animationIdle = "BobBalance_Idle";
-	protected string animationStruggle = "BobBalance_Struggle";
-	protected string animationWin = "BobBalance_win";
+	public float maxScoreModifier = 9.0f;
+
+	public delegate void OnDisplayModifier();
+	public OnDisplayModifier onDisplayModifier = null;
+
+	public delegate void OnScoreRaised(DanceHeroLane lane);
+	public OnScoreRaised onScoreRaised = null;
+
+	public delegate void OnScoreLowered(DanceHeroLane lane);
+	public OnScoreRaised onScoreLowered = null;
+	
 	protected int failCount = 0;
 	protected int succesCount = 0;
 	protected int scorePerHit = 10;
@@ -16,12 +23,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected float scoreModifier = 1;
 	protected int scoreModifierStep = 1;
 	protected int nextMessageIndex = 1;
-	protected float maxScoreModifier = 9;
 	protected float scoreIncreaseStep = 0.2f;
 	protected TextMesh scoreDisplay = null;
 	protected TextMesh message = null;
-	protected GameObject modifierDisplayPrefab = null;
-	protected AudioClip laneHitSound = null;
 	protected ILugusCoroutineHandle messageRoutine = null;
 	protected string[] messages = new string[]
 	{
@@ -47,11 +51,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupLocal()
 	{
-		if (bobAnim == null)
-			bobAnim = GameObject.Find("Bob").GetComponent<BoneAnimation>();
-		if (bobAnim == null)
-			Debug.LogError("No Bob found in scene.");
-
 		Transform guiParent = GameObject.Find("GUI").transform;
 
 		if (scoreDisplay == null)
@@ -59,27 +58,24 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		if (scoreDisplay == null)
 			Debug.LogError("No score display found in scene.");
 
-		if (modifierDisplayPrefab == null)
-			modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
-		if (modifierDisplayPrefab == null)
-			Debug.LogError("No modifier display found in scene.");
-
 		if (message == null)
 			message = guiParent.FindChild("Message").gameObject.GetComponent<TextMesh>();
 		if (message == null)
 			Debug.LogError("No message game object found in scene.");
-
-
 	}
 
 	public void SetupGlobal()
 	{
-		bobAnim.Play("BobBalance_Idle", PlayMode.StopAll);
+	}
 
-		if (laneHitSound == null)
-			laneHitSound = LugusResources.use.Shared.GetAudio("Blob01");
-		if (laneHitSound == null)
-			Debug.Log("Lane hit sound is missing!");
+	public float GetScoreModifier()
+	{
+		return scoreModifier;
+	}
+
+	public int GetScore()
+	{
+		return score;
 	}
 
 	public void UpdateScore(bool succes, DanceHeroLane lane, int amount = 1)
@@ -91,9 +87,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			scoreValue += amount;
 			succesCount += amount;
 
-			scoreModifier += (scoreIncreaseStep);
+			scoreModifier += scoreIncreaseStep;
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
-			scoreAdd =  Mathf.RoundToInt((float)scorePerHit * scoreModifier);
+			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
 			DisplayScoreGainAtLane(lane, scoreAdd);
 
@@ -106,7 +102,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			// we only display the modifier above Bob's head when it has crossed a certain threshold, i.e. scoreModifierStep
 			if (scoreModifier >= scoreModifierStep && scoreModifier < maxScoreModifier + 1)
 			{
-				DisplayModifierAboveBob();
+				if (onDisplayModifier != null)
+					onDisplayModifier();
+
 				scoreModifierStep++;
 			}
 		}
@@ -130,7 +128,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			nextMessageIndex = 1;
 
 			if (showChange)
-				DisplayModifierAboveBob();
+			{
+				if (onDisplayModifier != null)
+					onDisplayModifier();
+			}
 		}
 
 		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
@@ -139,16 +140,16 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		scoreDisplay.text = score.ToString();
 
-		ChangeBobAnimation();
-	}
-
-	protected void DisplayModifierAboveBob()
-	{
-		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
-		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
-		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
-		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(scoreModifier).ToString();
-		Destroy(modifierDisplay, 0.5f);
+		if (succes)
+		{
+			if (onScoreRaised != null)
+				onScoreRaised(lane);
+		}
+		else
+		{
+			if (onScoreLowered != null)
+				onScoreLowered(lane);
+		}
 	}
 
 	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain)
@@ -172,62 +173,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		Destroy(scoreDisplay, 0.5f);
 	}
 
-	// blend three animations for value
-	protected void ChangeBobAnimation()
-	{
-		float step = maxScoreModifier / 3;
 
-		// between 2/3rd - full , win anim
-		if (scoreModifier >= step * 2)
-		{
-			float animWeight = Mathf.Lerp(0, 1, scoreModifier - 2 / 2);
-			bobAnim.Blend(animationWin, animWeight);
-			bobAnim.Blend(animationIdle, 1 - animWeight);
-			bobAnim.Blend(animationStruggle, 0);
-		}
-		// between 1/3rd - 2/3rd , idle anim
-		else if (scoreModifier >= step)
-		{
-			bobAnim.Blend(animationWin, 0);
-			bobAnim.Blend(animationIdle, 1);
-			bobAnim.Blend(animationStruggle, 0);
-		
-		}
-		// blend win from 1 - 0 for values 0-10
-		else
-		{
-			float animWeight = Mathf.Lerp(1, 0, scoreModifier - 1);
-			bobAnim.Blend(animationWin, 0);
-			bobAnim.Blend(animationIdle, 1 - animWeight);
-			bobAnim.Blend(animationStruggle, animWeight);
-		}
-
-
-//		// blend win from 0 - 1 for values 20-30
-//		if (scoreValue >= 10)
-//		{
-//			float animWeight = Mathf.Lerp(0, 1, scoreValue - 10 / 4);
-//			bobAnim.Blend(animationWin, animWeight);
-//			bobAnim.Blend(animationIdle, 1 - animWeight);
-//			bobAnim.Blend(animationStruggle, 0);
-//		}
-//		// between 10 - 20, idle anim
-//		else if (scoreValue >= 5)
-//		{
-//			bobAnim.Blend(animationWin, 0);
-//			bobAnim.Blend(animationIdle, 1);
-//			bobAnim.Blend(animationStruggle, 0);
-//		
-//		}
-//		// blend win from 1 - 0 for values 0-10
-//		else
-//		{
-//			float animWeight = Mathf.Lerp(1, 0, scoreValue / 4);
-//			bobAnim.Blend(animationWin, 0);
-//			bobAnim.Blend(animationIdle, 1 - animWeight);
-//			bobAnim.Blend(animationStruggle, animWeight);
-//		}
-	}
 
 	public void DisplayMessage(string messageText)
 	{
@@ -267,44 +213,5 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			message.color = message.color.a(message.color.a - 2f * Time.deltaTime);
 			yield return new WaitForEndOfFrame();
 		}
-	}
-
-	public void HighLightLane(Transform actionPoint)
-	{
-		LugusCoroutines.use.StartRoutine(LaneHighlight(actionPoint));
-	}
-
-
-	IEnumerator LaneHighlight(Transform actionPoint)
-	{
-		Transform highlight = actionPoint.FindChild("Highlight");
-
-		float alpha = 0;
-		float effectTime = 0.5f;
-
-		highlight.gameObject.SetActive(true);
-
-		iTween.RotateBy(highlight.gameObject, iTween.Hash(
-			"amount", new Vector3(0, 0, -0.5f),
-			"time", effectTime,
-			"easetype", iTween.EaseType.easeInOutQuad));
-
-		LugusAudio.use.SFX().Play(laneHitSound);
-		
-		while(alpha < 1)
-		{
-			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
-			alpha += (1 / (effectTime * 0.5f)) * Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-		
-		while(alpha > 0 )
-		{
-			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
-			alpha -= (1 / (effectTime * 0.5f)) * Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-
-		highlight.gameObject.SetActive(false);
 	}
 }

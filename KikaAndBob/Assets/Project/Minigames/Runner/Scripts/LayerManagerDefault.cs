@@ -8,7 +8,7 @@ public class LayerManager : LugusSingletonExisting<LayerManagerDefault>
 }
 
 
-public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault> 
+public class LayerManagerDefault : MonoBehaviour
 {
 	public LayerSpawner skyLayer = null;
 	public LayerSpawner groundLayer = null;
@@ -76,21 +76,24 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 	{
 		groundLayer.baseLayer = themes[ currentThemeIndex ].ground;
 		groundLayer.detailLayer = themes[ currentThemeIndex ].groundDetails;
+		groundLayer.detailSpawnIntensity = themes[ currentThemeIndex ].groundDetailsIntensity; 
 		groundLayer.StartSpawning();
 
 		skyLayer.baseLayer = themes[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themes[ currentThemeIndex ].skyDetails;
+		skyLayer.detailSpawnIntensity = themes[ currentThemeIndex ].skyDetailsIntensity; 
 		skyLayer.StartSpawning();
 
 
 		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
 		frontLayer.detailsRandomY = false;
+		frontLayer.detailSpawnIntensity = themes[ currentThemeIndex ].frontDetailsIntensity; 
 		frontLayer.StartSpawning();
 
 		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
 	}
 
-	protected bool themeTransitionInProgress = false;
+	public bool themeTransitionInProgress = false;
 	public void NextTheme()
 	{
 		if( themeTransitionInProgress ) 
@@ -111,6 +114,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 
 		skyLayer.baseLayer = themeTransitions[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themeTransitions[ currentThemeIndex ].skyDetails;
+		skyLayer.detailSpawnIntensity = themeTransitions[ currentThemeIndex ].skyDetailsIntensity; 
 	}
 
 	protected void OnSkyLayerTransitioned(LayerSection currentSection, LayerSection nextSection)
@@ -127,6 +131,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		int oneAhead = (currentThemeIndex + 1) % themes.Length;
 		skyLayer.baseLayer = themes[ oneAhead ].sky;
 		skyLayer.detailLayer = themes[ oneAhead ].skyDetails;
+		skyLayer.detailSpawnIntensity = themes[ oneAhead ].skyDetailsIntensity; 
 
 
 		LugusCoroutines.use.StartRoutine( GroundTransitionRoutine(nextSection) );
@@ -155,9 +160,11 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		
 		groundLayer.baseLayer = themeTransitions[ currentThemeIndex ].ground;
 		groundLayer.detailLayer = themeTransitions[ currentThemeIndex ].groundDetails;
+		groundLayer.detailSpawnIntensity = themeTransitions[ currentThemeIndex ].groundDetailsIntensity; 
 		
 		
 		frontLayer.detailLayer = themeTransitions[ currentThemeIndex ].frontDetails;
+		frontLayer.detailSpawnIntensity = themeTransitions[ currentThemeIndex ].frontDetailsIntensity; 
 	}
 
 	protected void OnGroundLayerTransitioned(LayerSection currentSection, LayerSection nextSection)
@@ -170,10 +177,14 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 
 		groundLayer.baseLayer = themes[ currentThemeIndex ].ground;
 		groundLayer.detailLayer = themes[ currentThemeIndex ].groundDetails;
+		groundLayer.detailSpawnIntensity = themes[ currentThemeIndex ].groundDetailsIntensity; 
+
 		skyLayer.baseLayer = themes[ currentThemeIndex ].sky;
 		skyLayer.detailLayer = themes[ currentThemeIndex ].skyDetails;
+		skyLayer.detailSpawnIntensity = themes[ currentThemeIndex ].skyDetailsIntensity; 
 		
 		frontLayer.detailLayer = themes[ currentThemeIndex ].frontDetails;
+		frontLayer.detailSpawnIntensity = themes[ currentThemeIndex ].frontDetailsIntensity; 
 		
 		themeTransitionInProgress = false;
 		
