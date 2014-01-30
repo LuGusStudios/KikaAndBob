@@ -92,7 +92,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DisableObjects( new GameObject[]{ StewPot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, VegetableProducer } );
 
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 
 
 		// generate orders to be use by the customers in this game
@@ -116,6 +116,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DisableObjects( new GameObject[]{ Blender, IceCreamMachine, OrangeProducer, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
 		
 		
 		
@@ -140,6 +141,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DisableObjects( new GameObject[]{ IceCreamMachine, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
 		
 		
 		
@@ -163,6 +165,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	{
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(8.0f, 10.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
@@ -171,9 +174,9 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		orders.Add( CreateOrder(stew) );
 		orders.Add( CreateOrder(burger, orange) );
 		orders.Add( CreateOrder(iceCream) );
-		orders.Add( CreateOrder(tomato, burgerLong) );
+		orders.Add( CreateOrder(tomato, burgerLong) ); 
 		
-		DinnerDashManager.use.consumerManager.RandomOrders = true;
+		DinnerDashManager.use.consumerManager.RandomOrders = true; 
 		DinnerDashManager.use.consumerManager.orders = orders;
 		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
 		
@@ -184,6 +187,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	{
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();

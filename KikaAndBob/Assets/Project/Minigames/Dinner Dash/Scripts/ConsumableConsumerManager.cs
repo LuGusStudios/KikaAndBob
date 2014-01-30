@@ -26,6 +26,9 @@ public class ConsumableConsumerManager : MonoBehaviour
 	public List<ConsumableConsumer> consumers = new List<ConsumableConsumer>();
 
 
+	public DataRange consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
+
+
 	protected ILugusCoroutineHandle generationHandle = null;
 
 	public void StartConsumerGeneration()
@@ -79,6 +82,44 @@ public class ConsumableConsumerManager : MonoBehaviour
 
 		return openPlaces[ Random.Range(0, openPlaces.Count) ];
 	}
+
+	public void VisualizeNewConsumer(ConsumableConsumer newConsumer, Vector3 position)
+	{
+		/*
+		newConsumer.transform.position = seat.transform.position + new Vector3(0.0f, -500.0f, 0.0f);
+		newConsumer.gameObject.MoveTo( seat.transform.position ).Time (2.0f).EaseType(iTween.EaseType.easeOutBack).Execute();
+		*/
+
+		GameObject poofEffect = GameObject.Find ("PoofEffect");
+		if( poofEffect != null )
+		{
+			GameObject poof = (GameObject) GameObject.Instantiate( poofEffect );
+			poof.transform.position = position;
+			
+			GameObject.Destroy( poof, 10.0f );
+		}
+		
+		Vector3 originalScale = newConsumer.transform.localScale;
+		newConsumer.transform.localScale = Vector3.zero;
+		newConsumer.gameObject.ScaleTo( originalScale ).Time (0.6f).EaseType(iTween.EaseType.easeOutBack).Execute();
+		
+		newConsumer.transform.position = position; // necessary for pathfinding to work! See IConsumableUser.GetTarget()
+
+	}
+
+	public void VisualizeRemoveConsumer(ConsumableConsumer consumer, Vector3 position)
+	{
+		GameObject poofEffect = GameObject.Find ("PoofEffect");
+		if( poofEffect != null )
+		{
+			GameObject poof = (GameObject) GameObject.Instantiate( poofEffect );
+			poof.transform.position = position;
+			
+			GameObject.Destroy( poof, 10.0f );
+		}
+
+		consumer.gameObject.ScaleTo( Vector3.zero ).Time (0.3f).EaseType(iTween.EaseType.linear).Execute(); 
+	}
 	
 	protected IEnumerator ConsumerGeneratorRoutine()
 	{
@@ -116,13 +157,18 @@ public class ConsumableConsumerManager : MonoBehaviour
 				}
 				else
 				{
-					newConsumer.state = ConsumableConsumer.State.Seated; // directly seated now, maybe later add waiting for places to gameplay
-					newConsumer.OnSeated();
-
-					newConsumer.transform.position = seat.transform.position;
-					newConsumer.name = /*"Consumer" +*/ seat.transform.name; // necessary for pathfinding to work! See IConsumableUser.GetTarget()
 					seat.consumer = newConsumer;
 					newConsumer.place = seat;
+
+					newConsumer.state = ConsumableConsumer.State.Seated; // directly seated now, maybe later add waiting for places to gameplay
+
+					newConsumer.Reset();
+					newConsumer.OnSeated(); 
+
+
+					VisualizeNewConsumer( newConsumer, seat.transform.position );
+					
+					newConsumer.name = /*"Consumer" +*/ seat.transform.name;
 
 					if( RandomOrders )
 					{

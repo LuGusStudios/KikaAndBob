@@ -80,10 +80,10 @@ public abstract class IConsumableUser : MonoBehaviour
 
 
 				
-				if( this.transform.localScale != Vector3.one )
-				{
-					Debug.LogError("CheckMark parent has non-one scale! " + this.transform.Path () );
-				}
+				//if( this.transform.localScale != Vector3.one )
+				//{
+					//Debug.LogError("CheckMark parent has non-one scale! " + this.transform.Path () );
+				//}
 			}
 
 

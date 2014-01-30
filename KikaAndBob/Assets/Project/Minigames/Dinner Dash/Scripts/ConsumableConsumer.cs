@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 // Most often: A customer that will eat the food and later pay for it and leaves dirty dishes
 // at the moment, consumers only accept consumables of a Processed state
+using SmoothMoves;
 
 public class ConsumableConsumer : IConsumableUser 
 {
@@ -19,11 +20,26 @@ public class ConsumableConsumer : IConsumableUser
 		NONE = -1
 	}
 
+	public enum AnimationType
+	{
+		NONE = -1,
+
+		Idle = 1,
+		Angry = 2,
+		Eating = 3
+	}
+
 	// has to be set externally when this consumer is spawned
 	public List<ConsumableDefinition> order;
 	
 	public DataRange eatingTime = new DataRange(2.0f, 4.0f);
 	public DataRange orderTime = new DataRange(2.0f, 4.0f); 
+
+	public DataRange waitingTimeBeforeAngry = new DataRange(6.0f, 8.0f);
+
+	public bool useAlternativeAnimations = false; // for now only used in New York to support 1 character with 2 texture sets
+
+	public float happiness = 10.0f;
 	
 	public ConsumableConsumer.State state = ConsumableConsumer.State.Seated;
 	public Consumable currentConsumable = null;
@@ -32,6 +48,10 @@ public class ConsumableConsumer : IConsumableUser
 	public ConsumableConsumerPlace place = null;
 
 	public Consumable moneyPrefab = null;
+
+
+
+	protected ILugusCoroutineHandle waitingHandle = null;
 
 	public override bool Use()
 	{
@@ -108,12 +128,20 @@ public class ConsumableConsumer : IConsumableUser
 			DinnerDashManager.use.Mover.AddConsumable( currentConsumable );
 			
 			//2. client leaves
+
+			place.happinessVisualizer.Hide();
+
 			// TODO: decently move
-			this.gameObject.MoveTo( Vector3.left * 3000 ).Speed ( 999999.0f ).Execute();
+			//this.gameObject.MoveTo( Vector3.left * 3000 ).Speed ( 999999.0f ).Execute();
+			DinnerDashManager.use.consumerManager.VisualizeRemoveConsumer(this, this.transform.position);
 			place.consumer = null;
 			this.place = null;
 			LugusCoroutines.use.StartRoutine( SetStateDelayed(5.0f, State.NONE) );
 
+
+
+			if( waitingHandle != null )
+				waitingHandle.StopRoutine();
 
 			return true;
 		}
@@ -140,6 +168,7 @@ public class ConsumableConsumer : IConsumableUser
 		// TODO: order yet another food item (ex. desert)
 
 		state = State.Paying;
+		PlayAnimation( AnimationType.Idle );
 		
 		LugusCoroutines.use.StartRoutine( PaymentRoutine() );
 	}
@@ -155,6 +184,146 @@ public class ConsumableConsumer : IConsumableUser
 		currentConsumable.transform.parent = this.transform.parent;
 		currentConsumable.transform.position = place.consumableLocation.position;
 		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
+	}
+
+	protected void PlayAnimation(AnimationType type)
+	{
+		BoneAnimation animation = GetComponent<BoneAnimation>();
+		if( animation == null )
+		{
+			animation = gameObject.GetComponentInChildren<BoneAnimation>();
+
+			if( animation == null )
+			{
+				Debug.LogError(transform.Path () + " : No BoneAnimation found for this consumer!");
+				return;
+			}
+		}
+
+		string animationName = "";
+		foreach( AnimationClipSM_Lite candidate in animation.mAnimationClips )
+		{
+			if( !useAlternativeAnimations )
+			{
+				if( type == AnimationType.Angry )
+				{
+					if( candidate.animationName.Contains("Stage2") ||
+					   candidate.animationName.Contains("Angry") ||
+					   candidate.animationName.Contains("Bang_table"))
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+				else if( type == AnimationType.Idle ) 
+				{
+					if( candidate.animationName.Contains("Sit") ||
+					    candidate.animationName.Contains("Idl") ||
+					    candidate.animationName.Contains("Idle") )
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+				else if( type == AnimationType.Eating )
+				{
+					if( candidate.animationName.Contains("Eating") )
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+			}
+			else
+			{
+				// in NewYork, we use the same BoneAnimation for 2 different characters with 2 texture sets
+				if( type == AnimationType.Angry )
+				{
+					if( candidate.animationName.Contains("Stage202") )
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+				else if( type == AnimationType.Idle ) 
+				{
+					if( candidate.animationName.Contains("Idle02") )
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+				else if( type == AnimationType.Eating )
+				{
+					if( candidate.animationName.Contains("Eating02") )
+					{
+						animationName = candidate.animationName;
+						break;
+					}
+				}
+
+			}
+		}
+
+		if( animationName == "" )
+		{
+
+			if( type != AnimationType.Idle )
+			{
+				Debug.LogWarning(transform.Path() + " : No animation found for type " + type + ". Default to Idle.");
+				PlayAnimation(AnimationType.Idle);
+				return;
+			}
+			else
+			{
+				Debug.LogError(transform.Path() + " : No animation found for type " + type + ".");
+				return;
+			}
+		}
+
+		Debug.LogError("PlayingAnimation " + animationName + " // " + transform.Path () );
+		//animation.CrossFade( animationName, 1.0f );
+		animation.Play ( animationName );
+	}
+
+	protected IEnumerator WaitingRoutine(State beginningState)
+	{
+		yield return new WaitForSeconds( waitingTimeBeforeAngry.Random() );
+
+		if( this.state == beginningState )
+		{
+			// still in the same state -> we're going to get annoyed now!
+			PlayAnimation( AnimationType.Angry );
+		}
+
+		bool waiting = true;
+		while( waiting )
+		{
+			if( this.state != beginningState )
+			{
+				// stopped waiting
+				break;
+			}
+			else
+			{
+				happiness -= 1.0f;
+				place.happinessVisualizer.Visualize( this.happiness );
+
+				yield return new WaitForSeconds( waitingTimeBeforeAngry.Random() );
+			}
+		}
+
+		yield break;
+	}
+
+	// called before re-using this consumer
+	public void Reset()
+	{
+		PlayAnimation( AnimationType.Idle );
+		this.waitingTimeBeforeAngry = DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry;
+
+		this.happiness = 10.0f;
+		place.happinessVisualizer.Visualize( this.happiness );
 	}
 
 	// TODO: now this is called from the outside
@@ -176,6 +345,8 @@ public class ConsumableConsumer : IConsumableUser
 		place.orderVisualizer.Visualize( order );
 
 		state = State.Ordered;  
+
+		waitingHandle = LugusCoroutines.use.StartRoutine( WaitingRoutine(State.Ordered) );
 	}
 
 
@@ -192,7 +363,9 @@ public class ConsumableConsumer : IConsumableUser
 		//subject.transform.localScale *= 0.5f;
 
 		ILugusAudioTrack track = LugusAudio.use.SFX ().Play ( LugusResources.use.Shared.GetAudio("Eating01"), false, new LugusAudioTrackSettings().Loop(true) );
-		
+
+		PlayAnimation(AnimationType.Eating);
+
 		yield return new WaitForSeconds( eatingTime.Random () ); 
 
 		track.Stop();
@@ -201,6 +374,11 @@ public class ConsumableConsumer : IConsumableUser
 		state = State.Done;
 
 		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
+		
+		PlayAnimation(AnimationType.Idle);
+		waitingHandle = LugusCoroutines.use.StartRoutine( WaitingRoutine(State.Done) );
+
+
 		
 		// TODO: graphical indication client is ready?
 	}
