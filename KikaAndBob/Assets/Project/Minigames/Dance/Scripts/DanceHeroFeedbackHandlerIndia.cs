@@ -19,8 +19,11 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected Vector3 snakePosition2;
 	protected Vector3 snakePosition3;
 	protected ILugusCoroutineHandle flutePlayRoutine = null;
-	private float smallFluteAnimDuration = 0.3f;
-	private float largeFluteAnimDuration = 0.5f;
+	protected float smallFluteAnimDuration = 0.3f;
+	protected float largeFluteAnimDuration = 0.5f;
+	protected List<Transform> coinPrefabs = new List<Transform>();
+	protected List<Transform> coinsDropped = new List<Transform>();
+	protected Transform legs = null;
 
 	
 	protected void Awake()
@@ -32,6 +35,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	{
 		SetupGlobal();
 		fluteParent.gameObject.MoveTo(flute.position + new Vector3(0, 0.1f, 0)).Time(1f).EaseType(iTween.EaseType.easeInOutQuad).Looptype(iTween.LoopType.pingPong).Execute();
+		LugusCoroutines.use.StartRoutine(RemoveCoinsRoutine());
 	}
 	
 	public void SetupLocal()
@@ -76,6 +80,22 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		snakePosition1 = snake.transform.position;
 		snakePosition2 = snakePosition1 + new Vector3(0, 1, 0);
 		snakePosition3 = snakePosition1 + new Vector3(0, -1, 0);
+
+		GameObject money = GameObject.Find("Money");
+
+		foreach(Transform t in money.transform)
+		{
+			coinPrefabs.Add(t);
+		}
+
+		legs = GameObject.Find("Legs").transform;
+
+		for (int i = 0; i < legs.childCount; i++) 
+		{
+			BoneAnimation ba = legs.GetChild(i).GetComponent<BoneAnimation>();
+			ba.Play(ba.GetComponent<DefaultBoneAnimation>().clipName);
+		}
+
 	}
 	
 	public void SetupGlobal()
@@ -99,6 +119,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	{
 		ChangeSnakeAnim();
 		AnimateFlute(false);
+		DropMoney();
 	}
 	
 	protected void OnScoreLowered(DanceHeroLane lane)
@@ -148,8 +169,36 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		yield return new WaitForSeconds(halfTime);
 	}
 
+	protected void DropMoney()
+	{
+		GameObject droppedCoin = (GameObject)Instantiate(coinPrefabs[Random.Range(0, coinPrefabs.Count)].gameObject);
 
+		droppedCoin.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), 0, 0));
 
+		Vector3 destination = 	droppedCoin.transform.position + 
+								new Vector3(0, Random.Range(-6, -10), 0);
+
+		droppedCoin.MoveTo(destination).EaseType(iTween.EaseType.easeOutBounce).Time(1).Execute();
+
+		coinsDropped.Add(droppedCoin.transform);
+	}
+
+	protected IEnumerator RemoveCoinsRoutine()
+	{
+		while(true)
+		{
+			if (coinsDropped.Count >= 10)
+			{
+				Transform oldestCoin = coinsDropped[0];
+				coinsDropped.Remove(oldestCoin);
+				GameObject.Destroy(oldestCoin.gameObject);
+				yield return new WaitForSeconds(1.0f);
+			}
+			else
+				yield return new WaitForEndOfFrame();
+
+		}
+	}
 
 	protected void ChangeSnakeAnim()
 	{
