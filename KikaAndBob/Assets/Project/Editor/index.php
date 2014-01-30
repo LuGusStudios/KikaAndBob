@@ -45,7 +45,7 @@ html, body {
 
 	margin: 0 auto;
 
-	width: 440px;
+	width: 800px;
 
 	text-align: center;
 

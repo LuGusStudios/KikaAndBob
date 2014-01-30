@@ -35,7 +35,7 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 		
 		character.speedRange = new DataRange(10,10);
 		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
-		RunnerInteractionManager.use.maximumDifficulty = 3;
+		RunnerInteractionManager.use.maximumDifficulty = 6;
 	}
 	
 	public void Level1()

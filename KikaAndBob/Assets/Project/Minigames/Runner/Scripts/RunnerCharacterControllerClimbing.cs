@@ -128,27 +128,29 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
 		}
 		*/
+
+		float speed = RunnerCameraPuller.use.currentSpeed + 1.0f; //* 1.2f; // 20% faster than camera
 		
 		this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
 		if( up )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( horizontalSpeed * 1.2f );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( speed * 1.2f );
 			this.transform.localScale = originalScale;
 		}
 		else if( down )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * horizontalSpeed * 0.8f );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * speed * 0.8f );
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 
 		if( right )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( horizontalSpeed );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed );
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 		else if( left )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * horizontalSpeed );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed );
 			this.transform.localScale = originalScale;
 		}
 
