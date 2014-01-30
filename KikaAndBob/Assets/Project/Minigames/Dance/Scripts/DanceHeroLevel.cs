@@ -63,7 +63,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		}
 	}
 
-	protected DanceHeroLane GetLane(string name)
+	public DanceHeroLane GetLane(string name)
 	{
 		foreach( DanceHeroLane lane in lanes )
 		{
@@ -80,7 +80,16 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		//LoadLevelMetallica();
 
 		cumulativeDelay = 0;
-		LoadLevelChina();
+
+		DanceHeroLane lane1 = GetLane("Lane1");
+		DanceHeroLane lane2 = GetLane("Lane2");
+		DanceHeroLane lane3 = GetLane("Lane3");
+		
+		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+
+		LaneLoader.LoadLanes("ChinaSong02");
 
 		if (endLevelRoutine != null && endLevelRoutine.Running)
 			endLevelRoutine.StopRoutine();
@@ -104,8 +113,10 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
 		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
 		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
-		
-		
+
+	
+
+		/*
 		// GLOBAL_CUMULATIVE
 		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
 		lane1.AddItem( 0.0f );
@@ -141,7 +152,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		lane1.AddItem( 1.2f );
 		lane2.AddItem( 0.3f );
 		lane3.AddItem( 0.3f );
-		lane2.AddItem( 0.3f, 1 );
+		lane2.AddItem( 0.3f, 1 );*/
 	}
 
 	protected void LoadLevel1()

@@ -155,6 +155,38 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				}
 			}
 		}
+		// in front of action point
+		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.actionPoint.transform.localPosition.x)
+		{
+			if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
+			{
+//				// TODO: raycast! both down and up
+//				if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//					DetectSingle(true, actionPoint);
+//				else
+//					DetectStreak(true, actionPoint);
+			}
+			else
+			{
+//				if( LugusInput.use.KeyDown( item.KeyCode ) )
+//				{
+//					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//						DetectSingle(true, actionPoint);
+//					else
+//						DetectStreak(true, actionPoint);
+//				}
+				
+				// TODO: for streak, up also needs to be detected if it happens in between: need to keep it going untill the end!
+//				if( LugusInput.use.KeyUp( item.KeyCode ) )
+//				{
+//					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//						DetectSingle(false, actionPoint);
+//					else
+//						DetectStreak(false, actionPoint);
+//				}
+			}
+		}
+		// past action point
 		else if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
 		{
 			MissedSingle();
