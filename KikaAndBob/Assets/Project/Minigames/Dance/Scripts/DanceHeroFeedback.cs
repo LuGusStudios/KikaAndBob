@@ -124,7 +124,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 //			scoreValue -= amount;
 			failCount += amount;
 
-			score -= (int)((scorePerHit * maxScoreModifier) * 0.5f);
+			//score -= (int)((scorePerHit * maxScoreModifier) * 0.5f);	// deduct half of maximum score
 
 			if (score < 0)
 			{
