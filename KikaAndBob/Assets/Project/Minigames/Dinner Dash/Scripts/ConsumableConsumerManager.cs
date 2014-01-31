@@ -120,6 +120,21 @@ public class ConsumableConsumerManager : MonoBehaviour
 
 		consumer.gameObject.ScaleTo( Vector3.zero ).Time (0.3f).EaseType(iTween.EaseType.linear).Execute(); 
 	}
+
+	public void RemoveConsumerDelayed(ConsumableConsumer consumer, float delay)
+	{
+		LugusCoroutines.use.StartRoutine( RemoveConsumerDelayedRoutine(consumer, delay) );
+	}
+
+	protected IEnumerator RemoveConsumerDelayedRoutine(ConsumableConsumer consumer, float delay)
+	{
+		yield return new WaitForSeconds( delay );
+
+		Debug.Log (consumer.transform.Path() + " : removing consumer from list");
+
+		consumers.Remove( consumer );
+		GameObject.Destroy( consumer.gameObject ); 
+	}
 	
 	protected IEnumerator ConsumerGeneratorRoutine()
 	{

@@ -6,7 +6,8 @@ public class HappinessVisualizer : MonoBehaviour
 {
 	public GameObject happinessIconPrefab = null;
 
-	protected List<GameObject> icons = null;
+	//protected List<GameObject> icons = null;
+	public GameObject icon = null;
 
 	public void SetupLocal()
 	{
@@ -15,16 +16,41 @@ public class HappinessVisualizer : MonoBehaviour
 		{
 			Debug.LogError(transform.Path () + " : No happinessIconPrefab found!" );
 		}
+		else
+		{
+			icon = (GameObject) GameObject.Instantiate( happinessIconPrefab );
+			icon.transform.parent = this.transform;
+			icon.transform.localPosition = Vector3.zero;
 
-		PrepareRenderers();
+			icon.SetActive( false );
+		}
+
+		//PrepareRenderers();
 	}
 
 	public void Visualize(float happiness)
 	{
 		// happiness goes from 0 to 10
 		// divide in buckets of 2 wide for now
-		int showCount = Mathf.FloorToInt( happiness / 2.0f );
-		
+
+		icon.SetActive( true );
+
+		int index = 4; // 10 is multi happy already!
+
+		if( happiness < 10 )
+		{
+			DataRange happinessRange = new DataRange(0,9);
+			DataRange indexRange = new DataRange(0, 4);
+
+			float percent = happinessRange.PercentageInInterval( happiness );
+			index = Mathf.RoundToInt( indexRange.ValueFromPercentage(percent) );
+
+			//Debug.LogWarning("Happiness viz : index " + index + " from happiness " + happiness + " from percent " + percent + " @ " + indexRange.ValueFromPercentage(percent));
+		}
+
+		icon.GetComponent<SpriteRenderer>().sprite = icon.GetComponent<HappinessIcon>().states[ index ];
+
+		/*
 		for( int i = 0; i < showCount; ++i )
 		{
 			icons[i].SetActive(true);
@@ -37,8 +63,10 @@ public class HappinessVisualizer : MonoBehaviour
 				icons[i].SetActive(false);
 			}
 		}
+		*/
 	}
 
+	/*
 	protected void PrepareRenderers()
 	{
 		icons = new List<GameObject>();
@@ -69,12 +97,20 @@ public class HappinessVisualizer : MonoBehaviour
 			icons.Add ( icon );
 		}
 	}
+	*/
 
 	public void Hide()
 	{
+		/*
 		foreach( GameObject icon in icons )
 		{
 			icon.SetActive(false);
+		}
+		*/
+
+		foreach( Transform child in this.transform )
+		{
+			child.gameObject.SetActive(false);
 		}
 	}
 	

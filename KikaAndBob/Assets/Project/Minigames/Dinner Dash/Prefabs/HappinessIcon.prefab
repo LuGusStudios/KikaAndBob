@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 212: {fileID: 21200000}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: HappinessIcon
   m_TagString: Untagged
@@ -24,9 +25,26 @@ Transform:
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -55.928894, y: 567.763489, z: -115}
-  m_LocalScale: {x: .0736249983, y: .0736249983, z: .0736249983}
+  m_LocalScale: {x: .800000012, y: .800000012, z: .800000012}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d15b719a24c14fda88af015984c6cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - {fileID: 21300000, guid: ec7a717e1a92c47c4870d5d8ffb792eb, type: 3}
+  - {fileID: 21300000, guid: cf7255ab3e80f471797f1dbe4ba6637d, type: 3}
+  - {fileID: 21300000, guid: 2bc3646dca007479e947fae1d72fc255, type: 3}
+  - {fileID: 21300000, guid: beb8cdfd794d04dafaabe330eb27b629, type: 3}
+  - {fileID: 21300000, guid: 87ad2a6714dec4eadb7e40688fd5a313, type: 3}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -48,7 +66,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: c34f5304126414ffe9f801e24b4cbefb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87ad2a6714dec4eadb7e40688fd5a313, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

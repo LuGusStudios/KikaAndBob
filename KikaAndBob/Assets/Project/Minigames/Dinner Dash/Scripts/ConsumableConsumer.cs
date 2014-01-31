@@ -159,6 +159,11 @@ public class ConsumableConsumer : IConsumableUser
 		yield return new WaitForSeconds(delay);
 
 		this.state = newState;
+
+		if( this.state == State.NONE )
+		{
+			DinnerDashManager.use.consumerManager.RemoveConsumerDelayed( this, 0.0f );
+		}
 	}
 
 	protected void DoneEating()
@@ -219,7 +224,8 @@ public class ConsumableConsumer : IConsumableUser
 				{
 					if( candidate.animationName.Contains("Sit") ||
 					    candidate.animationName.Contains("Idl") ||
-					    candidate.animationName.Contains("Idle") )
+					   candidate.animationName.Contains("Idle") ||
+					   candidate.animationName.Contains("JewBoy") )
 					{
 						animationName = candidate.animationName;
 						break;
@@ -281,7 +287,7 @@ public class ConsumableConsumer : IConsumableUser
 			}
 		}
 
-		Debug.LogError("PlayingAnimation " + animationName + " // " + transform.Path () );
+		//Debug.LogError("PlayingAnimation " + animationName + " // " + transform.Path () );
 		//animation.CrossFade( animationName, 1.0f );
 		animation.Play ( animationName );
 	}
@@ -310,10 +316,57 @@ public class ConsumableConsumer : IConsumableUser
 				place.happinessVisualizer.Visualize( this.happiness );
 
 				yield return new WaitForSeconds( waitingTimeBeforeAngry.Random() );
+
+				if( happiness < -1.0f )
+				{
+					// waited long enough, i'm going home!
+					LeaveAnnoyed();
+					break;
+				}
 			}
 		}
 
 		yield break;
+	}
+
+	protected void LeaveAnnoyed()
+	{
+		// we are either in Ordered state (waiting to be served)
+		// or in the Done state (empty dishes are set out in front)
+
+		bool stop = true;
+		if( state == State.Ordered )  
+		{
+			// hide the order
+			place.orderVisualizer.Hide();
+		}
+		else if( state == State.Done )
+		{
+			// clear the dishes
+			if( currentConsumable != null )
+			{
+				GameObject.Destroy( currentConsumable.gameObject );
+			}
+		}
+		else
+		{
+			stop = false;
+			Debug.LogError(transform.Path () + " : Consumer was in state " + state + " and cannot LeaveAnnoyed!");
+		}
+
+		if( stop ) 
+		{
+			place.happinessVisualizer.Hide();
+
+			DinnerDashManager.use.consumerManager.VisualizeRemoveConsumer(this, this.transform.position);
+			place.consumer = null;
+			this.place = null;
+			LugusCoroutines.use.StartRoutine( SetStateDelayed(5.0f, State.NONE) );
+
+			if( waitingHandle != null )
+				waitingHandle.StopRoutine();
+		}
+
 	}
 
 	// called before re-using this consumer

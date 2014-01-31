@@ -78,6 +78,15 @@ public abstract class IConsumableUser : MonoBehaviour
 				
 				checkMarkPos = this.transform.TransformPoint( new Vector3(xOffset, yOffset, 0.0f ) );
 
+				Vector2 screenPoint = LugusCamera.game.WorldToScreenPoint( checkMarkPos );
+				if( screenPoint.x < 20 || screenPoint.x > Screen.width - 20 ||
+				   screenPoint.y < 20 || screenPoint.y > Screen.height - 20 )
+				{
+					// pos is offscreen or too close to edge... try the top right corner instead
+					xOffset *= -1.0f;
+					
+					checkMarkPos = this.transform.TransformPoint( new Vector3(xOffset, yOffset, 0.0f ) );
+				}
 
 				
 				//if( this.transform.localScale != Vector3.one )
