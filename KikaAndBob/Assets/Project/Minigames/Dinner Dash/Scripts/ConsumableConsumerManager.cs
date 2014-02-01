@@ -31,6 +31,11 @@ public class ConsumableConsumerManager : MonoBehaviour
 
 	protected ILugusCoroutineHandle generationHandle = null;
 
+
+	public delegate void OnConsumerStateChange(ConsumableConsumer consumer, ConsumableConsumer.State oldState, ConsumableConsumer.State newState);
+	public OnConsumerStateChange onConsumerStateChange;
+
+
 	public void StartConsumerGeneration()
 	{
 		generationHandle = LugusCoroutines.use.StartRoutine( ConsumerGeneratorRoutine() );
@@ -44,6 +49,20 @@ public class ConsumableConsumerManager : MonoBehaviour
 		generationHandle.StopRoutine();
 		generationHandle = null;
 	} 
+
+	public ConsumableConsumer GetNextActiveConsumer()
+	{
+		foreach( ConsumableConsumer consumer in consumers )
+		{
+			if( consumer.IsActive() )
+			{
+				return consumer;
+			}
+		}
+
+		return null;
+	}
+
 
 	protected int GetActiveConsumerCount()
 	{

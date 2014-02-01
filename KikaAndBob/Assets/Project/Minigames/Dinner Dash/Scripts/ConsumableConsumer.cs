@@ -16,6 +16,7 @@ public class ConsumableConsumer : IConsumableUser
 		Eating = 4, // eating the food
 		Done = 5, // done eating the food, waiting for cleanup
 		Paying = 6, // all done, waiting for mover to pickup the payment
+		Leaving = 7, // payment is done, we're leaving
 		
 		NONE = -1
 	}
@@ -40,8 +41,29 @@ public class ConsumableConsumer : IConsumableUser
 	public bool useAlternativeAnimations = false; // for now only used in New York to support 1 character with 2 texture sets
 
 	public float happiness = 10.0f;
-	
-	public ConsumableConsumer.State state = ConsumableConsumer.State.Seated;
+
+	protected ConsumableConsumer.State _state = ConsumableConsumer.State.Seated;
+	public ConsumableConsumer.State state
+	{
+		set
+		{
+			Debug.LogError("Consumer set state " + value );
+			State oldState = _state;
+			_state = value;
+
+			if( _state != oldState )
+			{
+				if( DinnerDashManager.use.consumerManager.onConsumerStateChange != null )
+					DinnerDashManager.use.consumerManager.onConsumerStateChange(this, oldState, _state);
+			}
+		}
+
+		get
+		{
+			return _state;
+		} 
+	}
+
 	public Consumable currentConsumable = null;
 
 	// place (chair) the consumer is currently taking in
@@ -136,6 +158,9 @@ public class ConsumableConsumer : IConsumableUser
 			DinnerDashManager.use.consumerManager.VisualizeRemoveConsumer(this, this.transform.position);
 			place.consumer = null;
 			this.place = null;
+
+			this.state = State.Leaving;
+
 			LugusCoroutines.use.StartRoutine( SetStateDelayed(5.0f, State.NONE) );
 
 
@@ -151,7 +176,7 @@ public class ConsumableConsumer : IConsumableUser
 
 	public bool IsActive()
 	{
-		return (state != ConsumableConsumer.State.NONE);
+		return (state != ConsumableConsumer.State.NONE && state != ConsumableConsumer.State.Leaving);
 	}
 
 	public IEnumerator SetStateDelayed(float delay, State newState)

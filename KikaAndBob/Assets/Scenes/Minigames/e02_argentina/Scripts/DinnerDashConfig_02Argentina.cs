@@ -105,9 +105,13 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
-		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 6.0f);
+
+		DinnerDashTutorials_02Argentina tutorials = gameObject.AddComponent<DinnerDashTutorials_02Argentina>();
+		tutorials.currentTutorial = 0;
+		tutorials.NextStep();
 	}
 
 	public void Level1()
