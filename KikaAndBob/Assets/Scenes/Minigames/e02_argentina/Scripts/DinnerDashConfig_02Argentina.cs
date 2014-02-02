@@ -128,16 +128,21 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
 		orders.Add( CreateOrder(stew) );
-		orders.Add( CreateOrder(burger) );
 		orders.Add( CreateOrder(stew, burgerLong) );
+		orders.Add( CreateOrder(burger) );
 		orders.Add( CreateOrder(stew) );
 		
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+
+		
+		DinnerDashTutorials_02Argentina tutorials = gameObject.AddComponent<DinnerDashTutorials_02Argentina>();
+		tutorials.currentTutorial = 1;
+		tutorials.NextStep();
 	}
 	public void Level2()
 	{

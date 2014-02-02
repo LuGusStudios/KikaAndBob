@@ -17,6 +17,10 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		{
 			Tutorial0_Step ();
 		}
+		else if( currentTutorial == 1 )
+		{
+			Tutorial1_Step ();
+		}
 	}
 
 	public void Tutorial0_Step()
@@ -40,11 +44,15 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 9 )
 		{
-			BasicProcess( 2, config.BurgerProducer );
+			SingleOrderFull( 2, config.BurgerProducer );
 		}
 		else if( stepCount < 16 )
 		{
-			BasicProcess( 9, config.BurgerLongProducer );
+			SingleOrderFull( 9, config.BurgerLongProducer );
+		}
+		else if( stepCount < 24 )
+		{
+			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
 		}
 
 		/*
@@ -95,6 +103,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		*/
 
+		/*
 		else if( stepCount == 16 )
 		{
 			Debug.Log ("This guy wants 2 sandwiches: tap both after another and bring them to him");
@@ -150,6 +159,47 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 			Debug.Log ("TUTORIAL SUCCESS!");
 			arrow.Hide();
 		}
+		*/
 
+	}
+
+	public void Tutorial1_Step()
+	{
+		++stepCount;
+		
+		Debug.LogError ("Tutorial1 step " + stepCount);
+		
+		if( stepCount == 1 )
+		{
+			// first step before beginning : CTOR
+			DinnerDashManager.use.consumerManager.onConsumerStateChange += OnConsumerStateChanged;
+		}
+		else if( stepCount < 12 )
+		{
+			SingleProcessorOrderFull( 2, config.VegetableProducer, config.StewPot );
+		} 
+
+		/*
+		else if( stepCount < 17 )
+		{
+			SingleProcessorOrderFull( 9, config.VegetableProducer, config.StewPot, config.BurgerProducer );
+		}
+		*/
+
+		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
+		{
+			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+		}
+
+		/*
+		else if( stepCount < 17 )
+		{
+			SingleOrderFull( 9, config.BurgerLongProducer );
+		}
+		else if( stepCount < 24 )
+		{
+			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
+		}
+		*/
 	}
 }

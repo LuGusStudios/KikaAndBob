@@ -10,7 +10,7 @@ public class ConsumableConsumerManager : MonoBehaviour
 	
 	// this is to be filled up in the Start() function of the level-specific config script for the game
 	public List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
-	protected int currentOrderIndex = 0;
+	public int currentOrderIndex = 0;
 	public bool RandomOrders = false;
 	
 	// different places where the consumers can be seated at
