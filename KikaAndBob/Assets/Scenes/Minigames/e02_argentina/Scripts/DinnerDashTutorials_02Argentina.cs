@@ -21,6 +21,14 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		{
 			Tutorial1_Step ();
 		}
+		else if( currentTutorial == 2 )
+		{
+			Tutorial2_Step ();
+		}
+		else if( currentTutorial == 3 )
+		{
+			Tutorial3_Step (); 
+		}
 	}
 
 	public void Tutorial0_Step()
@@ -55,112 +63,6 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
 		}
 
-		/*
-		else if( stepCount == 9 )
-		{
-			Debug.Log ("TAP Long burger!");
-			arrow.Show( config.BurgerLongProducer );
-			config.BurgerLongProducer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
-		}
-		else if( stepCount == 10 )
-		{
-			// sandwich tapped
-			Debug.Log ("TAP CUSTOMER");
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-			config.BurgerLongProducer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
-		}
-		else if( stepCount == 11 )
-		{
-			// customer tapped. Customer is now eating... wait for the customer to be Done
-			arrow.Hide ();
-			
-		}
-		else if( stepCount == 12 )
-		{
-			// customer is done: need to pick up the dishes
-			Debug.Log ("TAP CUSTOMER for DISHES");
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-		}
-		else if( stepCount == 13 )
-		{
-			// customer is done eating
-			Debug.Log ("TAP DISHWASHER");
-			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed += OnConsumableUsed;
-			arrow.Show( GameObject.Find ("GarbageBin") );
-		}
-		else if( stepCount == 14 )
-		{
-			// dishwasher tapped
-			Debug.Log ("TAP CUSTOMER for PAYMENT");
-			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed -= OnConsumableUsed;
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-		}
-		else if( stepCount == 15 )
-		{
-			// dishwasher tapped
-			Debug.Log ("TUTORIAL SUCCESS!");
-			arrow.Hide();
-		}
-		*/
-
-		/*
-		else if( stepCount == 16 )
-		{
-			Debug.Log ("This guy wants 2 sandwiches: tap both after another and bring them to him");
-			arrow.Show( config.BurgerProducer );
-			config.BurgerProducer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
-		}
-		else if( stepCount == 17 )
-		{
-			// sandwich tapped
-			Debug.Log ("TAP BURGER LONG");
-			config.BurgerProducer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
-			
-			arrow.Show( config.BurgerLongProducer );
-			config.BurgerLongProducer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
-		}
-		else if( stepCount == 18 )
-		{
-			// sandwich tapped
-			Debug.Log ("TAP CUSTOMER");
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-			config.BurgerLongProducer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
-		}
-
-		else if( stepCount == 19 )
-		{
-			// customer tapped. Customer is now eating... wait for the customer to be Done
-			arrow.Hide ();
-			
-		}
-		else if( stepCount == 20 )
-		{
-			// customer is done: need to pick up the dishes
-			Debug.Log ("TAP CUSTOMER for DISHES");
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-		}
-		else if( stepCount == 21 )
-		{
-			// customer is done eating
-			Debug.Log ("TAP DISHWASHER");
-			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed += OnConsumableUsed;
-			arrow.Show( GameObject.Find ("GarbageBin") );
-		}
-		else if( stepCount == 22 )
-		{
-			// dishwasher tapped
-			Debug.Log ("TAP CUSTOMER for PAYMENT");
-			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed -= OnConsumableUsed;
-			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
-		}
-		else if( stepCount == 23 )
-		{
-			// dishwasher tapped
-			Debug.Log ("TUTORIAL SUCCESS!");
-			arrow.Hide();
-		}
-		*/
-
 	}
 
 	public void Tutorial1_Step()
@@ -179,27 +81,48 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 			SingleProcessorOrderFull( 2, config.VegetableProducer, config.StewPot );
 		} 
 
-		/*
-		else if( stepCount < 17 )
-		{
-			SingleProcessorOrderFull( 9, config.VegetableProducer, config.StewPot, config.BurgerProducer );
-		}
-		*/
-
 		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
 		{
 			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		}
+	}
 
-		/*
-		else if( stepCount < 17 )
+	public void Tutorial2_Step()
+	{
+		++stepCount;
+		
+		Debug.LogError ("Tutorial2 step " + stepCount);
+		
+		if( stepCount == 1 )
 		{
-			SingleOrderFull( 9, config.BurgerLongProducer );
+			// first step before beginning : CTOR
+			DinnerDashManager.use.consumerManager.onConsumerStateChange += OnConsumerStateChanged;
 		}
-		else if( stepCount < 24 )
+		else if( stepCount < 12 )
 		{
-			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
+			SingleProcessorOrderFull( 2, config.OrangeProducer, config.Blender );
+		} 
+		
+		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
+		{
+			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+			// TODO: if excessive food: dishwasher, penalty
 		}
-		*/
+	}
+
+	public void Tutorial3_Step()
+	{
+		++stepCount;
+		
+		Debug.LogError ("Tutorial3 step " + stepCount);
+		
+		if( stepCount == 1 )
+		{
+			// TODO: if user becomes angry = less money
+			// TODO: if similar actions in a row : bonus! 
+
+			// first step before beginning : CTOR
+			DinnerDashManager.use.consumerManager.onConsumerStateChange += OnConsumerStateChanged;
+		}
 	}
 }

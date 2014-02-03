@@ -165,16 +165,21 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 3;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+
+		
+		DinnerDashTutorials_02Argentina tutorials = gameObject.AddComponent<DinnerDashTutorials_02Argentina>();
+		tutorials.currentTutorial = 2;
+		tutorials.NextStep();
 	}
 
-	public void Level3()
-	{
+	public void Level3() 
+	{ 
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(8.0f, 10.0f);
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
@@ -187,12 +192,16 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = true; 
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 10.0f);
+		
+		DinnerDashTutorials_02Argentina tutorials = gameObject.AddComponent<DinnerDashTutorials_02Argentina>();
+		tutorials.currentTutorial = 3;
+		tutorials.NextStep();
 	}
 
-	public void Level4()
+	public void Level4() 
 	{
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
