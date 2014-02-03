@@ -8,7 +8,7 @@ public class LayerManager : LugusSingletonExisting<LayerManagerDefault>
 }
 
 
-public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault> 
+public class LayerManagerDefault : MonoBehaviour
 {
 	public LayerSpawner skyLayer = null;
 	public LayerSpawner groundLayer = null;
@@ -93,7 +93,7 @@ public class LayerManagerDefault : LugusSingletonExisting<LayerManagerDefault>
 		LugusCoroutines.use.StartRoutine( NextThemeRoutine() );
 	}
 
-	protected bool themeTransitionInProgress = false;
+	public bool themeTransitionInProgress = false;
 	public void NextTheme()
 	{
 		if( themeTransitionInProgress ) 

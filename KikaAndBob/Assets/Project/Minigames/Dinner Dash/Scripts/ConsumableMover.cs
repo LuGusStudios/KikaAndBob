@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 {
+	public List<Waypoint> navigationGraph = null;
+
 	public List<Consumable> processedItems = new List<Consumable>();
 	public List<Consumable> unprocessedItems = new List<Consumable>();
 	public List<Consumable> consumedItems = new List<Consumable>();
@@ -23,26 +25,39 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 
 	public IEnumerator MoveToRoutine(Waypoint target)
 	{
+		//Debug.Log ("MOVING TO target " + target.transform.Path());
+
 		moving = true;
 
-		List<Waypoint> graph = new List<Waypoint>( (Waypoint[]) GameObject.FindObjectsOfType(typeof(Waypoint)) );
-		
+		List<Waypoint> graph = navigationGraph; //new List<Waypoint>( (Waypoint[]) GameObject.FindObjectsOfType(typeof(Waypoint)) );
+
+
 		Waypoint start = null;
 		// find closest waypoint to our current position
 		float smallestDistance = float.MaxValue;
 		foreach( Waypoint wp in graph )
 		{
 			float distance = Vector2.Distance( transform.position.v2 (), wp.transform.position.v2 () );
+			//Debug.LogError("Distance to " + wp.transform.Path() + " is " + distance + " < " + smallestDistance);
 			if( distance < smallestDistance )
 			{
 				start = wp;
 				smallestDistance = distance;
 			}
 		}
+
 		
+		//Debug.Log ("START " + start.transform.Path());
 		
 		bool fullPath = false;
 		List<Waypoint> path = AStarCalculate( graph, start, target, out fullPath );
+
+		/*
+		foreach( Waypoint wp in path )
+		{
+			Debug.Log ("PATH item " + wp.transform.Path());
+		}
+		*/
 		
 		int pathIndex = path.Count - 1;
 		while( pathIndex > -1 )
@@ -419,6 +434,12 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		
 		if( unprocessedVisualizer == null )
 			Debug.LogError(name + " : no unprocessed visualizer found!");
+
+		
+		navigationGraph = new List<Waypoint>( (Waypoint[]) GameObject.FindObjectsOfType(typeof(Waypoint)) );
+		
+		if( navigationGraph.Count == 0 )
+			Debug.LogError(transform.Path() + " : no navigationGraph found for this level!!");
 
 
 		moving = false;

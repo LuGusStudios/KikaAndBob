@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class IConsumableUser : MonoBehaviour
 {
@@ -25,7 +26,9 @@ public abstract class IConsumableUser : MonoBehaviour
 
 		// waypoint with name : WaypointThisName
 		// TODO: store the overview of all waypoitns somewhere central so there's no need to constantly FindObjectsOfType
-		Waypoint[] waypoints = (Waypoint[]) GameObject.FindObjectsOfType( typeof(Waypoint) );
+		//Waypoint[] waypoints = (Waypoint[]) GameObject.FindObjectsOfType( typeof(Waypoint) );
+		
+		List<Waypoint> waypoints = ConsumableMover.use.navigationGraph;
 		foreach( Waypoint wp in waypoints )
 		{
 			if( wp.name == "Waypoint" + this.name )

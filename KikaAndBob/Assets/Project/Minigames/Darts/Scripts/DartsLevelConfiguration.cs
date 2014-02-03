@@ -80,6 +80,7 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 			foundGroup.itemsOnScreen = groupDefinition.itemsOnScreen;
 			foundGroup.minTimeBetweenShows = groupDefinition.minTimeBetweenShows;
 			foundGroup.autoHideTimes = groupDefinition.autoHideTimes;
+			foundGroup.avoidRepeat = groupDefinition.avoidRepeat;
 		}
 	}
 

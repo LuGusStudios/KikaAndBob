@@ -31,6 +31,7 @@ public class iTweener : MonoBehaviour
 	public float _speed = float.MaxValue;
 	public float _delay = float.MaxValue;
 	public iTween.EaseType _easeType = iTween.EaseType.linear;
+	public iTween.LoopType _loopType = iTween.LoopType.none;
 	
 	public bool _local = false;
 	public bool _moveToPath = true;
@@ -90,6 +91,12 @@ public class iTweener : MonoBehaviour
 	public iTweener EaseType(iTween.EaseType easeType)
 	{
 		_easeType = easeType;
+		return this;
+	}
+
+	public iTweener Looptype(iTween.LoopType loopType)
+	{
+		_loopType = loopType;
 		return this;
 	}
 	
@@ -197,6 +204,8 @@ public class iTweener : MonoBehaviour
 		//}
 		
 		output.Add ("easetype", _easeType);
+
+		output.Add ("looptype", _loopType);
 		
 		return output;
 	}

@@ -39,7 +39,7 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 		}
 	}
 
-	protected void PlayerSeenEffect ()
+	protected override void PlayerSeenEffect ()
 	{
 		LugusCoroutines.use.StartRoutine(PlayerSeenRoutine());
 	}
@@ -79,7 +79,7 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 			targetTile = patrolPath[patrolIndex];
 		}
 
-		CheckTeleportProximity();
+		//CheckTeleportProximity();
 		
 		MoveTo(FindTileClosestTo(targetTile));
 		

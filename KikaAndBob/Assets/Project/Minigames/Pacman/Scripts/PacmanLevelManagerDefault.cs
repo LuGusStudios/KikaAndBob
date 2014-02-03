@@ -96,6 +96,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public void ClearLevel()
 	{
+		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
 			Destroy(levelParent.GetChild(i).gameObject);
@@ -108,12 +109,21 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		for (int i = characterParent.childCount - 1; i >= 0; i--) 
 		{
+			// NOTE: Ideally, destroying this gameObject would mean it is immediately gone!
+			// But Destroy() is delayed until the end of the Update loop, which means the scan for new player characters will still find them!
+			// So: Make sure to also set them disabled, which will make them invisible to GetComponents (provided includeInactive is false)
+			if (characterParent.GetChild(i).GetComponent<PacmanCharacter>() != null)
+			{
+				characterParent.GetChild(i).GetComponent<PacmanCharacter>().enabled = false;
+				characterParent.GetChild(i).gameObject.SetActive(false);
+			}
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
 	}
 
 	public void ClearLevelEditor()
 	{
+		Debug.Log("Clearing level (playing in editor).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
 			DestroyImmediate(levelParent.GetChild(i).gameObject);
@@ -191,8 +201,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
-		
-		//StartCoroutine(DoorUpdateRoutine());
 	}
 		
 	public void ParseLevelTiles(string levelData, int _width, int _height)
@@ -1020,7 +1028,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			{
 				if (GUILayout.Button("Level " + i))
 				{
-					PacmanGameManager.use.StartNewGame(i);
+					PacmanGameManager.use.StartNewLevel(i);
 				}
 			}
 		}

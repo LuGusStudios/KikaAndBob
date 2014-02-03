@@ -8,7 +8,6 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 
 	protected Dictionary<string, AudioClip> enemyAudioClips = new Dictionary<string, AudioClip>();	// load enemy sounds by LugusResources just once
 	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
-	protected PacmanPlayerCharacter player = null;
 	protected PacmanEnemyCharacter closestEnemy = null;
 	protected LugusAudioTrackSettings enemyTrackSettings;
 	protected ILugusAudioTrack enemiesTrack = null;
@@ -37,11 +36,6 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 
 	public void Reset(List<PacmanEnemyCharacter> _enemies)
 	{
-		player = PacmanGameManager.use.GetActivePlayer();
-		if (player == null)
-			Debug.LogError("Player was null!");
-
-
 		enemies = _enemies;
 
 		enemyAudioClips.Clear();
@@ -57,10 +51,10 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	
 	protected void Update () 
 	{
-		player = PacmanGameManager.use.GetActivePlayer();
+		PacmanPlayerCharacter player = PacmanGameManager.use.GetActivePlayer();
 		if (player == null)
 		{
-			Debug.LogError("Player was null!");
+			Debug.LogError("PacmanSoundEffect: Player was null!");
 			return;
 		}
 
