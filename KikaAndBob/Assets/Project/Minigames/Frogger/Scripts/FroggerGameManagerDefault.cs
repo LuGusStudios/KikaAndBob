@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefault> {
 }
@@ -32,6 +33,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		FroggerCameraController.use.FocusOn(lastPlayer);
 
 		gameRunning = true;
+	}
+
+	void Start()
+	{
+
 	}
 
 	// TO DO: Placeholder!!!

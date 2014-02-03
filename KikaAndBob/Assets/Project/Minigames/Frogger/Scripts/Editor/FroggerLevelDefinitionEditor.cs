@@ -16,6 +16,7 @@ class FroggerLevelDefinitionEditor : Editor
 		if (GUILayout.Button("Save config", GUILayout.Width(100), GUILayout.Height(20)))
 		{
 			SaveConfig();
+			Debug.Log(saveLocation);
 		}
 
 		DrawDefaultInspector();
@@ -28,11 +29,11 @@ class FroggerLevelDefinitionEditor : Editor
 		if (!Directory.Exists(saveLocation))
 			Directory.CreateDirectory(saveLocation);
 
-		string rawdata = FroggerLevelDefinition.ToXML(level, 0);
+		string rawdata = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n";
+		rawdata += FroggerLevelDefinition.ToXML(level);
 
 		StreamWriter writer = new StreamWriter(saveLocation + level.name + ".xml");
 		writer.Write(rawdata);
-		writer.Flush();
 		writer.Close();
 	}
 }

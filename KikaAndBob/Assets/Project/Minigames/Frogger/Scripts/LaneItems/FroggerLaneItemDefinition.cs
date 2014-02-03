@@ -8,18 +8,32 @@ public class FroggerLaneItemDefinition
 	
 	public static FroggerLaneItemDefinition FromXML(TinyXmlReader parser)
 	{
+		// First we check whether the parser is a the correct tag.
+		// Next, the lane item is parsed from xml.
+
 		FroggerLaneItemDefinition laneitem = new FroggerLaneItemDefinition();
 
 		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
-			(parser.tagName != "FroggerLaneItemDefinition"))
+			(parser.tagName != "LaneItem"))
 		{
 			Debug.Log("FroggerLaneItemDefition.FromXML(): unexpected tag type or tag name.");
 			return null;
 		}
 
-		while (parser.Read("FroggerLaneItemDefinition"))
+		while (parser.Read("LaneItem"))
 		{
-			
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch (parser.tagName)
+				{
+					case "SpawnID":
+						laneitem.spawnID = parser.content;
+						break;
+					case "Positioning":
+						laneitem.positioning = float.Parse(parser.content);
+						break;
+				}
+			}
 		}
 
 		return laneitem;
@@ -39,12 +53,12 @@ public class FroggerLaneItemDefinition
 		for (int i = 0; i < depth; i++)
 			tabs += "\t";
 
-		rawdata += tabs + "<FroggerLaneItemDefinition>\r\n";
+		rawdata += tabs + "<LaneItem>\r\n";
 
 		rawdata += tabs + "\t<SpawnID>" + laneitem.spawnID + "</SpawnID>\r\n";
 		rawdata += tabs + "\t<Positioning>" + laneitem.positioning.ToString() + "</Positioning>\r\n";
 
-		rawdata += tabs + "</FroggerLaneItemDefinition>\r\n";
+		rawdata += tabs + "</LaneItem>\r\n";
 
 		return rawdata;
 	}

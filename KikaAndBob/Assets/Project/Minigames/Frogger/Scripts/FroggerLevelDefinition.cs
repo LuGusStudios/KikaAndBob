@@ -1,30 +1,55 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class FroggerLevelDefinition : ScriptableObject {
 
 	public static FroggerLevelDefinition FromXML(TinyXmlReader parser)
 	{
+		// Check whether the parser is at the correct tag first.
+		// Next, we parse the properties of the levels, and the lanes.
+		// The lanes are enumerated in reverse order, from a design perspective,
+		// so they need to be reordered back at the end.
+
 		FroggerLevelDefinition level = ScriptableObject.CreateInstance<FroggerLevelDefinition>();
 
 		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
-			(parser.tagName != "FroggerLevelDefinition"))
+			(parser.tagName != "Level"))
 		{
 			Debug.Log("FroggerLevelDefition.FromXML(): unexpected tag type or tag name.");
 			return null;
 		}
 
-		while (parser.Read("FroggerLevelDefinition"))
-		{
+		List<FroggerLaneDefinition> lanes = new List<FroggerLaneDefinition>();
 
+		while (parser.Read("Level"))
+		{
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch (parser.tagName)
+				{
+					case "BackgroundMusicName":
+						level.backgroundMusicName = parser.content;
+						break;
+					case "Lane":
+						lanes.Add(FroggerLaneDefinition.FromXML(parser));
+						break;
+				}
+			}
 		}
+
+		lanes.Reverse();
+		level.lanes = lanes.ToArray();
 
 		return level;
 	}
 
-	public static string ToXML(FroggerLevelDefinition level, int depth)
+	public static string ToXML(FroggerLevelDefinition level)
 	{
+		// Write all of the level's properties to XML.
+		// A level's lanes are enumerated in reverse order, to ease editing the files.
+
 		string rawdata = string.Empty;
 
 		if (level == null)
@@ -33,17 +58,17 @@ public class FroggerLevelDefinition : ScriptableObject {
 			return rawdata;
 		}
 
-		string tabs = string.Empty;
-		for (int i = 0; i < depth; ++i)
-			tabs += "\t";
+		rawdata += "<Level>\r\n";
+		rawdata += "\t<BackgroundMusicName>" + level.backgroundMusicName + "</BackgroundMusicName>\r\n";
 
-		rawdata += tabs + "<FroggerLevelDefinition>\r\n";
-		rawdata += tabs + "\t<BackgroundMusicName>" + level.backgroundMusicName + "</BackgroundMusicName>\r\n";
+		rawdata += "\t<Lanes>\r\n";
+		for (int i = level.lanes.Length - 1; i >= 0; --i )
+		{
+			rawdata += FroggerLaneDefinition.ToXML(level.lanes[i], 2);
+		}
+		rawdata += "\t</Lanes>\r\n";
 
-		foreach (FroggerLaneDefinition lane in level.lanes)
-			rawdata += FroggerLaneDefinition.ToXML(lane, depth + 1);
-
-		rawdata += tabs + "</FroggerLevelDefinition>\r\n";
+		rawdata += "</Level>\r\n";
 
 		return rawdata;
 	}
