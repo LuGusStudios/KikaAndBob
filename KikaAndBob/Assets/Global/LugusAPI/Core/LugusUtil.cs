@@ -13,6 +13,12 @@ public class LugusUtil
 	{
 		get{ return 1536; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
+
+	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
+	public static Rect UIScreenSize
+	{
+		get{ return new Rect(0, 0, LugusUtil.UIWidth, LugusUtil.UIHeight ); }
+	}
 	
 	public static int ScreenWidth
 	{
