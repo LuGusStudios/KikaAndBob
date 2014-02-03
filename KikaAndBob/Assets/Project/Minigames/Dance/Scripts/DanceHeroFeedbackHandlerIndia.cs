@@ -104,10 +104,10 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	
 	public void OnDisplayModifier()
 	{
+		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 17.0f, 1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 4.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(1f).Execute();
-		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		modifierDisplay.ScaleTo(modifierDisplay.transform.localScale * 2.0f).Time(1f).Execute();
 
 		Destroy(modifierDisplay, 0.5f);

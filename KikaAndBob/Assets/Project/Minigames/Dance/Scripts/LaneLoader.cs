@@ -7,8 +7,9 @@ using System.Collections;
  **/
 public class LaneLoader {
 
-	public static void LoadLanes(string assetName)
+	public static void LoadLanes(string assetName, out bool success)
 	{
+		success = true;
 
 		// Load the action file from Resources and start parsing.
 		// Each lane is parsed separately.
@@ -16,6 +17,14 @@ public class LaneLoader {
 		// The game's (you just lost it) lanes are numbered from bottom to top.
 
 		string rawdata = LugusResources.use.Shared.providers[0].GetText(LugusResources.use.Shared.URL, assetName).text;
+
+		if (string.IsNullOrEmpty(rawdata))
+		{
+			success = false;
+			Debug.LogError("LaneLoader: Serialized level was null or empty! Check filename?");
+			return;
+		}
+
 		TinyXmlReader parser = new TinyXmlReader(rawdata);
 		DanceHeroLevel.use.mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
 

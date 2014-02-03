@@ -33,6 +33,7 @@ public class DanceHeroLaneItem
 	public KikaAndBob.LaneItemActionType actionType = KikaAndBob.LaneItemActionType.NONE;
 
 	public DanceHeroLane lane = null;
+	public DanceHeroLaneItemRenderer laneItemRenderer = null;
 
 	public float delay = 0.0f;
 	public float duration = 0.0f;

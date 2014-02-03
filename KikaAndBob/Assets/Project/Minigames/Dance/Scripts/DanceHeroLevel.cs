@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel> 
 {
+	public AudioClip musicClip; // TO DO: Remove
+
 	public delegate void OnLevelStarted();
 	public OnLevelStarted onLevelStarted = null;
 
@@ -24,7 +26,13 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 	public float cumulativeDelay = 0.0f;
 
+	public int currentLevel = 0;
+
+	public string[] levels;
+
 	protected ILugusCoroutineHandle endLevelRoutine = null;
+
+	protected ILugusAudioTrack backgroundMusic = null;
 
 	public void SetupLocal()
 	{
@@ -55,7 +63,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 		// lanes moeten aan/uit kunnen gezet worden
 
-		CreateLevels();
+		CreateLevel();
 
 		foreach( DanceHeroLane lane in lanes )
 		{
@@ -75,31 +83,83 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	}
 
 
-	protected void CreateLevels()
+	
+	public void CreateLevel()
 	{
-		//LoadLevelMetallica();
+		CreateLevel(currentLevel);
+	}
+
+	public void CreateLevel(int index)
+	{
+		if (index < 0 || index >= levels.Length)
+		{
+			Debug.LogError("DanceHeroLevel: Level index was out of bounds: " + index);
+			return;
+		}
+
+		CreateLevel(levels[index]);
+	}
+	
+	public void CreateLevel(string levelName)
+	{
+		Debug.Log("Clearing lanes.");
+		foreach(DanceHeroLane lane in lanes)
+		{
+			lane.ClearLaneItems();
+		}
+
+		if (string.IsNullOrEmpty(levelName))
+		{
+			Debug.LogError("DanceHeroLevel: Level name was null or empty.");
+			return;
+		}
 
 		cumulativeDelay = 0;
 
-		DanceHeroLane lane1 = GetLane("Lane1");
-		DanceHeroLane lane2 = GetLane("Lane2");
-		DanceHeroLane lane3 = GetLane("Lane3");
-		
-		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
-		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
-		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+		GetLane("Lane1").defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+		GetLane("Lane2").defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+		GetLane("Lane3").defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
 
-		LaneLoader.LoadLanes("ChinaSong02");
+		bool success = false;
+
+		LaneLoader.LoadLanes(levelName, out success);
+
+		if (!success)
+		{
+			Debug.LogError("Errors encountered while adding lane items. Stopped generating level.");
+			return;
+		}
+
+		LugusCoroutines.use.StartRoutine(MusicBufferDelay());
+	}
+
+	protected IEnumerator MusicBufferDelay()
+	{
+		Debug.Log("Waiting for song to be done buffering.");
+
+		backgroundMusic = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
+
+		while(backgroundMusic.Playing == false)
+		{
+			yield return new WaitForEndOfFrame();
+		}
 
 		if (endLevelRoutine != null && endLevelRoutine.Running)
 			endLevelRoutine.StopRoutine();
-
+		
 		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
-
+		
+		foreach( DanceHeroLane lane in lanes )
+		{
+			lane.Begin();
+		}
+		
 		if (onLevelStarted != null)
 		{
 			onLevelStarted();
 		}
+		
+		Debug.Log("Finished setting up new level.");
 	}
 
 	protected void LoadLevelChina()
@@ -265,20 +325,22 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		SetupGlobal();
 	}
 
-	float interval = 0;
-	protected void Update () 
-	{
-		interval += Time.deltaTime;
-		if (Input.GetKeyDown(KeyCode.Space))
-			interval = 0;
-	}
-
 	void OnGUI()
 	{
 		if (!LugusDebug.debug)
 			return;
 
-		GUILayout.Box(Time.time.ToString("0.000"));
-		GUILayout.Box(interval.ToString("0.000"));
+
+		GUILayout.BeginHorizontal();
+
+		for (int i = 0; i < levels.Length; i++)
+		{
+			if (GUILayout.Button("Level " + i))
+			{
+				CreateLevel(i);
+			}
+		}
+		
+		GUILayout.EndHorizontal();
 	}
 }
