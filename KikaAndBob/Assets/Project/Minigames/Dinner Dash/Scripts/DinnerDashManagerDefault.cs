@@ -172,7 +172,10 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		bool result = user.Use ();
 
 		if( result && user.onUsed != null )
+		{
+			//Debug.LogWarning("ICOnsumableuser " + user.name + " used!" );
 			user.onUsed( user );
+		}
 
 
 		/*

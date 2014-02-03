@@ -14,6 +14,7 @@ public class ConsumableConsumerPlace : MonoBehaviour
 	public Transform consumableLocation = null;
 
 	public ConsumableListVisualizer orderVisualizer = null;
+	public HappinessVisualizer happinessVisualizer = null;
 	
 	public void SetupLocal()
 	{
@@ -28,7 +29,12 @@ public class ConsumableConsumerPlace : MonoBehaviour
 
 		if( orderVisualizer == null )
 			Debug.LogError (name + " : OrderVisualizer not found for this ConsumerPlace");
-
+		
+		if( happinessVisualizer == null )
+			happinessVisualizer = transform.GetComponentInChildren<HappinessVisualizer>();
+		
+		if( happinessVisualizer == null )
+			Debug.LogError (name + " : happinessVisualizer not found for this ConsumerPlace");
 
 	}
 	
