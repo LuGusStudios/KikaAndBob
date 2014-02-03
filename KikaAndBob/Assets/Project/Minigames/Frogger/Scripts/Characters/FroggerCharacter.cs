@@ -414,5 +414,20 @@ public class FroggerCharacter : MonoBehaviour {
 		hitParticles.Play();
 		hitParticles.transform.position = hitParticles.transform.position.z(0);
 		characterAnimator.PlayAnimation(characterAnimator.hit);
+
+		// make hit animation 'bend' in direction of hit
+		if (currentLane != null)
+		{
+			if (currentLane.goRight)
+			{
+				if (transform.localScale.x > 0)
+					transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
+			}
+			else
+			{
+				if (transform.localScale.x < 0)
+					transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+			}
+		}
 	}
 }
