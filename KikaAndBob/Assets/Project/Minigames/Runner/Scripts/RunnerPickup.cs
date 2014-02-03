@@ -50,6 +50,10 @@ public class RunnerPickup : MonoBehaviour
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
+		if( this.collider2D == null || !this.collider2D.isTrigger )
+		{
+			Debug.LogError(transform.Path() + " : RunnerPickup has no collider or the collider is not set as Trigger!!");
+		}
 	}
 	
 	public void SetupGlobal()

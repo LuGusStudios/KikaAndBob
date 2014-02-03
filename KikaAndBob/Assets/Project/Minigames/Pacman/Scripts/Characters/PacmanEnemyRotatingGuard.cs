@@ -144,7 +144,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 		}
 	}
 
-	protected void PlayerSeenEffect ()
+	protected override void PlayerSeenEffect ()
 	{
 		LugusCoroutines.use.StartRoutine(PlayerSeenRoutine());
 	}

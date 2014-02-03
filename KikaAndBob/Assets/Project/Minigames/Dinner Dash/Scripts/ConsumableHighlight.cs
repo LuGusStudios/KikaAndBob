@@ -34,7 +34,7 @@ public class ConsumableHighlight : MonoBehaviour
 		
 	}
 
-	public void OnDisable()
+	public void OnDestroy()
 	{
 		if( bobbingHandle != null && bobbingHandle.Running )
 			bobbingHandle.StopRoutine();

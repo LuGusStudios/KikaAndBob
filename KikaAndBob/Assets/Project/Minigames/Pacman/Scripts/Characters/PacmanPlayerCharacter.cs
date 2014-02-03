@@ -349,12 +349,12 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		return currentDirection;
 	}
 
-	private bool hitRoutineBusy = false;
-
 	public void DoHitEffect()
 	{
 		LugusCoroutines.use.StartRoutine(HitRoutine());
 	}
+
+	private bool hitRoutineBusy = false;
 
 	protected IEnumerator HitRoutine()
 	{

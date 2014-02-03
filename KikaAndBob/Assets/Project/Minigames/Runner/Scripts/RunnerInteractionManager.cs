@@ -43,7 +43,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			return;
 		}
 
-		//Debug.LogError("SECTION SWITCH ACCEPTED " + zones.Count);
+		//Debug.LogError("SECTION SWITCH ACCEPTED " + zones.Count + " // " + sectionSpanOverflow);
 
 		//return;
 
@@ -61,33 +61,65 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			RunnerInteractionZone zonePrefab = null;
 			int maxIterations = 100;
 			int iteration = 0;
+			bool zoneOK = true;
+
 			do
 			{
 				zonePrefab = zones[ Random.Range(0, zones.Count) ];
+				zoneOK = (zonePrefab != lastSpawned);
 
-				// for example if all zones are too difficult
-				// won't happen in "real" situations, but can easily happen in testing if we're not carefull
-				if( iteration >= maxIterations )
+				if( zoneOK ) // if equal to the previous, we're probably not going to spawn it anyway, so avoid these next checks
 				{
-					lastSpawned = null;
-				}
-				else
-				{
-					if( zones.Count == 1 ) // make sure we can also work with just 1 spawner. Bit hacky, but works :)
+
+					// InteractionZones can be limited to 1 (or more) specific BackgroundThemes
+					// if this is the case, only spawn them if the current BackgroundTheme is in fact appropriate for this zone
+
+					// if themes is empty, no restrictions: can always spawn
+					if( zonePrefab.themes != null && zonePrefab.themes.Length > 0 )
 					{
-						lastSpawned = null;
+						// If we're transitioning, we only want to spawn zones without specific requirements
+						// this is because transition layers often have special graphic characteristics that won't match specific zones
+						if( LayerManager.use.themeTransitionInProgress )
+						{
+							zoneOK = false;
+						}
+						else
+						{
+							bool ok = false;
+
+							// no transition: check if the current theme is in our list
+							foreach( BackgroundTheme theme in zonePrefab.themes )
+							{
+								if( theme == LayerManager.use.CurrentTheme )
+								{
+									ok = true;
+									break;
+								}
+							}
+							if( !ok ) // themes don't match: skip this interactionZone
+								zoneOK = false;
+						}
 					}
-					else
+					
+					if( zonePrefab.difficulty > maximumDifficulty )
 					{
-						// if too difficult: skip this one
-						if( zonePrefab.difficulty > maximumDifficulty )
-							zonePrefab = lastSpawned;
+						zoneOK = false;
 					}
 				}
+
 
 				++iteration;
+
+
+				// for example if all zones are too difficult or we're just testing 1 zone
+				// won't happen in "real" situations, but can easily happen in testing if we're not carefull
+				if( iteration >= maxIterations || zones.Count == 1 )
+				{
+					zoneOK = true;
+				}
 			}
-			while( zonePrefab == lastSpawned ); 
+			while( !zoneOK ); 
+
 
 			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
 
@@ -204,6 +236,15 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+
+		if( groundLayer != null )
+		{
+			// normally, we have 2 sections of the same layer already setup at the scen estart
+			// this means that we have to wait 2 full sections before OnSectionSwitch is called and we finally see the first InteractionZones
+			// so: counter that by forcing a spawn on the nextSection at the beginning of the level
+			OnSectionSwitch( groundLayer.currentSection, groundLayer.nextSection );
+		}
+
 	}
 	
 	protected void Awake()

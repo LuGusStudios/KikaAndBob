@@ -22,6 +22,15 @@ public class RunnerCameraPuller : LugusSingletonExisting<RunnerCameraPuller>
 		return modifier;
 	}
 
+	public float currentSpeed
+	{
+		get
+		{
+			float speedModifier = speedModifiers.ValueFromPercentage( speedModifierPercentage );
+			return speedRange.ValueFromPercentage(speedPercentage) * speedModifier;
+		}
+	}
+
 	[HideInInspector]
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
