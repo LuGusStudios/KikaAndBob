@@ -17,25 +17,16 @@ public class DialogueBox : MonoBehaviour
 
 	protected Vector3 targetPosition = Vector3.zero;
 
+	public Vector2 margin = new Vector2(50.0f, 50.0f); // in PIXELS
+	public Vector2 backgroundPadding = new Vector2(0.0f, 40.0f); // in PIXELS 
+
 	public void Reposition( KikaAndBob.ScreenAnchor mainAnchor = KikaAndBob.ScreenAnchor.Center, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.Center )
 	{
 		this.mainAnchor = mainAnchor;
 		this.subAnchor = subAnchor;
 
-		//Vector2 basePos = KikaAndBob.ScreenAnchorHelper.GetQuadrantCenter( mainAnchor, LugusUtil.UIScreenSize );
-
-		Rect mainContainer = KikaAndBob.ScreenAnchorHelper.GetQuadrant( mainAnchor, LugusUtil.UIScreenSize );
-		Rect backgroundRect = new Rect( background.renderer.bounds.center.x , background.renderer.bounds.center.y, background.renderer.bounds.size.x * 100.0f, background.renderer.bounds.size.y * 100.0f );
-		Debug.LogWarning("BACKGROUND RECT " + backgroundRect + " vs " + mainContainer );
-
-		// add margin
-		//mainContainer.height = mainContainer.height - (mainContainer.height / 10.0f);
-		//mainContainer.width = mainContainer.width - (mainContainer.width / 10.0f);
-
-		Vector2 basePos = KikaAndBob.ScreenAnchorHelper.ExtendTowards( subAnchor, backgroundRect, mainContainer, new Vector2(50.0f, 50.0f) );
-
-		Debug.LogWarning ("REPOSITION " + mainAnchor + " + "  + subAnchor + " // " + (basePos / 100.0f).v3 ());
-	
+		// update the text-wrapping
+		TextMeshWrapper chosenText = null;
 		if( this.icon.sprite != null )
 		{
 			this.textLarge.gameObject.SetActive( false );
@@ -43,18 +34,44 @@ public class DialogueBox : MonoBehaviour
 			
 			this.textSmall.textMesh.text = text; 
 			this.textSmall.UpdateWrapping();
+
+			chosenText = this.textSmall;
 		}
 		else
 		{
 			this.textSmall.gameObject.SetActive( false );
 			this.textLarge.gameObject.SetActive( true  );
-
+			
 			this.textLarge.textMesh.text = text; 
 			this.textLarge.UpdateWrapping();
+			
+			chosenText = this.textLarge;
 		}
 
-		targetPosition = (basePos / 100.0f).v3 ();
+		// fit the background around the text
+		// for now, only scale in height, assume width is already correct by setup
+		// * 100.0f because texture is imported at 100 pixels/unit scale
+		background.transform.localScale = background.transform.localScale.y( (chosenText.renderer.bounds.size.y + (backgroundPadding.y / 100.0f)) * 100.0f );
 
+
+		//Vector2 basePos = KikaAndBob.ScreenAnchorHelper.GetQuadrantCenter( mainAnchor, LugusUtil.UIScreenSize );
+
+		Rect mainContainer = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect( mainAnchor, LugusUtil.UIScreenSize );
+		Rect backgroundRect = background.renderer.bounds.ToRectXY();//new Rect( background.renderer.bounds.center.x , background.renderer.bounds.center.y, background.renderer.bounds.size.x * 100.0f, background.renderer.bounds.size.y * 100.0f );
+		backgroundRect.width = backgroundRect.width * 100;
+		backgroundRect.height = backgroundRect.height * 100;
+
+		Debug.LogWarning("BACKGROUND RECT " + backgroundRect + " vs " + mainContainer );
+
+		// add margin
+		//mainContainer.height = mainContainer.height - (mainContainer.height / 10.0f);
+		//mainContainer.width = mainContainer.width - (mainContainer.width / 10.0f);
+
+		Vector2 basePos = KikaAndBob.ScreenAnchorHelper.ExtendTowards( subAnchor, backgroundRect, mainContainer, margin );
+
+		Debug.LogWarning ("REPOSITION " + mainAnchor + " + "  + subAnchor + " // " + (basePos / 100.0f).v3 ());
+	
+		targetPosition = (basePos / 100.0f).v3 ();
 	}
 
 	public void Reset()

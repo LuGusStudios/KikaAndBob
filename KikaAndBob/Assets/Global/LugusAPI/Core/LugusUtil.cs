@@ -63,6 +63,15 @@ public class LugusUtil
 	
 	public static Vector3 DEFAULTVECTOR = new Vector3( float.MaxValue, float.MaxValue, float.MaxValue ); 
 	public static Vector3 OFFSCREEN = new Vector3( -9999.0f, -9999.0f, -9999.0f ); 
+
+}
+
+public static class BoundsExtensions
+{
+	public static Rect ToRectXY(this Bounds bounds)
+	{
+		return new Rect( bounds.center.x , bounds.center.y, bounds.size.x, bounds.size.y);
+	}
 }
 
 public static class VectorExtensions

@@ -27,8 +27,8 @@ namespace KikaAndBob
 	{
 		NONE = -1,
 
-		Left = 1, // also CenterLeft
-		Right = 2, // also CenterRight
+		Left = 1, // also LeftCenter
+		Right = 2, // also RightCenter
 		Center = 4, 
 		Top = 8, // also TopCenter basically
 		Bottom = 16, // also BottomCenter basically
@@ -42,7 +42,7 @@ namespace KikaAndBob
 
 	public class ScreenAnchorHelper
 	{
-		public static KikaAndBob.ScreenAnchor GetQuadrant(Transform worldObj)
+		public static KikaAndBob.ScreenAnchor GetQuadrantRect(Transform worldObj)
 		{
 			Vector2 screenPoint = LugusCamera.game.WorldToScreenPoint( worldObj.position );
 			float halfWidth = Screen.width / 2.0f;
@@ -104,15 +104,39 @@ namespace KikaAndBob
 		}
 
 		// rect is with origin at BOTTOM LEFT
-		public static Rect GetQuadrant(KikaAndBob.ScreenAnchor quadrant, Rect container)
+		public static Rect GetQuadrantRect(KikaAndBob.ScreenAnchor quadrant, Rect container)
 		{
 			// TODO: when passed CENTER als quadrant, this will fail!!! (will return topRight...)
 
 			float halfWidth  = container.width  / 2.0f;
 			float halfHeight = container.height  / 2.0f;
 
-			float x = halfWidth; // CENTER + RIGHT
-			float y = halfHeight; // CENTER + TOP
+			float x = halfWidth / 2.0f; // quarter width
+			float y = halfHeight / 2.0f; // quarter height
+
+			if( (quadrant & ScreenAnchor.Left) == ScreenAnchor.Left )
+			{
+				x = 0.0f;
+			}
+			
+			if( (quadrant & ScreenAnchor.Right) == ScreenAnchor.Right )
+			{
+				x = halfWidth;
+			}
+			
+			if( (quadrant & ScreenAnchor.Top) == ScreenAnchor.Top )
+			{
+				y = halfHeight;
+			}
+			
+			if( (quadrant & ScreenAnchor.Bottom) == ScreenAnchor.Bottom )
+			{
+				y = 0.0f;
+			}
+
+			/*
+			float x = halfWidth; // RIGHT
+			float y = halfHeight; // TOP
 
 			if( (quadrant & ScreenAnchor.Left) == ScreenAnchor.Left )
 			{
@@ -123,6 +147,14 @@ namespace KikaAndBob
 			{
 				y = 0.0f;
 			}
+
+			if( (quadrant & ScreenAnchor.Center) == ScreenAnchor.Center )
+			{
+				x = halfWidth / 2.0f;
+				y = halfHeight / 2.0f;
+			}
+			*/
+
 
 			return new Rect( x, y, halfWidth, halfHeight );
 		}
@@ -203,27 +235,39 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 		return output;
 	}
 
+	
 	public DialogueBox CreateBox( Transform avoid, string text, Sprite icon = null )
+	{
+		return CreateBox ( avoid, KikaAndBob.ScreenAnchor.Center, text, icon );
+	}
+
+	public DialogueBox CreateBox( Transform avoid, KikaAndBob.ScreenAnchor subAnchor, string text, Sprite icon = null )
 	{
 		KikaAndBob.ScreenAnchor quadrant = KikaAndBob.ScreenAnchor.Center; 
 		
 		if( avoid != null )
 		{
-			KikaAndBob.ScreenAnchor avoidQuadrant = KikaAndBob.ScreenAnchorHelper.GetQuadrant( avoid );
+			KikaAndBob.ScreenAnchor avoidQuadrant = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect( avoid );
 			Debug.LogWarning("Avoiding " + avoid.Path() + " which is in quadrant " + avoidQuadrant );
 
 			if( avoidQuadrant == KikaAndBob.ScreenAnchor.TopLeft || avoidQuadrant == KikaAndBob.ScreenAnchor.BottomLeft )
 				quadrant = KikaAndBob.ScreenAnchor.TopRight;
 		}
 		
-		return CreateBox( quadrant, text, icon );
+		return CreateBox( quadrant, subAnchor, text, icon );
 	}
+
 	
 	public DialogueBox CreateBox( KikaAndBob.ScreenAnchor location, string text, Sprite icon = null )
 	{
+		return CreateBox( location, KikaAndBob.ScreenAnchor.Center, text, icon );
+	}
+
+	public DialogueBox CreateBox( KikaAndBob.ScreenAnchor mainAnchor, KikaAndBob.ScreenAnchor subAnchor, string text, Sprite icon = null )
+	{
 		DialogueBox output = CreateBox ( text, icon );
 
-		output.Reposition(location);
+		output.Reposition(mainAnchor, subAnchor);
 		
 		return output;
 	}
@@ -256,13 +300,32 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 
 		// TEST 
 		// TODO: Remove this!
-		CreateBox(GameObject.Find ("Burger").transform, "Deze klant wil een stoofpotje!\nKlik op de groenten.", null ).Show ();
+		//CreateBox(GameObject.Find ("Burger").transform, "Deze klant wil een stoofpotje!\nKlik op de groenten.", null ).Show ();
 
-		
-		DialogueBox box = CreateBox("Deze klant wil een stoofpotje 2!\nKlik op de groenten.", null );
-		box.Reposition(KikaAndBob.ScreenAnchor.TopLeft, KikaAndBob.ScreenAnchor.TopLeft );
+		/*
+		DialogueBox box = CreateBox("Deze klant wil een stoofpotje 2!\nKlik op de groenten.\nDeze klant wil een stoofpotje 2234567!\nKlik op de groenten.\nDeze klant wil een stoofpotje 2!\nKlik op de groenten." );
+		box.Reposition(KikaAndBob.ScreenAnchor.TopLeft, KikaAndBob.ScreenAnchor.Top );
 		box.Show();
 
+		
+		box = CreateBox("Deze klant wil een stoofpotje 3!\nKlik op de groenten.", null );
+		box.Reposition(KikaAndBob.ScreenAnchor.BottomLeft, KikaAndBob.ScreenAnchor.Bottom );
+		box.Show();
+
+		
+		box = CreateBox("Deze klant wil een stoofpotje 4!\nKlik op de groenten.", null );
+		box.Reposition(KikaAndBob.ScreenAnchor.BottomRight, KikaAndBob.ScreenAnchor.Bottom );
+		box.Show();
+		
+		box = CreateBox("Deze klant wil een stoofpotje 5!\nKlik op de groenten.", null );
+		box.Reposition(KikaAndBob.ScreenAnchor.Center, KikaAndBob.ScreenAnchor.Top );
+		box.Show();
+
+		
+		box = CreateBox("Deze klant wil een stoofpotje 6!\nKlik op de groenten.", GameObject.Find("Arrow").GetComponent<SpriteRenderer>().sprite  );
+		box.Reposition(KikaAndBob.ScreenAnchor.Center, KikaAndBob.ScreenAnchor.Center );
+		box.Show();
+		*/
 	}
 	
 	protected void Awake()
