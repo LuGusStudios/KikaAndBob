@@ -27,7 +27,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
 
-	// MOVE TO SCRIPTABLE OBJECT
+	// MOVE TO SCRIPTABLE OBJECT 'THEME'?
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
 	public Sprite[] blockDecorations = null;
@@ -36,6 +36,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite doorSprite = null;
 	public Sprite teleportSprite = null;
 
+	public delegate void OnLevelBuilt();
+	public OnLevelBuilt onLevelBuilt;
 	
 	public enum LevelQuadrant
 	{
@@ -60,8 +62,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanTile[,] levelTiles;
 	public List<PacmanTile> teleportTiles = new List<PacmanTile>();
 
-	public delegate void OnLevelBuilt();
-	public OnLevelBuilt onLevelBuilt;
+//	public delegate void OnLevelBuilt();
+//	public OnLevelBuilt onLevelBuilt;
 	
 	protected int itemsToBePickedUp = 0;
 	protected int itemsPickedUp = 0;
@@ -1018,20 +1020,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Transform GetLevelRoot()
 	{
 		return levelRoot;
-	}
-
-	void OnGUI()
-	{
-		if (LugusDebug.debug)
-		{
-			for (int i = 0; i < levels.Length; i++) 
-			{
-				if (GUILayout.Button("Level " + i))
-				{
-					PacmanGameManager.use.StartNewLevel(i);
-				}
-			}
-		}
 	}
 }
 

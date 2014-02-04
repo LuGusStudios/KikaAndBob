@@ -79,10 +79,10 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	
 	public void OnDisplayModifier()
 	{
+		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
-		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		Destroy(modifierDisplay, 0.5f);
 	}
 
