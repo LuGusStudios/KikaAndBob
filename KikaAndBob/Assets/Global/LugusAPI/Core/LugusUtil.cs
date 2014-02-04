@@ -13,6 +13,12 @@ public class LugusUtil
 	{
 		get{ return 1536; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
+
+	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
+	public static Rect UIScreenSize
+	{
+		get{ return new Rect(0, 0, LugusUtil.UIWidth, LugusUtil.UIHeight ); }
+	}
 	
 	public static int ScreenWidth
 	{
@@ -57,6 +63,15 @@ public class LugusUtil
 	
 	public static Vector3 DEFAULTVECTOR = new Vector3( float.MaxValue, float.MaxValue, float.MaxValue ); 
 	public static Vector3 OFFSCREEN = new Vector3( -9999.0f, -9999.0f, -9999.0f ); 
+
+}
+
+public static class BoundsExtensions
+{
+	public static Rect ToRectXY(this Bounds bounds)
+	{
+		return new Rect( bounds.center.x , bounds.center.y, bounds.size.x, bounds.size.y);
+	}
 }
 
 public static class VectorExtensions

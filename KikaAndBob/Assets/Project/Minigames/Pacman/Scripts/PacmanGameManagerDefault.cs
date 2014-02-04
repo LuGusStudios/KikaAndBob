@@ -56,8 +56,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		// NOTE: GetComponentsInChildren skips inactive objects! This is intentional because the Destroy method used to clear the level does not act immediately.
 		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>());
 
-		Debug.Log(playerChars.Count);
-
 		if (playerChars.Count >= 1)
 		{
 			activePlayer = playerChars[0];

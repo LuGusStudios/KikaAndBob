@@ -10,8 +10,8 @@ public class LugusCamera
 	{
 		get
 		{
-            if (_frontCamera == null && GameObject.Find ("UICamera") != null )
-                _frontCamera = GameObject.Find("UICamera").camera;
+            if (_frontCamera == null && GameObject.Find ("GUICamera") != null )
+                _frontCamera = GameObject.Find("GUICamera").camera;
 			
 			if( _frontCamera == null )
 				_frontCamera = game;

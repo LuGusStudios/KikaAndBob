@@ -134,7 +134,7 @@ public class ConsumableProcessor : IConsumableUser
 		if( processingTexture != null )
 			GetComponent<SpriteRenderer>().sprite = idleTexture;
 
-		if( onProcessingStart != null )
+		if( onProcessingEnd != null )
 			onProcessingEnd( subject );
 
 		// TODO: indicate food is ready for pickup (graphically!)
