@@ -4,7 +4,7 @@ using SmoothMoves;
 
 public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
-	public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
+	//public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
 	public float maxScoreModifier = 9.0f;
 
 	public delegate void OnDisplayModifier();
@@ -36,6 +36,15 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		"Wow!",
 		"Amazing!"
 	};
+	protected string missedMessage = "OUCH!";
+
+	public enum ScoreType
+	{
+		NONE,
+		PRESS_CORRECT,
+		PRESS_MISSED,
+		PRESS_INCORRECT
+	}
 	
 	void Awake()
 	{
@@ -78,20 +87,20 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		return score;
 	}
 
-	public void UpdateScore(bool succes, DanceHeroLane lane, int amount = 1)
+	public void UpdateScore(ScoreType type, DanceHeroLane lane, int amount = 1)
 	{
 		int scoreAdd = 0;
 
-		if (succes)
+		if (type == ScoreType.PRESS_CORRECT)
 		{
-			scoreValue += amount;
+			//scoreValue += amount;
 			succesCount += amount;
 
 			scoreModifier += scoreIncreaseStep;
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
 			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
-			DisplayScoreGainAtLane(lane, scoreAdd);
+			DisplayScoreGainAtLane(lane, scoreAdd, true);
 
 			if (scoreModifier >= (maxScoreModifier / 6) * nextMessageIndex)
 			{
@@ -108,7 +117,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 				scoreModifierStep++;
 			}
 		}
-		else
+		else if (type == ScoreType.PRESS_MISSED)
 		{
 			// only show a "modifier lost" message if some has been built up - otherwise it shows up all the time
 			bool showChange = false;
@@ -118,9 +127,8 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			}
 
 			if (showChange)
-				DisplayMessage("OUCH!");
+				DisplayMessage(missedMessage);
 
-			scoreValue -= amount;
 			failCount += amount;
 
 			scoreModifier = 1;
@@ -133,14 +141,33 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 					onDisplayModifier();
 			}
 		}
+		else if (type == ScoreType.PRESS_INCORRECT)
+		{
+			Debug.Log("Pressed incorrectly!");
 
-		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
+			// incorrect pressing does not lower modifier, but does subtract penalty score
+
+			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f);
+			DisplayScoreGainAtLane(lane, scoreAdd, false);
+
+			score -= scoreAdd;	// subtract half of maximum score
+
+			if (score < 0)
+			{
+				score = 0;
+			}
+		}
+		else
+		{
+			Debug.LogError("DanceHeroFeedback: Unknown score change type.");
+		}
+
 
 		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
 		scoreDisplay.text = score.ToString();
 
-		if (succes)
+		if (type == ScoreType.PRESS_CORRECT)
 		{
 			if (onScoreRaised != null)
 				onScoreRaised(lane);
@@ -152,7 +179,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		}
 	}
 
-	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain)
+	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain, bool positive)
 	{
 		if (lane.scoreDisplay == null)
 		{
@@ -162,12 +189,21 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		GameObject scoreDisplay = (GameObject)Instantiate(lane.scoreDisplay.gameObject);
 		scoreDisplay.transform.parent = lane.transform;
-		scoreDisplay.transform.position = lane.actionPoint.transform.position + new Vector3(0, 0, -1);
-		scoreDisplay.GetComponent<TextMesh>().text = gain.ToString();
+		scoreDisplay.transform.position = lane.actionPoint.transform.position.z(-1.0f);
+		TextMesh textMesh = scoreDisplay.GetComponent<TextMesh>();
+		textMesh.text = gain.ToString();
 
-		scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, 2, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		if (positive)
+		{
+			scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, 2.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		}
+		else
+		{
+			textMesh.color = Color.red;
+			scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, -2.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		}
+
 		scoreDisplay.transform.localScale = Vector3.zero;
-
 		scoreDisplay.ScaleTo(Vector3.one).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
 
 		Destroy(scoreDisplay, 0.5f);

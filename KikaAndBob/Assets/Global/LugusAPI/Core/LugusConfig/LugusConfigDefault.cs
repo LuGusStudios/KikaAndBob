@@ -1,6 +1,7 @@
-﻿/*
-using UnityEngine;
+﻿using UnityEngine;
+#if !UNITY_WEBPLAYER
 using System.IO;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 
@@ -54,73 +55,52 @@ public class LugusConfigDefault : MonoBehaviour
 	#endregion
 
 	#region Protected
-	protected ILugusConfigProfile _systemProfile = null;								// Profile holding system variables, i.e. graphics and sound options.
-	protected ILugusConfigProfile _currentUser = null;									// Profile holding user specific variables, i.e. character health and strength.
+	protected ILugusConfigProfile _systemProfile = null;	// Profile holding system variables, i.e. graphics and sound options.
+	protected ILugusConfigProfile _currentUser = null;		// Profile holding user specific variables, i.e. character health and strength.
 	protected List<ILugusConfigProfile> _profiles = new List<ILugusConfigProfile>();	// All profiles registered in this configuration, incl. system profile.
 	#endregion
 
-	// Reload all profiles found in the Config folder with an .xml-extension.
+	#if !UNITY_WEBPLAYER
+	// Reload all profiles found in the Config folder.
 	public void ReloadDefaultProfiles()
 	{
-		ReloadProfiles(new LugusConfigDataHelperXML());
-	}
+		_profiles = new List<ILugusConfigProfile>();
+		_systemProfile = null;
+		_currentUser = null;
 
-	// Reload all profiles found in the Config folder that have a specific extension.
-	public void ReloadProfiles(ILugusConfigDataHelper dataHelper)
-	{
-		List<ILugusConfigDataHelper> dataHelpers = new List<ILugusConfigDataHelper>();
-		dataHelpers.Add(dataHelper);
-		ReloadProfiles(dataHelpers);
-	}
+		// Load the profiles found in the config folder of the application datapath
+		// and try to set the latest user as the current user.
+		// If no profiles could be found in the folder,
+		// then create a default system and user profile.
 
-	// Reload all profiles found in the Config folder that have one of the file extensions in the list.
-	public void ReloadProfiles(List<ILugusConfigDataHelper> dataHelpers)
-	{
-		LugusConfigProviderDefault provider = new LugusConfigProviderDefault(Application.dataPath + "/Config/", dataHelpers);
-		ReloadProfiles(provider);
-	}
+		string configpath = Application.dataPath + "/Config/";
+		DirectoryInfo directoryInfo = new DirectoryInfo(configpath);
+		FileInfo[] files = directoryInfo.GetFiles("*.xml");
 
-	// Reload all profiles that can be found by the provider.
-	public void ReloadProfiles(ILugusConfigProvider provider)
-	{
-		List<ILugusConfigProvider> providers = new List<ILugusConfigProvider>();
-		providers.Add(provider);
-		ReloadProfiles(providers);
-	}
-
-	// Reload all profiles that can be found by the list of providers.
-	public void ReloadProfiles(List<ILugusConfigProvider> providers)
-	{
-		ClearProfiles();
-
-		// Find all profiles that can be found by the providers, and load them
-		foreach (ILugusConfigProvider provider in providers)
+		if (files.Length > 0)
 		{
-			List<string> names = provider.Scan();
-			foreach (string name in names)
+			// Create and load profiles
+			foreach (FileInfo fileInfo in files)
 			{
-				LugusConfigProfileDefault profile = new LugusConfigProfileDefault(name, provider);
+				string profileName = fileInfo.Name.Remove(fileInfo.Name.LastIndexOf(".xml"));
+				LugusConfigProfileDefault profile = new LugusConfigProfileDefault(profileName);
 				profile.Load();
 
-				// Ensure that a profile with a duplicate name is overwritten
-				if (_profiles.Exists(p => p.Name == name))
-					_profiles[_profiles.FindIndex(p => p.Name == name)] = profile;
-				else
-					_profiles.Add(profile);
+				if (profileName == "System")
+					_systemProfile = profile;
+
+				_profiles.Add(profile);
 			}
 		}
 
-		// Find the system profile, if there is one, and find the latest user
-		ILugusConfigProfile system = FindProfile("System");
-		if (system == null)
+		if (_systemProfile == null)
 		{
-			system = new LugusConfigProfileDefault("System");
-			_systemProfile = system;
-			_profiles.Add(system);
+			LugusConfigProfileDefault sysProfile = new LugusConfigProfileDefault("System");
+			this.System = sysProfile;
+			_profiles.Add(sysProfile);
 		}
 		else
 		{
-			_systemProfile = system;
 			string lastestUser = _systemProfile.GetString("User.Latest", string.Empty);
 			if (!string.IsNullOrEmpty(lastestUser))
 				_currentUser = _profiles.Find(profile => profile.Name == lastestUser);
@@ -131,8 +111,38 @@ public class LugusConfigDefault : MonoBehaviour
 			_currentUser = new LugusConfigProfileDefault("Player");
 			_profiles.Add(_currentUser);
 		}
-
 	}
+#else
+
+	// Reload all profiles found in the Config folder.
+	public void ReloadDefaultProfiles()
+	{
+		_profiles = new List<ILugusConfigProfile>();
+		_systemProfile = null;
+		_currentUser = null;
+
+		// TODO: in the case of playerprefs, we have to save a separate playerprefs key indicating which profiles are available
+		// for now, we just take System
+
+		_systemProfile = new LugusConfigProfileDefault("System", new LugusConfigProviderPlayerPrefs("System") );
+		_systemProfile.Load();
+		_profiles.Add( _systemProfile );
+
+		string lastestUser = _systemProfile.GetString("User.Latest", string.Empty);
+		if (!string.IsNullOrEmpty(lastestUser))
+		{
+			_currentUser = new LugusConfigProfileDefault(lastestUser, new LugusConfigProviderPlayerPrefs(lastestUser) );
+		}
+		else
+		{
+			_currentUser = new LugusConfigProfileDefault("Player", new LugusConfigProviderPlayerPrefs("Player") );
+		}
+
+		_currentUser.Load();
+
+		_profiles.Add(_currentUser);
+	}
+#endif
 
 	public void SaveProfiles()
 	{
@@ -149,11 +159,4 @@ public class LugusConfigDefault : MonoBehaviour
 		return _profiles.Find(profile => profile.Name == name);
 	}
 
-	public void ClearProfiles()
-	{
-		_profiles = new List<ILugusConfigProfile>();
-		_systemProfile = null;
-		_currentUser = null;
-	}
-
-}*/
+}
