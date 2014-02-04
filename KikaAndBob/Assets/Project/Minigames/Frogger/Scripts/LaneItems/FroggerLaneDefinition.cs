@@ -16,6 +16,7 @@ public class FroggerLaneDefinition
 			return null;
 		}
 
+		// While not encountering the closing "Lane"-tag, we know we are still inside the lane
 		List<FroggerLaneItemDefinition> laneitems = new List<FroggerLaneItemDefinition>();
 		while (parser.Read("Lane"))
 		{
@@ -58,6 +59,8 @@ public class FroggerLaneDefinition
 
 	public static string ToXML(FroggerLaneDefinition lane, int depth)
 	{
+		// Write all of the lane's properties to XML
+
 		string rawdata = string.Empty;
 
 		if (lane == null)
@@ -66,13 +69,13 @@ public class FroggerLaneDefinition
 			return rawdata;
 		}
 
+		// A string representing the indentation of the tags
 		string tabs = string.Empty;
 		for (int i = 0; i < depth; i++)
 			tabs += "\t";
 
-		rawdata += tabs + "<Lane>\r\n";
-
 		// Go over all properties
+		rawdata += tabs + "<Lane>\r\n";
 		rawdata += tabs + "\t<LaneID>" + lane.laneID + "</LaneID>\r\n";
 		rawdata += tabs + "\t<GoRight>" + lane.goRight.ToString() + "</GoRight>\r\n";
 		rawdata += tabs + "\t<Speed>" + lane.speed.ToString() + "</Speed>\r\n";
@@ -81,13 +84,13 @@ public class FroggerLaneDefinition
 		rawdata += tabs + "\t<RepeatAllowFactor>" + lane.repeatAllowFactor.ToString() + "</RepeatAllowFactor>\r\n";
 		rawdata += tabs + "\t<BackgroundScrollingSpeed>" + lane.backgroundScrollingSpeed.ToString() + "</BackgroundScrollingSpeed>\r\n";
 
+		// Write away all of the spawn items in a separate module
 		rawdata += tabs + "\t<LaneItems>\r\n";
 		foreach (FroggerLaneItemDefinition laneitem in lane.spawnItems)
 		{
 			rawdata += FroggerLaneItemDefinition.ToXML(laneitem, depth + 2);
 		}
 		rawdata += tabs + "\t</LaneItems>\r\n";
-
 		rawdata += tabs + "</Lane>\r\n";
 
 		return rawdata;

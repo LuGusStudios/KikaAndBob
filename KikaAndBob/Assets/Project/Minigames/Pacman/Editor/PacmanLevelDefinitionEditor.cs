@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
-
-[CustomEditor(typeof(FroggerLevelDefinition))]
-class FroggerLevelDefinitionEditor : Editor
+[CustomEditor(typeof(PacmanLevelDefinition))]
+public class PacmanLevelDefinitionEditor : Editor 
 {
-	public string saveLocation = Application.dataPath + "/Config/Frogger/";
+	public string saveLocation = Application.dataPath + "/Config/Pacman/";
 
 	public override void OnInspectorGUI()
 	{
@@ -22,13 +21,13 @@ class FroggerLevelDefinitionEditor : Editor
 
 	private void SaveConfig()
 	{
-		FroggerLevelDefinition level = (FroggerLevelDefinition)target;
+		PacmanLevelDefinition level = (PacmanLevelDefinition)target;
 
 		if (!Directory.Exists(saveLocation))
 			Directory.CreateDirectory(saveLocation);
 
 		string rawdata = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n";
-		rawdata += FroggerLevelDefinition.ToXML(level);
+		rawdata += PacmanLevelDefinition.ToXML(level);
 
 		StreamWriter writer = new StreamWriter(saveLocation + level.name + ".xml");
 		writer.Write(rawdata);

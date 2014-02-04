@@ -23,6 +23,7 @@ public class FroggerLevelDefinition : ScriptableObject {
 
 		List<FroggerLaneDefinition> lanes = new List<FroggerLaneDefinition>();
 
+		// While not encountering the closing "Level"-tag, we know we are still inside the level
 		while (parser.Read("Level"))
 		{
 			if (parser.tagType == TinyXmlReader.TagType.OPENING)
@@ -60,14 +61,12 @@ public class FroggerLevelDefinition : ScriptableObject {
 
 		rawdata += "<Level>\r\n";
 		rawdata += "\t<BackgroundMusicName>" + level.backgroundMusicName + "</BackgroundMusicName>\r\n";
-
 		rawdata += "\t<Lanes>\r\n";
 		for (int i = level.lanes.Length - 1; i >= 0; --i )
 		{
 			rawdata += FroggerLaneDefinition.ToXML(level.lanes[i], 2);
 		}
 		rawdata += "\t</Lanes>\r\n";
-
 		rawdata += "</Level>\r\n";
 
 		return rawdata;

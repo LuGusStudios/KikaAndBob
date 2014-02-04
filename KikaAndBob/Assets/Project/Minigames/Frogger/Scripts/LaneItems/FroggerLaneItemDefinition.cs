@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 [System.Serializable]
 public class FroggerLaneItemDefinition 
@@ -41,6 +40,8 @@ public class FroggerLaneItemDefinition
 
 	public static string ToXML(FroggerLaneItemDefinition laneitem, int depth)
 	{
+		// Write all of the lane item's properties to XML
+
 		string rawdata = string.Empty;
 
 		if (laneitem == null)
@@ -49,15 +50,14 @@ public class FroggerLaneItemDefinition
 			return rawdata;
 		}
 
+		// A string representing the indentation of the tags
 		string tabs = string.Empty;
 		for (int i = 0; i < depth; i++)
 			tabs += "\t";
 
 		rawdata += tabs + "<LaneItem>\r\n";
-
 		rawdata += tabs + "\t<SpawnID>" + laneitem.spawnID + "</SpawnID>\r\n";
 		rawdata += tabs + "\t<Positioning>" + laneitem.positioning.ToString() + "</Positioning>\r\n";
-
 		rawdata += tabs + "</LaneItem>\r\n";
 
 		return rawdata;
