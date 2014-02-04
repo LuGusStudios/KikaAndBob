@@ -62,18 +62,4 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		gameRunning = false;
 		FroggerGUIManager.use.GameLost();
 	}
-
-	void OnGUI()
-	{
-		if (!LugusDebug.debug)
-			return;
-
-		for (int i = 0; i < FroggerLevelManager.use.levels.Length; i++) 
-		{
-			if (GUILayout.Button("Start Level " + i))
-			{
-				StartNewGame(i);
-			}
-		}
-	}
 }

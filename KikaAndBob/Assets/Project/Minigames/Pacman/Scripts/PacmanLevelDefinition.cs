@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class PacmanLevelDefinition : ScriptableObject {
@@ -15,6 +16,51 @@ public class PacmanLevelDefinition : ScriptableObject {
 			return null;
 		}
 
+		List<PacmanCharacterDefinition> characters = new List<PacmanCharacterDefinition>();
+		List<string> updaters = new List<string>();
+		List<PacmanTileItemDefinition> tileitems = new List<PacmanTileItemDefinition>();
+		while (parser.Read("Level"))
+		{
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch (parser.tagName)
+				{
+					case "BackgroundMusicName":
+						level.backgroundMusicName = parser.content;
+						break;
+					case "Width":
+						level.width = int.Parse(parser.content);
+						break;
+					case "Height":
+						level.height = int.Parse(parser.content);
+						break;
+					case "CameraTracksPlayer":
+						level.cameraTracksPlayer = bool.Parse(parser.content);
+						break;
+					case "Layout":
+						char[] separators = { ' ', '\t', '\n', '\r' };
+						string[] rows = parser.content.Split(separators);
+						foreach (string row in rows)
+						{
+							level.level += row;
+						}
+						break;
+					case "Character":
+						characters.Add(PacmanCharacterDefinition.FromXML(parser));
+						break;
+					case "Updater":
+						updaters.Add(parser.content);
+						break;
+					case "TileItem":
+						tileitems.Add(PacmanTileItemDefinition.FromXML(parser));
+						break;
+				}
+			}
+		}
+
+		level.characters = characters.ToArray();
+		level.updaters = updaters.ToArray();
+		level.tileItems = tileitems.ToArray();
 
 		return level;
 	}
@@ -89,6 +135,79 @@ public class PacmanCharacterDefinition
 	{
 		PacmanCharacterDefinition character = new PacmanCharacterDefinition();
 
+		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
+			(parser.tagName != "Character"))
+		{
+			Debug.Log("PacmanCharacterDefinition.FromXML(): unexpected tag type or tag name.");
+			return null;
+		}
+
+		List<Vector2> targettiles = new List<Vector2>();
+		while (parser.Read("Character"))
+		{
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch(parser.tagName)
+				{
+					case "ID":
+						character.id = parser.content;
+						break;
+					case "Speed":
+						character.speed = float.Parse(parser.content);
+						break;
+					case "XLocation":
+						character.xLocation = int.Parse(parser.content);
+						break;
+					case "YLocation":
+						character.yLocation = int.Parse(parser.content);
+						break;
+					case "SpawnDelay":
+						character.spawnDelay = float.Parse(parser.content);
+						break;
+					case "StartDirection":
+						switch (parser.content)
+						{
+							case "down":
+								character.startDirection = PacmanCharacter.CharacterDirections.Down;
+								break;
+							case "left":
+								character.startDirection = PacmanCharacter.CharacterDirections.Left;
+								break;
+							case "up":
+								character.startDirection = PacmanCharacter.CharacterDirections.Up;
+								break;
+							case "right":
+								character.startDirection = PacmanCharacter.CharacterDirections.Right;
+								break;
+							case "undefined":
+								character.startDirection = PacmanCharacter.CharacterDirections.Undefined;
+								break;
+						}
+						break;
+					case "Tile":
+						Vector2 tile = Vector2.zero;
+						while (parser.Read("Tile"))
+						{
+							if (parser.tagType == TinyXmlReader.TagType.OPENING)
+							{
+								switch (parser.tagName)
+								{
+									case "X":
+										tile.x = float.Parse(parser.content);
+										break;
+									case "Y":
+										tile.y = float.Parse(parser.content);
+										break;
+								}
+							}
+						}
+						targettiles.Add(tile);
+						break;
+				}
+			}
+		}
+
+		character.defaultTargetTiles = targettiles.ToArray();
 		return character;
 	}
 
@@ -164,6 +283,45 @@ public class PacmanTileItemDefinition
 	public static PacmanTileItemDefinition FromXML(TinyXmlReader parser)
 	{
 		PacmanTileItemDefinition tileitem = new PacmanTileItemDefinition();
+
+		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
+			(parser.tagName != "Character"))
+		{
+			Debug.Log("PacmanTileItemDefinition.FromXML(): unexpected tag type or tag name.");
+			return null;
+		}
+
+		while(parser.Read("TileItem"))
+		{
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch(parser.tagName)
+				{
+					case "ID":
+						tileitem.id = parser.content;
+						break;
+					case "TileCoordinates":
+						Vector2 coordinates = Vector2.zero;
+						while (parser.Read("TileCoordinates"))
+						{
+							if (parser.tagType == TinyXmlReader.TagType.OPENING)
+							{
+								switch (parser.tagName)
+								{
+									case "X":
+										coordinates.x = float.Parse(parser.content);
+										break;
+									case "Y":
+										coordinates.y = float.Parse(parser.content);
+										break;
+								}
+							}
+						}
+						tileitem.tileCoordinates = coordinates;
+						break;
+				}
+			}
+		}
 
 		return tileitem;
 	}
