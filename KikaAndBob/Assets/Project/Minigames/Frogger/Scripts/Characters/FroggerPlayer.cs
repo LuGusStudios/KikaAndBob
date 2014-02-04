@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class FroggerPlayer : FroggerCharacter {
+	
+	protected bool headingUp = true;
 
 	protected override void UpdatePosition ()
 	{
@@ -13,10 +15,12 @@ public class FroggerPlayer : FroggerCharacter {
 			if (LugusInput.use.Key(KeyCode.UpArrow))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneAbove(currentLane));
+				headingUp = true;
 			}
 			else if (LugusInput.use.Key(KeyCode.DownArrow))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneBelow(currentLane));
+				headingUp = false;
 			}
 			else if (LugusInput.use.Key(KeyCode.LeftArrow))
 			{
@@ -28,8 +32,12 @@ public class FroggerPlayer : FroggerCharacter {
 			}
 			else
 			{
-				PlayAnimation("Idle");
+				if (!headingUp)
+					characterAnimator.PlayAnimation(characterAnimator.idleDown);
+				else
+					characterAnimator.PlayAnimation(characterAnimator.idleUp);
 			}
+
 			ClampToScreen();
 		}
 	} 
