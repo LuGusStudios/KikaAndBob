@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
-  m_Name: FroggerLevelTest01
+  m_Name: KeniaLevel01
   m_EditorClassIdentifier: 
   backgroundMusicName: 
   lanes:
-  - laneID: LaneGrass
+  - laneID: LaneMud
     goRight: 1
     speed: 3
     minGapDistance: 4
@@ -38,11 +38,9 @@ MonoBehaviour:
     maxGapDistance: 10
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: Car
-      positioning: 0
+    spawnItems: []
   - laneID: LaneMud
-    goRight: 1
+    goRight: 0
     speed: 5
     minGapDistance: 6
     maxGapDistance: 9
@@ -58,9 +56,7 @@ MonoBehaviour:
     maxGapDistance: 10
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: Elephant
-      positioning: 0
+    spawnItems: []
   - laneID: LaneMud
     goRight: 1
     speed: 3
@@ -85,7 +81,7 @@ MonoBehaviour:
     minGapDistance: 4
     maxGapDistance: 6
     repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
+    backgroundScrollingSpeed: 1
     spawnItems:
     - spawnID: Log01
       positioning: 0
@@ -97,11 +93,11 @@ MonoBehaviour:
     minGapDistance: 4
     maxGapDistance: 6
     repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
+    backgroundScrollingSpeed: -1
     spawnItems:
     - spawnID: Log03
       positioning: 0
-    - spawnID: Crocodile01
+    - spawnID: Log02
       positioning: 0
   - laneID: LaneWater
     goRight: 1
@@ -109,11 +105,11 @@ MonoBehaviour:
     minGapDistance: 4
     maxGapDistance: 6
     repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
+    backgroundScrollingSpeed: 1
     spawnItems:
     - spawnID: Log01
       positioning: 0
-    - spawnID: Crocodile02
+    - spawnID: Log02
       positioning: 0
   - laneID: LaneWater
     goRight: 0
@@ -121,11 +117,11 @@ MonoBehaviour:
     minGapDistance: 4
     maxGapDistance: 6
     repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
+    backgroundScrollingSpeed: -1
     spawnItems:
     - spawnID: Log03
       positioning: 0
-    - spawnID: Crocodile01
+    - spawnID: Log01
       positioning: 0
   - laneID: LaneWaterEnd
     goRight: 1
@@ -139,17 +135,7 @@ MonoBehaviour:
       positioning: 0
     - spawnID: Log02
       positioning: 0
-    - spawnID: Crocodile01
-      positioning: 0
   - laneID: LaneDirt
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
-    spawnItems: []
-  - laneID: LaneEndWin
     goRight: 1
     speed: 4
     minGapDistance: 4
