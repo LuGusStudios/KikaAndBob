@@ -8,6 +8,8 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 
 	public void SetupLocal()
 	{
+		LugusResources.use.Localized.LangID = "nl";
+
 		// assign variables that have to do with this class only
 		if( arrow == null )
 		{
@@ -52,19 +54,25 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	public abstract void NextStep();
 
 	// total of 5 steps
-	public void ConsumerFinish(int startCount)
+	public void ConsumerFinish(int startCount, string textBase)
 	{
+		string keyEnd =  "." + (stepCount - startCount + 1);
+		string text = LugusResources.use.Localized.GetText( textBase + keyEnd, "global.tutorial" + keyEnd );
+
 		if( stepCount == startCount )
 		{
 			// customer tapped. Customer is now eating... wait for the customer to be Done
 			arrow.Hide ();
-			
+
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
 		}
 		else if( stepCount == startCount + 1 )
 		{
 			// customer is done: need to pick up the dishes
 			Debug.Log ("TAP CUSTOMER for DISHES");
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
+
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
 		}
 		else if( stepCount == startCount + 2 )
 		{
@@ -72,6 +80,8 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			Debug.Log ("TAP DISHWASHER");
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed += OnConsumableUsed;
 			arrow.Show( GameObject.Find ("GarbageBin") );
+
+			DialogueManager.use.CreateBox( GameObject.Find ("GarbageBin").transform, text );
 		}
 		else if( stepCount == startCount + 3 )
 		{
@@ -79,6 +89,8 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			Debug.Log ("TAP CUSTOMER for PAYMENT");
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed -= OnConsumableUsed;
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
+			
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
 		}
 		else if( stepCount == startCount + 4 )
 		{
@@ -89,29 +101,31 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	}
 
 	// 7 steps in total (2 + 5)
-	public void SingleOrderFull(int startCount, GameObject producer )
+	public void SingleOrderFull(int startCount, string textBase, GameObject producer )
 	{
 		if( stepCount == startCount  )
 		{
-			Debug.Log ("TAP " + producer.name);
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.GetText(textBase + ".1") );
+
 			arrow.Show( producer );
 			producer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
 		}
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			Debug.Log ("TAP CUSTOMER");
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.GetText(textBase + ".2") );
+
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			producer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
 		}
 		else
 		{
-			ConsumerFinish( startCount + 2 );
+			ConsumerFinish( startCount + 2, textBase );
 		}
 	}
 
 	// 8 steps in total
-	public void DoubleOrderFull(int startCount, GameObject producer1, GameObject producer2)
+	public void DoubleOrderFull(int startCount, string textBase, GameObject producer1, GameObject producer2)
 	{
 		if( stepCount == startCount )
 		{
@@ -138,7 +152,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		}
 		else
 		{
-			ConsumerFinish( startCount + 3 );
+			ConsumerFinish( startCount + 3, textBase );
 		}
 
 		/*
@@ -178,7 +192,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	}
 
 	// 10 steps in total
-	public void SingleProcessorOrderFull(int startCount, GameObject producer, GameObject processor)
+	public void SingleProcessorOrderFull(int startCount, string textBase, GameObject producer, GameObject processor)
 	{
 		if( stepCount == startCount )
 		{
@@ -229,7 +243,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		}
 		else
 		{
-			ConsumerFinish( startCount + 5 );
+			ConsumerFinish( startCount + 5, textBase );
 		}
 
 		/*

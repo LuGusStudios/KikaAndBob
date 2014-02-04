@@ -52,15 +52,15 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 9 )
 		{
-			SingleOrderFull( 2, config.BurgerProducer );
+			SingleOrderFull( 2, "kenia.tutorial.1.burger", config.BurgerProducer );
 		}
 		else if( stepCount < 16 )
 		{
-			SingleOrderFull( 9, config.BurgerLongProducer );
+			SingleOrderFull( 9, "kenia.tutorial.1.burgerLong", config.BurgerLongProducer );
 		}
 		else if( stepCount < 24 )
 		{
-			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
+			DoubleOrderFull( 16, "kenia.tutorial.1.doubleOrder", config.BurgerProducer, config.BurgerLongProducer );
 		}
 
 	}
@@ -78,7 +78,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 12 )
 		{
-			SingleProcessorOrderFull( 2, config.VegetableProducer, config.StewPot );
+			SingleProcessorOrderFull( 2, "kenia.tutorial.2.stew" , config.VegetableProducer, config.StewPot );
 		} 
 
 		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
@@ -100,7 +100,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 12 )
 		{
-			SingleProcessorOrderFull( 2, config.OrangeProducer, config.Blender );
+			SingleProcessorOrderFull( 2, "kenia.tutorial.3.juice", config.OrangeProducer, config.Blender );
 		} 
 		
 		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )

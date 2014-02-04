@@ -10,6 +10,7 @@ public interface ILugusResourceCollection
 	Texture2D GetTexture(string key);
 	AudioClip GetAudio(string key);
 	string GetText(string key);
+	string GetText(string key, string backupKey);
 	
 	void Reload();
 }
@@ -123,6 +124,11 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 	public string GetText(string key)
 	{
 		return textHelper.Get ( key );
+	}
+	
+	public string GetText(string key, string backupKey)
+	{
+		return textHelper.Get ( key, backupKey );
 	}
 }
 
