@@ -23,6 +23,9 @@ public class ConsumableProcessor : IConsumableUser
 	public float processingTime = 3.0f;
 	public string processingSound = "";
 
+	protected Sprite idleTexture = null;
+	public Sprite processingTexture = null;
+
 	public ConsumableProcessor.State state = ConsumableProcessor.State.Idle;
 	public Consumable currentConsumable = null;
 
@@ -107,6 +110,9 @@ public class ConsumableProcessor : IConsumableUser
 
 		subject.renderer.enabled = false;
 
+		if( processingTexture != null )
+			GetComponent<SpriteRenderer>().sprite = processingTexture;
+
 		// TODO: show graphic update of the subject being placed "inside" the processor
 		// TODO: show graphical update indicating we're busy
 
@@ -123,7 +129,11 @@ public class ConsumableProcessor : IConsumableUser
 
 		currentConsumable.State = toState;
 		state = State.Done;
+
 		
+		if( processingTexture != null )
+			GetComponent<SpriteRenderer>().sprite = idleTexture;
+
 		if( onProcessingStart != null )
 			onProcessingEnd( subject );
 
@@ -141,6 +151,9 @@ public class ConsumableProcessor : IConsumableUser
 		{
 			Debug.LogError(name + " : no consumables found that can be processed here!");
 		}
+
+		if( GetComponent<SpriteRenderer>() != null )
+			idleTexture = GetComponent<SpriteRenderer>().sprite;
 	}
 	
 	public void SetupGlobal()

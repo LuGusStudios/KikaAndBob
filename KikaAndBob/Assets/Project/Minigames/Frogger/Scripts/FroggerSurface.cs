@@ -7,7 +7,7 @@ public abstract class FroggerSurface : MonoBehaviour {
 
 	public List<string> enterSoundKeys = new List<string>();
 	protected bool onSurface = false;
-	protected BoxCollider2D boxCollider2D = null;
+	protected BoxCollider2D surfaceCollider = null;
 
 	protected void Awake()
 	{
@@ -16,7 +16,12 @@ public abstract class FroggerSurface : MonoBehaviour {
 	
 	public virtual void SetUpLocal()
 	{
-		boxCollider2D = GetComponent<BoxCollider2D>();
+		surfaceCollider = GetComponent<BoxCollider2D>();
+
+		if (surfaceCollider == null)
+		{
+			Debug.LogError("FroggerSurface: " + name + " is missing surface collider.", gameObject);
+		}
 	}
 
 	public void Enter(FroggerCharacter character)

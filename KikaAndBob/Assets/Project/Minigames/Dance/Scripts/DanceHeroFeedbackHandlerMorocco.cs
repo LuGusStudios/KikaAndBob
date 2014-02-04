@@ -79,10 +79,10 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	
 	public void OnDisplayModifier()
 	{
+		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
-		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		Destroy(modifierDisplay, 0.5f);
 	}
 
@@ -203,6 +203,8 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 	protected IEnumerator StartSpinRoutine(int index)
 	{
+
+		// enable right index sculpture and scale it up
 		foreach(Transform t in sculptures)
 		{
 			foreach(Transform child in t)
@@ -210,7 +212,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				if (child.name == index.ToString())
 				{
 					child.gameObject.SetActive(true);
-					child.gameObject.ScaleTo(child.transform.localScale * 1.2f).Time(0.5f).Execute();
+					child.gameObject.ScaleTo(child.transform.localScale * 1.3f).Time(0.5f).Execute();
 				}
 				else
 				{
@@ -221,19 +223,21 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		yield return new WaitForSeconds(0.5f);
 
+		// scale it down again
 		foreach(Transform t in sculptures)
 		{
 			foreach(Transform child in t)
 			{
 				if (child.name == index.ToString())
 				{
-					child.gameObject.ScaleTo(child.transform.localScale / 1.2f).Time(0.5f).Execute();
+					child.gameObject.ScaleTo(child.transform.localScale / 1.3f).Time(0.5f).Execute();
 				}
 			}
 		}
 
-		yield return new WaitForSeconds(2.0f);
+		yield return new WaitForSeconds(5.0f);
 
+		// re-enable twist animation
 		foreach(Transform t in sculptures)
 		{
 			foreach(Transform child in t)

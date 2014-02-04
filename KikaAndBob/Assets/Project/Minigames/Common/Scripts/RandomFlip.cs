@@ -15,10 +15,15 @@ public class RandomFlip : MonoBehaviour
 
 	public void SetupLocal()
 	{
+		FlipRandom();
+	}
+
+	public void FlipRandom()
+	{
 		bool x = Random.value < flipChance && flipX;
 		bool y = Random.value < flipChance && flipY;
-
-
+		
+		
 		Flip ( this.transform, x, y);
 		foreach( GameObject obj in brothers )
 		{

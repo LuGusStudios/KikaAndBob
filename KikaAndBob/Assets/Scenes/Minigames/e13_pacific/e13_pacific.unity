@@ -230,7 +230,6 @@ Transform:
   - {fileID: 295428361}
   - {fileID: 254946498}
   - {fileID: 1830279825}
-  - {fileID: 1236143025}
   - {fileID: 1961147042}
   - {fileID: 1348466223}
   - {fileID: 1182759556}
@@ -6386,6 +6385,7 @@ MonoBehaviour:
     from: 20
     to: 25
   transitionSkyOffset: 50
+  themeTransitionInProgress: 0
 --- !u!114 &158124275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7396,7 +7396,7 @@ GameObject:
   - 111: {fileID: 261507337}
   - 137: {fileID: 261507336}
   m_Layer: 0
-  m_Name: Eagle
+  m_Name: Parrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16160,7 +16160,7 @@ GameObject:
   - 111: {fileID: 658018932}
   - 137: {fileID: 658018931}
   m_Layer: 0
-  m_Name: Eagle
+  m_Name: Parrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21125,6 +21125,46 @@ Transform:
   m_Children:
   - {fileID: 185965826}
   m_Father: {fileID: 369859625}
+--- !u!1 &859108609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 859108611}
+  - 114: {fileID: 859108610}
+  m_Layer: 0
+  m_Name: LevelTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &859108610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 859108609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf6d724c0dda4269accfecfb165fb72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sectionCount: 50
+  transitionThemes: 1
+--- !u!4 &859108611
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 859108609}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 43.0250854, y: -39.0139847, z: -24.9887695}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &860429060
 GameObject:
   m_ObjectHideFlags: 0
@@ -26086,13 +26126,13 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1236143024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4738884, y: 38.7116776, z: 0}
+  m_LocalPosition: {x: .370716095, y: 33.4690208, z: -1.04760742}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1233218678}
   - {fileID: 261507334}
   - {fileID: 658018930}
-  m_Father: {fileID: 22430978}
+  m_Father: {fileID: 1635775957}
 --- !u!114 &1236143026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32232,7 +32272,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -51.6481171, y: 38.0394325, z: 1.04760742}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1236143025}
   m_Father: {fileID: 0}
 --- !u!1 &1637850348
 GameObject:
