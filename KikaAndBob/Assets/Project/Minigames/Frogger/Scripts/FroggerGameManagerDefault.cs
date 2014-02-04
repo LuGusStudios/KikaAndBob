@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefault> {
 }
@@ -34,6 +35,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		gameRunning = true;
 	}
 
+	void Start()
+	{
+
+	}
+
 	// TO DO: Placeholder!!!
 	void Update()
 	{
@@ -55,19 +61,5 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	{
 		gameRunning = false;
 		FroggerGUIManager.use.GameLost();
-	}
-
-	void OnGUI()
-	{
-		if (!LugusDebug.debug)
-			return;
-
-		for (int i = 0; i < FroggerLevelManager.use.levels.Length; i++) 
-		{
-			if (GUILayout.Button("Start Level " + i))
-			{
-				StartNewGame(i);
-			}
-		}
 	}
 }
