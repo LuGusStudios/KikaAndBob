@@ -13,7 +13,7 @@ public class IndicatorArrow : MonoBehaviour
 		BoxCollider2D box = target.GetComponent<BoxCollider2D>();
 		if( box != null )
 		{
-			Debug.LogWarning("BOX " + box.size + " // " + box.center);
+			//Debug.LogWarning("BOX " + box.size + " // " + box.center);
 
 			float yOffset = ((-1.0f * box.size.y) / 2.0f) - box.center.y;
 			yOffset *= -1.0f;
@@ -21,7 +21,7 @@ public class IndicatorArrow : MonoBehaviour
 			
 			position = target.transform.TransformPoint( position );
 			
-			Debug.LogWarning("BOXPOS " + position);
+			//Debug.LogWarning("BOXPOS " + position);
 		}
 
 		Show ( position );

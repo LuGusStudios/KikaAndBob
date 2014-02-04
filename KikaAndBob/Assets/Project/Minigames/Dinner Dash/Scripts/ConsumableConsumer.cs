@@ -47,7 +47,7 @@ public class ConsumableConsumer : IConsumableUser
 	{
 		set
 		{
-			Debug.LogError("Consumer set state " + value );
+			//Debug.Log("Consumer set state " + value );
 			State oldState = _state;
 			_state = value;
 
