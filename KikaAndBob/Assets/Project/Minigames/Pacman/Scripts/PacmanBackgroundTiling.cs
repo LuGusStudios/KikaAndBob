@@ -7,17 +7,16 @@ public class PacmanBackgroundTiling : MonoBehaviour
 	public int ringCount = 1;
 
 	protected PacmanPlayerCharacter player = null;
-	protected Transform activeBackground = null;
 	protected SpriteRenderer backgroundSprite = null;
 
 	public void SetupLocal()
 	{
-	
+		PacmanLevelManager.use.onLevelBuilt += OnLevelBuilt;
 	}
 	
 	public void SetupGlobal()
 	{
-		PacmanLevelManager.use.onLevelBuilt += OnLevelBuilt;
+	
 	}
 	
 	protected void Awake()
@@ -32,8 +31,8 @@ public class PacmanBackgroundTiling : MonoBehaviour
 
 	protected void OnLevelBuilt()
 	{
+		Debug.Log("PacmanBackgroundTiling: reset");
 		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
-		activeBackground = this.transform;
 		backgroundSprite = GetComponent<SpriteRenderer>();
 		CreateTilingBackground(); // handy to call this again in case we ever do something like per-level backgrounds
 	}
@@ -45,9 +44,9 @@ public class PacmanBackgroundTiling : MonoBehaviour
 		for (int i = transform.childCount - 1; i >= 0; i--) 
 		{
 			#if UNITY_EDITOR
-			DestroyImmediate(transform.GetChild(i));
+			DestroyImmediate(transform.GetChild(i).gameObject);
 			#else
-			Destroy(transform.GetChild(i));
+			Destroy(transform.GetChild(i).gameObject);
 			#endif
 		}
 
@@ -79,8 +78,8 @@ public class PacmanBackgroundTiling : MonoBehaviour
 
 	protected void UpdateBackground()
 	{
-//		if (player == null)
-//			return;
+		if (player == null)
+			return;
 
 		if ((player.transform.position.x - transform.position.x) >= backgroundSprite.bounds.extents.x)
 		{
