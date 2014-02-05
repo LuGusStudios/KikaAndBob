@@ -19,12 +19,16 @@ public class PacmanConfigLoaderDefault : MonoBehaviour
 
 		if (!Directory.Exists(configPath))
 		{
-			Debug.LogError("The directory " + configPath + " does not exist.");
+			Debug.LogError("PacmanConfigLoader: The directory " + configPath + " does not exist.");
 			return;
 		}
 
 		string[] files = Directory.GetFiles(configPath, "*.xml");
-		PacmanLevelDefinition[] levels = new PacmanLevelDefinition[files.Length];
+
+		// using a list instead of an array here, so we only add an entry if the xml was parsed successfully
+		//PacmanLevelDefinition[] levels = new PacmanLevelDefinition[files.Length];
+		List<PacmanLevelDefinition> levels = new List<PacmanLevelDefinition>();	
+
 		for (int i = 0; i < files.Length; ++i)
 		{
 			StreamReader reader = new StreamReader(files[i]);
@@ -32,20 +36,39 @@ public class PacmanConfigLoaderDefault : MonoBehaviour
 
 			TinyXmlReader parser = new TinyXmlReader(rawdata);
 
+			bool success = true;
+
+			PacmanLevelDefinition level = null;
+
 			while (parser.Read())
 			{
-				if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
-					(parser.tagName == "Level"))
+				try
 				{
-					PacmanLevelDefinition level = PacmanLevelDefinition.FromXML(parser);
-					level.name = Path.GetFileNameWithoutExtension(files[i]);
-					levels[i] = level;
-					//SaveConfig(level);
+					if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
+						(parser.tagName == "Level"))
+					{
+						level = PacmanLevelDefinition.FromXML(parser);
+						level.name = Path.GetFileNameWithoutExtension(files[i]);
+						//levels.Add(level);
+						//SaveConfig(level);
+					}
+				}
+				catch(System.Exception e)
+				{
+					Debug.LogError("PacmanConfigLoader: There was an error parsing XML file: " + files[i] + ". Skipping this file. Error reprinted below: ");
+					Debug.LogError(e.ToString());
+
+					success = false;
+					break;
 				}
 			}
+
+			if (success)
+				levels.Add(level);
 		}
 
-		PacmanLevelManager.use.levels = levels;
+		//PacmanLevelManager.use.levels = levels;
+		PacmanLevelManager.use.levels = levels.ToArray();
 	}
 
 	private void SaveConfig(PacmanLevelDefinition level)
@@ -59,21 +82,5 @@ public class PacmanConfigLoaderDefault : MonoBehaviour
 		StreamWriter writer = new StreamWriter(configPath + level.name + ".xml");
 		writer.Write(rawdata);
 		writer.Close();
-	}
-
-	void OnGUI()
-	{
-		if (!LugusDebug.debug)
-		{
-			return;
-		}
-
-		for (int i = 0; i < PacmanLevelManager.use.levels.Length; i++)
-		{
-			if (GUILayout.Button("Level " + i))
-			{
-				PacmanGameManager.use.StartNewLevel(i);
-			}
-		}
 	}
 }

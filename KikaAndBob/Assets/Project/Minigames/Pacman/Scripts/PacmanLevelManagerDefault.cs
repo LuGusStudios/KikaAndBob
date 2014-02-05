@@ -1021,5 +1021,21 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		return levelRoot;
 	}
+
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+		{
+			return;
+		}
+		
+		for (int i = 0; i < levels.Length; i++)
+		{
+			if (GUILayout.Button("Level " + i))
+			{
+				PacmanGameManager.use.StartNewLevel(i);
+			}
+		}
+	}
 }
 

@@ -12896,6 +12896,7 @@ GameObject:
   - 114: {fileID: 739109688}
   - 114: {fileID: 739109690}
   - 114: {fileID: 739109691}
+  - 114: {fileID: 739109692}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -12914,10 +12915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4309e9d1a71e4f4d96c6eb09daf75f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
-  - {fileID: 11400000, guid: 7f7dd204b8fe2af468ae7cda8eaa9718, type: 2}
-  - {fileID: 11400000, guid: c1f97610cbc829549a1b59cb30b92de5, type: 2}
-  - {fileID: 11400000, guid: a136b0464194d0642957a904f3b6928b, type: 2}
+  levels: []
   width: 13
   height: 13
   scale: 1
@@ -12927,6 +12925,7 @@ MonoBehaviour:
   - {fileID: 11400006, guid: 4519f36a54094974495393d43b635ca4, type: 2}
   - {fileID: 11400002, guid: 88cc0b9aac1aa0348acde09c4a4d3b40, type: 2}
   - {fileID: 11400002, guid: 70783474818ba8647a0211bd85a4767e, type: 2}
+  - {fileID: 11400002, guid: 79f3cc7af78b06f449ccd529d57de1c6, type: 2}
   tileItems: []
   blockSprites:
   - {fileID: 21300000, guid: a433e204ea010c64d832fedeb44976f8, type: 3}
@@ -13037,7 +13036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2e867729c57074d8888581a8f65f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxEnemyDistance: 400
+  maxEnemyDistance: 4
 --- !u!114 &739109690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13058,6 +13057,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e234c1d77cb634eccb6ce50564cc67dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &739109692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 739109681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729b33555398aef44aa9dbe8b8e1fec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &743793562
@@ -13311,7 +13321,7 @@ MonoBehaviour:
   speed: 2
   walkSoundKey: WalkLoop01
   spawnDelay: 0
-  enemiesFlee: 0
+  poweredUp: 0
   powerupDuration: 10
 --- !u!1 &763690215
 GameObject:
@@ -14791,6 +14801,8 @@ MonoBehaviour:
   allowUTurns: 0
   forwardDetectDistance: 5
   walkAnimation: Left/ScorpionA_Walk
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
 --- !u!1 &975623391
 GameObject:
@@ -30512,6 +30524,8 @@ MonoBehaviour:
   allowUTurns: 0
   forwardDetectDistance: 5
   walkAnimation: Left/ScorpionA_Walk
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
 --- !u!1 &1563318007
 GameObject:
