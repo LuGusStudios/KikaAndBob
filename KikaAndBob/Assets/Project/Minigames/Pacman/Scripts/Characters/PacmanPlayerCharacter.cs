@@ -4,7 +4,7 @@ using SmoothMoves;
 
 public class PacmanPlayerCharacter : PacmanCharacter {
 
-	public bool enemiesFlee = false;
+	public bool poweredUp = false;
 	public float powerupDuration = 10;
 
 	protected bool allowControl = true;
@@ -45,6 +45,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 		if (allowControl == true)
 		{
+			// once we're heading for a teleport tile, disable further input
 			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
 				return;
 
@@ -96,7 +97,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	public override void Reset()
 	{
 		moving = false;
-		enemiesFlee = false;
+		poweredUp = false;
 		characterAnimator.PlayAnimation("Idle");
 		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
 		DetectCurrentTile();
@@ -114,7 +115,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		if (enemiesFlee)
+		if (poweredUp)
 		{
 			if ( direction == CharacterDirections.Right || direction == CharacterDirections.Left)
 			{
@@ -196,11 +197,13 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	// Override for custom behavior
 	protected virtual void DoCurrentTileBehavior()
 	{
+		// if we just teleported and hit the next non-teleport tile, we're done teleporting
 		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
 		{
 			alreadyTeleported = false;
 		}
 
+		// check all sorts things placed on this tile
 		foreach(GameObject go in currentTile.tileItems)
 		{
 			if (go.GetComponent<PacmanTileItem>() != null)
@@ -337,11 +340,11 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	protected IEnumerator PowerupRoutine()
 	{
-		enemiesFlee = true;
+		poweredUp = true;
 
 		yield return new WaitForSeconds(powerupDuration);
 
-		enemiesFlee = false;
+		poweredUp = false;
 	}
 	
 	public PacmanCharacter.CharacterDirections GetDirection()
