@@ -15,7 +15,7 @@ public class LugusResourceHelperText
 		if( texts.Count == 0 )
 		{
 			Debug.LogError("No texts loaded! " + key);
-			return "[" + key + "]";
+			return "[" + key + " // " + backupKey +"]";
 		}
 		
 		if( texts.ContainsKey(key) )
@@ -60,15 +60,24 @@ public class LugusResourceHelperText
 	public void Parse( string text )
 	{
 		texts.Clear();
-		
-		string[] delimterFields2 = new string[1];
-		delimterFields2[0] = delimiterFields;
-		
+
 		if( string.IsNullOrEmpty(text) )
 		{
 			Debug.LogError("text source was null or empty!");
 			return;
 		}
+
+		// ex.
+		// <root>
+		// <key>value</key>\n
+		//</root>
+		texts = TinyXmlReader.DictionaryFromXMLString( text );
+
+		/*
+		// code for parsing format "key@@@value\n"
+		string[] delimterFields2 = new string[1];
+		delimterFields2[0] = delimiterFields;
+
 		
 		String[] lines = text.Split(delimiterLines[0]);
 		
@@ -98,6 +107,7 @@ public class LugusResourceHelperText
 			
 			texts[ parts[0].Trim() ] = parts[1].Trim();
 		}
+		*/
 		
 	}
 	

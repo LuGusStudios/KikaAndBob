@@ -43,7 +43,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 
 		++stepCount;
 
-		Debug.LogError ("Tutorial0 step " + stepCount);
+		Debug.Log ("Tutorial0 step " + stepCount);
 
 		if( stepCount == 1 )
 		{

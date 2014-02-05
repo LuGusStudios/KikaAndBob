@@ -8,6 +8,7 @@ public interface ILugusResourceCollection
 	event Lugus.OnResourcesReloaded onResourcesReloaded;
 	
 	Texture2D GetTexture(string key);
+	Sprite GetSprite(string key);
 	AudioClip GetAudio(string key);
 	string GetText(string key);
 	string GetText(string key, string backupKey);
@@ -82,14 +83,30 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		return output;
 	}
 	
+	public Sprite GetSprite(string key)
+	{	
+		Sprite output = null;
+		
+		foreach( ILugusResourceProvider provider in providers )
+		{
+			output = provider.GetSprite(_URL, key);
+			if( output != null )
+				break;
+		}
+		
+		if( output == null )
+		{
+			Debug.LogError(" : Sprite " + _URL + " " + key + " was not found!");
+			output = LugusResources.use.errorSprite; 
+		}
+		
+		return output;
+	}
 	
 	
 	public AudioClip GetAudio(string key)
 	{
 		AudioClip output = null;
-
-		if( string.IsNullOrEmpty(key) )
-			return output;
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
@@ -125,7 +142,6 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 	{
 		return textHelper.Get ( key );
 	}
-	
 	public string GetText(string key, string backupKey)
 	{
 		return textHelper.Get ( key, backupKey );

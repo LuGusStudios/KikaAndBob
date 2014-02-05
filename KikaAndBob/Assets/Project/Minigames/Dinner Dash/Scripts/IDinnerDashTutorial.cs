@@ -44,7 +44,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	public void OnProcessorEnd(Consumable consumable)
 	{
 		Debug.LogError(consumable.transform.Path() + " : Processor ended!");
-		NextStep();
+		NextStep(); 
 	}
 
 
@@ -56,7 +56,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	// total of 5 steps
 	public void ConsumerFinish(int startCount, string textBase)
 	{
-		string keyEnd =  "." + (stepCount - startCount + 1);
+		string keyEnd =  ".customer." + (stepCount - startCount + 1);
 		string text = LugusResources.use.Localized.GetText( textBase + keyEnd, "global.tutorial" + keyEnd );
 
 		if( stepCount == startCount )
@@ -64,7 +64,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			// customer tapped. Customer is now eating... wait for the customer to be Done
 			arrow.Hide ();
 
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "IconTime01" ).Show ();
 		}
 		else if( stepCount == startCount + 1 )
 		{
@@ -72,7 +72,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			Debug.Log ("TAP CUSTOMER for DISHES");
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "mouse.left.click" ).Show ();
 		}
 		else if( stepCount == startCount + 2 )
 		{
@@ -81,7 +81,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed += OnConsumableUsed;
 			arrow.Show( GameObject.Find ("GarbageBin") );
 
-			DialogueManager.use.CreateBox( GameObject.Find ("GarbageBin").transform, text );
+			DialogueManager.use.CreateBox( GameObject.Find ("GarbageBin").transform, text, "mouse.left.click" ).Show ();
 		}
 		else if( stepCount == startCount + 3 )
 		{
@@ -90,7 +90,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed -= OnConsumableUsed;
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text );
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "mouse.left.click" ).Show ();
 		}
 		else if( stepCount == startCount + 4 )
 		{
@@ -100,12 +100,12 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		}
 	}
 
-	// 7 steps in total (2 + 5)
+	// 7 steps in total (2 + 5) 
 	public void SingleOrderFull(int startCount, string textBase, GameObject producer )
 	{
-		if( stepCount == startCount  )
+		if( stepCount == startCount  ) 
 		{
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.GetText(textBase + ".1") );
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "mouse.left.click" ).Show ();
 
 			arrow.Show( producer );
 			producer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
@@ -113,7 +113,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.GetText(textBase + ".2") );
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "mouse.left.click" ).Show ();
 
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			producer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;

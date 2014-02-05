@@ -7,6 +7,7 @@ public class DialogueBox : MonoBehaviour
 	public bool available = true;
 
 	public Transform background = null;
+	protected Vector3 originalBackgroundSize = Vector3.one;
 	protected TextMeshWrapper textSmall = null;
 	protected TextMeshWrapper textLarge = null;
 	public string text = "";
@@ -51,7 +52,8 @@ public class DialogueBox : MonoBehaviour
 		// fit the background around the text
 		// for now, only scale in height, assume width is already correct by setup
 		// * 100.0f because texture is imported at 100 pixels/unit scale
-		background.transform.localScale = background.transform.localScale.y( (chosenText.renderer.bounds.size.y + (backgroundPadding.y / 100.0f)) * 100.0f );
+		float newHeight = Mathf.Max( originalBackgroundSize.y, (chosenText.renderer.bounds.size.y + (backgroundPadding.y / 100.0f)) * 100.0f );
+		background.transform.localScale = background.transform.localScale.y( newHeight);
 
 
 		//Vector2 basePos = KikaAndBob.ScreenAnchorHelper.GetQuadrantCenter( mainAnchor, LugusUtil.UIScreenSize );
@@ -61,7 +63,7 @@ public class DialogueBox : MonoBehaviour
 		backgroundRect.width = backgroundRect.width * 100;
 		backgroundRect.height = backgroundRect.height * 100;
 
-		Debug.LogWarning("BACKGROUND RECT " + backgroundRect + " vs " + mainContainer );
+		//Debug.LogWarning("BACKGROUND RECT " + backgroundRect + " vs " + mainContainer );
 
 		// add margin
 		//mainContainer.height = mainContainer.height - (mainContainer.height / 10.0f);
@@ -81,8 +83,13 @@ public class DialogueBox : MonoBehaviour
 		targetPosition = Vector3.zero; 
 	}
 
-	public void Show()
+	public void Show(bool hideOthers = true)
 	{
+		if( hideOthers )
+		{
+			DialogueManager.use.HideOthers(this);
+		}
+				
 		available = false;
 
 		if( mainAnchor == KikaAndBob.ScreenAnchor.NONE )
@@ -90,6 +97,7 @@ public class DialogueBox : MonoBehaviour
 			Reposition( KikaAndBob.ScreenAnchor.Center );
 		}
 
+		//Debug.LogError(transform.Path () + " : Repositioning to local coords " + targetPosition);
 		this.transform.localPosition = targetPosition;
 	}
 
@@ -97,7 +105,7 @@ public class DialogueBox : MonoBehaviour
 	{
 		available = true;
 		
-		this.transform.localPosition = new Vector3(9999.0f, 9999.0f, 9999.0f);
+		this.transform.position = new Vector3(9999.0f, 9999.0f, 9999.0f);
 		Reset ();
 	}
 
@@ -130,6 +138,10 @@ public class DialogueBox : MonoBehaviour
 		if( background == null )
 		{
 			Debug.LogError( transform.Path () + " : No background found!" );
+		}
+		else
+		{
+			originalBackgroundSize = background.localScale.v2 ();
 		}
 
 		if( textSmall == null )
