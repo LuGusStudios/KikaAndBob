@@ -8,6 +8,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public int forwardDetectDistance = 5;
 	public string walkAnimation = "";
 	public string defeatSoundKey = "";
+	public string attackSoundKey = "";
 
 	protected bool playerFound = false;
 	protected bool runBehavior = true;			// if set to false, most behavior is disabled (for cutscenes, teleport etc.)
@@ -88,6 +89,10 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				// else, player loses life
 				else
 				{
+					if (!string.IsNullOrEmpty(attackSoundKey))
+					{
+						LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(attackSoundKey));
+					}
 					p.DoHitEffect();
 				}
 			}
@@ -258,14 +263,20 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(defeatSoundKey));
 		}
 
-
-		ParticleSystem deathParticles = GetComponentInChildren<ParticleSystem>();
-		if (deathParticles != null)
+		// instatiate the particles, because we don't want them to scale or be affected by anything similar taking place on the enemy proper
+		ParticleSystem defeatParticles = GetComponentInChildren<ParticleSystem>();
+		if (defeatParticles != null)
 		{
-			deathParticles.Play();
+			ParticleSystem particlesSpawn = (ParticleSystem)Instantiate(defeatParticles);
+			particlesSpawn.transform.position = defeatParticles.transform.position;
+			particlesSpawn.Play();
 
-			while (deathParticles.isPlaying)
+			while (particlesSpawn.isPlaying)
+			{
 				yield return new WaitForEndOfFrame();
+			}
+
+			Destroy(particlesSpawn.gameObject);
 		}
 		else
 		{
