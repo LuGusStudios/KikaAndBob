@@ -87,6 +87,8 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 	}
 
+	protected bool dumpFoodShown = false;
+
 	public void Tutorial2_Step()
 	{
 		++stepCount;
@@ -107,14 +109,21 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		{
 			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 			// TODO: if excessive food: dishwasher, penalty
+
+			if( !dumpFoodShown )
+			{
+				dumpFoodShown = true;
+				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.dumpFood") ).Show (10.0f);
+			}
 		}
 	}
 
+	protected bool streakShown = false;
 	public void Tutorial3_Step()
 	{
 		++stepCount;
 		
-		Debug.LogError ("Tutorial3 step " + stepCount);
+		Debug.LogError ("Tutorial3 step " + stepCount + " // orderindex : " + DinnerDashManager.use.consumerManager.currentOrderIndex);
 		
 		if( stepCount == 1 )
 		{
@@ -123,6 +132,20 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 
 			// first step before beginning : CTOR
 			DinnerDashManager.use.consumerManager.onConsumerStateChange += OnConsumerStateChanged;
+		}
+
+		if( stepCount == 3 )
+		{
+			DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.angry") ).Show (10.0f);
+		}
+		
+		if( stepCount == 11 )
+		{
+			if( !streakShown ) 
+			{
+				streakShown = true;
+				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.streak") ).Show (10.0f);
+			}
 		}
 	}
 }

@@ -83,6 +83,21 @@ public class DialogueBox : MonoBehaviour
 		targetPosition = Vector3.zero; 
 	}
 
+	protected ILugusCoroutineHandle autoHideHandle = null;
+
+	public void Show(float autoHideDelay, bool hideOthers = true)
+	{
+		autoHideHandle = LugusCoroutines.use.StartRoutine( AutoHideRoutine(autoHideDelay) );
+		Show ( hideOthers ); 
+	}
+
+	protected IEnumerator AutoHideRoutine(float autoHideDelay)
+	{
+		yield return new WaitForSeconds( autoHideDelay );
+
+		Hide ();
+	}
+
 	public void Show(bool hideOthers = true)
 	{
 		if( hideOthers )
@@ -103,6 +118,14 @@ public class DialogueBox : MonoBehaviour
 
 	public void Hide()
 	{
+		if( autoHideHandle != null && autoHideHandle.Running )
+		{
+			autoHideHandle.StopRoutine();
+		}
+
+		autoHideHandle = null;
+
+
 		available = true;
 		
 		this.transform.position = new Vector3(9999.0f, 9999.0f, 9999.0f);

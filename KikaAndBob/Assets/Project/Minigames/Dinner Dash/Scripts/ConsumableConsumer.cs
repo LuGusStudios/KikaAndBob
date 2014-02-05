@@ -313,8 +313,8 @@ public class ConsumableConsumer : IConsumableUser
 		}
 
 		//Debug.LogError("PlayingAnimation " + animationName + " // " + transform.Path () );
-		//animation.CrossFade( animationName, 1.0f );
-		animation.Play ( animationName );
+		animation.CrossFade( animationName, 1.0f );
+		//animation.Play ( animationName );
 	}
 
 	protected IEnumerator WaitingRoutine(State beginningState)
