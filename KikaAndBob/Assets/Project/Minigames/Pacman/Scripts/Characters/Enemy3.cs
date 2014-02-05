@@ -2,8 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 public class Enemy3 : PacmanEnemyCharacter {
-	
-	// third enemy : find position four tiles behind player - since enemies can not normally turn around, it can still reach the player
+
+	public int ambushDistance = 4;
+
+	// inverted version of Ambush ai: find position x tiles behind player - since enemies can not normally turn around, it can still reach the player
+
+
 	protected override void CheckTeleportProximity()
 	{
 		if (player == null)

@@ -113,7 +113,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		#if UNITY_EDITOR	// only handy for debugging
 		if (debugPathFinding)
 		{
-			targetMarker.localPosition = targetTile.location;
+			targetMarker.position = targetTile.GetWorldLocation().v3();
 		}
 		#endif
 	}
@@ -354,12 +354,12 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
 	{
-		if (targetTile != null)
+		if (targetTile == null)
 			return;
 
 		// detect if it is more efficient to use a teleport than to find target tile directly
 		// if target is more than half a level away
-		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if player is (more than) half a level away in x distance
+		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if targetTile is (more than) half a level away in x distance
 		{
 			// and we're a quarter level or less way from a teleport
 			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
