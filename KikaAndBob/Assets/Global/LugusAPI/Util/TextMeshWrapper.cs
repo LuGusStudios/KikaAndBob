@@ -14,6 +14,8 @@ public class TextMeshWrapperHelper : LugusSingletonRuntime<TextMeshWrapperHelper
 		workMesh.characterSize = targetMesh.characterSize;
 		
 		targetMesh.text = targetMesh.text.Replace("<br>", "\n");
+		targetMesh.text = targetMesh.text.Replace("<br/>", "\n");
+		targetMesh.text = targetMesh.text.Replace("\\n", "\n");
 		
 		string[] words = targetMesh.text.Split(' ');
 		

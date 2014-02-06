@@ -222,28 +222,38 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 		if( output == null )
 		{
 			output = (DialogueBox) GameObject.Instantiate( boxPrefab );
-			boxes.Add( boxPrefab );
+			boxes.Add( output );
 		}
 		
 		output.available = false;
 		
 		output.text = text;
-		output.icon.sprite = icon;
+		output.icon.sprite = icon; 
 
-		output.transform.parent = boxPrefab.transform.parent;
+		output.transform.parent = boxPrefab.transform.parent; 
 
 		return output;
 	}
-
+	
+	public DialogueBox CreateBox( Transform avoid, string text, string iconKey )
+	{
+		return CreateBox ( avoid, text, LugusResources.use.Shared.GetSprite(iconKey) );
+	}
 	
 	public DialogueBox CreateBox( Transform avoid, string text, Sprite icon = null )
 	{
 		return CreateBox ( avoid, KikaAndBob.ScreenAnchor.Center, text, icon );
 	}
 
+	
+	public DialogueBox CreateBox( Transform avoid, KikaAndBob.ScreenAnchor subAnchor, string text, string iconKey )
+	{
+		return CreateBox( avoid, subAnchor, text, LugusResources.use.Shared.GetSprite(iconKey) );
+	}
+
 	public DialogueBox CreateBox( Transform avoid, KikaAndBob.ScreenAnchor subAnchor, string text, Sprite icon = null )
 	{
-		KikaAndBob.ScreenAnchor quadrant = KikaAndBob.ScreenAnchor.Center; 
+		KikaAndBob.ScreenAnchor quadrant = KikaAndBob.ScreenAnchor.TopLeft; 
 		
 		if( avoid != null )
 		{
@@ -272,6 +282,19 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 		return output;
 	}
 
+	public void HideOthers(DialogueBox keep)
+	{
+		foreach( DialogueBox box in boxes )
+		{
+			if( box != keep )
+				box.Hide();
+		}
+	}
+
+	public void HideAll()
+	{
+		HideOthers( null );
+	}
 
 	public DialogueBox boxPrefab = null;
 	public List<DialogueBox> boxes = new List<DialogueBox>();
@@ -300,7 +323,7 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 
 		// TEST 
 		// TODO: Remove this!
-		//CreateBox(GameObject.Find ("Burger").transform, "Deze klant wil een stoofpotje!\nKlik op de groenten.", null ).Show ();
+		//CreateBox(GameObject.Find ("Producers").transform.FindChild("Burger").transform, "Deze klant wil een stoofpotje!\nKlik op de groenten.", null ).Show ();
 
 		/*
 		DialogueBox box = CreateBox("Deze klant wil een stoofpotje 2!\nKlik op de groenten.\nDeze klant wil een stoofpotje 2234567!\nKlik op de groenten.\nDeze klant wil een stoofpotje 2!\nKlik op de groenten." );
