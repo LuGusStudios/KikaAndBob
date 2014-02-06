@@ -58,6 +58,15 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void LoadLevel(int index)
 	{
+		if( index < 4 )
+		{
+			SetupGUIForTutorial(99);
+		}
+		else
+		{
+			SetupGUIForGame();
+		}
+
 		if( index == 0 )
 			Level0 ();
 		else if( index == 1 )
