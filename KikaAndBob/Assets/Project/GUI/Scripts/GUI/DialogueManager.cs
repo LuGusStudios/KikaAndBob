@@ -228,9 +228,9 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 		output.available = false;
 		
 		output.text = text;
-		output.icon.sprite = icon;
+		output.icon.sprite = icon; 
 
-		output.transform.parent = boxPrefab.transform.parent;
+		output.transform.parent = boxPrefab.transform.parent; 
 
 		return output;
 	}
