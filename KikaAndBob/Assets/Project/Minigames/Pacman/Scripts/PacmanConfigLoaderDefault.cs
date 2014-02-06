@@ -10,7 +10,7 @@ public class PacmanConfigLoader : LugusSingletonExisting<PacmanConfigLoaderDefau
 
 public class PacmanConfigLoaderDefault : MonoBehaviour 
 {
-	private string[] configFiles;
+	private List<string> configFiles = new List<string>();
 	private string configPath = string.Empty;
 
 	void Awake()
@@ -19,43 +19,62 @@ public class PacmanConfigLoaderDefault : MonoBehaviour
 
 		if (!Directory.Exists(configPath))
 		{
-			Debug.LogError("The directory " + configPath + " does not exist.");
+			Debug.LogError("PacmanConfigLoader: The directory " + configPath + " does not exist.");
 			return;
 		}
 
-		// Get the config files and load the first one in the list, of there is one
-		configFiles = Directory.GetFiles(configPath, "*.xml");
-		if (configFiles.Length > 0)
-		{
-			LoadConfig(0);
-		}
-	}
+		string[] files = Directory.GetFiles(configPath, "*.xml");
 
-	void OnGUI()
-	{
-		if (!LugusDebug.debug)
-		{
-			return;
-		}
+		// using a list instead of an array here, so we only add an entry if the xml was parsed successfully
+		//PacmanLevelDefinition[] levels = new PacmanLevelDefinition[files.Length];
+		List<PacmanLevelDefinition> levels = new List<PacmanLevelDefinition>();	
 
-		// Display buttons with the names of the file by removing path and extension information
-		for (int i = 0; i < configFiles.Length; ++i)
+		for (int i = 0; i < files.Length; ++i)
 		{
-			string name = configFiles[i];
-			if (GUILayout.Button("Level " + Path.GetFileNameWithoutExtension(name)))
+			StreamReader reader = new StreamReader(files[i]);
+			string rawdata = reader.ReadToEnd();
+
+			TinyXmlReader parser = new TinyXmlReader(rawdata);
+
+			bool success = true;
+
+			PacmanLevelDefinition level = null;
+
+			while (parser.Read())
 			{
-				LoadConfig(i);
-				PacmanGameManager.use.StartNewLevel(0);
+				try
+				{
+					if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
+						(parser.tagName == "Level"))
+					{
+						level = PacmanLevelDefinition.FromXML(parser);
+						level.name = Path.GetFileNameWithoutExtension(files[i]);
+						//levels.Add(level);
+						//SaveConfig(level);
+					}
+				}
+				catch(System.Exception e)
+				{
+					Debug.LogError("PacmanConfigLoader: There was an error parsing XML file: " + files[i] + ". Skipping this file. Error reprinted below: ");
+					Debug.LogError(e.ToString());
+
+					success = false;
+					break;
+				}
 			}
+
+			if (success)
+				levels.Add(level);
 		}
+
+		//PacmanLevelManager.use.levels = levels;
+		PacmanLevelManager.use.levels = levels.ToArray();
 	}
 
-	public void SaveConfig(PacmanLevelDefinition level)
+	private void SaveConfig(PacmanLevelDefinition level)
 	{
 		if (!Directory.Exists(configPath))
-		{
 			Directory.CreateDirectory(configPath);
-		}
 
 		string rawdata = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n";
 		rawdata += PacmanLevelDefinition.ToXML(level);
@@ -63,37 +82,5 @@ public class PacmanConfigLoaderDefault : MonoBehaviour
 		StreamWriter writer = new StreamWriter(configPath + level.name + ".xml");
 		writer.Write(rawdata);
 		writer.Close();
-	}
-
-	private void LoadConfig(int index)
-	{
-		StreamReader reader = new StreamReader(configFiles[index]);
-		string rawdata = reader.ReadToEnd();
-
-		TinyXmlReader parser = new TinyXmlReader(rawdata);
-
-		PacmanLevelDefinition level = null;
-		while (parser.Read("Level"))
-		{
-			if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
-				(parser.tagName == "Level"))
-			{
-				level = PacmanLevelDefinition.FromXML(parser);
-				level.name = Path.GetFileNameWithoutExtension(configFiles[index]);
-				//SaveConfig(level);
-			}
-		}
-
-		PacmanLevelDefinition[] levels = {level};
-		PacmanLevelManager.use.levels = levels;
-	}
-
-	private IEnumerator CheckConfigDirectory()
-	{
-		while (true)
-		{
-			configFiles = Directory.GetFiles(configPath, "*.xml");
-			yield return new WaitForSeconds(10f);
-		}
 	}
 }

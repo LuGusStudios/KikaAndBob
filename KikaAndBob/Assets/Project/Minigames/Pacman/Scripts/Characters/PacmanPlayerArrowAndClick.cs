@@ -242,7 +242,7 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 			else
 			{
 				//PlayAnimationObject("Idle", CharacterDirections.Undefined);
-				if (enemiesFlee)
+				if (poweredUp)
 					characterAnimator.PlayAnimation(characterAnimator.poweredUpIdle);
 				else
 					characterAnimator.PlayAnimation(characterAnimator.idle);
