@@ -22,6 +22,8 @@ public class PacmanCharacterAnimator : MonoBehaviour
 	public string poweredDown;
 	public string poweredSide;
 
+	public string hitAnimation;
+
 	
 	public void SetupLocal()
 	{
