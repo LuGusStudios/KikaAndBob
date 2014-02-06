@@ -10,6 +10,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 {
 	public FroggerLevelDefinition[] levels;
 	public GameObject foreground = null;
+	public GameObject background = null;
 	public GameObject[] lanePrefabs;
 	public GameObject[] laneItemPrefabs;
 	protected LugusAudioTrackSettings musicSettings = null;
@@ -64,6 +65,9 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			Debug.LogError("Level definition was null!");
 			return;
 		}
+
+		FroggerLaneManager.use.levelBottomY = 0;
+		FroggerLaneManager.use.levelTopY = 0;
 
 		Transform lanesRoot = GameObject.Find("Level/Lanes").transform;
 		int laneIndex = 0;
@@ -142,20 +146,38 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			laneIndex++;
 		}
 
-		// add the final lane manually because its active area is nowhere near the sprite size, which requires special treatment and makes it an allround PITA
-		//AppendFinalLane(currentY, laneIndex, lanesRoot);
-
 		FroggerLaneManager.use.SetLanes(lanes);
 
-		// finally create a fake lane to cover up any room between the bottom lane's collider and the bottom of the sprite (which is what the camera will clamp to)
-		// there is no easy way to calculate the overlap needed here, so just add a bit of customizable overlap
+
+
+
 
 		if (lanes.Count > 0)
 		{
+			// place foregrounds and background (horizon) sprites
+
+			// create a fake bottom lane to cover up any room between the bottom lane's collider and the bottom of the sprite (which is what the camera will clamp to)
+			// there is no easy way to calculate the overlap needed here, so just add a bit of customizable overlap
 			float overlap = 0.1f;
 			GameObject foregroundObject = (GameObject)Instantiate(foreground);
 			foregroundObject.transform.parent = lanesRoot;
 			foregroundObject.transform.localPosition = new Vector3(0, lanes[0].transform.localPosition.y - lanes[0].GetComponent<SpriteRenderer>().bounds.extents.y + overlap, -10);
+
+			// create a fake last lane on the horizon - using a simplied version of the method used on the procedural lanes above
+			GameObject backgroundObject = (GameObject)Instantiate(background);
+			backgroundObject.transform.parent = lanesRoot;
+				
+			SpriteRenderer horizonSprite = backgroundObject.GetComponent<SpriteRenderer>();
+			backgroundObject.transform.localPosition = new Vector3(0, currentY + horizonSprite.bounds.extents.y, laneIndex * 10);
+
+
+			// 	FroggerLaneManager.use.levelBottomY and FroggerLaneManager.use.levelTopY are used by the camera tracker
+			
+			// levelBottomY = the bottom pixel of the lowest active lane (not the foreground created above)
+			FroggerLaneManager.use.levelBottomY = lanes[0].GetComponent<SpriteRenderer>().bounds.min.y;	
+
+			// levelTopY = the top pixel of the horizon sprite
+			FroggerLaneManager.use.levelTopY = horizonSprite.bounds.max.y;
 		}
 
 		Debug.Log("Finished building level.");
@@ -197,6 +219,9 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			GameObject foundPrefab = null;
 			foreach(GameObject go in laneItemPrefabs)
 			{
+				if (go == null)	// this will prevent errors if there's an empty entry in the array
+					continue;
+
 				if (go.name == laneItemDefinition.spawnID)
 				{
 					foundPrefab = go;

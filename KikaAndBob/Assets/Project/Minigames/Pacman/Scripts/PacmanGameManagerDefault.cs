@@ -56,8 +56,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		// NOTE: GetComponentsInChildren skips inactive objects! This is intentional because the Destroy method used to clear the level does not act immediately.
 		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>());
 
-		Debug.Log(playerChars.Count);
-
 		if (playerChars.Count >= 1)
 		{
 			activePlayer = playerChars[0];
@@ -102,6 +100,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// Idea is to allow multiple characters, e.g. Kika and Bob, but only one is active at a time
 	public PacmanPlayerCharacter GetActivePlayer()
 	{
+		// currently just returns the first of any placed players - multiple player characters isn't implemented currently
 		return activePlayer;
 	}
 

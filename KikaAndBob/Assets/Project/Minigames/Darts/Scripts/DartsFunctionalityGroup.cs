@@ -8,8 +8,10 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public float itemsOnScreen = 1.0f;
 	public float minTimeBetweenShows = 1.0f;
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
+	public bool avoidRepeat = false;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
+	protected IDartsHitable lastHitable = null;
 
 	public void SetupLocal()
 	{
@@ -70,23 +72,51 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		// another approach is to reverse the list about 50% of the time, so the latest items will get their chance to shine
 		// downside: items in the middle are still much more likely to be chosen
 
-		if( Random.value < 0.5f )
-			hitables.Reverse ();
+//		if( Random.value < 0.5f )
+//			hitables.Reverse ();
 
-		foreach( IDartsHitable hitable in hitables )
+		int tryCounter = 0;
+
+		// cycle randomly through list to find next item with fixed iteration limit
+		do
 		{
-			if( hitable.Shown )
+			tryCounter++;
+
+			int randomIndex = Random.Range(0, hitables.Count);
+			IDartsHitable hitable = hitables[randomIndex];
+
+			if (avoidRepeat && hitable == lastHitable)
 				continue;
 
-			// make sure hitable has been hidden long enough (not hit recently) before re-showing
-			if( (Time.time - hitable.lastHideTime) < minTimeBetweenShows )
-				continue;
+			if (!hitable.Shown && (Time.time - hitable.lastHideTime) >= minTimeBetweenShows)
+			{
+				output = hitable;
+				lastHitable = hitable;
+			}
 
-			// TODO: possibly add a distance check to other shown items here
-			// this would require another foreach loop though... or a spherical raycast using the physics system... 
+		}
+		while(output == null && tryCounter < 50);
 
-			output = hitable;
-			break;
+		// fallback in case iteration limit was reached - find first available hitable
+		if (output == null)
+		{
+			foreach( IDartsHitable hitable in hitables )
+			{
+				if( hitable.Shown )
+					continue;
+
+				// make sure hitable has been hidden long enough (not hit recently) before re-showing
+				if( (Time.time - hitable.lastHideTime) < minTimeBetweenShows )
+				{
+					continue;
+				}
+
+				// TODO: possibly add a distance check to other shown items here
+				// this would require another foreach loop though... or a spherical raycast using the physics system... 
+
+				output = hitable;
+				break;
+			}
 		}
 
 
@@ -160,7 +190,6 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 			if (spawnRoutine != null && spawnRoutine.Running)
 			{
-				print ("fjsgz;kdl");
 				spawnRoutine.StopRoutine();
 			}
 		}

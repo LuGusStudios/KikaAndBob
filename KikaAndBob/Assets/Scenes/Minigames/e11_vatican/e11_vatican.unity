@@ -13638,15 +13638,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 36a2000661be643fd8bc72135b56ee24, type: 2}
       propertyPath: m_BackGroundColor.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 36a2000661be643fd8bc72135b56ee24, type: 2}
       propertyPath: m_BackGroundColor.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 36a2000661be643fd8bc72135b56ee24, type: 2}
       propertyPath: m_BackGroundColor.b
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 36a2000661be643fd8bc72135b56ee24, type: 2}
       propertyPath: orthographic size
@@ -29911,6 +29911,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   directionChangeInterval: 4
   discoveredSound: Discovered01
@@ -48137,6 +48139,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   directionChangeInterval: 4
   discoveredSound: Discovered01
@@ -52224,6 +52228,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   directionChangeInterval: 4
   discoveredSound: Discovered01
@@ -52779,6 +52785,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   discoveredSound: Discovered01
 --- !u!1 &792785120
@@ -53378,6 +53386,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   directionChangeInterval: 4
   discoveredSound: Discovered01
@@ -81551,6 +81561,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   discoveredSound: Discovered01
 --- !u!1 &1159272460
@@ -92179,6 +92191,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   discoveredSound: Discovered01
 --- !u!1 &1443511796
@@ -96164,6 +96178,7 @@ Transform:
   m_LocalPosition: {x: -6.01555061, y: -6.22297859, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1782536388}
   - {fileID: 1114714943}
   - {fileID: 727219367}
   - {fileID: 597051404}
@@ -106186,7 +106201,7 @@ MonoBehaviour:
   speed: 2
   walkSoundKey: WalkLoop01
   spawnDelay: 0
-  enemiesFlee: 0
+  poweredUp: 0
   powerupDuration: 10
 --- !u!1 &1638570291
 GameObject:
@@ -108166,6 +108181,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   discoveredSound: Discovered01
 --- !u!1 &1780636657
@@ -108231,6 +108248,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1782536388}
   - 212: {fileID: 1782536389}
+  - 114: {fileID: 1782536390}
   m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
@@ -108245,10 +108263,10 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1782536387}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 6.01555061, y: 6.22297859, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1896040425}
+  m_Father: {fileID: 1494611857}
 --- !u!212 &1782536389
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -108272,6 +108290,18 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 3f2f811eaad89144eb19ab28cffdfbb6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1782536390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1782536387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409ec371f27c2d643ad85fcfaa90dd05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ringCount: 1
 --- !u!1 &1785230848
 GameObject:
   m_ObjectHideFlags: 0
@@ -112202,7 +112232,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: .0196078438}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -112578,7 +112608,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1782536388}
   - {fileID: 1494611857}
   m_Father: {fileID: 0}
 --- !u!1 &1896583076
@@ -115999,6 +116028,8 @@ MonoBehaviour:
   allowUTurns: 1
   forwardDetectDistance: 4
   walkAnimation: Down
+  defeatSoundKey: 
+  attackSoundKey: 
   enemyState: 0
   directionChangeInterval: 4
   discoveredSound: Discovered01

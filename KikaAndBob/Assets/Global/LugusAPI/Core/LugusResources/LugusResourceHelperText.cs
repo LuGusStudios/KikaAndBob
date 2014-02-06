@@ -9,7 +9,42 @@ public class LugusResourceHelperText
 	
 	public string delimiterLines = "\n";
 	public string delimiterFields = "@@@";
-	
+
+	public bool HasText(string key)
+	{
+		if( texts.Count == 0 )
+			return false;
+		else
+		{
+			return texts.ContainsKey(key);
+		}
+	}
+
+	public string Get(string key, string backupKey)
+	{
+		if( texts.Count == 0 )
+		{
+			Debug.LogError("No texts loaded! " + key);
+			return "[" + key + " // " + backupKey +"]";
+		}
+		
+		if( texts.ContainsKey(key) )
+		{
+			return texts[key];
+		}
+		else
+		{
+			if( texts.ContainsKey(backupKey) )
+			{
+				return texts[backupKey];
+			}
+			else
+			{
+				Debug.LogError("No entry found for key " + key + " or backup " + backupKey);
+				return "[" + key + " // " + backupKey + "]";
+			}
+		}
+	}
 	
 	public string Get(string key)
 	{
@@ -35,15 +70,24 @@ public class LugusResourceHelperText
 	public void Parse( string text )
 	{
 		texts.Clear();
-		
-		string[] delimterFields2 = new string[1];
-		delimterFields2[0] = delimiterFields;
-		
+
 		if( string.IsNullOrEmpty(text) )
 		{
 			Debug.LogError("text source was null or empty!");
 			return;
 		}
+
+		// ex.
+		// <root>
+		// <key>value</key>\n
+		//</root>
+		texts = TinyXmlReader.DictionaryFromXMLString( text );
+
+		/*
+		// code for parsing format "key@@@value\n"
+		string[] delimterFields2 = new string[1];
+		delimterFields2[0] = delimiterFields;
+
 		
 		String[] lines = text.Split(delimiterLines[0]);
 		
@@ -73,6 +117,7 @@ public class LugusResourceHelperText
 			
 			texts[ parts[0].Trim() ] = parts[1].Trim();
 		}
+		*/
 		
 	}
 	
