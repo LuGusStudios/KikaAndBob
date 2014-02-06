@@ -1,15 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class PacmanEnemyChaseAmbush : PacmanEnemyCharacter {
+public class PacmanEnemyChaseTrail : PacmanEnemyCharacter {
 
 	public int ambushDistance = 4;
 
-	// 	this ai imitates the pink pacman ghost. Quoting from http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior:
-	//	"Pinky’s target tile in Chase mode is determined by looking at Pac-Man’s current position and orientation, 
-	//	and selecting the location four tiles straight ahead of Pac-Man."
-	// 	I.e. this AI will seem to be "ambushing" the player by trying to get ahead of them.
-	
+	// inverted version of Ambush ai: find position x tiles behind player (not in standard Pacman) - since enemies can not normally turn around, it can still reach the player
+	// makes cool, quite unpredictable behavior
+
 	public override void DestinationReached ()
 	{
 		if (runBehavior == true)
@@ -32,6 +30,16 @@ public class PacmanEnemyChaseAmbush : PacmanEnemyCharacter {
 				}
 				else
 				{
+					// inverse direction!
+					if (playerDirection == CharacterDirections.Left)
+						playerDirection = CharacterDirections.Right;
+					else if (playerDirection == CharacterDirections.Right)
+						playerDirection = CharacterDirections.Left;
+					else if (playerDirection == CharacterDirections.Up)
+						playerDirection = CharacterDirections.Down;
+					else if (playerDirection == CharacterDirections.Down)
+						playerDirection = CharacterDirections.Up;
+
 					// check x tiles ahead of player
 					foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesInDirection(player.currentTile, ambushDistance, playerDirection, true, true))
 					{
@@ -68,4 +76,5 @@ public class PacmanEnemyChaseAmbush : PacmanEnemyCharacter {
 				ChangeSpriteFacing(CharacterDirections.Up);
 		}
 	}
+
 }
