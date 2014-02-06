@@ -1,4 +1,4 @@
-﻿//#define DEBUG_RESOURCES
+﻿#define DEBUG_RESOURCES
 
 using UnityEngine;
 using System.Collections;
@@ -16,7 +16,7 @@ public class LugusResources : LugusSingletonExisting<LugusResourcesDefault>
 	
 	public static ILugusResources use 
 	{ 
-		get 
+		get  
 		{
 			if ( _instance == null )
 			{
@@ -49,9 +49,12 @@ public class LugusResourcesDefault : MonoBehaviour
 	
 	public LugusResourceCollectionDefault Shared = null;
 	public LugusResourceCollectionLocalized Localized = null;
+	public LugusResourceCollectionLocalized Levels = null;
 	
 	public Texture2D errorTexture = null;
 	public AudioClip errorAudio = null;
+	public Sprite errorSprite = null;
+	public TextAsset errorTextAsset = null;
 	
 	protected void LoadDefaultCollections()
 	{ 
@@ -59,9 +62,11 @@ public class LugusResourcesDefault : MonoBehaviour
 		
 		this.Shared = new LugusResourceCollectionDefault("Shared/");
 		this.Localized = new LugusResourceCollectionLocalized("Languages/");
+		this.Levels = new LugusResourceCollectionLocalized("Levels/");
 		
 		collections.Add ( Localized );
 		collections.Add ( Shared );
+		collections.Add ( Levels );
 		
 		foreach( ILugusResourceCollection collection in collections )
 		{
@@ -71,8 +76,25 @@ public class LugusResourcesDefault : MonoBehaviour
 		if( errorTexture == null )
 			errorTexture = Shared.GetTexture("error");
 		
+		if( errorSprite == null )
+			errorSprite = Shared.GetSprite("error");
+		
 		if( errorAudio == null )
 			errorAudio = Shared.GetAudio("error");
+		
+		if( errorTextAsset == null )
+			errorTextAsset = Shared.GetTextAsset("error");
+	}
+
+	public void ChangeLanguage(string langKey)
+	{
+		foreach( ILugusResourceCollection collection in collections )
+		{
+			if( collection is LugusResourceCollectionLocalized )
+			{
+				( (LugusResourceCollectionLocalized) collection).LangID = langKey;
+			}
+		}
 	}
 	
 	protected void CollectionReloaded()
@@ -105,6 +127,24 @@ public class LugusResourcesDefault : MonoBehaviour
 		return output;
 	}
 	
+	public Sprite GetSprite(string key)
+	{	
+		Sprite output = null;
+		
+		foreach( ILugusResourceCollection collection in collections )
+		{
+			output = collection.GetSprite(key);
+			if( output != errorSprite )
+				break;
+		}
+		
+		if( output == errorSprite )
+		{
+			Debug.LogError(name + " : Texture " + key + " was not found!");
+		}
+		
+		return output;
+	}
 	
 	public AudioClip GetAudio(string key)
 	{
@@ -143,5 +183,5 @@ public class LugusResourcesDefault : MonoBehaviour
 		
 		return output;
 	}
-
+	
 }
