@@ -703,7 +703,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return GetTilesInDirection(startTile, amount, direction, false);
 	}
 
-	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp)
+	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp, bool reverseOrder = false)
 	{
 		List<PacmanTile> tileList = new List<PacmanTile>();
 		
@@ -743,6 +743,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			{
 				tileList.Add(GetTile(x, yStart, clamp));
 			}
+		}
+
+		if (reverseOrder)
+		{
+			tileList.Reverse();
 		}
 		
 		return tileList.ToArray();
@@ -1020,6 +1025,22 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Transform GetLevelRoot()
 	{
 		return levelRoot;
+	}
+
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+		{
+			return;
+		}
+		
+		for (int i = 0; i < levels.Length; i++)
+		{
+			if (GUILayout.Button("Level " + i))
+			{
+				PacmanGameManager.use.StartNewLevel(i);
+			}
+		}
 	}
 }
 

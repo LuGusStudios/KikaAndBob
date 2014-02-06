@@ -100,6 +100,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// Idea is to allow multiple characters, e.g. Kika and Bob, but only one is active at a time
 	public PacmanPlayerCharacter GetActivePlayer()
 	{
+		// currently just returns the first of any placed players - multiple player characters isn't implemented currently
 		return activePlayer;
 	}
 

@@ -7,6 +7,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public bool allowUTurns = true;
 	public int forwardDetectDistance = 5;
 	public string walkAnimation = "";
+	public string defeatSoundKey = "";
+	public string attackSoundKey = "";
+
 	protected bool playerFound = false;
 	protected bool runBehavior = true;			// if set to false, most behavior is disabled (for cutscenes, teleport etc.)
 	protected float scatterModeDuration = 5;
@@ -27,7 +30,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		Neutral,
 		Chasing,
-		Frightened
+		Frightened,
+		Defeated,
 	}
 
 	public override void SetUpLocal()
@@ -39,35 +43,58 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		if (player == null)
 			Debug.Log("Could not find player.");
-		
-		//		// used for visualizing enemy target tile
-		//		if (debugPathFinding)
-		//		{
-		//			if (targetMarker != null)
-		//				Destroy(targetMarker.gameObject);
-		//
-		//			targetMarker = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-		//			targetMarker.localScale = Vector3.one * (PacmanLevelManager.use.scale * 0.5f);
-		//			targetMarker.parent = transform.parent;
-		//		}
+
+		#if UNITY_EDITOR	// handy for debugging - not to be included in build
+		// used for visualizing enemy target tile
+		if (debugPathFinding)
+		{
+			if (targetMarker != null)
+				Destroy(targetMarker.gameObject);
+
+			targetMarker = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
+			targetMarker.localScale = Vector3.one * (PacmanLevelManager.use.scale * 0.5f);
+			targetMarker.parent = transform.parent;
+		}
+		#endif	
 	}
 
 		
 	protected virtual void Update() 
 	{
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || enemyState == EnemyState.Defeated)
 			return;
 
+		// update player in case we've changed players (two character game etc.)
+		player = PacmanGameManager.use.GetActivePlayer();	
+
+		// the player is in neutral state unless something else is happening
+		NeutralEffect();
+
+		// iterate over players to see if we're on the same tile as any of them
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{
+			if (p.poweredUp)
+			{
+				FrightenedEffect();
+			}
+
+			// if we're on the same tile as a player, determine behavior
 			if (currentTile == p.currentTile)
 			{
-				if (enemyState != EnemyState.Frightened)
+				// if player is powered up, defeat this enemy
+				if (p.poweredUp)
 				{
+					DefeatedEffect();
+				}
+				// else, player loses life
+				else
+				{
+					if (!string.IsNullOrEmpty(attackSoundKey))
+					{
+						LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(attackSoundKey));
+					}
 					p.DoHitEffect();
 				}
-				else
-					DefeatedEffect();
 			}
 		}
 
@@ -83,17 +110,19 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		// move
 		UpdateMovement();
 
+		#if UNITY_EDITOR	// only handy for debugging
 		if (debugPathFinding)
 		{
-			targetMarker.localPosition = targetTile.location;
+			targetMarker.position = targetTile.GetWorldLocation().v3();
 		}
+		#endif
 	}
 	
+	// reset enemy to default values, location, etc.
 	public override void Reset()
 	{
 		PlaceAtSpawnLocation();
 
-		//SetDefaultTargetTiles();
 		targetTile = defaultTargetTile;
 
 		// set the sprite to face the start direction if provided
@@ -102,26 +131,29 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			currentDirection = startDirection;
 			ChangeSpriteFacing(startDirection);
 		}
-		else
+		else // else, default to left
 		{
 			currentDirection = CharacterDirections.Left;
 			ChangeSpriteFacing(CharacterDirections.Left);
 		}
 
-		DetectCurrentTile();
-		DestinationReached(); // calling DestinationReached will set enemies moving again
+		DetectCurrentTile();	// figure out what tile this enemy is on after having been moved to start position
+		DestinationReached(); 	// calling DestinationReached will set enemies moving again
 		
-		enemyState = EnemyState.Neutral;
+		NeutralEffect();
 
 		playerFound = false;
 
 		characterAnimator.PlayAnimation(walkAnimation);
 	}
 
-	// Set tile that enemy will originally try to find here.
-	// Override for different default tile per enemy or setting other paths etc.
+	// Sets a number of default target tiles. How these are used exactly is up to the character type itself.
+	// Override for different default tile per enemy or setting different paths etc.
 	public override void SetDefaultTargetTiles(Vector2[] defaultTargetTiles)
 	{
+		// this default implementation just takes the first valid tile provided and ignores the rest
+		// others might for instance use several to construct a patrol path
+
 		PacmanTile tile = null;
 
 		// pick the first valid tile from a patrol path if given
@@ -137,9 +169,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		{
 			// this can be desired behavior, so it shouldn't register as an error; e.g. the standard chasing enemy has no use for its
 			// default target tile, since it always finds the player anyway. Other enemy types might, though.
-			//Debug.LogError(this.gameObject.name + ": No valid default target tile found. Defaulting to (0,0).");
+			// Debug.LogError(this.gameObject.name + ": No valid default target tile found. Defaulting to (0,0).");
 			defaultTargetTile = PacmanLevelManager.use.GetTile(0,0);
-			return;
 		}
 		else
 		{
@@ -147,10 +178,11 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 	}
 
-	// set playerFound bool in this method and call any effects on the player
-	// override to get a custom detection method (e.g. only in front of player, in a circle around the player, etc.)
+	// Set playerFound bool in this method and call any effects on the player
+	// Override to get a custom player detection method (e.g. only in front of player, in a circle around the player, etc.)
 	protected virtual void DetectPlayer()
 	{
+		// this default implementation looks forwardDetectDistance tiles in the current direction and checks for a player there
 		foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesInDirection(currentTile, forwardDetectDistance, currentDirection))
 		{
 			if (tile != null)
@@ -161,11 +193,17 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 					playerFound = false;
 					return;
 				}
-				// if player is in this tile, we have visual contact
-				else if (tile == player.currentTile)
+				else 
 				{
-					playerFound = true;
-					return;
+					// check if any players are on the currently inspected tile
+					foreach(PacmanPlayerCharacter playerChar in PacmanGameManager.use.GetPlayerChars())
+					{
+						if (tile == playerChar.currentTile)
+						{
+							playerFound = true;
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -179,11 +217,6 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Neutral)
 			return;
 
-//		iTween.Stop(gameObject);
-//		transform.localScale = originalScale;
-
-		//renderer.material.color = Color.white;
-
 		enemyState = EnemyState.Neutral;
 	}
 
@@ -193,28 +226,66 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Chasing)
 			return;
 
-//		iTween.Stop(gameObject);
-//		transform.localScale = originalScale;
-		
-		// do detected effect
-//		if (playerDetectedItweener == null)
-//		{
-//			// TO DO: Add updated iTweener
-//			//playerDetectedItweener = gameObject.ScaleTo(Vector3.one * 0.7f).Time(0.5f).EaseType(iTween.EaseType.easeInOutQuad).LoopType(iTween.LoopType.pingPong);
-//
-//
-//		}
-//		playerDetectedItweener.Execute();
-
-//		iTween.ScaleTo(gameObject, iTween.Hash(
-//			"scale", Vector3.one * 1.1f,
-//			"time", 0.5f,
-//			"easetype", iTween.EaseType.easeInOutQuad,
-//			"looptype", iTween.LoopType.pingPong));
-
-		//renderer.material.color = Color.red;
-
 		enemyState = EnemyState.Chasing;
+	}
+
+	// override for custom effect when the enemy runs away from the player
+	protected virtual void FrightenedEffect()
+	{
+		if (enemyState == EnemyState.Frightened)
+			return;
+		
+		iTween.Stop(gameObject);
+		transform.localScale = originalScale;
+		
+		
+		enemyState = EnemyState.Frightened;
+	}
+
+	// override for custom death anim	
+	protected virtual void DefeatedEffect()
+	{
+		if (enemyState == EnemyState.Defeated)
+			return;
+
+		enemyState = EnemyState.Defeated;
+
+		StartCoroutine(DefeatAnim());
+	}
+	
+	private IEnumerator DefeatAnim()
+	{
+		runBehavior = false;
+		gameObject.ScaleTo(Vector3.zero).Time(0.5f).Execute();
+
+		if (!string.IsNullOrEmpty(defeatSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(defeatSoundKey));
+		}
+
+		// instatiate the particles, because we don't want them to scale or be affected by anything similar taking place on the enemy proper
+		ParticleSystem defeatParticles = GetComponentInChildren<ParticleSystem>();
+		if (defeatParticles != null)
+		{
+			ParticleSystem particlesSpawn = (ParticleSystem)Instantiate(defeatParticles);
+			particlesSpawn.transform.position = defeatParticles.transform.position;
+			particlesSpawn.Play();
+
+			while (particlesSpawn.isPlaying)
+			{
+				yield return new WaitForEndOfFrame();
+			}
+
+			Destroy(particlesSpawn.gameObject);
+		}
+		else
+		{
+			// default wait time
+			yield return new WaitForSeconds(0.5f);
+		}
+		
+		transform.localScale = originalScale;
+		gameObject.SetActive(false);
 	}
 
 	public override void ChangeSpriteFacing (CharacterDirections direction)
@@ -240,57 +311,24 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 	}
 
-	// override for custom effect when the enemy runs away from the player
-	protected virtual void FrightenedEffect()
-	{
-		if (enemyState == EnemyState.Frightened)
-			return;
-
-		iTween.Stop(gameObject);
-		transform.localScale = originalScale;
-
-		//TO DO: Add updated iTweener
-		// do frightened effect
-//		if (frightenedItweener == null)
-//		{
-//			
-//			frightenedItweener = gameObject.ScaleTo(Vector3.one * 0.6f).Time(0.2f).EaseType(iTween.EaseType.easeInOutQuad).LoopType(iTween.LoopType.pingPong);
-//		}
-//		frightenedItweener.Execute();
-
-		iTween.ScaleTo(gameObject, iTween.Hash(
-			"scale", Vector3.one * 0.9f,
-			"time", 0.5f,
-			"easetype", iTween.EaseType.easeInOutQuad,
-			"looptype", iTween.LoopType.pingPong));
-
-		//renderer.material.color = Color.blue;
-
-		enemyState = EnemyState.Frightened;
-	}
-
-	protected virtual void DefeatedEffect()
-	{
-		StartCoroutine(DefeatAnim());
-	}
-
-	private IEnumerator DefeatAnim()
-	{
-		runBehavior = false;
-		gameObject.ScaleTo(Vector3.zero).Time(0.5f).Execute();
-
-		yield return new WaitForSeconds(0.5f);
-
-		transform.localScale = originalScale;
-		gameObject.SetActive(false);
-	}
-
+	
 	// override for custom behavior upon having reached a tile (e.g. picking the next tile to move to)
 	public override void DestinationReached ()
 	{
 		if (runBehavior == true)
 		{
-			targetTile = PacmanGameManager.use.GetActivePlayer().currentTile;
+			if (enemyState == EnemyState.Frightened)
+			{
+				PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
+					PacmanLevelManager.use.GetOppositeQuadrant(
+					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
+				
+				targetTile = tiles[Random.Range(0, tiles.Length - 1)];
+			}
+			else
+			{
+				targetTile = player.currentTile;
+			}
 
 			MoveTo(FindTileClosestTo(targetTile));
 				
@@ -312,17 +350,16 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 	}
 
-	
-	// UpdateTargetTile runs every frame to decide where the enemy is trying to get to (random tile, player, etc.)
+
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
 	{
-		if (targetTile != null)
+		if (targetTile == null)
 			return;
 
 		// detect if it is more efficient to use a teleport than to find target tile directly
 		// if target is more than half a level away
-		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if player is (more than) half a level away in x distance
+		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if targetTile is (more than) half a level away in x distance
 		{
 			// and we're a quarter level or less way from a teleport
 			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
