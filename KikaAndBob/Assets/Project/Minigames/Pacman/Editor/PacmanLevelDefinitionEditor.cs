@@ -32,5 +32,7 @@ public class PacmanLevelDefinitionEditor : Editor
 		StreamWriter writer = new StreamWriter(saveLocation + level.name + ".xml");
 		writer.Write(rawdata);
 		writer.Close();
+
+		Debug.Log("PacmanLevelDefinitionEditor: Saved " + level.name + " to " + saveLocation);
 	}
 }
