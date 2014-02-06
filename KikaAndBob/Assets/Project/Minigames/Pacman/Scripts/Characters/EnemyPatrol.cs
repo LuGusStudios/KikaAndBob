@@ -32,11 +32,11 @@ public class EnemyPatrol : PacmanEnemyCharacter {
 
 	public override void DestinationReached()
 	{
-		// TO DO replace
-		if (player == null)
-			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
+//		// TO DO replace
+//		if (player == null)
+//			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 
-		if (player.enemiesFlee)
+		if (player.poweredUp)
 		{
 			FrightenedEffect();
 

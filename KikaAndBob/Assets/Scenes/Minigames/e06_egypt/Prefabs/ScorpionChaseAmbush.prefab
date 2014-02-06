@@ -360,7 +360,7 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   m_Layer: 0
-  m_Name: ScorpionPatrol
+  m_Name: ScorpionChaseAmbush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -792,7 +792,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 42.3905602, y: -.649942517, z: 0}
+  m_LocalPosition: {x: 40.6303902, y: -1.23046553, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400066}
@@ -9172,7 +9172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e5fc82807620284ab5872a3e6aa9dca, type: 3}
+  m_Script: {fileID: 11500000, guid: 04e3312469a5abb41851815711216f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 120
@@ -9184,6 +9184,7 @@ MonoBehaviour:
   defeatSoundKey: BugSquash01
   attackSoundKey: ScorpionAttack01
   enemyState: 0
+  ambushDistance: 4
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
