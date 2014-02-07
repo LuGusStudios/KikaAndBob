@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ProgressBar : MonoBehaviour 
+public class ProgressBar : IHUDElement 
 {
 	public DataRange scaleRange = null;
 	public DataRange valueRange = null;
@@ -27,6 +27,7 @@ public class ProgressBar : MonoBehaviour
 	{
 		float oldScale = filler.localScale.x;
 		float newScale = scaleRange.ValueFromPercentage( percentage ); 
+		//Debug.Log ("Set Percentage " + percentage + " // " + newScale + " //" + scaleRange.from + "-" + scaleRange.to);
 
 		if( !animate )
 		{
@@ -51,24 +52,46 @@ public class ProgressBar : MonoBehaviour
 		yield break;
 	}
 
+	public void SetTimer(float seconds)
+	{
+		valueRange = new DataRange(Time.time, Time.time + seconds);
+
+		LugusCoroutines.use.StartRoutine( TimerRoutine() );
+	}
+
+	protected IEnumerator TimerRoutine()
+	{
+		float percentage = 0.0f;
+		while( Time.time < valueRange.to )
+		{
+			percentage = valueRange.PercentageInInterval(Time.time);
+			SetPercentage( percentage, false );
+
+			yield return null;
+		}
+	}
+
 	public void SetupLocal()
 	{
+		if( icon == null )
+		{
+			icon = transform.FindChild("Icon").GetComponent<SpriteRenderer>();
+		}
+
 		// assign variables that have to do with this class only
 		if( filler == null )
 		{
-			transform.FindChild("Bar/Filler");
+			filler = transform.FindChild("Bar/Filler");
 		}
+
 		if( filler == null )
 		{
 			Debug.LogError( transform.Path () + " : No filler found!" );
 		}
 		else
 		{
-			if( scaleRange == null )
-			{
-				// we assume the filler is scaled all up to 100% (0% is 0 scale then)
-				scaleRange = new DataRange(0, filler.localScale.x);
-			}
+			// we assume the filler is scaled all up to 100% (0% is 0 scale then)
+			scaleRange = new DataRange(0, filler.localScale.x);
 		}
 	}
 
