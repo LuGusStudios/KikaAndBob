@@ -12896,7 +12896,6 @@ GameObject:
   - 114: {fileID: 739109688}
   - 114: {fileID: 739109690}
   - 114: {fileID: 739109691}
-  - 114: {fileID: 739109692}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -12915,7 +12914,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4309e9d1a71e4f4d96c6eb09daf75f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels: []
+  levels:
+  - {fileID: 11400000, guid: 7f7dd204b8fe2af468ae7cda8eaa9718, type: 2}
+  - {fileID: 11400000, guid: c1f97610cbc829549a1b59cb30b92de5, type: 2}
+  - {fileID: 11400000, guid: a136b0464194d0642957a904f3b6928b, type: 2}
   width: 13
   height: 13
   scale: 1
@@ -13027,6 +13029,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+  errorSprite: {fileID: 0}
+  errorTextAsset: {fileID: 0}
 --- !u!114 &739109689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13059,17 +13063,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e234c1d77cb634eccb6ce50564cc67dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &739109692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 739109681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729b33555398aef44aa9dbe8b8e1fec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &743793562
