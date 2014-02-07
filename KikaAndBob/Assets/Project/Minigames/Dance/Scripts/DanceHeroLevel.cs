@@ -120,15 +120,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		GetLane("Lane2").defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
 		GetLane("Lane3").defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
 
-		bool success = false;
-
-		LaneLoader.LoadLanes(levelName, out success);
-
-		if (!success)
-		{
-			Debug.LogError("Errors encountered while adding lane items. Stopped generating level.");
-			return;
-		}
+		
 
 		LugusCoroutines.use.StartRoutine(MusicBufferDelay());
 	}
@@ -342,5 +334,27 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		}
 		
 		GUILayout.EndHorizontal();
+	}
+
+	void ParseLevelFromXML(string rawData)
+	{
+		TinyXmlReader parser = new TinyXmlReader(rawData);
+		DanceHeroLevel.use.mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
+
+		int laneCount = 0;
+		while (parser.Read())
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "AudioClip"))
+			{
+				DanceHeroLevel.use.musicClip = LugusResources.use.Shared.GetAudio(parser.content);
+			}
+			else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Lane"))
+			{
+				string laneName = "Lane" + (lanes.Count - laneCount).ToString();
+				DanceHeroLane lane = GetLane(laneName);
+				lane.ParseLaneFromXML(parser);
+				++laneCount;
+			}
+		}
 	}
 }

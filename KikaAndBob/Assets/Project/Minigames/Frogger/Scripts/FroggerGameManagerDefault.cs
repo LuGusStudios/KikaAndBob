@@ -37,7 +37,7 @@ public class FroggerGameManagerDefault : MonoBehaviour
 
 	void Start()
 	{
-
+		
 	}
 
 	// TO DO: Placeholder!!!
@@ -49,7 +49,6 @@ public class FroggerGameManagerDefault : MonoBehaviour
 			firstFrame = false;
 		}
 	}
-
 
 	public void WinGame()
 	{
