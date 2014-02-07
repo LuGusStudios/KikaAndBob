@@ -372,71 +372,11 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		hitRoutineBusy = true;
 		PacmanGameManager.use.gameRunning = false;
 
+		characterAnimator.PlayAnimation(characterAnimator.hitAnimation);
+
 		yield return new WaitForSeconds(duration);
 
 		hitRoutineBusy = false;
 		PacmanGameManager.use.LoseLife();
 	}
-
-//	protected IEnumerator HitRoutine()
-//	{
-//		hitRoutineBusy = true;
-//
-//		PacmanGameManager.use.gameRunning = false;
-//
-//		Color originalColor = Color.white;
-//		Color color = Color.red; 
-//		
-//		float duration = 1.5f; 
-//		int iterations = 5;
-//		float partDuration = duration / (float) iterations;
-//
-//		BoneAnimation[] boneAnimations = GetComponentsInChildren<BoneAnimation>();
-//		
-//		for( int i = 0; i < iterations; ++i )
-//		{
-//			float percentage = 0.0f;
-//			float startTime = Time.time;
-//			bool rising = true;
-//			Color newColor = new Color();
-//
-//			while( rising )
-//			{
-//				percentage = (Time.time - startTime) / (partDuration / 2.0f);
-//				newColor = originalColor.Lerp (color, percentage);
-//				
-//				foreach( BoneAnimation container in boneAnimations )
-//					container.SetMeshColor( newColor );
-//
-//				if( percentage >= 1.0f )
-//					rising = false;
-//				
-//				yield return null;
-//			}
-//			
-//			percentage = 0.0f;
-//			startTime = Time.time;
-//			
-//			while( !rising )
-//			{
-//				percentage = (Time.time - startTime) / (partDuration / 2.0f);
-//				newColor = color.Lerp (originalColor,percentage);
-//				
-//				//currentAnimationContainer.SetMeshColor( newColor );
-//				
-//				foreach( BoneAnimation container in boneAnimations )
-//					container.SetMeshColor( newColor );
-//				
-//				if( percentage >= 1.0f )
-//					rising = true;
-//				
-//				yield return null;
-//			}
-//		}
-//		
-//		foreach( BoneAnimation container in boneAnimations )
-//			container.SetMeshColor( originalColor );
-//
-//		PacmanGameManager.use.LoseLife();
-//	}
 }
