@@ -4,6 +4,45 @@ using System.Collections.Generic;
 
 public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig> 
 {
+	public void SetupGUIForTutorial(int targetScore)
+	{
+		// top left is simple timer
+		// top right is x/y for money
+		
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.TimeS;
+		HUDManager.use.CounterLargeLeft1.StartTimer();
+		
+		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Money;
+		HUDManager.use.CounterLargeRight1.suffix = "/" + targetScore;
+		HUDManager.use.CounterLargeRight1.SetValue(0);
+
+		
+		//HUDManager.use.Counter1.gameObject.SetActive(true);
+		//HUDManager.use.Counter2.gameObject.SetActive(true);
+		//HUDManager.use.Counter3.gameObject.SetActive(true); 
+		
+		//HUDManager.use.Counter1.SetValue(10);
+		//HUDManager.use.Counter2.StartTimer(HUDCounter.Formatting.TimeMS);
+		//HUDManager.use.Counter3.StartTimer();
+	}
+	
+	public void SetupGUIForGame()
+	{
+		
+		HUDManager.use.ProgressBar.gameObject.SetActive(true);
+		HUDManager.use.ProgressBar.SetTimer(20.0f);
+		
+		HUDManager.use.Counter1.gameObject.SetActive(true);
+		HUDManager.use.Counter2.gameObject.SetActive(true);
+		HUDManager.use.Counter3.gameObject.SetActive(true);
+		
+		HUDManager.use.Counter1.SetValue(10);
+		HUDManager.use.Counter2.StartTimer(HUDCounter.Formatting.TimeMS);
+		HUDManager.use.Counter3.StartTimer();
+	}
 
 	public List<ConsumableDefinition> CreateOrder(ConsumableDefinition one)
 	{
