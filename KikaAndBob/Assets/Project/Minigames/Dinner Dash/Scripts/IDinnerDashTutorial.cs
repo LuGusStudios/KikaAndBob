@@ -377,6 +377,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+
 	}
 	
 	protected void Awake()
