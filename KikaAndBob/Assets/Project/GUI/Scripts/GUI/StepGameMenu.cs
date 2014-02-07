@@ -6,6 +6,9 @@ public class StepGameMenu : IMenuStep
 {
 	protected Button playButton = null;
 	protected Button helpButton = null;
+	protected TextMeshWrapper title = null;
+	protected TextMeshWrapper description = null;
+	protected SpriteRenderer image = null;
 	
 	public void SetupLocal()
 	{
@@ -26,6 +29,35 @@ public class StepGameMenu : IMenuStep
 		{
 			Debug.Log("StepGameMenu: Missing help button.");
 		}
+
+		if (title == null)
+		{
+			title = transform.FindChild("Title").GetComponent<TextMeshWrapper>();
+		}
+		if (title == null)
+		{
+			Debug.Log("StepGameMenu: Missing title!");
+		}
+
+		if (description == null)
+		{
+			description = transform.FindChild("Description").GetComponent<TextMeshWrapper>();
+		}
+		if (description == null)
+		{
+			Debug.Log("StepGameMenu: Missing description!");
+		}
+
+		if (image == null)
+		{
+			image = transform.FindChild("Image").GetComponent<SpriteRenderer>();
+		}
+		if (image == null)
+		{
+			Debug.Log("StepGameMenu: Missing image sprite renderer!");
+		}
+		
+		LugusResources.use.ChangeLanguage("nl");
 	}
 	
 	public void SetupGlobal()
@@ -57,10 +89,37 @@ public class StepGameMenu : IMenuStep
 		}
 	}
 
+	protected void LoadLevelData()
+	{
+		// TO DO: Set data about levels here (name, description, etc.)
+		string key = Application.loadedLevelName + ".main.";
+	
+		title.SetText(LugusResources.use.Levels.GetText(key + "title"));
+		description.SetText(LugusResources.use.Levels.GetText(key + "description"));
+
+		Sprite imageSprite = null;
+
+		if (LugusResources.use.Levels.HasText(key + "image"))
+		{
+			imageSprite = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + "image"));
+		}
+
+		if (imageSprite == null || imageSprite == LugusResources.use.errorSprite)
+		{
+			image.gameObject.SetActive(false);
+		}
+		else
+		{
+			image.sprite = imageSprite;
+			image.gameObject.SetActive(true);
+		}
+	}
+
 	public override void Activate()
 	{
 		activated = true;
 		gameObject.SetActive(true);
+		LoadLevelData();
 	}
 
 	public override void Deactivate()
