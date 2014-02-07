@@ -92,6 +92,12 @@ public class TextMeshWrapper : MonoBehaviour
 		}
 
 		textMesh = GetComponent<TextMesh>(); 
+		if (textMesh == null)
+		{
+			Debug.LogError("TextMeshWrapper: Missing text mesh!", gameObject);
+			return;
+		}
+
 		savedText = textMesh.text;
 
 		originalCharacterSize = textMesh.characterSize;
@@ -100,6 +106,12 @@ public class TextMeshWrapper : MonoBehaviour
 	void Start ()
 	{
 		//TextMeshWrapperHelper.use.WrapText(textMesh, width, allowSplit);
+		UpdateWrapping();
+	}
+
+	public void SetText(string text)
+	{
+		textMesh.text = text;
 		UpdateWrapping();
 	}
 

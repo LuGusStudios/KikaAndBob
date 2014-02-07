@@ -44,10 +44,16 @@ public class StepHelpMenu : IMenuStep
 		}
 	}
 
+	protected void LoadLevelData()
+	{
+		// TO DO: Set data about levels here (name, description, etc.)
+	}
+
 	public override void Activate()
 	{
 		activated = true;
 		gameObject.SetActive(true);
+		LoadLevelData();
 	}
 
 	public override void Deactivate()
