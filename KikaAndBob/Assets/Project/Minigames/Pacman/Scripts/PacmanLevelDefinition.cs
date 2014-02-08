@@ -302,7 +302,7 @@ public class PacmanTileItemDefinition
 		PacmanTileItemDefinition tileitem = new PacmanTileItemDefinition();
 
 		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
-			(parser.tagName != "Character"))
+			(parser.tagName != "TileItem"))
 		{
 			Debug.Log("PacmanTileItemDefinition.FromXML(): unexpected tag type or tag name.");
 			return null;
