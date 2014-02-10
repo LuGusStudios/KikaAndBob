@@ -10,6 +10,7 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public bool gameRunning = false;
 	private bool firstFrame = true;
 	private int currentIndex = 0;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void StartNewGame()
 	{
@@ -35,18 +36,33 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		gameRunning = true;
 	}
 
-	void Start()
+	protected void Start()
 	{
-		
-	}
+		levelLoader.FindLevels();
 
-	// TO DO: Placeholder!!!
-	void Update()
-	{
-		if (firstFrame)
+		FroggerLevelManager.use.ClearLevel();
+
+		if (FroggerCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+
+			string levelData = levelLoader.GetLevelData(FroggerCrossSceneInfo.use.GetLevelIndex());
+
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				FroggerLevelDefinition newLevel = FroggerLevelDefinition.FromXML(levelData);
+				FroggerLevelManager.use.levels = new FroggerLevelDefinition[]{newLevel};
+			}
+			else
+			{
+				Debug.LogError("FroggerGameManager: Invalid level data!");
+			}
+
 			StartNewGame();
-			firstFrame = false;
 		}
 	}
 
@@ -60,5 +76,19 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	{
 		gameRunning = false;
 		FroggerGUIManager.use.GameLost();
+	}
+
+	protected void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+		
+		foreach(int index in levelLoader.levelIndices)
+		{
+			if (GUILayout.Button("Load level: " + index))
+			{
+				levelLoader.LoadLevel(index);
+			}
+		}	
 	}
 }

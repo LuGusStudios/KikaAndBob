@@ -14,6 +14,8 @@ public class StepLevelMenu : IMenuStep
 	protected ILugusCoroutineHandle moveRoutine = null;
 	protected float offScreenDistance = 20.0f;
 	protected int pageCounter = 0;
+	protected List<int> levelIndices;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void SetupLocal()
 	{
@@ -63,6 +65,8 @@ public class StepLevelMenu : IMenuStep
 		{
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
+
+		levelIndices = levelLoader.FindLevels();
 	}
 	
 	public void SetupGlobal()
@@ -88,10 +92,17 @@ public class StepLevelMenu : IMenuStep
 		{
 			if (levelButtons[i].pressed)
 			{
-				Debug.Log("StepLevelMenu: Pressed button: " + i);
-				// TO DO: Set relevant level data here. Index = (pageCounter * 5) + i;
-				// Get right CrossSceneInfo for minigame type
-				// Then: reload scene!
+				int selectedButton = (pageCounter * 5) + i;
+
+				if (selectedButton < 0 && selectedButton >= levelIndices.Count)
+				{
+					Debug.LogError("StepLevelMenu: Level index is out of bounds!");
+					return;
+				}
+
+				int returnedLevel = levelIndices[selectedButton];
+
+				LoadLevel(returnedLevel);
 			}
 		}
 
@@ -131,9 +142,23 @@ public class StepLevelMenu : IMenuStep
 		}
 	}
 
+	protected void LoadLevel(int index)
+	{
+		IMinigameCrossSceneInfo crossSceneInfo = GetCrossSceneInfo();
+		
+		if (crossSceneInfo != null)
+		{
+			crossSceneInfo.SetLevelIndex(index);
+			Application.LoadLevel(Application.loadedLevel);
+		}
+		
+		Debug.Log("StepLevelMenu: Loaded level: " + index);
+	}
+
 	public override void Activate()
 	{
 		activated = true;
+		//levelIndices =
 		gameObject.SetActive(true);
 		FlyIn(true);
 		LoadLevelData();
@@ -145,13 +170,30 @@ public class StepLevelMenu : IMenuStep
 		gameObject.SetActive(false);
 	}
 
-	protected void GetCrossSceneInfo()	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
+	protected IMinigameCrossSceneInfo GetCrossSceneInfo()	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
 	{
+		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
+		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
+		    || Application.loadedLevelName == "e13_pacific")
+		{
+			return RunnerCrossSceneInfo.use;
+		}
+		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e18_Amsterdam")
+		{
+			return FroggerCrossSceneInfo.use;
+		}
+
+
+		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");
+		return null;
+
 	}
 
 	protected void LoadLevelData()
 	{
 		// TO DO: Set data about levels here (name, description, etc.)
+
+		EnableBars(levelIndices.Count);
 	}
 
 	protected void EnableBars(int amount)
@@ -206,6 +248,17 @@ public class StepLevelMenu : IMenuStep
 			
 			t.gameObject.MoveTo(t.transform.localPosition.x(centerScreen.x)).Time(0.5f).IsLocal(true).Delay(delay).EaseType(iTween.EaseType.easeOutBack).Execute();
 			delay += 0.1f;
+		}
+
+		int pageStart = pageCounter * 5;
+
+		for (int i = pageStart + 1; i < pageStart + 6; i++) 
+		{
+			string levelName = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".name");
+			levelBars[i-1].transform.FindChild("Name").GetComponent<TextMeshWrapper>().SetText(levelName);
+
+			string levelDescription = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".description");
+			levelBars[i-1].transform.FindChild("Description").GetComponent<TextMeshWrapper>().SetText(levelDescription); 
 		}
 	}
 }
