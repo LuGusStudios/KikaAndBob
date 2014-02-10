@@ -143,6 +143,7 @@ public class HUDCounter : IHUDElement
 	public void SetText(string content)
 	{
 		text.textMesh.text = prefix + "" + content + "" + suffix;
+		text.UpdateWrapping();
 	}
 
 	protected bool timerMode = false;

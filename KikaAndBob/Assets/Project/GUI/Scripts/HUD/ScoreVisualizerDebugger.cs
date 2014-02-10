@@ -59,7 +59,7 @@ public class ScoreVisualizerDebugger : LugusSingletonRuntime<ScoreVisualizerDebu
 		
 		if( Input.GetKeyDown(KeyCode.G) )
 		{
-			ScoreVisualizer.Score(KikaAndBob.CommodityType.Distance, 200).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Distance, 200).Title ("Distance++!").Time (2.0f).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
 		}
 	}
 
