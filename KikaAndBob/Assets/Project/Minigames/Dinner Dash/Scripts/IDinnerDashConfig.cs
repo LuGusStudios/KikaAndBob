@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig> 
 {
+	public virtual void LoadLevel(int index)
+	{
+		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
+	}
+
 	public void SetupHUDForTutorial(int targetScore)
 	{
 		// top left is simple timer

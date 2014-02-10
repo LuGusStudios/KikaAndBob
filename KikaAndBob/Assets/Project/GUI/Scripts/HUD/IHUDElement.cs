@@ -23,7 +23,7 @@ public abstract class IHUDElement : MonoBehaviour
 	public abstract void SetValue(float value, bool animate = true);
 	public abstract void AddValue(float value, bool animate = true);
 
-
+	public abstract void Stop();
 
 	public void UpdateIconForCommodityType()
 	{

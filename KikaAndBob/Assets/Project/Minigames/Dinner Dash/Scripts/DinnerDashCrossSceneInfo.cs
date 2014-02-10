@@ -27,7 +27,7 @@ public class DinnerDashCrossSceneInfo : MonoBehaviour
 		GameObject.Destroy( this.gameObject );
 	}
 	
-	public int levelToLoad = 0;
+	public int levelToLoad = -1;
 	
 	// Use this for initialization
 	void Start () {

@@ -26,12 +26,20 @@ public abstract class IDinnerDashManager : MonoBehaviour
 	public ConsumableConsumerManager consumerManager = null;
 
 	public abstract void StartGame();
-	public abstract void StopGame();
+	public abstract void StopGame(); 
+	
+	public abstract bool GameRunning { get; }
 }
 
 public class DinnerDashManagerDefault : IDinnerDashManager
 {
 	public GameObject checkMark = null;
+
+	protected bool _gameRunning = false;
+	public override bool GameRunning
+	{
+		get{ return _gameRunning; }
+	}
 
 	public void SetupLocal()
 	{
@@ -53,37 +61,63 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	{
 		// lookup references to objects / scripts outside of this script
 
-		// DEBUG: REMOVE THIS! just so we can directly play when starting in editor
+		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 #if UNITY_EDITOR
-		if( DinnerDashCrossSceneInfo.use.levelToLoad < -1 )
+		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
 			DinnerDashCrossSceneInfo.use.levelToLoad = 0;
 #endif
 
-		if( DinnerDashCrossSceneInfo.use.levelToLoad < -1 )
+		//Debug.LogError("DINNER DASH TO LOAD" + DinnerDashCrossSceneInfo.use.levelToLoad);
+
+		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
 		{
-			// TODO: show main menu
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 		else
 		{
-			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".intro") );  
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 
+			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".intro") );  
+			introBox.boxType = DialogueBox.BoxType.Continue;
+			introBox.onContinueButtonClicked += OnStartButtonClicked;
 			introBox.Show(); 
 		}
 	}
 
+	protected void OnStartButtonClicked(DialogueBox box)
+	{
+		box.onContinueButtonClicked -= OnStartButtonClicked;
+		box.Hide();
+
+		StartGame ();
+	}
+
 	public override void StartGame()
 	{
-		StopGame ();
-		Debug.Log ("Starting dinner dash");
+		_gameRunning = true;
 
+		//StopGame ();
+		Debug.Log ("Starting dinner dash");
+		
+		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
 
 		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
 
 		consumerManager.StartConsumerGeneration();
 	}
 
-	public override void StopGame()
+	public override void StopGame() 
 	{
+		_gameRunning = false;
+
+		HUDManager.use.StopAll();
+		DialogueManager.use.HideAll();
+
+		DialogueBox outroBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".outro") );  
+		outroBox.boxType = DialogueBox.BoxType.Continue;
+		outroBox.onContinueButtonClicked += BackToMenu; 
+		outroBox.Show(); 
+		
 		Debug.Log ("Stopping dinner dash");
 
 		if( queueRoutineHandle != null )
@@ -98,12 +132,25 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		}
 	}
 
+	protected void BackToMenu(DialogueBox box)
+	{
+		box.onContinueButtonClicked -= BackToMenu;
+		box.Hide(); 
+
+		HUDManager.use.DisableAll();
+
+		MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
+	}
+
 	public List<IConsumableUser> queue = new List<IConsumableUser>();
 
 	protected ILugusCoroutineHandle queueRoutineHandle = null;
 
 	protected void Update()
 	{
+		if( LugusInput.use.KeyDown(KeyCode.S) )
+			StopGame();
+
 		Transform hit = LugusInput.use.RayCastFromMouseUp( LugusCamera.game );
 		if( hit == null )
 			return;

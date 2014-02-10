@@ -55,10 +55,10 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	{
 		LugusResources.use.ChangeLanguage("nl");
 
-		LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		//LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
 	}
 
-	public void LoadLevel(int index)
+	public override void LoadLevel(int index)
 	{
 		if( index == 0 )
 			Level0 ();
@@ -90,7 +90,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level0()
 	{
-		SetupHUDForTutorial(190);
+		SetupHUDForTutorial(190); 
 
 		// level 0 : only bob with the 2 burgers
 		DisableObjects( new GameObject[]{ StewPot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, VegetableProducer } );
@@ -150,6 +150,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		tutorials.currentTutorial = 1;
 		tutorials.NextStep();
 	}
+
 	public void Level2()
 	{
 		SetupHUDForTutorial(270);
@@ -213,7 +214,10 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level4() 
 	{
-		SetupHUDForGame(300.0f);
+		float levelDuration = 300.0f;
+		
+		LugusCoroutines.use.StartRoutine( TimerRoutine(levelDuration) );
+		SetupHUDForGame(levelDuration);
 
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
@@ -237,6 +241,14 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
 	}
+
+	protected IEnumerator TimerRoutine(float levelDuration)
+	{
+		yield return new WaitForSeconds(levelDuration);
+
+		DinnerDashManager.use.StopGame();
+	}
+
 
 	public bool started = false;
 

@@ -37,6 +37,12 @@ public class HUDCounter : IHUDElement
 		}
 	}
 
+	public override void Stop()
+	{
+		if( timerMode )
+			StopTimer();
+	}
+
 	public override void AddValue(float value, bool animate = true)
 	{
 

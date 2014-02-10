@@ -45,6 +45,14 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		}
 	}
 
+	public void StopAll()
+	{
+		foreach( IHUDElement element in elements )
+		{
+			element.Stop();
+		}
+	}
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only

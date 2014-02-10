@@ -12,6 +12,12 @@ public class ProgressBar : IHUDElement
 	protected float currentValue = 0.0f;
 
 	protected Vector3 originalFillerScale = Vector3.one;
+	
+	public override void Stop()
+	{
+		if( timerMode )
+			StopTimer();
+	}
 
 	public override void AddValue(float value, bool animate = true)
 	{
@@ -86,12 +92,27 @@ public class ProgressBar : IHUDElement
 	}
 
 	protected bool timerMode = false;
+
+	
+	protected ILugusCoroutineHandle timerHandle = null;
+
 	public void SetTimer(float seconds)
 	{
 		timerMode = true;
 		valueRange = new DataRange(Time.time, Time.time + seconds);
 
-		LugusCoroutines.use.StartRoutine( TimerRoutine() );
+		timerHandle = LugusCoroutines.use.StartRoutine( TimerRoutine() );
+	}
+
+	public void StopTimer()
+	{
+		if( timerHandle != null && timerHandle.Running )
+		{
+			timerHandle.StopRoutine();
+			timerHandle = null;
+		}
+		
+		timerMode = false;
 	}
 
 	protected IEnumerator TimerRoutine()

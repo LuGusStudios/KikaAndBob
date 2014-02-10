@@ -218,6 +218,14 @@ public class ConsumableConsumerManager : MonoBehaviour
 					consumers.Add( newConsumer );
 				}
 			}
+
+			Debug.LogWarning("ConsumerManager tapped out : " + orders.Count + " // " + GetActiveConsumerCount() + " // " + consumers.Count);
+			 
+			if( (orders.Count <= 0 || currentOrderIndex >= orders.Count) && GetActiveConsumerCount() <= 0 )
+			{
+
+				DinnerDashManager.use.StopGame();
+			}
 			
 			yield return new WaitForSeconds( timeBetweenConsumers.Random() );
 		}

@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 public class DialogueBox : MonoBehaviour 
 {
+	public enum BoxType
+	{
+		NONE = -1,
+
+		Notification = 1, // no buttons, auto-hide or hidden by script
+		Continue = 2, // just an OK button
+	}
+
 	public bool available = true;
 
 	public Transform background = null;
@@ -20,6 +28,12 @@ public class DialogueBox : MonoBehaviour
 
 	public Vector2 margin = new Vector2(50.0f, 50.0f); // in PIXELS
 	public Vector2 backgroundPadding = new Vector2(0.0f, 40.0f); // in PIXELS 
+
+	public BoxType boxType = BoxType.Notification;
+	public Button ContinueButton = null;
+
+	public delegate void OnContinueButtonClicked(DialogueBox box);
+	public OnContinueButtonClicked onContinueButtonClicked;
 
 	public void Reposition( KikaAndBob.ScreenAnchor mainAnchor = KikaAndBob.ScreenAnchor.Center, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.Center )
 	{
@@ -85,8 +99,40 @@ public class DialogueBox : MonoBehaviour
 
 	protected ILugusCoroutineHandle autoHideHandle = null;
 
+	protected void RepositionButtons()
+	{
+		Debug.LogError("RepositionButtons " + boxType);
+
+		if( boxType == BoxType.NONE )
+		{
+			ContinueButton.transform.parent.gameObject.SetActive(false);
+		}
+		else if( boxType == BoxType.Notification )
+		{
+			ContinueButton.transform.parent.gameObject.SetActive(false);
+
+		}
+		else if( boxType == BoxType.Continue )
+		{
+			// we need to move the playButton down so it fits beneath the box
+			// the background will probably have been scaled to fit the text
+			ContinueButton.transform.parent.gameObject.SetActive(true);
+
+			Transform continueButtonContainer = ContinueButton.transform.parent;
+
+			// find out the bottom of the background
+			float backgroundBottom = background.renderer.bounds.center.y - background.renderer.bounds.extents.y;
+			//continueButtonContainer.localPosition = continueButtonContainer.localPosition.y( backgroundBottom );
+			continueButtonContainer.position = continueButtonContainer.position.y( backgroundBottom );
+			
+			//Debug.LogError("REpositioning buttonz " + backgroundBottom + " // " + background.renderer.bounds.center + " vs " + background.localPosition);
+		}
+	}
+
+
 	public void Show(float autoHideDelay, bool hideOthers = true)
 	{
+
 		autoHideHandle = LugusCoroutines.use.StartRoutine( AutoHideRoutine(autoHideDelay) );
 		Show ( hideOthers ); 
 	}
@@ -112,6 +158,8 @@ public class DialogueBox : MonoBehaviour
 			Reposition( KikaAndBob.ScreenAnchor.Center );
 		}
 
+		RepositionButtons();
+
 		//Debug.LogError(transform.Path () + " : Repositioning to local coords " + targetPosition);
 		this.transform.localPosition = targetPosition;
 	}
@@ -125,7 +173,7 @@ public class DialogueBox : MonoBehaviour
 
 		autoHideHandle = null;
 
-
+		boxType = BoxType.Notification;
 		available = true;
 		
 		this.transform.position = new Vector3(9999.0f, 9999.0f, 9999.0f);
@@ -193,6 +241,16 @@ public class DialogueBox : MonoBehaviour
 		{
 			Debug.LogError( transform.Path () + " : No icon found!" );
 		}
+		
+		if( ContinueButton == null )
+		{
+			ContinueButton = this.transform.GetComponentInChildren<Button>();
+		}
+		if( ContinueButton == null )
+		{
+			Debug.LogError( transform.Path () + " : No ContinueButton found!" );
+		}
+
 	}
 	
 	public void SetupGlobal()
@@ -212,6 +270,13 @@ public class DialogueBox : MonoBehaviour
 	
 	protected void Update () 
 	{
-	
+		if( available ) // we're not currently in active use: no interaction allowed
+			return;
+
+		if( ContinueButton.pressed )
+		{
+			if( onContinueButtonClicked != null )
+				onContinueButtonClicked(this);
+		}
 	}
 }

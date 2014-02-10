@@ -8,6 +8,9 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 
 	public override void NextStep()
 	{
+		if( !DinnerDashManager.use.GameRunning )
+			return;
+
 		if( config == null )
 		{
 			config = (DinnerDashConfig_02Argentina) IDinnerDashConfig.use;
