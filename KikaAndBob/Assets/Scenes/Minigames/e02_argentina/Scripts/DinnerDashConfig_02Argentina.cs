@@ -246,7 +246,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		if( !started )
 		{
 			started = true;
-			DinnerDashManager.use.StartGame();
+			//DinnerDashManager.use.StartGame();
 		}
 	}
 

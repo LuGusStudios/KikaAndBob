@@ -52,6 +52,23 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+
+		// DEBUG: REMOVE THIS! just so we can directly play when starting in editor
+#if UNITY_EDITOR
+		if( DinnerDashCrossSceneInfo.use.levelToLoad < -1 )
+			DinnerDashCrossSceneInfo.use.levelToLoad = 0;
+#endif
+
+		if( DinnerDashCrossSceneInfo.use.levelToLoad < -1 )
+		{
+			// TODO: show main menu
+		}
+		else
+		{
+			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".intro") );  
+
+			introBox.Show(); 
+		}
 	}
 
 	public override void StartGame()
