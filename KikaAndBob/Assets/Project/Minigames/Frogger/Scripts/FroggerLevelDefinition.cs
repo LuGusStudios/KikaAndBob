@@ -5,6 +5,23 @@ using System.Collections.Generic;
 [System.Serializable]
 public class FroggerLevelDefinition : ScriptableObject {
 
+	public static FroggerLevelDefinition FromXML(string rawData)
+	{
+		TinyXmlReader parser = new TinyXmlReader(rawData);
+
+		while (parser.Read())
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
+				(parser.tagName == "Level"))
+			{
+				return FroggerLevelDefinition.FromXML(parser);
+			}
+		}
+
+		// If we end up here, then no level tag was found...
+		return null;
+	}
+
 	public static FroggerLevelDefinition FromXML(TinyXmlReader parser)
 	{
 		// Check whether the parser is at the correct tag first.
