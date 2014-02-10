@@ -175,6 +175,17 @@ public class StepLevelMenu : IMenuStep
 			else
 				levelBars[i].gameObject.SetActive(false);
 		}
+
+ 		if (amount >= 5 && levelIndices.Count > 5)
+		{
+			buttonLeft.gameObject.SetActive(true);
+			buttonRight.gameObject.SetActive(true);
+		}
+		else
+		{
+			buttonLeft.gameObject.SetActive(false);
+			buttonRight.gameObject.SetActive(false);
+		}
 	}
 
 	protected IEnumerator SwitchPages(bool toRight)

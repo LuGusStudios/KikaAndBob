@@ -9,7 +9,10 @@ public class MenuManager : LugusSingletonExisting<MenuManagerDefault>
 public class MenuManagerDefault: MonoBehaviour
 {
 	public Dictionary<MenuTypes, IMenuStep> menus = new Dictionary<MenuTypes, IMenuStep>();
+	public Sprite backgroundSprite = null;
+
 	protected Transform background = null;
+
 
 	public enum MenuTypes
 	{
@@ -50,6 +53,23 @@ public class MenuManagerDefault: MonoBehaviour
 	
 	public void SetupGlobal()
 	{
+		SpriteRenderer backgroundRenderer = background.GetComponent<SpriteRenderer>();
+
+		if (backgroundSprite != null)
+		{
+			backgroundRenderer.sprite = backgroundSprite;
+		}
+		else
+		{
+			string key = Application.loadedLevelName + ".main.background";
+
+			Sprite newBackground = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key));
+
+			if (newBackground != LugusResources.use.errorSprite)
+			{
+				backgroundRenderer.sprite = newBackground;
+			}
+		}
 	}
 	
 	protected void Awake()
