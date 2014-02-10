@@ -113,6 +113,7 @@ public class StepGameMenu : IMenuStep
 			image.sprite = imageSprite;
 			image.gameObject.SetActive(true);
 		}
+	
 	}
 
 	public override void Activate()
