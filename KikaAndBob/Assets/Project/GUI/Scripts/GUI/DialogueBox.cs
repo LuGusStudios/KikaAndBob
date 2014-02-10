@@ -58,7 +58,7 @@ public class DialogueBox : MonoBehaviour
 
 		//Vector2 basePos = KikaAndBob.ScreenAnchorHelper.GetQuadrantCenter( mainAnchor, LugusUtil.UIScreenSize );
 
-		Rect mainContainer = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect( mainAnchor, LugusUtil.UIScreenSize );
+		Rect mainContainer = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect( mainAnchor, LugusUtil.UIScreenSizePixelPerfect );
 		Rect backgroundRect = background.renderer.bounds.ToRectXY();//new Rect( background.renderer.bounds.center.x , background.renderer.bounds.center.y, background.renderer.bounds.size.x * 100.0f, background.renderer.bounds.size.y * 100.0f );
 		backgroundRect.width = backgroundRect.width * 100;
 		backgroundRect.height = backgroundRect.height * 100;

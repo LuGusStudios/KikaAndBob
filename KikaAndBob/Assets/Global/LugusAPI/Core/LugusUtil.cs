@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class LugusUtil 
 {
-	public static int UIWidth
+	public static float UIWidth
 	{
-		get{ return 2048; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 20.48f; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
 	
-	public static int UIHeight
+	public static float UIHeight
 	{
-		get{ return 1536; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 15.36f; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
 
 	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
@@ -20,6 +20,12 @@ public class LugusUtil
 		get{ return new Rect(0, 0, LugusUtil.UIWidth, LugusUtil.UIHeight ); }
 	}
 	
+	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
+	public static Rect UIScreenSizePixelPerfect
+	{
+		get{ return new Rect(0, 0, LugusUtil.UIWidth * 100, LugusUtil.UIHeight * 100 ); }
+	}
+
 	public static int ScreenWidth
 	{
 		get{ return Screen.width; }

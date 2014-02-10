@@ -191,17 +191,19 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 		Vector2 viewportCoords = LugusCamera.game.WorldToViewportPoint( score._worldPosition );
 		viewportCoords = Vector2.Scale( viewportCoords, new Vector2(LugusUtil.UIWidth, LugusUtil.UIHeight) );
 
-		scoreText.transform.localPosition = (viewportCoords.v3 () / 100.0f);
+		scoreText.transform.localPosition = (viewportCoords.v3 () );// / 100.0f);
 		scoreText.transform.position = scoreText.transform.position.z( score.GetHUDElement().transform.position.z );
 
+		float moveDuration = score._duration;
 		float moveOverDelay = 0.0f;
 		if( score._duration > 1.0f )
 		{
+			moveDuration = 1.0f;
 			moveOverDelay = score._duration - 1.0f;
 			scoreText.MoveTo( scoreText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 		}
 
-		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( 1.0f ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
 
 		GameObject.Destroy(scoreText, score._duration);
 
@@ -224,7 +226,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 				titleText.MoveTo( titleText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 			}
 
-			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( 1.0f ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
 			GameObject.Destroy(titleText, score._duration);
 		}
 
