@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class IHUDElement : MonoBehaviour 
+public abstract class IHUDElement : MonoBehaviour 
 {
 	public SpriteRenderer icon = null;
 
@@ -19,6 +19,11 @@ public class IHUDElement : MonoBehaviour
 			UpdateIconForCommodityType();
 		}
 	}
+
+	public abstract void SetValue(float value, bool animate = true);
+	public abstract void AddValue(float value, bool animate = true);
+
+
 
 	public void UpdateIconForCommodityType()
 	{
@@ -39,12 +44,13 @@ public class IHUDElement : MonoBehaviour
 		else if( _commodity == KikaAndBob.CommodityType.Distance )
 			iconKey = "IconSpeed01";
 
-		Debug.LogError("Setting icon " + iconKey + " for " + _commodity );
+		//Debug.LogError("Setting icon " + iconKey + " for " + _commodity );
 
 		if( iconKey != "" )
 			icon.sprite = LugusResources.use.Shared.GetSprite( iconKey );
 	}
 
+	/*
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -69,4 +75,5 @@ public class IHUDElement : MonoBehaviour
 	{
 	
 	}
+	*/
 }

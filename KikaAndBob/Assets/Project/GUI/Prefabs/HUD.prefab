@@ -95,7 +95,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100012
 GameObject:
   m_ObjectHideFlags: 1
@@ -127,7 +127,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100016
 GameObject:
   m_ObjectHideFlags: 1
@@ -229,7 +229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100028
 GameObject:
   m_ObjectHideFlags: 1
@@ -296,7 +296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100036
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,7 +430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100052
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,7 +446,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100054
 GameObject:
   m_ObjectHideFlags: 1
@@ -872,6 +872,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400106}
+  - 23: {fileID: 2300016}
+  - 102: {fileID: 10200016}
+  m_Layer: 20
+  m_Name: ScorePopupPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -886,6 +903,7 @@ Transform:
   - {fileID: 400026}
   - {fileID: 400034}
   - {fileID: 400014}
+  - {fileID: 400106}
   - {fileID: 400100}
   - {fileID: 400074}
   - {fileID: 400060}
@@ -997,7 +1015,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05932617, y: -.121576309, z: -1}
+  m_LocalPosition: {x: .982910156, y: -.121576309, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400014}
@@ -1066,7 +1084,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05932617, y: -.121576309, z: -1}
+  m_LocalPosition: {x: .977294922, y: -.121576309, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400034}
@@ -1268,7 +1286,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05932617, y: -.121576309, z: -1}
+  m_LocalPosition: {x: .982910156, y: -.121576309, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400060}
@@ -1301,7 +1319,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100070}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05932617, y: -.121576309, z: -1}
+  m_LocalPosition: {x: .977294922, y: -.121576309, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400074}
@@ -1507,6 +1525,17 @@ Transform:
   m_Children:
   - {fileID: 400096}
   m_Father: {fileID: 400100}
+--- !u!4 &400106
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.39501953, y: 12.6374798, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400000}
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -1660,6 +1689,27 @@ Renderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100070}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: a329e3af73395401dbe294185bbafbd0, type: 3}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+--- !u!23 &2300016
+Renderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100106}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -1931,6 +1981,27 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!102 &10200016
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100106}
+  m_Text: 123
+  m_OffsetZ: 0
+  m_CharacterSize: .150000006
+  m_LineSpacing: 1
+  m_Anchor: 4
+  m_Alignment: 1
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 2
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: a329e3af73395401dbe294185bbafbd0, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1942,6 +2013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3188b02b43b146dfa9703fff458edb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   scaleRange:
     from: 0
     to: 0
@@ -1959,7 +2031,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 748f0b2b31a244ceeaeeed3d3212e037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  progressBar: {fileID: 0}
+  ProgressBar: {fileID: 0}
+  ProgressBarCenter: {fileID: 0}
+  ProgressBarLeft: {fileID: 0}
+  ProgressBarRight: {fileID: 0}
+  ProgressBarLeftBottom: {fileID: 0}
+  Counter1: {fileID: 0}
+  Counter2: {fileID: 0}
+  Counter3: {fileID: 0}
+  CounterLargeLeft1: {fileID: 0}
+  CounterLargeLeft2: {fileID: 0}
+  CounterLargeRight1: {fileID: 0}
+  CounterLargeRight2: {fileID: 0}
+  CounterSmallLeft1: {fileID: 0}
+  CounterSmallLeft2: {fileID: 0}
+  CounterSmallRight1: {fileID: 0}
+  CounterSmallRight2: {fileID: 0}
+  elements: []
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2007,6 +2095,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2022,6 +2112,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2037,6 +2129,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2084,6 +2178,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2099,6 +2195,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2146,6 +2244,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2161,6 +2261,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2176,6 +2278,8 @@ MonoBehaviour:
   text: {fileID: 0}
   prefix: 
   suffix: 
+  formatting: 1
+  currentValue: 0
 --- !u!114 &11400032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2219,6 +2323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3188b02b43b146dfa9703fff458edb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   scaleRange:
     from: 0
     to: 0
@@ -2236,6 +2341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3188b02b43b146dfa9703fff458edb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   scaleRange:
     from: 0
     to: 0
@@ -2253,6 +2359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3188b02b43b146dfa9703fff458edb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   scaleRange:
     from: 0
     to: 0

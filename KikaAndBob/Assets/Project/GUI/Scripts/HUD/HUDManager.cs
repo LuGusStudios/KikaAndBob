@@ -37,6 +37,14 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		return null;
 	}
 
+	public void DisableAll()
+	{
+		foreach( IHUDElement element in elements )
+		{
+			element.gameObject.SetActive(false);
+		}
+	}
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
