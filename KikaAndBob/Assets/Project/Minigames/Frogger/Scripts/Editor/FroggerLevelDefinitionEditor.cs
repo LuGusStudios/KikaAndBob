@@ -33,5 +33,7 @@ class FroggerLevelDefinitionEditor : Editor
 		StreamWriter writer = new StreamWriter(saveLocation + level.name + ".xml");
 		writer.Write(rawdata);
 		writer.Close();
+
+		Debug.Log("FroggerLevelDefinitionEditor: Saved file:" + saveLocation + level.name + ".xml");
 	}
 }
