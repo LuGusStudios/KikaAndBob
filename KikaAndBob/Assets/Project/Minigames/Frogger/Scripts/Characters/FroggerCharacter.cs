@@ -33,9 +33,13 @@ public class FroggerCharacter : MonoBehaviour {
 	protected BoxCollider boundsCollider;	// this is not a 2D collider, because bounds cannot be retrieved for those 
 											// (this collider is primarily used for clamping characters to the screen)
 
-	protected void Start()
+	protected void Awake()
 	{
 		SetUpLocal();
+	}
+
+	protected void Start()
+	{
 	}
 
 	public virtual void SetUpLocal()
@@ -398,6 +402,8 @@ public class FroggerCharacter : MonoBehaviour {
 
 	public void ShowCharacter(bool show)
 	{
+		print (renderers);
+
 		foreach(Renderer r in renderers)
 		{
 			r.enabled = show;

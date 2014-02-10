@@ -17,7 +17,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	{
 		if (guiParent == null)
 		{
-			guiParent = GameObject.Find("GUI").transform;
+			guiParent = GameObject.Find("GUI_Debug").transform;
 		}
 		if (guiParent == null)
 		{

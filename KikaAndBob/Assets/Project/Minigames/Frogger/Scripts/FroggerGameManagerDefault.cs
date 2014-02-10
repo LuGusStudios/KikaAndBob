@@ -62,6 +62,7 @@ public class FroggerGameManagerDefault : MonoBehaviour
 				Debug.LogError("FroggerGameManager: Invalid level data!");
 			}
 
+			// if a level wasn't found above, we can still load a default level
 			StartNewGame();
 		}
 	}
