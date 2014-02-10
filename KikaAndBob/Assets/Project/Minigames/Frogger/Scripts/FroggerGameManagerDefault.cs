@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -44,11 +44,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 
 		if (FroggerCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 		else
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.NONE);
 
 			string levelData = levelLoader.GetLevelData(FroggerCrossSceneInfo.use.GetLevelIndex());
 

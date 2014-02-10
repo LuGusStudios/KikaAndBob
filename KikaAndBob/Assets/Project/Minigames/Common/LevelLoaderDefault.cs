@@ -115,6 +115,11 @@ public class LevelLoaderDefault
 		{
 			return PacmanCrossSceneInfo.use;
 		}
+		else if (Application.loadedLevelName == "e03_china" || Application.loadedLevelName == "e20_morocco"
+		         || Application.loadedLevelName == "e15_india")
+		{
+			return DanceHeroCrossSceneInfo.use;
+		}
 		
 		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");
 		return null;

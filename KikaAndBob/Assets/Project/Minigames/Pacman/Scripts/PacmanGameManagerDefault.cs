@@ -36,11 +36,11 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		
 		if (PacmanCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 		else
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.NONE);
 			
 			string levelData = levelLoader.GetLevelData(PacmanCrossSceneInfo.use.GetLevelIndex());
 			

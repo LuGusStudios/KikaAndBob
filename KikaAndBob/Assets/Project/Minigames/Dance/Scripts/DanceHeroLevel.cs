@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -21,18 +21,14 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	}
 
 	public TimeProgressionMode mode = TimeProgressionMode.PER_LANE;
-
 	public List<DanceHeroLane> lanes = new List<DanceHeroLane>();
-
 	public float cumulativeDelay = 0.0f;
-
 	public int currentLevel = 0;
-
 	public string[] levels;
 
 	protected ILugusCoroutineHandle endLevelRoutine = null;
-
 	protected ILugusAudioTrack backgroundMusic = null;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void SetupLocal()
 	{
@@ -62,13 +58,6 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		// -> is this really needed... probably it is only change the starting one of the sequence and we're good to go?
 
 		// lanes moeten aan/uit kunnen gezet worden
-
-		CreateLevel();
-
-		foreach( DanceHeroLane lane in lanes )
-		{
-			lane.Begin();
-		}
 	}
 
 	public DanceHeroLane GetLane(string name)
@@ -84,50 +73,54 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 
 	
-	public void CreateLevel()
-	{
-		CreateLevel(currentLevel);
-	}
-
-	public void CreateLevel(int index)
-	{
-		if (index < 0 || index >= levels.Length)
-		{
-			Debug.LogError("DanceHeroLevel: Level index was out of bounds: " + index);
-			return;
-		}
-
-		CreateLevel(levels[index]);
-	}
+//	public void CreateLevel()
+//	{
+//		CreateLevel(currentLevel);
+//	}
+//
+//	public void CreateLevel(int index)
+//	{
+//		if (index < 0 || index >= levels.Length)
+//		{
+//			Debug.LogError("DanceHeroLevel: Level index was out of bounds: " + index);
+//			return;
+//		}
+//
+//		CreateLevel(levels[index]);
+//	}
 	
-	public void CreateLevel(string levelName)
+	public void CreateLevel(string levelData)
 	{
-		Debug.Log("Clearing lanes.");
+		Debug.Log("DanceHeroLevel: Clearing lanes.");
 		foreach(DanceHeroLane lane in lanes)
 		{
 			lane.ClearLaneItems();
 		}
 
-		if (string.IsNullOrEmpty(levelName))
+		if (string.IsNullOrEmpty(levelData))
 		{
-			Debug.LogError("DanceHeroLevel: Level name was null or empty.");
+			Debug.LogError("DanceHeroLevel: Level data was null or empty.");
 			return;
 		}
 
+		// add new level items
+		// also, set music file
+
+		
 		cumulativeDelay = 0;
 
 		GetLane("Lane1").defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
 		GetLane("Lane2").defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
 		GetLane("Lane3").defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
 
-		
+		ParseLevelFromXML(levelData);
 
 		LugusCoroutines.use.StartRoutine(MusicBufferDelay());
 	}
 
 	protected IEnumerator MusicBufferDelay()
 	{
-		Debug.Log("Waiting for song to be done buffering.");
+		Debug.Log("DanceHeroLevel: Waiting for song to be done buffering.");
 
 		backgroundMusic = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
 
@@ -315,6 +308,28 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	protected void Start () 
 	{
 		SetupGlobal();
+
+		levelLoader.FindLevels();
+
+		if (DanceHeroCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			string levelData = levelLoader.GetLevelData(DanceHeroCrossSceneInfo.use.GetLevelIndex());
+			
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				CreateLevel(levelData);
+			}
+			else
+			{
+				Debug.LogError("DanceHeroLevel: Invalid level data!");
+			}
+		}
 	}
 
 	void OnGUI()
@@ -322,18 +337,17 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		if (!LugusDebug.debug)
 			return;
 
+		GUILayout.BeginVertical();
 
-		GUILayout.BeginHorizontal();
-
-		for (int i = 0; i < levels.Length; i++)
+		foreach(int index in levelLoader.levelIndices)
 		{
-			if (GUILayout.Button("Level " + i))
+			if (GUILayout.Button("Load level: " + index))
 			{
-				CreateLevel(i);
+				levelLoader.LoadLevel(index);
 			}
 		}
 		
-		GUILayout.EndHorizontal();
+		GUILayout.EndVertical();
 	}
 
 	void ParseLevelFromXML(string rawData)

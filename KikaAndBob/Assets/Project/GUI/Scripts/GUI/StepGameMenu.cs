@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -56,12 +56,11 @@ public class StepGameMenu : IMenuStep
 		{
 			Debug.Log("StepGameMenu: Missing image sprite renderer!");
 		}
-		
-		LugusResources.use.ChangeLanguage("nl");
 	}
 	
 	public void SetupGlobal()
 	{
+		LugusResources.use.ChangeLanguage("nl");
 	}
 	
 	protected void Awake()
@@ -81,11 +80,11 @@ public class StepGameMenu : IMenuStep
 
 		if (playButton.pressed)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.LevelMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.LevelMenu);
 		}
 		else if (helpButton.pressed)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.HelpMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.HelpMenu);
 		}
 	}
 

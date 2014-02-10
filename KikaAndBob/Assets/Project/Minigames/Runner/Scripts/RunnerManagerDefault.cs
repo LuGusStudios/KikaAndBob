@@ -13,6 +13,7 @@ public class RunnerManagerDefault : MonoBehaviour
 	// this is to prevent reaching very high x values (which float precision does not like)
 	protected float shiftXTreshold = 500.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
 	protected float shiftYTreshold = -500.0f;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	// if horizontal == false -> it's vertical
 	public void ShiftLevel(float units, bool horizontal)
@@ -99,6 +100,19 @@ public class RunnerManagerDefault : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
+
+		levelLoader.FindLevels();
+		
+		if (RunnerCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.NONE);
+
+			// TO DO: Add code for clearing level, setting correct level variables, etc. Or leave that a more specific config loader.
+		}
 	}
 	
 	protected void Update () 

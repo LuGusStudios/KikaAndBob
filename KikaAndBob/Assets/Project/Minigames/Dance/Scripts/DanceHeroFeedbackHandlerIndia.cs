@@ -53,7 +53,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
 		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
 		
-		Transform guiParent = GameObject.Find("GUI").transform;
+		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 		
 		modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
 		if (modifierDisplayPrefab == null)

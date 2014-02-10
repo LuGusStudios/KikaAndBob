@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -74,7 +74,7 @@ public class MenuManagerDefault: MonoBehaviour
 		}
 	}
 
-	public void ActivateMenu(MenuTypes type)
+	public void ShowMenu(MenuTypes type)
 	{
 		IMenuStep nextStep = null;
 

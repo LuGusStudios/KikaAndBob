@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -40,7 +40,7 @@ public class StepHelpMenu : IMenuStep
 		
 		if (leaveButton.pressed)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -138,7 +138,7 @@ public class StepLevelMenu : IMenuStep
 
 		if (buttonLeave.pressed)
 		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 	}
 
