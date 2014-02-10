@@ -53,6 +53,9 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	
 	protected void Update () 
 	{
+		if (!PacmanGameManager.use.gameRunning)
+			return;
+
 		// if the closest enemy was just defeated, always make sure to immediately stop sound
 		if (closestEnemy != null && closestEnemy.enemyState == PacmanEnemyCharacter.EnemyState.Defeated && enemiesTrack.Playing)
 		{

@@ -5,6 +5,23 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PacmanLevelDefinition : ScriptableObject {
 	
+	public static PacmanLevelDefinition FromXML(string rawData)
+	{
+		TinyXmlReader parser = new TinyXmlReader(rawData);
+
+		while (parser.Read())
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
+				(parser.tagName == "Level"))
+			{
+				return PacmanLevelDefinition.FromXML(parser);
+			}
+		}
+
+		// If we end up here, then no level tag was found...
+		return null;
+	}
+
 	public static PacmanLevelDefinition FromXML(TinyXmlReader parser)
 	{
 		PacmanLevelDefinition level = ScriptableObject.CreateInstance<PacmanLevelDefinition>();
@@ -285,7 +302,7 @@ public class PacmanTileItemDefinition
 		PacmanTileItemDefinition tileitem = new PacmanTileItemDefinition();
 
 		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
-			(parser.tagName != "Character"))
+			(parser.tagName != "TileItem"))
 		{
 			Debug.Log("PacmanTileItemDefinition.FromXML(): unexpected tag type or tag name.");
 			return null;
