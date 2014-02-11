@@ -53,19 +53,16 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	// Use this for initialization
 	protected void Start () 
 	{
-		LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		LugusResources.use.ChangeLanguage("nl");
+
+		//LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
 	}
 
-	public void LoadLevel(int index)
+	public override void LoadLevel(int index)
 	{
-		if( index < 4 )
-		{
-			SetupGUIForTutorial(99);
-		}
-		else
-		{
-			SetupGUIForGame();
-		}
+		index = index - 1; // index passed by menu is 1-based. Here we want 0-based
+
+		Debug.LogError("LOAD LEVEL diner dash " + index + " // " + DinnerDashCrossSceneInfo.use.levelToLoad);
 
 		if( index == 0 )
 			Level0 ();
@@ -97,6 +94,8 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level0()
 	{
+		SetupHUDForTutorial(190); 
+
 		// level 0 : only bob with the 2 burgers
 		DisableObjects( new GameObject[]{ StewPot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, VegetableProducer } );
 
@@ -125,11 +124,13 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level1()
 	{
+		SetupHUDForTutorial(250); 
+
 		// level 1 : introduce stew
 		DisableObjects( new GameObject[]{ Blender, IceCreamMachine, OrangeProducer, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 		
 		
 		
@@ -153,13 +154,16 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		tutorials.currentTutorial = 1;
 		tutorials.NextStep();
 	}
+
 	public void Level2()
 	{
+		SetupHUDForTutorial(270);
+
 		// level 2 : introduce blender
 		DisableObjects( new GameObject[]{ IceCreamMachine, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 		
 		
 		
@@ -186,9 +190,11 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level3() 
 	{ 
+		SetupHUDForTutorial(230);  
+
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
-		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
@@ -212,6 +218,11 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level4() 
 	{
+		float levelDuration = 300.0f;
+		
+		LugusCoroutines.use.StartRoutine( TimerRoutine(levelDuration) );
+		SetupHUDForGame(levelDuration);
+
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
 		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
@@ -235,6 +246,14 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
 	}
 
+	protected IEnumerator TimerRoutine(float levelDuration)
+	{
+		yield return new WaitForSeconds(levelDuration);
+
+		DinnerDashManager.use.StopGame();
+	}
+
+
 	public bool started = false;
 
 	// Update is called once per frame
@@ -243,7 +262,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		if( !started )
 		{
 			started = true;
-			DinnerDashManager.use.StartGame();
+			//DinnerDashManager.use.StartGame();
 		}
 	}
 
@@ -258,7 +277,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		{
 			if (GUILayout.Button("Start Level " + i))
 			{
-				DinnerDashCrossSceneInfo.use.levelToLoad = i;
+				DinnerDashCrossSceneInfo.use.levelToLoad = (i + 1);
 				LugusCoroutines.use.StopAllRoutines();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
