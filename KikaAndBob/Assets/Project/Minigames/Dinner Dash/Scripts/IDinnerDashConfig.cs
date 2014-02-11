@@ -16,6 +16,8 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 
 		HUDManager.use.DisableAll();
 
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
 		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.TimeS;
@@ -39,6 +41,9 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 	public void SetupHUDForGame(float time)
 	{
 		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+		HUDManager.use.RepositionPauseButton( KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopLeft );
 		
 		HUDManager.use.ProgressBarLeft.gameObject.SetActive(true); 
 		HUDManager.use.ProgressBarLeft.SetTimer(time);

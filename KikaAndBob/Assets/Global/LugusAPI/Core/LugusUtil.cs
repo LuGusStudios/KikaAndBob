@@ -78,6 +78,11 @@ public static class BoundsExtensions
 	{
 		return new Rect( bounds.center.x , bounds.center.y, bounds.size.x, bounds.size.y);
 	}
+
+	public static Bounds Bounds(this BoxCollider2D collider)
+	{
+		return new UnityEngine.Bounds( collider.center, collider.size );
+	}
 }
 
 public static class VectorExtensions

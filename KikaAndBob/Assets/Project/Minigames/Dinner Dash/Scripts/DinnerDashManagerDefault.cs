@@ -7,7 +7,7 @@ public class DinnerDashManager : LugusSingletonExisting<IDinnerDashManager>
 
 }
 
-public abstract class IDinnerDashManager : MonoBehaviour
+public abstract class IDinnerDashManager : IGameManager
 {
 	protected ConsumableMover _mover = null;
 	public ConsumableMover Mover
@@ -24,11 +24,6 @@ public abstract class IDinnerDashManager : MonoBehaviour
 	}
 
 	public ConsumableConsumerManager consumerManager = null;
-
-	public abstract void StartGame();
-	public abstract void StopGame(); 
-	
-	public abstract bool GameRunning { get; }
 }
 
 public class DinnerDashManagerDefault : IDinnerDashManager
@@ -59,12 +54,14 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	
 	public void SetupGlobal()
 	{
+		HUDManager.use.RepositionPauseButton( KikaAndBob.ScreenAnchor.Top);
+
 		// lookup references to objects / scripts outside of this script
 
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 #if UNITY_EDITOR
-		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
-			DinnerDashCrossSceneInfo.use.levelToLoad = 0;
+		//if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
+		//	DinnerDashCrossSceneInfo.use.levelToLoad = 0;
 #endif
 
 		//Debug.LogError("DINNER DASH TO LOAD" + DinnerDashCrossSceneInfo.use.levelToLoad);
@@ -77,7 +74,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 
-			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".intro") );  
+			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad) + ".intro") );  
 			introBox.boxType = DialogueBox.BoxType.Continue;
 			introBox.onContinueButtonClicked += OnStartButtonClicked;
 			introBox.Show(); 
@@ -98,6 +95,16 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		//StopGame ();
 		Debug.Log ("Starting dinner dash");
+
+		// empty the queue
+		// when this was added, you could click on the items in the level while the beginning dialoguebox was still showing
+		// the queue would fill up and the mover would start moving to sometimes no-longer existing items
+		foreach( IConsumableUser obj in queue )
+		{
+			ToggleCheckmark( obj, false );
+		}
+		queue.Clear();
+
 		
 		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
 

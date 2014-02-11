@@ -9,7 +9,13 @@ using System.Collections.Generic;
 public class LevelLoaderDefault
 {
 	public enum LoadingSource { NONE = -1, SYSTEM_IO = 1, RESOURCES = 2 };
+	
+#if !UNITY_WEBPLAYER
 	public LoadingSource source = LoadingSource.SYSTEM_IO;
+#else
+	public LoadingSource source = LoadingSource.RESOURCES;
+#endif
+
 
 	public List<int> levelIndices = new List<int>();
 
@@ -99,7 +105,7 @@ public class LevelLoaderDefault
 		}
 	}
 
-	protected IMinigameCrossSceneInfo GetCrossSceneInfo()	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
+	public static IMinigameCrossSceneInfo GetCrossSceneInfo()	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
 	{
 		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
 		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
@@ -114,6 +120,10 @@ public class LevelLoaderDefault
 		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican")
 		{
 			return PacmanCrossSceneInfo.use;
+		}
+		else if( Application.loadedLevelName == "e02_argentina" )
+		{
+			return DinnerDashCrossSceneInfo.use;
 		}
 		
 		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");

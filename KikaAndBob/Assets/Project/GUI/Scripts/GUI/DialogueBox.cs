@@ -101,7 +101,7 @@ public class DialogueBox : MonoBehaviour
 
 	protected void RepositionButtons()
 	{
-		Debug.LogError("RepositionButtons " + boxType);
+		//Debug.LogError("RepositionButtons " + boxType);
 
 		if( boxType == BoxType.NONE )
 		{

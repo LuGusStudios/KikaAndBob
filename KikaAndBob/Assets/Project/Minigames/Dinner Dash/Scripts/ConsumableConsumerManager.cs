@@ -219,7 +219,7 @@ public class ConsumableConsumerManager : MonoBehaviour
 				}
 			}
 
-			Debug.LogWarning("ConsumerManager tapped out : " + orders.Count + " // " + GetActiveConsumerCount() + " // " + consumers.Count);
+			//Debug.LogWarning("ConsumerManager tapped out : " + orders.Count + " // " + GetActiveConsumerCount() + " // " + consumers.Count);
 			 
 			if( (orders.Count <= 0 || currentOrderIndex >= orders.Count) && GetActiveConsumerCount() <= 0 )
 			{
