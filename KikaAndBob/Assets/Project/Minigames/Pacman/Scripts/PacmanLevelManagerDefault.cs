@@ -27,7 +27,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
 
-	// MOVE TO SCRIPTABLE OBJECT
+	// MOVE TO SCRIPTABLE OBJECT 'THEME'?
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
 	public Sprite[] blockDecorations = null;
@@ -36,6 +36,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite doorSprite = null;
 	public Sprite teleportSprite = null;
 
+	public delegate void OnLevelBuilt();
+	public OnLevelBuilt onLevelBuilt;
 	
 	public enum LevelQuadrant
 	{
@@ -60,8 +62,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanTile[,] levelTiles;
 	public List<PacmanTile> teleportTiles = new List<PacmanTile>();
 
-	public delegate void OnLevelBuilt();
-	public OnLevelBuilt onLevelBuilt;
+//	public delegate void OnLevelBuilt();
+//	public OnLevelBuilt onLevelBuilt;
 	
 	protected int itemsToBePickedUp = 0;
 	protected int itemsPickedUp = 0;
@@ -96,17 +98,34 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public void ClearLevel()
 	{
+		#if UNITY_EDITOR
+		Debug.Log("Clearing level (playing in editor).");
+		for (int i = levelParent.childCount - 1; i >= 0; i--) 
+		{
+			DestroyImmediate(levelParent.GetChild(i).gameObject);
+		}
+		
+		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
+		{
+			DestroyImmediate(pickupParent.GetChild(i).gameObject);
+		}
+		
+		for (int i = characterParent.childCount - 1; i >= 0; i--) 
+		{
+			DestroyImmediate(characterParent.GetChild(i).gameObject);
+		}
+		#else
 		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
 			Destroy(levelParent.GetChild(i).gameObject);
 		}
-
+		
 		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
 		{
 			Destroy(pickupParent.GetChild(i).gameObject);
 		}
-
+		
 		for (int i = characterParent.childCount - 1; i >= 0; i--) 
 		{
 			// NOTE: Ideally, destroying this gameObject would mean it is immediately gone!
@@ -119,38 +138,16 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			}
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
-	}
-
-	public void ClearLevelEditor()
-	{
-		Debug.Log("Clearing level (playing in editor).");
-		for (int i = levelParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(levelParent.GetChild(i).gameObject);
-		}
-		
-		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(pickupParent.GetChild(i).gameObject);
-		}
-
-		for (int i = characterParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(characterParent.GetChild(i).gameObject);
-		}
+		#endif
 	}
 
 	// only used for testing and for quickly building a level
 	public void BuildLevelDebug(string levelData, int _width, int _height)
 	{
 		FindReferences();
-		
-		#if UNITY_EDITOR
-		ClearLevelEditor();
-		#else
-		ClearLevel();
-		#endif
 
+		ClearLevel();
+		
 		width = _width;
 		height = _height;
 		
@@ -171,11 +168,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		FindReferences();
 
-		#if UNITY_EDITOR
-		ClearLevelEditor();
-		#else
 		ClearLevel();
-		#endif
 
 		width = level.width;
 		height = level.height;
@@ -701,7 +694,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return GetTilesInDirection(startTile, amount, direction, false);
 	}
 
-	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp)
+	public PacmanTile[] GetTilesInDirection(PacmanTile startTile, int amount, PacmanCharacter.CharacterDirections direction, bool clamp, bool reverseOrder = false)
 	{
 		List<PacmanTile> tileList = new List<PacmanTile>();
 		
@@ -741,6 +734,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			{
 				tileList.Add(GetTile(x, yStart, clamp));
 			}
+		}
+
+		if (reverseOrder)
+		{
+			tileList.Reverse();
 		}
 		
 		return tileList.ToArray();
@@ -1018,20 +1016,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Transform GetLevelRoot()
 	{
 		return levelRoot;
-	}
-
-	void OnGUI()
-	{
-		if (LugusDebug.debug)
-		{
-			for (int i = 0; i < levels.Length; i++) 
-			{
-				if (GUILayout.Button("Level " + i))
-				{
-					PacmanGameManager.use.StartNewLevel(i);
-				}
-			}
-		}
 	}
 }
 

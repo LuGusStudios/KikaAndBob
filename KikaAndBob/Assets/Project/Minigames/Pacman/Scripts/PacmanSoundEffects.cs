@@ -36,6 +36,8 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 
 	public void Reset(List<PacmanEnemyCharacter> _enemies)
 	{
+		Debug.Log("PacmanSoundEffects: Resetting sound effects.");
+
 		enemies = _enemies;
 
 		enemyAudioClips.Clear();
@@ -51,6 +53,16 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	
 	protected void Update () 
 	{
+		if (!PacmanGameManager.use.gameRunning)
+			return;
+
+		// if the closest enemy was just defeated, always make sure to immediately stop sound
+		if (closestEnemy != null && closestEnemy.enemyState == PacmanEnemyCharacter.EnemyState.Defeated && enemiesTrack.Playing)
+		{
+			enemiesTrack.Stop();
+			closestEnemy = null;
+		}
+
 		PacmanPlayerCharacter player = PacmanGameManager.use.GetActivePlayer();
 		if (player == null)
 		{
@@ -62,10 +74,10 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 		PacmanEnemyCharacter newClosestEnemy = null;
 		foreach(PacmanEnemyCharacter enemy in enemies)
 		{
-			if (enemy == null)
-				return;
+			if (enemy == null || enemy.enemyState == PacmanEnemyCharacter.EnemyState.Defeated || !enemy.enabled)
+				continue;
 
-			if (enemy.enabled && enemyAudioClips.ContainsKey(enemy.walkSoundKey))
+			if (enemyAudioClips.ContainsKey(enemy.walkSoundKey))
 			{
 				float distance = Vector2.Distance(player.transform.position.v2(), enemy.transform.position.v2());
 

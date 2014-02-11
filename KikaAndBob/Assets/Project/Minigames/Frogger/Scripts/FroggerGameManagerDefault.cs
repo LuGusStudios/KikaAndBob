@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefault> {
 }
@@ -9,6 +10,7 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public bool gameRunning = false;
 	private bool firstFrame = true;
 	private int currentIndex = 0;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void StartNewGame()
 	{
@@ -34,16 +36,36 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		gameRunning = true;
 	}
 
-	// TO DO: Placeholder!!!
-	void Update()
+	protected void Start()
 	{
-		if (firstFrame)
+		levelLoader.FindLevels();
+
+		FroggerLevelManager.use.ClearLevel();
+
+		if (FroggerCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+
+			string levelData = levelLoader.GetLevelData(FroggerCrossSceneInfo.use.GetLevelIndex());
+
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				FroggerLevelDefinition newLevel = FroggerLevelDefinition.FromXML(levelData);
+				FroggerLevelManager.use.levels = new FroggerLevelDefinition[]{newLevel};
+			}
+			else
+			{
+				Debug.LogError("FroggerGameManager: Invalid level data!");
+			}
+
+			// if a level wasn't found above, we can still load a default level
 			StartNewGame();
-			firstFrame = false;
 		}
 	}
-
 
 	public void WinGame()
 	{
@@ -57,17 +79,17 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		FroggerGUIManager.use.GameLost();
 	}
 
-	void OnGUI()
+	protected void OnGUI()
 	{
 		if (!LugusDebug.debug)
 			return;
-
-		for (int i = 0; i < FroggerLevelManager.use.levels.Length; i++) 
+		
+		foreach(int index in levelLoader.levelIndices)
 		{
-			if (GUILayout.Button("Start Level " + i))
+			if (GUILayout.Button("Load level: " + index))
 			{
-				StartNewGame(i);
+				levelLoader.LoadLevel(index);
 			}
-		}
+		}	
 	}
 }

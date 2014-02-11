@@ -113,10 +113,17 @@ public class DanceHeroLane : MonoBehaviour
 
 	public float GetFullDuration()
 	{
+		float lastItemDuration = 0;
+
+		if (items.Count > 0)
+		{
+			lastItemDuration = items[items.Count - 1].duration;
+		}
+
 		return 
 			Vector2.Distance(transform.position.v2(), transform.FindChild("ActionPoint").position.v2()) / speed +
 			GetTotalDelay() +
-				items[items.Count - 1].duration;
+				lastItemDuration;
 	}
 
 	protected void SpawnItem(DanceHeroLaneItem item)
@@ -366,6 +373,73 @@ public class DanceHeroLane : MonoBehaviour
 		{
 			currentLeadingItemIndex = items.Count - 1;
 			Debug.Log("Last lane item reached on lane: " + name);
+		}
+	}
+
+	public void ParseLaneFromXML(TinyXmlReader parser)
+	{
+		// Example Lane xml:
+		/**
+		 *	<Lane>
+		 *		<Item>
+		 *			<Time>4.096</Time>
+		 *			<Duration>0.256</Duration>
+		 *		</Item>
+		 *	</Lane>
+		 **/
+
+		// When parsing an item, its time is compared to the
+		// previous item's time in this lane and a delay is set.
+		// Items whose time is too close to the beginning of the music
+		// are ignored and will not spawn in the game.
+
+		if ((parser.tagType != TinyXmlReader.TagType.OPENING) &&
+			(parser.tagName != "Lane"))
+		{
+			Debug.LogError("Cannot start parsing the xml data.");
+			return;
+		}
+
+		// Delay between the action point and spawning from the character
+		float constDelay = Vector2.Distance(this.transform.position.v2(), this.actionPoint.position.v2()) / this.speed;
+		float prevTime = 0.0f;
+
+		// While still reading valid lane data
+		int itemCount = 0;
+		while (parser.Read("Lane"))
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Item"))
+			{
+				float time = 0.0f;
+				float duration = 0.0f;
+
+				// Parse the lane item
+				while (parser.Read("Item"))
+				{
+					if (parser.tagType != TinyXmlReader.TagType.OPENING)
+						continue;
+
+					if (parser.tagName == "Time")
+						time = float.Parse(parser.content.Trim());
+					else if (parser.tagName == "Duration")
+						duration = float.Parse(parser.content.Trim());
+				}
+
+				float delay = time - prevTime;
+
+				// If its the first lane item, then it receives the initial constant delay
+				if (itemCount == 0)
+				{
+					delay -= constDelay;
+				}
+
+				if (delay > 0f)
+				{
+					prevTime = time;
+					AddItem(delay, duration);
+					++itemCount;
+				}
+			}
 		}
 	}
 }

@@ -16,6 +16,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	protected Transform level = null;
 	protected List<PacmanPlayerCharacter> playerChars = new List<PacmanPlayerCharacter>();
 	protected int currentLevelIndex = 0;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	protected void Awake () 
 	{
@@ -29,7 +30,33 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 	protected void Start()
 	{
-		StartNewLevel();
+		levelLoader.FindLevels();
+		
+		PacmanLevelManager.use.ClearLevel();
+		
+		if (PacmanCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			string levelData = levelLoader.GetLevelData(PacmanCrossSceneInfo.use.GetLevelIndex());
+			
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				PacmanLevelDefinition newLevel = PacmanLevelDefinition.FromXML(levelData);
+				PacmanLevelManager.use.levels = new PacmanLevelDefinition[]{newLevel};
+			}
+			else
+			{
+				Debug.LogError("FroggerGameManager: Invalid level data!");
+			}
+			
+			// if a level wasn't found above, we can still load a default level
+			StartNewLevel();
+		}
 	}
 
 	public List<PacmanPlayerCharacter> GetPlayerChars()
@@ -55,8 +82,6 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 		playerChars.Clear();
 		// NOTE: GetComponentsInChildren skips inactive objects! This is intentional because the Destroy method used to clear the level does not act immediately.
 		playerChars = new List<PacmanPlayerCharacter>(level.GetComponentsInChildren<PacmanPlayerCharacter>());
-
-		Debug.Log(playerChars.Count);
 
 		if (playerChars.Count >= 1)
 		{
@@ -102,6 +127,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	// Idea is to allow multiple characters, e.g. Kika and Bob, but only one is active at a time
 	public PacmanPlayerCharacter GetActivePlayer()
 	{
+		// currently just returns the first of any placed players - multiple player characters isn't implemented currently
 		return activePlayer;
 	}
 
@@ -206,7 +232,19 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		PacmanGUIManager.use.ShowWinMessage();
 	}
-	
 
+	protected void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+		
+		foreach(int index in levelLoader.levelIndices)
+		{
+			if (GUILayout.Button("Load level: " + index))
+			{
+				levelLoader.LoadLevel(index);
+			}
+		}	
+	}
 }
 
