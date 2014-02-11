@@ -113,10 +113,17 @@ public class DanceHeroLane : MonoBehaviour
 
 	public float GetFullDuration()
 	{
+		float lastItemDuration = 0;
+
+		if (items.Count > 0)
+		{
+			lastItemDuration = items[items.Count - 1].duration;
+		}
+
 		return 
 			Vector2.Distance(transform.position.v2(), transform.FindChild("ActionPoint").position.v2()) / speed +
 			GetTotalDelay() +
-				items[items.Count - 1].duration;
+				lastItemDuration;
 	}
 
 	protected void SpawnItem(DanceHeroLaneItem item)

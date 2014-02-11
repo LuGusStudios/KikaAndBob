@@ -60,7 +60,7 @@ public class DartsShooter : MonoBehaviour
 		// - control the bullet : graphical movement, but also resolution of the hit
 
 		//Vector3 screenPoint = LugusInput.use.lastPoint;
-		Vector3 worldTarget = LugusInput.use.ScreenTo3DPoint(this.transform);
+		Vector3 worldTarget = LugusInput.use.ScreenTo3DPoint(LugusInput.use.lastPoint, this.transform.position, LugusCamera.game);
 
 		Transform hit = LugusInput.use.RayCastFromMouse(LugusCamera.game);
 
