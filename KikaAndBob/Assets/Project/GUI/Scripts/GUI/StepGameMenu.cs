@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -56,12 +56,11 @@ public class StepGameMenu : IMenuStep
 		{
 			Debug.Log("StepGameMenu: Missing image sprite renderer!");
 		}
-		
-		LugusResources.use.ChangeLanguage("nl");
 	}
 	
 	public void SetupGlobal()
 	{
+		LugusResources.use.ChangeLanguage("nl");
 	}
 	
 	protected void Awake()

@@ -38,7 +38,7 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
 		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
 
-		Transform guiParent = GameObject.Find("GUI").transform;
+		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 
 		if (modifierDisplayPrefab == null)
 			modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
@@ -142,8 +142,8 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	{
 		if (DanceHeroLevel.use.currentLevel < DanceHeroLevel.use.levels.Length - 1)	
 		{
-			DanceHeroLevel.use.currentLevel++;
-			DanceHeroLevel.use.CreateLevel();
+//			DanceHeroLevel.use.currentLevel++;
+//			DanceHeroLevel.use.CreateLevel();
 		}
 	}
 }
