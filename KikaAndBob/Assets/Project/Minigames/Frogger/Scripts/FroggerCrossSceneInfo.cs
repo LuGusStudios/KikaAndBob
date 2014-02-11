@@ -2,19 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class RunnerCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
+public class FroggerCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
 {
 	public int levelToLoad = -1;
 
-	public static RunnerCrossSceneInfo use	
+	public static FroggerCrossSceneInfo use	
 	{
 		get
 		{
-			RunnerCrossSceneInfo info = (RunnerCrossSceneInfo) GameObject.FindObjectOfType ( typeof(RunnerCrossSceneInfo) );
+			FroggerCrossSceneInfo info = (FroggerCrossSceneInfo) GameObject.FindObjectOfType ( typeof(FroggerCrossSceneInfo) );
 			if( info == null )
 			{
-				GameObject container = new GameObject("RunnerCrossSceneInfo");
-				info = container.AddComponent<RunnerCrossSceneInfo>();
+				GameObject container = new GameObject("FroggerCrossSceneInfo");
+				info = container.AddComponent<FroggerCrossSceneInfo>();
 				
 				DontDestroyOnLoad( container );
 			}

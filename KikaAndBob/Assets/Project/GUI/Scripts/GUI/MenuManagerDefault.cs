@@ -9,6 +9,7 @@ public class MenuManager : LugusSingletonExisting<MenuManagerDefault>
 public class MenuManagerDefault: MonoBehaviour
 {
 	public Dictionary<MenuTypes, IMenuStep> menus = new Dictionary<MenuTypes, IMenuStep>();
+	protected Transform background = null;
 
 	public enum MenuTypes
 	{
@@ -39,6 +40,12 @@ public class MenuManagerDefault: MonoBehaviour
 			menus.Add(MenuTypes.HelpMenu, helpMenu);
 		else
 			Debug.LogError("MenuManager: Missing help menu!");
+
+		if (background == null)
+			background = transform.FindChild("Background");
+		if (background == null)
+			Debug.LogError("MenuManager: Missing background!");
+			
 	}
 	
 	public void SetupGlobal()
@@ -53,7 +60,6 @@ public class MenuManagerDefault: MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
-		ActivateMenu(MenuTypes.GameMenu);
 	}
 	
 	protected void Update () 
@@ -72,6 +78,13 @@ public class MenuManagerDefault: MonoBehaviour
 	{
 		IMenuStep nextStep = null;
 
+		if (type == MenuTypes.NONE)
+		{
+			background.gameObject.SetActive(false);
+			DeactivateAllMenus();
+			return;
+		}
+
 		if (menus.ContainsKey(type))
 		{
 			nextStep = menus[type];
@@ -79,6 +92,9 @@ public class MenuManagerDefault: MonoBehaviour
 
 		if (nextStep != null)
 		{
+			if (!background.gameObject.activeSelf)
+				background.gameObject.SetActive(true);
+
 			DeactivateAllMenus();
 			nextStep.Activate();
 		}

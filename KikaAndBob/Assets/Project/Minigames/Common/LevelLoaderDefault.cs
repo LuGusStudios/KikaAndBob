@@ -85,4 +85,38 @@ public class LevelLoaderDefault
 
 		return levelData;
 	}
+
+	public void LoadLevel(int index)
+	{
+		Debug.Log("LevelLoaderDefault: Attempting to load level: " + index);
+
+		IMinigameCrossSceneInfo crossSceneInfo = GetCrossSceneInfo();
+		
+		if (crossSceneInfo != null)
+		{
+			crossSceneInfo.SetLevelIndex(index);
+			Application.LoadLevel(Application.loadedLevel);
+		}
+	}
+
+	protected IMinigameCrossSceneInfo GetCrossSceneInfo()	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
+	{
+		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
+		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
+		    || Application.loadedLevelName == "e13_pacific")
+		{
+			return RunnerCrossSceneInfo.use;
+		}
+		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e18_amsterdam")
+		{
+			return FroggerCrossSceneInfo.use;
+		}
+		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican")
+		{
+			return PacmanCrossSceneInfo.use;
+		}
+		
+		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");
+		return null;
+	}
 }
