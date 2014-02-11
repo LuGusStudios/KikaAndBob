@@ -7,21 +7,9 @@ using System.IO;
 using UnityEditor;
 
 [CustomEditor(typeof(FroggerLevelManagerDefault))]
-public class FroggerPrefabListWriter : Editor
+public class FroggerPrefabListWriter : PrefabListWriter
 {
-	public string saveLocation = Application.dataPath + "/Config/Levels/";
-
-	public override void OnInspectorGUI()
-	{
-		if (GUILayout.Button("Save prefab list", GUILayout.Width(100), GUILayout.Height(20)))
-		{
-			SavePrefabList();
-		}
-
-		DrawDefaultInspector();
-	}
-
-	private void SavePrefabList()
+	protected override void SavePrefabList()
 	{
 		FroggerLevelManagerDefault manager = (FroggerLevelManagerDefault)target;
 
