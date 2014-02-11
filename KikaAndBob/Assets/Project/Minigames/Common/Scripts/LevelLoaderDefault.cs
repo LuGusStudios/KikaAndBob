@@ -108,7 +108,7 @@ public class LevelLoaderDefault
 		{
 			return RunnerCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e18_amsterdam")
+		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e17_greenland" || Application.loadedLevelName == "e18_amsterdam")
 		{
 			return FroggerCrossSceneInfo.use;
 		}

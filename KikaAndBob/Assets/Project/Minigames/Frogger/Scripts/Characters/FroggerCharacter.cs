@@ -402,8 +402,6 @@ public class FroggerCharacter : MonoBehaviour {
 
 	public void ShowCharacter(bool show)
 	{
-		print (renderers);
-
 		foreach(Renderer r in renderers)
 		{
 			r.enabled = show;
