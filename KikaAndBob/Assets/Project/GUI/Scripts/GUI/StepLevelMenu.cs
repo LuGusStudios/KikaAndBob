@@ -138,7 +138,7 @@ public class StepLevelMenu : IMenuStep
 
 		if (buttonLeave.pressed)
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 	}
 

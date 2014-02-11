@@ -40,7 +40,7 @@ public class StepHelpMenu : IMenuStep
 		
 		if (leaveButton.pressed)
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 	}
 

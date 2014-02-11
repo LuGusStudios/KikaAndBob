@@ -26,7 +26,7 @@ public class DartsRotateToMouse : MonoBehaviour
 	
 	protected void Update () 
 	{
-		Vector3 mouse = LugusInput.use.ScreenTo3DPoint(this.transform);
+		Vector3 mouse = LugusInput.use.ScreenTo3DPoint(LugusInput.use.lastPoint, this.transform.position, LugusCamera.game);
 
 
 		float xDiff = mouse.x - this.transform.position.x;

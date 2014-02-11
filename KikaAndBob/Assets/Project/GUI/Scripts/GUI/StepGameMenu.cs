@@ -80,11 +80,11 @@ public class StepGameMenu : IMenuStep
 
 		if (playButton.pressed)
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.LevelMenu);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.LevelMenu);
 		}
 		else if (helpButton.pressed)
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.HelpMenu);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.HelpMenu);
 		}
 	}
 

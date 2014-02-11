@@ -94,7 +94,7 @@ public class MenuManagerDefault: MonoBehaviour
 		}
 	}
 
-	public void ShowMenu(MenuTypes type)
+	public void ActivateMenu(MenuTypes type)
 	{
 		IMenuStep nextStep = null;
 

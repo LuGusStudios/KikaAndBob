@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -105,11 +105,11 @@ public class RunnerManagerDefault : MonoBehaviour
 		
 		if (RunnerCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.GameMenu);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
 		else
 		{
-			MenuManager.use.ShowMenu(MenuManagerDefault.MenuTypes.NONE);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 
 			// TO DO: Add code for clearing level, setting correct level variables, etc. Or leave that a more specific config loader.
 		}
