@@ -168,6 +168,14 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		HUDManager.use.LevelEndScreen.Show(success);
 		HUDManager.use.LevelEndScreen.Counter1.SetValue( moneyScore, true );
 
+		if( success )
+		{
+
+			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad) );
+			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad, true, true );
+			LugusConfig.use.SaveProfiles();
+		}
+
 
 		Debug.Log ("Stopping dinner dash " + moneyScore + " >= " + targetMoneyScore);
 
