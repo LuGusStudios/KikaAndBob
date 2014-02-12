@@ -23,11 +23,6 @@ public abstract class FroggerLane : FroggerSurface
 	protected Transform scrollingBackground = null;
 	protected Vector2 scrollingOffset = Vector2.zero;
 
-	protected void Awake()
-	{
-		SetUpLocal();
-	}
-
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
@@ -165,7 +160,7 @@ public abstract class FroggerLane : FroggerSurface
 		return transform.position.v2() + surfaceCollider.center;
 	}
 	
-	protected void Update()
+	protected virtual void Update()
 	{
 		// move background if there is a moving one
 		if (scrollingBackground != null)
