@@ -226,6 +226,7 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 		}
 		
 		output.available = false;
+		output.boxType = DialogueBox.BoxType.Notification;
 		
 		output.text = text;
 		output.icon.sprite = icon; 

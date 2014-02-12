@@ -8,7 +8,6 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 
 	public void SetupLocal()
 	{
-		LugusResources.use.ChangeLanguage("nl");
 
 		// assign variables that have to do with this class only
 		if( arrow == null )
