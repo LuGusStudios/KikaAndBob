@@ -24,6 +24,10 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public HUDCounter CounterSmallRight1 = null;
 	public HUDCounter CounterSmallRight2 = null;
 
+	public Button PauseButton = null;
+	public PausePopup PausePopup = null;
+
+
 	public List<IHUDElement> elements = new List<IHUDElement>();
 
 	public IHUDElement GetElementForCommodity(KikaAndBob.CommodityType commodity)
@@ -35,6 +39,22 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		}
 
 		return null;
+	}
+
+	public void DisableAll()
+	{
+		foreach( IHUDElement element in elements )
+		{
+			element.gameObject.SetActive(false);
+		}
+	}
+
+	public void StopAll()
+	{
+		foreach( IHUDElement element in elements )
+		{
+			element.Stop();
+		}
 	}
 
 	public void SetupLocal()
@@ -94,6 +114,32 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		elements.Add ( CounterSmallLeft2 );
 		elements.Add ( CounterSmallRight1 );
 		elements.Add ( CounterSmallRight2 );
+
+		if( PauseButton == null )
+		{
+			PauseButton = transform.FindChild("PauseButton").GetComponent<Button>();
+		}
+		
+		if( PausePopup == null )
+		{
+			PausePopup = transform.FindChild("PausePopup").GetComponent<PausePopup>();
+		}
+	}
+
+	public void RepositionPauseButton(KikaAndBob.ScreenAnchor mainAnchor, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.NONE)
+	{
+		Rect container = LugusUtil.UIScreenSize; // if subAnchor == NONE, we just use the full screen
+
+		if( subAnchor != KikaAndBob.ScreenAnchor.NONE )
+		{
+			container = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect(mainAnchor, LugusUtil.UIScreenSize);
+			mainAnchor = subAnchor;
+		}
+
+		Rect buttonRect = (PauseButton.collider2D as BoxCollider2D).Bounds().ToRectXY();
+
+		Vector2 position = KikaAndBob.ScreenAnchorHelper.ExtendTowards(mainAnchor, buttonRect, container, new Vector2(0.1f,0.1f) ); 
+		PauseButton.transform.localPosition = position;
 	}
 	
 	public void SetupGlobal()
@@ -113,6 +159,9 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	
 	protected void Update () 
 	{
-	
+		if( PauseButton.pressed )
+		{
+			this.PausePopup.Show();
+		}
 	}
 }

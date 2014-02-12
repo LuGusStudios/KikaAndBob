@@ -9,8 +9,43 @@ public class ProgressBar : IHUDElement
 
 	protected Transform filler = null;
 
-	public void SetValue(float value, bool animate = true)
+	protected float currentValue = 0.0f;
+
+	protected Vector3 originalFillerScale = Vector3.one;
+	
+	public override void Stop()
 	{
+		if( timerMode )
+			StopTimer();
+	}
+
+	public override void AddValue(float value, bool animate = true)
+	{
+		if( timerMode )
+		{
+			currentValue += value;
+			value = currentValue;
+		}
+		else
+		{
+			value = currentValue + value;
+		}
+		
+		SetValue( value, animate );
+	}
+
+	public override void SetValue(float value, bool animate = true)
+	{
+		if( !timerMode )
+		{
+			currentValue = value;
+		}
+		else
+		{
+			// no animation if in timerMode, would fuck up the timer's constant counting
+			animate = false;
+		}
+
 		if( valueRange == null )
 		{
 			Debug.LogError( transform.Path () + " : Cannot set value directly: no valueRange known!" );
@@ -18,6 +53,9 @@ public class ProgressBar : IHUDElement
 		}
 
 		float percentage = valueRange.PercentageInInterval(value);
+
+		//Debug.LogError(transform.Path() + " : PROGRESSBAR " + value + " -> " + percentage + " in " + valueRange.from + " - " + valueRange.to);
+
 		SetPercentage( percentage, animate );
 	}
 
@@ -48,15 +86,33 @@ public class ProgressBar : IHUDElement
 
 	protected IEnumerator ScaleAnimationRoutine(float oldScale, float newScale)
 	{
-		filler.gameObject.ScaleTo( new Vector3(newScale, 0, 0) ).Time (1.0f).Execute();
+		//Debug.LogError("SCALEROUTINE " + oldScale + " // " + newScale); 
+		filler.gameObject.ScaleTo( originalFillerScale.x (newScale) ).EaseType(iTween.EaseType.easeOutBack).Time (0.5f).Execute();
 		yield break;
 	}
 
+	protected bool timerMode = false;
+
+	
+	protected ILugusCoroutineHandle timerHandle = null;
+
 	public void SetTimer(float seconds)
 	{
+		timerMode = true;
 		valueRange = new DataRange(Time.time, Time.time + seconds);
 
-		LugusCoroutines.use.StartRoutine( TimerRoutine() );
+		timerHandle = LugusCoroutines.use.StartRoutine( TimerRoutine() );
+	}
+
+	public void StopTimer()
+	{
+		if( timerHandle != null && timerHandle.Running )
+		{
+			timerHandle.StopRoutine();
+			timerHandle = null;
+		}
+		
+		timerMode = false;
 	}
 
 	protected IEnumerator TimerRoutine()
@@ -64,7 +120,7 @@ public class ProgressBar : IHUDElement
 		float percentage = 0.0f;
 		while( Time.time < valueRange.to )
 		{
-			percentage = valueRange.PercentageInInterval(Time.time);
+			percentage = valueRange.PercentageInInterval(Time.time + currentValue);
 			SetPercentage( percentage, false );
 
 			yield return null;
@@ -92,6 +148,7 @@ public class ProgressBar : IHUDElement
 		{
 			// we assume the filler is scaled all up to 100% (0% is 0 scale then)
 			scaleRange = new DataRange(0, filler.localScale.x);
+			originalFillerScale = filler.localScale; 
 		}
 	}
 

@@ -11,7 +11,7 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 
 	private void Awake()
 	{
-		gui = GameObject.Find("GUI").transform;
+		gui = GameObject.Find("GUI_Debug").transform;
 	}
 
 	public void GameWon()

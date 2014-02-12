@@ -9,7 +9,12 @@ using System.Collections.Generic;
 public class LevelLoaderDefault
 {
 	public enum LoadingSource { NONE = -1, SYSTEM_IO = 1, RESOURCES = 2 };
+	
+#if !UNITY_WEBPLAYER
 	public LoadingSource source = LoadingSource.SYSTEM_IO;
+#else
+	public LoadingSource source = LoadingSource.RESOURCES;
+#endif
 
 	public List<int> levelIndices = new List<int>();
 
@@ -100,7 +105,7 @@ public class LevelLoaderDefault
 	}
 
 	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
-	protected IMinigameCrossSceneInfo GetCrossSceneInfo()	
+	public static IMinigameCrossSceneInfo GetCrossSceneInfo()	
 	{
 		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
 		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
@@ -108,7 +113,7 @@ public class LevelLoaderDefault
 		{
 			return RunnerCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e18_amsterdam")
+		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e17_greenland" || Application.loadedLevelName == "e18_amsterdam")
 		{
 			return FroggerCrossSceneInfo.use;
 		}
@@ -124,6 +129,10 @@ public class LevelLoaderDefault
 		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas")
 		{
 			return DartsCrossSceneInfo.use;
+		}		
+		else if( Application.loadedLevelName == "e02_argentina" )
+		{
+			return DinnerDashCrossSceneInfo.use;
 		}
 		
 		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");

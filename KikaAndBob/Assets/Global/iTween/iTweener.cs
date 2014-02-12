@@ -37,6 +37,7 @@ public class iTweener : MonoBehaviour
 	public bool _moveToPath = true;
 
 	public bool _stopOthers = false;
+	public bool _ignoreTimeScale = false;
 	
 	
 	public iTweener Subject(GameObject go)
@@ -103,6 +104,12 @@ public class iTweener : MonoBehaviour
 	public iTweener IsLocal(bool local)
 	{
 		_local = local;
+		return this;
+	}
+	
+	public iTweener IgnoreTimeScale(bool ignore)
+	{
+		_ignoreTimeScale = ignore;
 		return this;
 	}
 	
@@ -201,6 +208,11 @@ public class iTweener : MonoBehaviour
 			output.Add ("islocal", _local);
 		}
 		
+		if( _ignoreTimeScale )
+		{
+			output.Add ("ignoretimescale", _ignoreTimeScale);
+		}
+
 		//}
 		
 		output.Add ("easetype", _easeType);

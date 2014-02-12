@@ -26,7 +26,8 @@ public class FroggerCharacter : MonoBehaviour {
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
 	protected ParticleSystem hitParticles = null;
-	protected FroggerCharacterAnimator characterAnimator = null;
+	[HideInInspector]
+	public FroggerCharacterAnimator characterAnimator = null;
 	protected Vector3 originalScale = Vector3.one;
 	protected BoneAnimation[] boneAnimations;
 	protected Renderer[] renderers;
@@ -402,8 +403,6 @@ public class FroggerCharacter : MonoBehaviour {
 
 	public void ShowCharacter(bool show)
 	{
-		print (renderers);
-
 		foreach(Renderer r in renderers)
 		{
 			r.enabled = show;
