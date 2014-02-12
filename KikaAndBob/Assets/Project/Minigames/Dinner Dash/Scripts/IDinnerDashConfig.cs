@@ -9,7 +9,7 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
-	public void SetupHUDForTutorial(int targetScore)
+	public void SetupHUDForTutorial()//int targetScore)
 	{
 		// top left is simple timer
 		// top right is x/y for money
@@ -25,7 +25,7 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		
 		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Money;
-		HUDManager.use.CounterLargeRight1.suffix = "/" + targetScore;
+		HUDManager.use.CounterLargeRight1.suffix = "/" + DinnerDashManager.use.targetMoneyScore;
 		HUDManager.use.CounterLargeRight1.SetValue(0);
 
 		
@@ -38,7 +38,7 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		//HUDManager.use.Counter3.StartTimer();
 	}
 	
-	public void SetupHUDForGame(float time)
+	public void SetupHUDForGame()
 	{
 		HUDManager.use.DisableAll();
 		
@@ -46,7 +46,7 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		HUDManager.use.RepositionPauseButton( KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopLeft );
 		
 		HUDManager.use.ProgressBarLeft.gameObject.SetActive(true); 
-		HUDManager.use.ProgressBarLeft.SetTimer(time);
+		HUDManager.use.ProgressBarLeft.SetTimer(DinnerDashManager.use.timeout);
 		
 		//HUDManager.use.Counter1.gameObject.SetActive(true);
 		//HUDManager.use.Counter2.gameObject.SetActive(true);

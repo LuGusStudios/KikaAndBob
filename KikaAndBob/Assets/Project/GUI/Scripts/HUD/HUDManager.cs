@@ -28,6 +28,7 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public PausePopup PausePopup = null;
 
 	public LevelEndScreen LevelEndScreen = null;
+	public FailScreen FailScreen = null;
 
 
 	public List<IHUDElement> elements = new List<IHUDElement>();
@@ -131,9 +132,11 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		{
 			LevelEndScreen = transform.FindChild("LevelEndScreen").GetComponent<LevelEndScreen>();
 		}
-
-		LevelEndScreen.Hide();
-		LevelEndScreen.gameObject.SetActive(true);
+		
+		if( FailScreen == null )
+		{
+			FailScreen = transform.FindChild("FailScreen").GetComponent<FailScreen>();
+		}
 	}
 
 	public void RepositionPauseButton(KikaAndBob.ScreenAnchor mainAnchor, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.NONE)
@@ -155,6 +158,12 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+		
+		LevelEndScreen.gameObject.SetActive(true);
+		LevelEndScreen.Hide();
+
+		FailScreen.gameObject.SetActive (true);
+		FailScreen.Hide();
 	}
 	
 	protected void Awake()

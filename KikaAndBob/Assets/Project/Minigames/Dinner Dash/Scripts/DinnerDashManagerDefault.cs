@@ -24,6 +24,27 @@ public abstract class IDinnerDashManager : IGameManager
 	}
 
 	public ConsumableConsumerManager consumerManager = null;
+
+	public float moneyScore = 0.0f;
+	public float targetMoneyScore = -1.0f; // < 0 means no money score
+	public float timeout = 300.0f; // how long the user can play in SECONDS (this is default 5 minutes). < 0 = no timeout
+
+	public IEnumerator TimeoutRoutine()
+	{
+		if( timeout < 0.0f )
+		{
+			// no timeout set (for example for tutorial levels)
+			// so skip this function
+			yield break;
+		}
+
+		yield return new WaitForSeconds(timeout);
+
+		if( GameRunning )
+		{
+			StopGame();
+		}
+	}
 }
 
 public class DinnerDashManagerDefault : IDinnerDashManager
@@ -107,6 +128,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		
 		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
 
 		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
 
@@ -120,12 +142,34 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		HUDManager.use.StopAll();
 		DialogueManager.use.HideAll();
 
+
+		/*
 		DialogueBox outroBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".outro") );  
 		outroBox.boxType = DialogueBox.BoxType.Continue;
 		outroBox.onContinueButtonClicked += BackToMenu; 
 		outroBox.Show(); 
-		
-		Debug.Log ("Stopping dinner dash");
+		*/
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+
+		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
+		bool success = true;
+		if( targetMoneyScore > 0.0f )
+		{
+			HUDManager.use.LevelEndScreen.Counter1.suffix = " / " + targetMoneyScore;
+
+			if( moneyScore < targetMoneyScore )
+			{
+				success = false;
+			}
+		}
+
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Money;
+		HUDManager.use.LevelEndScreen.Show(success);
+		HUDManager.use.LevelEndScreen.Counter1.SetValue( moneyScore, true );
+
+
+		Debug.Log ("Stopping dinner dash " + moneyScore + " >= " + targetMoneyScore);
 
 		if( queueRoutineHandle != null )
 		{
@@ -139,6 +183,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		}
 	}
 
+	/*
 	protected void BackToMenu(DialogueBox box)
 	{
 		box.onContinueButtonClicked -= BackToMenu;
@@ -148,6 +193,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
 	}
+	*/
 
 	public List<IConsumableUser> queue = new List<IConsumableUser>();
 
