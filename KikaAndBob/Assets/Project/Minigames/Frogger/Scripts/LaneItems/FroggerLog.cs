@@ -8,8 +8,9 @@ public class FroggerLog : FroggerLaneItem
 	protected float speedY = 2f;
 	protected float yMovement = 0.2f;
 
-	void Awake()
+	public override void SetUpLocal ()
 	{
+		base.SetUpLocal ();
 		originalY = transform.localPosition.y;
 	}
 
