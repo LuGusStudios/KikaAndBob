@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
   m_Name: KeniaLevel01
   m_EditorClassIdentifier: 
-  backgroundMusicName: 
+  backgroundMusicName: e01_kenia_background
+  levelPostFix: 1
   lanes:
   - laneID: LaneMud
     goRight: 1
@@ -21,15 +22,17 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneMud
-    goRight: 1
-    speed: 4
-    minGapDistance: 6
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 3.9000001
+    minGapDistance: 3
     maxGapDistance: 10
-    repeatAllowFactor: .200000003
+    repeatAllowFactor: .5
     backgroundScrollingSpeed: 0
     spawnItems:
     - spawnID: Zebra
+      positioning: 0
+    - spawnID: ZebraSmall
       positioning: 0
   - laneID: LaneDirt
     goRight: 0
@@ -39,35 +42,39 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneMud
+  - laneID: LaneDirt
     goRight: 0
-    speed: 5
-    minGapDistance: 6
-    maxGapDistance: 9
-    repeatAllowFactor: .200000003
+    speed: 6.5999999
+    minGapDistance: 2
+    maxGapDistance: 6
+    repeatAllowFactor: .5
     backgroundScrollingSpeed: 0
     spawnItems:
     - spawnID: Zebra
+      positioning: 0
+    - spawnID: ZebraSmall
       positioning: 0
   - laneID: LaneDirt
     goRight: 0
     speed: 3
     minGapDistance: 6
     maxGapDistance: 10
-    repeatAllowFactor: .200000003
+    repeatAllowFactor: .5
     backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneMud
-    goRight: 1
-    speed: 3
-    minGapDistance: 7
-    maxGapDistance: 9
-    repeatAllowFactor: .200000003
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 5.5999999
+    minGapDistance: 4
+    maxGapDistance: 7
+    repeatAllowFactor: .5
     backgroundScrollingSpeed: 0
     spawnItems:
     - spawnID: Zebra
       positioning: 0
-  - laneID: LaneGrass
+    - spawnID: ZebraSmall
+      positioning: 0
+  - laneID: LaneDirt
     goRight: 1
     speed: 4
     minGapDistance: 4
@@ -75,65 +82,17 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneWater
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 1
-    spawnItems:
-    - spawnID: Log01
-      positioning: 0
-    - spawnID: Log02
-      positioning: 0
-  - laneID: LaneWater
+  - laneID: LaneDirt
     goRight: 0
-    speed: 4
-    minGapDistance: 4
+    speed: 7.19999981
+    minGapDistance: 3
     maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: -1
-    spawnItems:
-    - spawnID: Log03
-      positioning: 0
-    - spawnID: Log02
-      positioning: 0
-  - laneID: LaneWater
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 1
-    spawnItems:
-    - spawnID: Log01
-      positioning: 0
-    - spawnID: Log02
-      positioning: 0
-  - laneID: LaneWater
-    goRight: 0
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: -1
-    spawnItems:
-    - spawnID: Log03
-      positioning: 0
-    - spawnID: Log01
-      positioning: 0
-  - laneID: LaneWaterEnd
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
+    repeatAllowFactor: .5
     backgroundScrollingSpeed: 0
     spawnItems:
-    - spawnID: Log01
+    - spawnID: Zebra
       positioning: 0
-    - spawnID: Log02
+    - spawnID: ZebraSmall
       positioning: 0
   - laneID: LaneDirt
     goRight: 1

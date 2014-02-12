@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class LevelLoaderDefault
 {
-	public enum LoadingSource { NONE = -1, SYSTEM_IO = 1, RESOURCES = 2 };
+	public enum LoadingSource { NONE = -1, SYSTEM_IO = 1, RESOURCES = 2 };   
 	public LoadingSource source = LoadingSource.SYSTEM_IO;
 
 	public List<int> levelIndices = new List<int>();
@@ -38,7 +38,7 @@ public class LevelLoaderDefault
 					break;
 				case LoadingSource.RESOURCES:
 
-					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName);
+					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName); 
 					if (asset != LugusResources.use.errorTextAsset)
 					{
 						levelIndices.Add(i + 1);

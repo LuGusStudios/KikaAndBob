@@ -41,6 +41,7 @@ public class FroggerConfigWindow : EditorWindow {
 		{ 
 			if (levelToBuild != null)
 			{
+				FroggerLevelManager.use.SetupLocal();
 				FroggerLevelManager.use.BuildLevel(levelToBuild);
 			}
 		}

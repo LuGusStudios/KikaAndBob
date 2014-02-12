@@ -90,7 +90,10 @@ public class FroggerLevelDefinition : ScriptableObject {
 	}
 
 	public string backgroundMusicName = "";
+	[HideInInspector]
+	public int levelPostFix = 1;
 	public FroggerLaneDefinition[] lanes;
+
 
 	// Arrays of serialized classes are not created with default values
 	// Instead, initialize values once in OnEnable (which runs AFTER deserialization), checking for null / zero value
