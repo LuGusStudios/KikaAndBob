@@ -16,7 +16,7 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 	protected LugusAudioTrackSettings musicSettings = null;
 	protected Transform lanesRoot = null;
 
-	void Awake()
+	public void SetupLocal()
 	{
 		musicSettings = new LugusAudioTrackSettings();
 		musicSettings.Loop(true).Volume(0.2f);
@@ -25,6 +25,11 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 			lanesRoot = GameObject.Find("Level/Lanes").transform;
 		if (lanesRoot == null)
 			Debug.LogError("FroggerLevelManagerDefault: Missing lanes root transform.");
+	}
+
+	void Awake()
+	{
+		SetupLocal();
 	}
 
 	public void LoadLevel(string levelName)
@@ -66,7 +71,6 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 	public void ClearLevel()
 	{
-	
 		#if UNITY_EDITOR
 		// clear existing level
 		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 

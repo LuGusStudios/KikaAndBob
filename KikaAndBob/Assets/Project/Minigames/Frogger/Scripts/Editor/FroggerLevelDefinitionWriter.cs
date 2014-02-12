@@ -15,7 +15,7 @@ public class FroggerLevelDefinitionWriter : LevelDefinitionWriter
 		string rawdata = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n";
 		rawdata += FroggerLevelDefinition.ToXML(level);
 
-		string fileName = sceneName + "_level_" + levelPostfix + ".xml";
+		string fileName = sceneName + "_level_" + levelPostfix.ToString() + ".xml";
 		string fullPath = saveLocation + fileName;
 		StreamWriter writer = new StreamWriter(fullPath);
 		writer.Write(rawdata);

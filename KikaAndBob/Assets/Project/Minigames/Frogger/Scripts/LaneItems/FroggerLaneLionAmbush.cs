@@ -127,7 +127,7 @@ public class FroggerLaneLionAmbush : FroggerLane {
 	}
 
 
-	void Update()
+	protected override void Update()
 	{
 		if (!onSurface || !FroggerGameManager.use.gameRunning)
 			return;
