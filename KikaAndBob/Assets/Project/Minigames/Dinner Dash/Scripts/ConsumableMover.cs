@@ -361,11 +361,11 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		}
 	}
 
-	public void AddConsumable(Consumable item)
+	public void AddConsumable(Consumable item, ConsumableConsumer consumer = null)
 	{
 		if( item.definition.isPayment )
 		{
-			ProcessPayment(item);
+			ProcessPayment(item, consumer);
 			return;
 		}
 
@@ -410,13 +410,53 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		//item.transform.position = this.transform.position +  new Vector3(10, renderer.bounds.max.y - 10, 0);
 	}
 
-	public void ProcessPayment(Consumable payment)
+	public void ProcessPayment(Consumable payment, ConsumableConsumer consumer)
 	{
+		float amount = 0.0f;
+		string text = "";
+		string title = "";
+		if( consumer == null )
+		{
+			Debug.LogError(transform.Path () + " : Consumer was null when processing payment!");
+			amount = 10.0f;
+
+			text = "" + amount;
+		}
+		else
+		{
+			float order = 12.0f * consumer.order.Count;
+			float extra = 5.0f * consumer.happiness;
+
+			amount = order + extra;
+
+			// happiness is in order of 0 - 10 -> reduce to 0-4
+			int happinessBucket = 4; // 10 is multi happy already!
+			
+			if( consumer.happiness < 10 )
+			{
+				DataRange happinessRange = new DataRange(0,9);
+				DataRange indexRange = new DataRange(0, 4);
+				
+				float percent = happinessRange.PercentageInInterval( consumer.happiness );
+				happinessBucket = Mathf.RoundToInt( indexRange.ValueFromPercentage(percent) );
+			}
+
+			text = "" + order + " +" + extra;
+			title = "" + LugusResources.use.Localized.GetText("dinerdash.tutorial.score.title." + happinessBucket);
+		}
+
 		// TODO: score!
 		GameObject.Destroy( payment.gameObject );
-		Debug.LogWarning (name + " : NEW PAYMENT BABY!" );
 
-		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio("MoneyCheck01") );
+		ScoreVisualizer
+			.Score ( KikaAndBob.CommodityType.Money, amount )
+			.Audio ("MoneyCheck01")
+			.Color ( Color.white )
+			.Position( payment.transform.position.yAdd ( 100.0f ) ) // 100 pixels
+			.Text(text)
+			.Title (title)
+			.Time(3.0f)
+			.Execute();
 	}
 
 	public void SetupLocal()

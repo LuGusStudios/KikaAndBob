@@ -52,16 +52,22 @@ public class Button : MonoBehaviour
 	protected IEnumerator PressRoutine()
 	{
 		transform.localScale = originalScale * scaleDownFactor;
-		gameObject.ScaleTo(originalScale).Time(clickAnimationTime).EaseType(iTween.EaseType.easeOutBack).Execute();
+		gameObject.ScaleTo(originalScale).IgnoreTimeScale(true).Time(clickAnimationTime).EaseType(iTween.EaseType.easeOutBack).Execute();
 
-		yield return new WaitForSeconds(clickAnimationTime);
+		float start = Time.realtimeSinceStartup;
+		while (Time.realtimeSinceStartup < start + clickAnimationTime) 
+		{
+			yield return null;
+		}
+
+		//yield return new WaitForSeconds(clickAnimationTime); // does not play nicely with TimeScale pause :)
 
 		pressed = true;
 	}
 	
 	public void Appear()
 	{
-		transform.localScale = originalScale * scaleDownFactor;;
+		transform.localScale = originalScale * scaleDownFactor;
 		
 		foreach(Renderer r in GetComponentsInChildren<Renderer>())
 		{
@@ -73,7 +79,7 @@ public class Button : MonoBehaviour
 			c.enabled = true;
 		}
 		
-		gameObject.ScaleTo(originalScale).Time(clickAnimationTime).EaseType(iTween.EaseType.easeOutBack).Execute();
+		gameObject.ScaleTo(originalScale).IgnoreTimeScale(true).Time(clickAnimationTime).EaseType(iTween.EaseType.easeOutBack).Execute();
 	}
 	
 	public void HideImmediately()
