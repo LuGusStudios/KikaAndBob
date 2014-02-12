@@ -18,14 +18,14 @@ public abstract class LevelDefinitionWriter : Editor
 	{
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Level name:");
-		GUILayout.Label(sceneName + "_level_" + levelPostfix, GUILayout.MaxWidth(150));
+		GUILayout.Label(sceneName + "_level_" + levelPostfix.ToString(), GUILayout.MaxWidth(150));
 		GUILayout.EndHorizontal();
 
 		if (!askConfirmation)
 		{
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Level nr:");
-			levelPostfix = GUILayout.TextField(levelPostfix, GUILayout.MaxWidth(150));
+			levelPostfix = GUILayout.TextField(levelPostfix.ToString(), GUILayout.MaxWidth(150));
 			GUILayout.EndHorizontal();
 
 			if (GUILayout.Button("Save level", GUILayout.Width(100), GUILayout.Height(20)))
@@ -63,7 +63,7 @@ public abstract class LevelDefinitionWriter : Editor
 			Directory.CreateDirectory(saveLocation);
 		}
 
-		string fileName = sceneName + "_level_" + levelPostfix + ".xml";
+		string fileName = sceneName + "_level_" + levelPostfix.ToString() + ".xml";
 		string fullPath = saveLocation + fileName;
 		if (File.Exists(fullPath))
 		{
