@@ -12,56 +12,163 @@ MonoBehaviour:
   m_Name: Greenland01
   m_EditorClassIdentifier: 
   backgroundMusicName: 
+  levelPostFix: 1
   lanes:
-  - laneID: LaneSnow01
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
+  - laneID: LaneSnow05
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
     backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneSnow02
+  - laneID: LaneSnow03
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneIce02
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: IceHole01
+      positioning: .300000012
+  - laneID: LaneIce01
     goRight: 1
     speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
+    minGapDistance: 3
+    maxGapDistance: 5
     repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Snowmobile
+      positioning: 0
+    - spawnID: PolarBearSmall
+      positioning: 0
+  - laneID: LaneIce03
+    goRight: 0
+    speed: 4
+    minGapDistance: 1
+    maxGapDistance: 4
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: IceHole03
+      positioning: .699999988
+  - laneID: LaneSnow01
+    goRight: 0
+    speed: 5
+    minGapDistance: 7
+    maxGapDistance: 10
+    repeatAllowFactor: .5
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: PolarBearBig
+      positioning: 0
+  - laneID: LaneSnow02
+    goRight: 0
+    speed: 3
+    minGapDistance: 7
+    maxGapDistance: 10
+    repeatAllowFactor: .400000006
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Sled
+      positioning: 0
+  - laneID: LaneSnow03
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
     backgroundScrollingSpeed: 0
     spawnItems:
     - spawnID: Stoneman
       positioning: .5
-  - laneID: LaneWater01
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: FloatingMammoth
-      positioning: .800000012
-  - laneID: LaneSnow03
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
-    spawnItems: []
   - laneID: LaneSnow04
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
     backgroundScrollingSpeed: 0
     spawnItems: []
   - laneID: LaneSnow05
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneWater01
     goRight: 1
     speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
+    minGapDistance: 2
+    maxGapDistance: 5
     repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: .800000012
+    spawnItems:
+    - spawnID: IceBlock01
+      positioning: 0
+  - laneID: LaneWater02
+    goRight: 0
+    speed: 3
+    minGapDistance: 1
+    maxGapDistance: 4
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: BobbingMammoth
+      positioning: 0
+    - spawnID: IceBlock02
+      positioning: 0
+  - laneID: LaneSnow03
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneWater01
+    goRight: 0
+    speed: 3
+    minGapDistance: 2
+    maxGapDistance: 6
+    repeatAllowFactor: .300000012
+    backgroundScrollingSpeed: .300000012
+    spawnItems:
+    - spawnID: IceBlock01
+      positioning: 0
+    - spawnID: IceBlock02
+      positioning: 0
+    - spawnID: BobbingIceRock
+      positioning: 0
+  - laneID: LaneIce06
+    goRight: 1
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: IceHole02
+      positioning: .300000012
+    - spawnID: IceCrack
+      positioning: .800000012
+  - laneID: LaneSnow04
+    goRight: 0
+    speed: 0
+    minGapDistance: 0
+    maxGapDistance: 0
+    repeatAllowFactor: 0
     backgroundScrollingSpeed: 0
     spawnItems: []
