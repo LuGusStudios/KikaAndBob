@@ -448,6 +448,8 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 		// TODO: score!
 		GameObject.Destroy( payment.gameObject );
 
+		DinnerDashManager.use.moneyScore += amount;
+
 		ScoreVisualizer
 			.Score ( KikaAndBob.CommodityType.Money, amount )
 			.Audio ("MoneyCheck01")

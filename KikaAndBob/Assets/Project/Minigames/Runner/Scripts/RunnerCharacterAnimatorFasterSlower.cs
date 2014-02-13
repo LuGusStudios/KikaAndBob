@@ -36,12 +36,12 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 		PlayAnimation(normalAnimation);
 	} 
 	
-	protected void Awake()
+	protected override void Awake()
 	{
-		SetupLocal();
+		SetupLocal(); 
 	}
 
-	protected void Start () 
+	protected override void Start () 
 	{
 		SetupGlobal();
 	}

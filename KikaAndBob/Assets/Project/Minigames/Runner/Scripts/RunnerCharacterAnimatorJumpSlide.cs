@@ -36,12 +36,12 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 		PlayAnimation(runningAnimation);
 	}
 	
-	protected void Awake()
+	protected override void Awake()
 	{
 		SetupLocal();
 	}
 
-	protected void Start () 
+	protected override void Start () 
 	{
 		SetupGlobal();
 	}
