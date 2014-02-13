@@ -27,6 +27,9 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public Button PauseButton = null;
 	public PausePopup PausePopup = null;
 
+	public LevelEndScreen LevelEndScreen = null;
+	public FailScreen FailScreen = null;
+
 
 	public List<IHUDElement> elements = new List<IHUDElement>();
 
@@ -61,10 +64,10 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	{
 		// assign variables that have to do with this class only
 
-		ProgressBarCenter 		= transform.FindChild("ProgressBarCenter").GetComponent<ProgressBar>();
-		ProgressBarLeft 		= transform.FindChild("ProgressBarLeft").GetComponent<ProgressBar>();
-		ProgressBarRight 		= transform.FindChild("ProgressBarRight").GetComponent<ProgressBar>();
-		ProgressBarLeftBottom 	= transform.FindChild("ProgressBarLeftBottom").GetComponent<ProgressBar>();
+		ProgressBarCenter 		= transform.FindChild("CommodityVisualizers/ProgressBarCenter").GetComponent<ProgressBar>();
+		ProgressBarLeft 		= transform.FindChild("CommodityVisualizers/ProgressBarLeft").GetComponent<ProgressBar>();
+		ProgressBarRight 		= transform.FindChild("CommodityVisualizers/ProgressBarRight").GetComponent<ProgressBar>();
+		ProgressBarLeftBottom 	= transform.FindChild("CommodityVisualizers/ProgressBarLeftBottom").GetComponent<ProgressBar>();
 
 		ProgressBar = ProgressBarCenter;
 
@@ -75,15 +78,15 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 
 
 		
-		CounterLargeLeft1 = transform.FindChild("CounterLargeLeft1").GetComponent<HUDCounter>();
-		CounterLargeLeft2 = transform.FindChild("CounterLargeLeft2").GetComponent<HUDCounter>();
-		CounterLargeRight1 = transform.FindChild("CounterLargeRight1").GetComponent<HUDCounter>();
-		CounterLargeRight2 = transform.FindChild("CounterLargeRight2").GetComponent<HUDCounter>();
+		CounterLargeLeft1 = transform.FindChild("CommodityVisualizers/CounterLargeLeft1").GetComponent<HUDCounter>();
+		CounterLargeLeft2 = transform.FindChild("CommodityVisualizers/CounterLargeLeft2").GetComponent<HUDCounter>();
+		CounterLargeRight1 = transform.FindChild("CommodityVisualizers/CounterLargeRight1").GetComponent<HUDCounter>();
+		CounterLargeRight2 = transform.FindChild("CommodityVisualizers/CounterLargeRight2").GetComponent<HUDCounter>();
 
-		CounterSmallLeft1 = transform.FindChild("CounterSmallLeft1").GetComponent<HUDCounter>();
-		CounterSmallLeft2 = transform.FindChild("CounterSmallLeft2").GetComponent<HUDCounter>();
-		CounterSmallRight1 = transform.FindChild("CounterSmallRight1").GetComponent<HUDCounter>();
-		CounterSmallRight2 = transform.FindChild("CounterSmallRight2").GetComponent<HUDCounter>();
+		CounterSmallLeft1 = transform.FindChild("CommodityVisualizers/CounterSmallLeft1").GetComponent<HUDCounter>();
+		CounterSmallLeft2 = transform.FindChild("CommodityVisualizers/CounterSmallLeft2").GetComponent<HUDCounter>();
+		CounterSmallRight1 = transform.FindChild("CommodityVisualizers/CounterSmallRight1").GetComponent<HUDCounter>();
+		CounterSmallRight2 = transform.FindChild("CommodityVisualizers/CounterSmallRight2").GetComponent<HUDCounter>();
 
 		Counter1 = CounterSmallLeft1;
 		Counter2 = CounterLargeLeft2;
@@ -124,6 +127,16 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		{
 			PausePopup = transform.FindChild("PausePopup").GetComponent<PausePopup>();
 		}
+
+		if( LevelEndScreen == null )
+		{
+			LevelEndScreen = transform.FindChild("LevelEndScreen").GetComponent<LevelEndScreen>();
+		}
+		
+		if( FailScreen == null )
+		{
+			FailScreen = transform.FindChild("FailScreen").GetComponent<FailScreen>();
+		}
 	}
 
 	public void RepositionPauseButton(KikaAndBob.ScreenAnchor mainAnchor, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.NONE)
@@ -145,6 +158,12 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+		
+		LevelEndScreen.gameObject.SetActive(true);
+		LevelEndScreen.Hide();
+
+		FailScreen.gameObject.SetActive (true);
+		FailScreen.Hide();
 	}
 	
 	protected void Awake()
