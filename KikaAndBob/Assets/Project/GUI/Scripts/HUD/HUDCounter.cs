@@ -95,7 +95,7 @@ public class HUDCounter : IHUDElement
 			text += secs + "s";
 			
 			if( millisecs < 10 )
-				text += "0" + millisecs;// + "ms";
+				text += "0" + millisecs; //+ "ms";
 			else
 				text += millisecs;// + "ms";
 		}
