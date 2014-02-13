@@ -17,6 +17,14 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		StartNewGame(currentIndex);
 	}
 
+//	protected void Update()
+//	{
+//		if (Input.GetKeyDown(KeyCode.Space))
+//		{
+//			LugusConfig.use.
+//		}
+//	}
+
 	public void StartNewGame(int levelIndex)
 	{
 		currentIndex = levelIndex;
@@ -70,6 +78,10 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public void WinGame()
 	{
 		gameRunning = false;
+		string saveKey = Application.loadedLevelName + "." + (FroggerCrossSceneInfo.use.GetLevelIndex() + 1).ToString();
+		LugusConfig.use.User.SetBool(saveKey, true, true);
+		LugusConfig.use.SaveProfiles();
+		print (saveKey);
 		FroggerGUIManager.use.GameWon();
 	}
 
