@@ -94,7 +94,9 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level0()
 	{
-		SetupHUDForTutorial(190); 
+		DinnerDashManager.use.targetMoneyScore = 190;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial(); 
 
 		// level 0 : only bob with the 2 burgers
 		DisableObjects( new GameObject[]{ StewPot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, VegetableProducer } );
@@ -124,7 +126,9 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level1()
 	{
-		SetupHUDForTutorial(250); 
+		DinnerDashManager.use.targetMoneyScore = 250;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial(); 
 
 		// level 1 : introduce stew
 		DisableObjects( new GameObject[]{ Blender, IceCreamMachine, OrangeProducer, TomatoProducer } );
@@ -157,7 +161,9 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level2()
 	{
-		SetupHUDForTutorial(270);
+		DinnerDashManager.use.targetMoneyScore = 270;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial();
 
 		// level 2 : introduce blender
 		DisableObjects( new GameObject[]{ IceCreamMachine, TomatoProducer } );
@@ -190,7 +196,9 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level3() 
 	{ 
-		SetupHUDForTutorial(230);  
+		DinnerDashManager.use.targetMoneyScore = 230;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial();
 
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
@@ -218,10 +226,10 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	public void Level4() 
 	{
-		float levelDuration = 300.0f;
-		
-		LugusCoroutines.use.StartRoutine( TimerRoutine(levelDuration) );
-		SetupHUDForGame(levelDuration);
+		DinnerDashManager.use.targetMoneyScore = -1.0f;
+		DinnerDashManager.use.timeout = 300.0f; 
+
+		SetupHUDForGame();
 
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
@@ -244,13 +252,6 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
-	}
-
-	protected IEnumerator TimerRoutine(float levelDuration)
-	{
-		yield return new WaitForSeconds(levelDuration);
-
-		DinnerDashManager.use.StopGame();
 	}
 
 

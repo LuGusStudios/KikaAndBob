@@ -109,6 +109,11 @@ public class TextMeshWrapper : MonoBehaviour
 		UpdateWrapping();
 	}
 
+	public void SetTextKey(string key)
+	{
+		SetText ( LugusResources.use.Localized.GetText(key) );
+	}
+
 	public void SetText(string text)
 	{
 		textMesh.text = text;
