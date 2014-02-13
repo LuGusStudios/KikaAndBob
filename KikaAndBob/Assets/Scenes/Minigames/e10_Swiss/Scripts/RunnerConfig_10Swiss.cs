@@ -11,12 +11,16 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public void LoadLevel(int index)
 	{
+		index--;
+
 		if( index == 0 )
 			Level0 ();
 		else if( index == 1 )
 			Level1 ();
 		else if( index == 2 )
 			Level2(); 
+		else if( index == 666 )
+			LevelCustom(); 
 	}
 	
 	public void Level0()
@@ -24,8 +28,10 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
 		
 		character.speedRange = new DataRange(10,10);
-		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
-		RunnerInteractionManager.use.maximumDifficulty = 3;
+		character.timeToMaxSpeed = 60;
+		RunnerInteractionManager.use.timeToMax = 60;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f ); 
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,3);
 	}
 	
 	public void Level1()
@@ -34,8 +40,9 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		
 		character.speedRange = new DataRange(10,14);
 		character.timeToMaxSpeed = 120;
-		RunnerInteractionManager.use.sectionSpanMultiplier = 0.8f; 
-		RunnerInteractionManager.use.maximumDifficulty = 6;
+		RunnerInteractionManager.use.timeToMax = 120;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.8f, 0.8f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
 	}
 	
 	public void Level2()
@@ -44,8 +51,9 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplier = 0.5f; 
-		RunnerInteractionManager.use.maximumDifficulty = 6;
+		RunnerInteractionManager.use.timeToMax = 60;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.5f, 0.5f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
 		List<string> inactiveZones = new List<string>();
@@ -75,11 +83,12 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		
 	}
-	
+
+	/*
 	void OnGUI()
 	{
 		if (!LugusDebug.debug)
-			return;
+			return; 
 		
 		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
 		GUILayout.Label("Current level : " + RunnerCrossSceneInfo.use.levelToLoad);
@@ -87,11 +96,12 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		{
 			if (GUILayout.Button("Start Level " + i))
 			{
-				RunnerCrossSceneInfo.use.levelToLoad = i;
+				RunnerCrossSceneInfo.use.levelToLoad = i + 1;
 				LugusCoroutines.use.StopAllRoutines();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
 		}
 		GUILayout.EndArea();
 	}
+	*/
 }

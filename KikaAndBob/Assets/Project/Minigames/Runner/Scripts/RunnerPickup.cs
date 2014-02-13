@@ -8,6 +8,9 @@ public class RunnerPickup : MonoBehaviour
 	// if negative: remain, hit and possibly detract points
 	public bool positive = true;
 
+	public float scoreAmount = 10;
+	public KikaAndBob.CommodityType commodityType = KikaAndBob.CommodityType.NONE;
+
 	public bool negative
 	{
 		get{ return !positive; } 
@@ -38,7 +41,6 @@ public class RunnerPickup : MonoBehaviour
 
 		if( positive )
 		{
-			// TODO: possibly move this nicely to a gui element that can then light up with the funky pickup!
 			transform.position = LugusUtil.OFFSCREEN;
 		}
 		else

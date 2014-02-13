@@ -12,6 +12,9 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	public float timeToMaxSpeed = 60.0f;
 	public float jumpForce = 30.0f; 
 
+	protected RunnerCharacterShadow shadow = null;
+	protected Vector3 originalShadowScale = Vector3.one;
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -58,12 +61,28 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		{
 			Debug.LogError(name + " : no GroundCheck found!");
 		}
+
 	}
 	
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
 		startTime = Time.time;
+
+
+		if( shadow == null )
+		{
+			shadow = GameObject.FindObjectOfType<RunnerCharacterShadow>();
+		}
+		
+		if( shadow == null )
+		{
+			Debug.LogError(transform.Path () + " : No shadow found!"); 
+		}
+		else
+		{
+			originalShadowScale = shadow.originalScale;
+		}
 	}
 	
 	protected void Awake()
@@ -170,10 +189,10 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		{
 			jumping = false;
 
-			CheckSlide(true);
-
 			if( onJump != null )
 				onJump(false); 
+			
+			CheckSlide(true);
 		}
 	}
 
@@ -182,16 +201,19 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		bool extra = false;
 		if( checkKeyHold ) // make it possible to slide directly after jump touchdown by holding down while in mid-air
 		{
-			extra = LugusInput.use.Key(KeyCode.DownArrow);
-			Debug.LogError("Checking keyhold slide " + extra);
+			extra = LugusInput.use.Key(KeyCode.DownArrow) || Input.GetMouseButton(1);
+			//Debug.LogError("Checking keyhold slide " + extra);
 		}
 
-		if( (LugusInput.use.KeyDown(KeyCode.DownArrow) || extra) && this.Grounded)
+		if( (LugusInput.use.KeyDown(KeyCode.DownArrow) || Input.GetMouseButtonDown(1) || extra) && this.Grounded)
 		{
-			Debug.LogError("SLIDING EXTRA? " + extra);
+			//Debug.LogError(Time.frameCount + " SLIDING EXTRA? " + extra);
 
 			sliding = true;
 			slideStartTime = Time.time;
+			
+			shadow.originalScale = originalShadowScale.xMul (2.5f);
+			shadow.xOffset = -0.35f;
 
 			BoxCollider2D topCollider = GetComponent<BoxCollider2D>();
 			if( topCollider != null )
@@ -207,9 +229,13 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 				onSlide(true);
 		}
 
-		if( sliding && (LugusInput.use.KeyUp(KeyCode.DownArrow) || (Time.time - slideStartTime > 1.5f)) )
+		if( sliding && (LugusInput.use.KeyUp(KeyCode.DownArrow) ||  Input.GetMouseButtonUp(1) || (Time.time - slideStartTime > 1.5f)) )
 		{
+			//Debug.LogError(Time.frameCount + " SLIDING Stopped ");
+
 			sliding = false;
+			shadow.originalScale = originalShadowScale;
+			shadow.xOffset = 0.0f;
 
 			BoxCollider2D topCollider = GetComponent<BoxCollider2D>();
 			if( topCollider != null )

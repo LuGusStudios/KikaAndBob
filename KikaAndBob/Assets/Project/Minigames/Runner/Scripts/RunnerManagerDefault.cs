@@ -7,8 +7,52 @@ public class RunnerManager : LugusSingletonExisting<RunnerManagerDefault>
 
 }
 
-public class RunnerManagerDefault : MonoBehaviour
+public class RunnerManagerDefault : IGameManager
 {
+	public float startTime = 0.0f;
+	public float timeSpent = 0.0f;
+	public int pickupCount = 0;
+	//public float targetScore = -1.0f;
+	public float timeout = -1.0f;
+
+	
+	protected bool _gameRunning = false;
+	public override bool GameRunning
+	{
+		get{ return _gameRunning; }
+	}
+
+
+	public void AddTime(float amount)
+	{
+		timeSpent += amount;
+	}
+
+	public void AddPickup(int amount)
+	{
+		pickupCount += amount;
+	}
+
+
+	public IEnumerator TimeoutRoutine()
+	{
+		if( timeout < 0.0f )
+		{
+			// no timeout set (for example for tutorial levels)
+			// so skip this function
+			yield break;
+		}
+		
+		yield return new WaitForSeconds(timeout);
+		
+		if( GameRunning )
+		{
+			StopGame();
+		}
+	}
+
+
+
 	// if the camera reaches this x value, the whole level is shifted to the left again
 	// this is to prevent reaching very high x values (which float precision does not like)
 	protected float shiftXTreshold = 500.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
@@ -97,8 +141,78 @@ public class RunnerManagerDefault : MonoBehaviour
 	public void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
+		
+		levelLoader.FindLevels(); 
+		
+		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
+		#if UNITY_EDITOR
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 1;
+		#endif
+		
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		{
+			( (MonoBehaviour) RunnerCharacterController.use).gameObject.SetActive(false);
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+
+			StartGame();
+		}
+
+
 	}
+
+	public override void StartGame()
+	{
+		_gameRunning = true;
+		Debug.Log ("Starting Runner game");
+
+		startTime = Time.time;
+
+		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
+
+		RunnerInteractionManager.use.StartTimer();
 	
+		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
+	}
+
+	public override void StopGame() 
+	{
+		_gameRunning = false;
+		
+		HUDManager.use.StopAll();
+		DialogueManager.use.HideAll();
+	
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Feather;
+		
+		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
+		bool success = true;
+
+		HUDManager.use.LevelEndScreen.Show(success);
+		HUDManager.use.LevelEndScreen.Counter1.SetValue( timeSpent + (Time.time - startTime), true );
+		HUDManager.use.LevelEndScreen.Counter2.SetValue( pickupCount, true );
+
+		// TODO: move pickups towards time at the end of showing pickups (Extra coroutine needed)
+		
+		if( success )
+		{
+			
+			Debug.Log ("Runner : set level success : " + (Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad) );
+			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad, true, true );
+			LugusConfig.use.SaveProfiles();
+		}
+		
+		
+		Debug.Log ("Stopping Runner game " + (timeSpent + (Time.time - startTime)) + " - " + pickupCount);
+	}
+
 	protected void Awake()
 	{
 		SetupLocal();
@@ -107,19 +221,6 @@ public class RunnerManagerDefault : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
-
-		levelLoader.FindLevels();
-		
-		if (RunnerCrossSceneInfo.use.GetLevelIndex() < 0)
-		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
-		}
-		else
-		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-
-			// TO DO: Add code for clearing level, setting correct level variables, etc. Or leave that a more specific config loader.
-		}
 	}
 	
 	protected void Update () 

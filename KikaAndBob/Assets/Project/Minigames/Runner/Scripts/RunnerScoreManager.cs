@@ -11,16 +11,52 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 
 	public void ProcessPickup(RunnerPickup pickup)
 	{
-		if( pickup != null && pickup.positive )
-		{
-			AddScore( 10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
+		Vector3 position;// = Vector3.zero;
+		if( pickup != null )
+			position = pickup.transform.position;
+		else
+			position = ( (MonoBehaviour) RunnerCharacterController.use).transform.position;
+
+		float scoreAmount = 10.0f;
+		if( pickup != null )
+			scoreAmount = pickup.scoreAmount;
+
+		KikaAndBob.CommodityType commodity = KikaAndBob.CommodityType.NONE;
+
+		if( pickup.positive )
+		{ 
+			//AddScore( 10, position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
+
+			if( pickup != null && pickup.commodityType != KikaAndBob.CommodityType.NONE )
+				commodity = pickup.commodityType;
+			else
+				commodity = KikaAndBob.CommodityType.Feather;
+
+
+			RunnerManager.use.AddPickup( Mathf.RoundToInt(scoreAmount) );
+			ScoreVisualizer.Score(commodity, scoreAmount).Time (1.0f).Position( position ).Audio("Blob01").Color(Color.white).Execute();
 		}
 		else // negative
 		{
-			AddScore( -10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+			if( pickup != null && pickup.commodityType != KikaAndBob.CommodityType.NONE )
+				commodity = pickup.commodityType;
+			else
+				commodity = KikaAndBob.CommodityType.Time;
+
+			if( commodity == KikaAndBob.CommodityType.Time )
+			{
+				// if time penalty, scoreAmount should not be negative but positive
+				scoreAmount *= -1;
+			}
+
+			RunnerManager.use.AddTime( -scoreAmount );
+			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position ).Audio("Collide01").Color(Color.red).Execute();
 		}
+
+
 	}
 
+	/*
 	public void AddScore( int score, Vector3 position, float time, AudioClip sound, Color color )
 	{
 		if( score == 0 )
@@ -59,9 +95,11 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 	{
 		scoreText.text = "" + totalScore;
 	}
+	*/
 	
 	public void SetupLocal()
 	{
+		/*
 		if( scoreTextPrefab == null )
 		{
 			scoreTextPrefab = GameObject.Find("Score");
@@ -83,6 +121,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 		{
 			Debug.LogError(name + " : no ScoreText found! found!");
 		}
+		*/
 	}
 	
 	public void SetupGlobal()
