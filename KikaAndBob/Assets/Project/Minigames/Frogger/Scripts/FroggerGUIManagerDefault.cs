@@ -30,18 +30,14 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		SetupGlobal();
 	}
 
-	public void ModifyTimer(float modifyValue)
-	{
-		HUDManager.use.CounterLargeLeft1.AddValue(modifyValue);
-	}
-
 	public void ResetGUI()
 	{
-		Debug.Log("FroggerGUIManager: Resetting GUI.");
+		Debug.Log("FroggerGUIManager: Resetting GUI."); 
 		HUDManager.use.DisableAll();
 
 		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.CounterLargeLeft1.SetValue(0);
 		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeMS);
 
 		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
@@ -49,40 +45,43 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterLargeRight1.SetValue(0);
 	}
 
-	public void GameWon()
+	public void GameWon(float timer, int pickupCount, int scoreTotal)
 	{
-		HUDManager.use.CounterLargeLeft1.StopTimer();
-		LugusCoroutines.use.StartRoutine(WinRoutine());
+		HUDManager.use.StopAll();
+
+		HUDManager.use.LevelEndScreen.Show(true);
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer, true);
+
+		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Feather;
+		HUDManager.use.LevelEndScreen.Counter2.SetValue(pickupCount, true);
+
+		HUDManager.use.LevelEndScreen.Counter3.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter3.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter3.SetValue(scoreTotal, true);
+
 		Debug.Log("Game won!");
 	}
-
-	private IEnumerator WinRoutine()
-	{
-		Transform child = gui.FindChild("YouWin");
-		child.gameObject.SetActive(true);
-
-		yield return new WaitForSeconds(1f);
-
-		child.gameObject.SetActive(false);
-
-		FroggerGameManager.use.StartNewGame();
-	}
-
+	
 	public void GameLost()
 	{
-		HUDManager.use.CounterLargeLeft1.StopTimer();
+		HUDManager.use.StopAll();
+
 		LugusCoroutines.use.StartRoutine(LoseRoutine());
 		Debug.Log("Game lost!");
 	}
 
 	private IEnumerator LoseRoutine()
 	{
-		Transform child = gui.FindChild("YouLose");
-		child.gameObject.SetActive(true);
-		
-		yield return new WaitForSeconds(1f);
-		
-		child.gameObject.SetActive(false);
+		float timer = 2.5f;
+
+		HUDManager.use.FailScreen.Show(timer);
+
+		yield return new WaitForSeconds(timer);
 
 		FroggerGameManager.use.StartNewGame();
 	}

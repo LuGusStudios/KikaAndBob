@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefault> {
 }
 
-public class FroggerGameManagerDefault : MonoBehaviour 
+public class FroggerGameManagerDefault : IGameManager 
 {
 	public bool gameRunning = false;
 	private bool firstFrame = true;
@@ -13,11 +13,23 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 	protected float timer = 0;
 	protected int pickupCount = 0;
+	protected float pickupBoost = 1;
+
+	public override bool GameRunning
+	{
+		get{ return gameRunning; }
+	}
 
 	public void StartNewGame()
 	{
 		StartNewGame(currentIndex);
 	}
+
+	public override void StartGame()
+	{}
+
+	public override void StopGame()
+	{}
 
 	public void StartNewGame(int levelIndex)
 	{
@@ -80,9 +92,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		string saveKey = Application.loadedLevelName + "." + (FroggerCrossSceneInfo.use.GetLevelIndex() + 1).ToString();
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
-		FroggerGUIManager.use.GameWon();
 
-		//TO DO: STORE TIMER SCORE HERE!
+		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
+		//TO DO: STORE SCORE TOTAL HERE!
+
+		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}
 
 	public void LoseGame()

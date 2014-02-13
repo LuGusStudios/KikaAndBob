@@ -144,6 +144,9 @@ public class StepLevelMenu : IMenuStep
 
 	public override void Activate()
 	{
+		HUDManager.use.LevelEndScreen.gameObject.SetActive(false);
+		HUDManager.use.DisableAll();
+
 		// make sure the very first level is always available
 		// it would make sense to put this under Start or Awake, but since this menu can start inactive, it's possible that those get called AFTER this method, which is unwanted
 		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
