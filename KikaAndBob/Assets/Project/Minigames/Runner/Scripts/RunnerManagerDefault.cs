@@ -67,6 +67,13 @@ public class RunnerManagerDefault : MonoBehaviour
 		}
 	}
 
+	public void OnDisable()
+	{
+		// reset the singleton-connections
+		// otherwhise, we get wrong references on scene re-start
+		RunnerCharacterController.Reset();
+	}
+
 	protected void LateUpdate()
 	{
 		// TODO: make this work for top and left moving levels as well!!

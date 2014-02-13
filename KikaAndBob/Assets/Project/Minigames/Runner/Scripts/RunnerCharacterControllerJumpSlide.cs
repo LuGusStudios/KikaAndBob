@@ -169,16 +169,27 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		else if( jumping && this.Grounded && (jumpFrame + 5 < Time.frameCount) ) // at least 5 frames after starting jump
 		{
 			jumping = false;
-			
+
+			CheckSlide(true);
+
 			if( onJump != null )
 				onJump(false); 
 		}
 	}
 
-	protected void CheckSlide()
+	protected void CheckSlide(bool checkKeyHold = false)
 	{
-		if( LugusInput.use.KeyDown(KeyCode.DownArrow) && this.Grounded )
+		bool extra = false;
+		if( checkKeyHold ) // make it possible to slide directly after jump touchdown by holding down while in mid-air
 		{
+			extra = LugusInput.use.Key(KeyCode.DownArrow);
+			Debug.LogError("Checking keyhold slide " + extra);
+		}
+
+		if( (LugusInput.use.KeyDown(KeyCode.DownArrow) || extra) && this.Grounded)
+		{
+			Debug.LogError("SLIDING EXTRA? " + extra);
+
 			sliding = true;
 			slideStartTime = Time.time;
 
