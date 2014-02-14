@@ -5,25 +5,31 @@ using System.Collections.Generic;
 public class FroggerGameManager : LugusSingletonExisting<FroggerGameManagerDefault> {
 }
 
-public class FroggerGameManagerDefault : MonoBehaviour 
+public class FroggerGameManagerDefault : IGameManager 
 {
 	public bool gameRunning = false;
 	private bool firstFrame = true;
 	private int currentIndex = 0;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+	protected float timer = 0;
+	protected int pickupCount = 0;
+	protected float pickupBoost = 1;
+
+	public override bool GameRunning
+	{
+		get{ return gameRunning; }
+	}
 
 	public void StartNewGame()
 	{
 		StartNewGame(currentIndex);
 	}
 
-//	protected void Update()
-//	{
-//		if (Input.GetKeyDown(KeyCode.Space))
-//		{
-//			LugusConfig.use.
-//		}
-//	}
+	public override void StartGame()
+	{}
+
+	public override void StopGame()
+	{}
 
 	public void StartNewGame(int levelIndex)
 	{
@@ -40,6 +46,11 @@ public class FroggerGameManagerDefault : MonoBehaviour
 		}
 
 		FroggerCameraController.use.FocusOn(lastPlayer);
+
+		FroggerGUIManager.use.ResetGUI();
+
+		timer = 0;
+		pickupCount = 0;
 
 		gameRunning = true;
 	}
@@ -78,17 +89,32 @@ public class FroggerGameManagerDefault : MonoBehaviour
 	public void WinGame()
 	{
 		gameRunning = false;
-		string saveKey = Application.loadedLevelName + "." + (FroggerCrossSceneInfo.use.GetLevelIndex() + 1).ToString();
+		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
+
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
-		print (saveKey);
-		FroggerGUIManager.use.GameWon();
+
+		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
+		//TO DO: STORE SCORE TOTAL HERE!
+
+		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}
 
 	public void LoseGame()
 	{
 		gameRunning = false;
 		FroggerGUIManager.use.GameLost();
+	}
+
+	public void ModifyPickUpCount(int modifyValue)
+	{
+		pickupCount += modifyValue;
+	}
+
+	protected void Update()
+	{
+		if (gameRunning)
+			timer += Time.deltaTime;
 	}
 
 	protected void OnGUI()

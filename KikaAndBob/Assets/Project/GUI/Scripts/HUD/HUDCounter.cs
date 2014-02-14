@@ -95,7 +95,7 @@ public class HUDCounter : IHUDElement
 			text += secs + "s";
 			
 			if( millisecs < 10 )
-				text += "0" + millisecs;// + "ms";
+				text += "0" + millisecs; //+ "ms";
 			else
 				text += millisecs;// + "ms";
 		}
@@ -171,12 +171,32 @@ public class HUDCounter : IHUDElement
 
 		timerMode = false;
 	}
+
+	private bool timerPaused = false;
+	public void PauseTimer(bool pause)
+	{
+		if (timerMode)
+		{
+			timerPaused = pause;
+		}
+	}
 	
 	protected IEnumerator TimerRoutine(float startTime)
 	{
+		float pauseTime = 0.0f;
+
 		while( true )
 		{
-			SetValue( (Time.time - startTime) + currentValue );
+			if (!timerPaused)
+			{
+				SetValue( (Time.time - startTime - pauseTime) + currentValue);
+				pauseTime = 0.0f;
+			}
+			else
+			{
+				startTime += Time.deltaTime;
+			}
+
 			yield return null;
 		}
 	}

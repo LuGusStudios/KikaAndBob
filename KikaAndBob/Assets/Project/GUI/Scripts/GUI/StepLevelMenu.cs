@@ -15,6 +15,7 @@ public class StepLevelMenu : IMenuStep
 	protected float offScreenDistance = 20.0f;
 	protected int pageCounter = 0;
 	protected List<int> levelIndices;
+	protected bool switchingPages = false;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void SetupLocal()
@@ -65,7 +66,6 @@ public class StepLevelMenu : IMenuStep
 		{
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
-
 		levelIndices = levelLoader.FindLevels();
 	}
 	
@@ -106,7 +106,7 @@ public class StepLevelMenu : IMenuStep
 			}
 		}
 
-		if (buttonLeft.pressed)
+		if (buttonLeft.pressed && !switchingPages)
 		{
 			if (pageCounter >= 1)
 			{
@@ -121,7 +121,7 @@ public class StepLevelMenu : IMenuStep
 			LugusCoroutines.use.StartRoutine(SwitchPages(false));
 		}
 
-		if (buttonRight.pressed)
+		if (buttonRight.pressed && !switchingPages)
 		{
 			if (pageCounter < Mathf.CeilToInt(levelIndices.Count / 5 ))		// TO DO: Figure out the maximum here based on nr of levels. Now set to 1 max.
 			{
@@ -144,14 +144,24 @@ public class StepLevelMenu : IMenuStep
 
 	public override void Activate()
 	{
+		gameObject.SetActive(true);
+		
+//		if (levelIndices == null)
+//			SetupLocal();
+
+		HUDManager.use.LevelEndScreen.gameObject.SetActive(false);
+		HUDManager.use.DisableAll();
+
 		// make sure the very first level is always available
 		// it would make sense to put this under Start or Awake, but since this menu can start inactive, it's possible that those get called AFTER this method, which is unwanted
-		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
-			LugusConfig.use.User.SetBool(Application.loadedLevelName + ".1", true, true);
+//		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
+//			LugusConfig.use.User.SetBool(Application.loadedLevelName + ".1", true, true);
 
 		if (levelIndices.Count <= 0)
 		{
 			Debug.LogError("StepLevelMenu: There are no level config files!");
+			levelLoader.LoadLevel(1);
+			EnableBars(0);
 			return;
 		}
 		else if (levelIndices.Count == 1)
@@ -161,8 +171,6 @@ public class StepLevelMenu : IMenuStep
 		}
 		
 		activated = true;
-		//levelIndices =
-		gameObject.SetActive(true);
 		UpdateAndFlyIn(true);
 		LoadLevelData();
 	}
@@ -215,27 +223,19 @@ public class StepLevelMenu : IMenuStep
 			buttonLeft.gameObject.SetActive(true);
 			buttonRight.gameObject.SetActive(true);
 		}
-
-//		// show buttons or not
-// 		if (levelIndices.Count - (pageCounter * 5))
-//		{
-//			buttonLeft.gameObject.SetActive(true);
-//			buttonRight.gameObject.SetActive(true);
-//		}
-//		else
-//		{
-//			buttonLeft.gameObject.SetActive(false);
-//			buttonRight.gameObject.SetActive(false);
-//		}
 	}
 
 	protected IEnumerator SwitchPages(bool toRight)
 	{
+		switchingPages = true;
+
 		FlyOut(toRight);
 
 		yield return new WaitForSeconds(0.51f);	// a little longer than the iTween animation to prevent double iTweens
 
 		UpdateAndFlyIn(toRight);
+
+		switchingPages = false;
 	}
 
 	protected void FlyOut(bool toRight)
@@ -275,21 +275,39 @@ public class StepLevelMenu : IMenuStep
 		int pageStart = pageCounter * 5;
 
 		EnableBars(levelIndices.Count - pageStart);
+
+		bool previousUnlocked = true;
 		
-		for (int i = pageStart + 1; i < pageStart + 6; i++) 
+		for (int i = pageStart; i < pageStart + 5; i++)
 		{
-			Transform bar = levelBars[(i-1) % 5]; // always count between 0 and 4
+			if (i >= levelIndices.Count)
+				break;
+
+			Transform bar = levelBars[i % 5]; // always count between 0 and 4
 
 			if (!bar.gameObject.activeInHierarchy)
 				continue;
 
-			string levelName = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".name");
+			string levelKey = Application.loadedLevelName + "." + levelIndices[i];
+
+			string levelName = LugusResources.use.Levels.GetText(levelKey + ".name");
 			bar.FindChild("Name").GetComponent<TextMeshWrapper>().SetText(levelName);
 
-			string levelDescription = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".description");
+			string levelDescription = LugusResources.use.Levels.GetText(levelKey + ".description");
 			bar.FindChild("Description").GetComponent<TextMeshWrapper>().SetText(levelDescription); 
 
-			bool unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "." + i.ToString(), false);
+			bool currentUnlocked = LugusConfig.use.User.GetBool(levelKey, false);
+
+			bool unlocked = false;
+
+			if (i == 0)	// first item is always unlocked
+			{
+				unlocked = true;
+			}
+			else // subsequent items are unlocked if previous one has been won
+			{
+				unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i-1], false);
+			}
 
 			bar.FindChild("ButtonPlay").gameObject.SetActive(unlocked);
 
@@ -308,6 +326,8 @@ public class StepLevelMenu : IMenuStep
 				else
 					tm.color = tm.color.a(0.6f);
 			}
+
+
 		}
 	}
 }
