@@ -277,6 +277,8 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 			onLevelFinished();
 		}
 
+		HUDManager.use.LevelEndScreen.Show(true);
+
 		Debug.Log("Level finished!");
 	}
 	
@@ -318,7 +320,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-			
+
 			string levelData = levelLoader.GetLevelData(DanceHeroCrossSceneInfo.use.GetLevelIndex());
 			
 			if (!string.IsNullOrEmpty(levelData))
@@ -329,6 +331,8 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 			{
 				Debug.LogError("DanceHeroLevel: Invalid level data!");
 			}
+
+			DanceHeroFeedback.use.ResetGUI();
 		}
 	}
 
