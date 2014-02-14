@@ -35,6 +35,8 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		Debug.Log("FroggerGUIManager: Resetting GUI."); 
 		HUDManager.use.DisableAll();
 
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
 		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.CounterLargeLeft1.SetValue(0);
@@ -48,6 +50,8 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 	public void GameWon(float timer, int pickupCount, int scoreTotal)
 	{
 		HUDManager.use.StopAll();
+
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
 		HUDManager.use.LevelEndScreen.Show(true);
 
@@ -69,6 +73,8 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 	
 	public void GameLost()
 	{
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+
 		HUDManager.use.StopAll();
 
 		LugusCoroutines.use.StartRoutine(LoseRoutine());

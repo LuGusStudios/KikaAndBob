@@ -89,7 +89,8 @@ public class FroggerGameManagerDefault : IGameManager
 	public void WinGame()
 	{
 		gameRunning = false;
-		string saveKey = Application.loadedLevelName + "." + (FroggerCrossSceneInfo.use.GetLevelIndex() + 1).ToString();
+		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
+
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
 
