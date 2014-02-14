@@ -11,6 +11,10 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 
 	public void ProcessPickup(RunnerPickup pickup)
 	{
+		if( !RunnerManager.use.GameRunning )
+			return;
+
+
 		Vector3 position;// = Vector3.zero;
 		if( pickup != null )
 			position = pickup.transform.position;
@@ -38,18 +42,28 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 		}
 		else // negative
 		{
+			/*
 			if( pickup != null && pickup.commodityType != KikaAndBob.CommodityType.NONE )
 				commodity = pickup.commodityType;
 			else
 				commodity = KikaAndBob.CommodityType.Time;
+			*/
 
-			if( commodity == KikaAndBob.CommodityType.Time )
+			if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
 			{
+				commodity = KikaAndBob.CommodityType.Life;
+				scoreAmount = 1.0f;
+
+				RunnerManager.use.AddLives( - (Mathf.RoundToInt(scoreAmount)) );
+			}
+			else
+			{
+				commodity = KikaAndBob.CommodityType.Time;
+
 				// if time penalty, scoreAmount should not be negative but positive
-				scoreAmount *= -1;
+				RunnerManager.use.AddTime( scoreAmount );
 			}
 
-			RunnerManager.use.AddTime( -scoreAmount );
 			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position ).Audio("Collide01").Color(Color.red).Execute();
 		}
 

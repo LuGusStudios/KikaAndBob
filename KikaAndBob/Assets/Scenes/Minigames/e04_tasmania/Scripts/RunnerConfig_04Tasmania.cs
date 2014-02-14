@@ -11,7 +11,8 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 	
 	public override void LoadLevel(int index)
 	{
-		SetupHUDForGame();
+		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Endless;
+		RunnerManager.use.AddLives(1);
 
 		index--;
 
@@ -23,6 +24,8 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 			Level2(); 
 		else if( index == 666 )
 			LevelCustom(); 
+		
+		SetupHUDForGame();
 
 		LoadGUIVarsFromRealSetup();
 	}

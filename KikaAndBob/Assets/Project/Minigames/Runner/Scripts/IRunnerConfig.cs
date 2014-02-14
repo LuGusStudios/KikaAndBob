@@ -17,8 +17,12 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
-		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.TimeS;
-		HUDManager.use.CounterLargeLeft1.StartTimer();
+		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeMS);
+
+		
+		HUDManager.use.CounterSmallLeft2.gameObject.SetActive(true);
+		HUDManager.use.CounterSmallLeft2.commodity = KikaAndBob.CommodityType.Life;
+		HUDManager.use.CounterSmallLeft2.SetValue( RunnerManager.use.lifeCount, false );
 
 
 		// TODO: use this for ipad version
@@ -66,6 +70,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 	
 	float speed1 = 10.0f;
 	float speed2 = 20.0f;
+
+	int lifeCount = 1;
 	
 	float timeToMax = 60.0f;
 	float sectionSpan1 = 1.0f;
@@ -109,6 +115,9 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		RunnerInteractionManager.use.difficultyRange = new DataRange( LugusConfig.use.User.GetFloat("runner.custom.difficulty1", difficulty1), 
 		                                                              LugusConfig.use.User.GetFloat("runner.custom.difficulty2", difficulty2) );  
+	
+	
+		RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
 	}
 
 	public void LoadGUIVarsFromRealSetup()
@@ -137,12 +146,14 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 	
 		difficulty1 = RunnerInteractionManager.use.difficultyRange.from;
 		difficulty2 = RunnerInteractionManager.use.difficultyRange.to;
+
+		lifeCount = RunnerManager.use.lifeCount;
 	}
 
 	public void ShowAdjustmentGUI()
 	{
-		if( RunnerCrossSceneInfo.use.levelToLoad != 667 )
-			return;
+		//if( RunnerCrossSceneInfo.use.levelToLoad != 667 )
+		//	return;
 
 		float speed = 0.0f;
 		if( RunnerCharacterControllerJumpSlide.Exists() )
@@ -158,7 +169,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			speed = RunnerCharacterControllerClimbing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerClimbing.use.speedPercentage );
 		}
 
-		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 2.0f ) );
+		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 1.5f ) );
 		GUILayout.BeginVertical(GUI.skin.box);
 
 		GUILayout.Label("Speed (1 to 30) Current: " + speed);
@@ -203,6 +214,14 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		timeToMax = float.Parse( GUILayout.TextField( "" + timeToMax ) );
 		
 		GUILayout.EndHorizontal();
+		
+		GUILayout.Label("Starting lives");
+		GUILayout.BeginHorizontal();
+		
+		GUILayout.Label("Lives"); 
+		lifeCount = int.Parse( GUILayout.TextField( "" + lifeCount ) );
+		
+		GUILayout.EndHorizontal();
 
 		if( GUILayout.Button("Load level with these settings") )
 		{
@@ -216,6 +235,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty1", difficulty1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty2", difficulty2, true); 
+			
+			LugusConfig.use.User.SetFloat("runner.custom.lives", lifeCount, true); 
 
 			LugusConfig.use.SaveProfiles();
 

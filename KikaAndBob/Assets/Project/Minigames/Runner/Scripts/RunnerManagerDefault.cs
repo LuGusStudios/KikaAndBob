@@ -2,6 +2,17 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+namespace KikaAndBob
+{
+	public enum RunnerGameType
+	{
+		NONE = -1,
+
+		Endless = 1,
+		Distance = 2
+	}
+}
+
 public class RunnerManager : LugusSingletonExisting<RunnerManagerDefault> 
 {
 
@@ -9,9 +20,12 @@ public class RunnerManager : LugusSingletonExisting<RunnerManagerDefault>
 
 public class RunnerManagerDefault : IGameManager
 {
+	public KikaAndBob.RunnerGameType gameType = KikaAndBob.RunnerGameType.NONE;
+
 	public float startTime = 0.0f;
 	public float timeSpent = 0.0f;
 	public int pickupCount = 0;
+	public int lifeCount = 0;
 	//public float targetScore = -1.0f;
 	public float timeout = -1.0f;
 
@@ -31,6 +45,16 @@ public class RunnerManagerDefault : IGameManager
 	public void AddPickup(int amount)
 	{
 		pickupCount += amount;
+	}
+
+	public void AddLives(int amount)
+	{
+		lifeCount += amount;
+
+		if( lifeCount <= 0 )
+		{
+			StopGame();
+		}
 	}
 
 
@@ -146,8 +170,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-			RunnerCrossSceneInfo.use.levelToLoad = 1;
+		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		//	RunnerCrossSceneInfo.use.levelToLoad = 1;
 		#endif
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
@@ -177,18 +201,30 @@ public class RunnerManagerDefault : IGameManager
 		RunnerInteractionManager.use.StartTimer();
 	
 		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
+	
+		if( this.gameType == KikaAndBob.RunnerGameType.NONE )
+		{
+			Debug.LogError(transform.Path () + " : No RunnerGameType set! Config should do this!!!");
+		}
 	}
 
 	public override void StopGame() 
 	{
 		_gameRunning = false;
+
+		Component cc = ( (MonoBehaviour) RunnerCharacterController.use).GetComponent( typeof(IRunnerCharacterController) );
+		((MonoBehaviour) cc).enabled = false;
+		( (MonoBehaviour) RunnerCharacterController.use).GetComponent<RunnerCharacterAnimator>().StopAll();
+		( (MonoBehaviour) RunnerCharacterController.use).GetComponent<RunnerCharacterAnimator>().enabled = false;
 		
 		HUDManager.use.StopAll();
 		DialogueManager.use.HideAll();
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
 	
 
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
 		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Feather;
 		

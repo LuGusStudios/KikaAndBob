@@ -11,6 +11,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	
 	public override void LoadLevel(int index)
 	{
+		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;
 		index--;
 
 		if( index == 0 )
@@ -21,6 +22,8 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 			Level2(); 
 		else if( index == 666 )
 			LevelCustom(); 
+		
+		SetupHUDForGame();
 	}
 	
 	public void Level0()

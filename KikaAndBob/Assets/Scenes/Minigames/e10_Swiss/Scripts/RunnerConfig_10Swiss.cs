@@ -9,8 +9,10 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		// assign variables that have to do with this class only
 	}
 	
-	public void LoadLevel(int index)
+	public override void LoadLevel(int index)
 	{
+		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Endless;
+
 		index--;
 
 		if( index == 0 )
@@ -21,6 +23,8 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 			Level2(); 
 		else if( index == 666 )
 			LevelCustom(); 
+		
+		SetupHUDForGame();
 	}
 	
 	public void Level0()
