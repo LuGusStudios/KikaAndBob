@@ -17,6 +17,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public List<RunnerInteractionZone> zones = new List<RunnerInteractionZone>();
 	public LayerSpawner groundLayer = null;
 
+	private int listCount = 3;
+	public List<RunnerInteractionZone>[] zoneDiff ;
+	public LugusRandomGeneratorSequence[] zoneRndSeq;
 	public enum Direction
 	{
 		NONE = -1,
@@ -65,7 +68,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 			do
 			{
-				zonePrefab = zones[ Random.Range(0, zones.Count) ];
+				int nextZone = (int)LugusRandom.use.Gaussian.Next();
+				zonePrefab = zoneDiff[nextZone][(int)zoneRndSeq[nextZone].Next()];
+				//zonePrefab = zones[ Random.Range(0, zones.Count) ];
 				zoneOK = (zonePrefab != lastSpawned);
 
 				if( zoneOK ) // if equal to the previous, we're probably not going to spawn it anyway, so avoid these next checks
@@ -193,6 +198,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public void SetupLocal()
 	{
+		LugusRandom.use.Gaussian.Range = new DataRange(0,listCount);
 		if( groundLayer == null )
 		{
 			groundLayer = GameObject.Find ("LayerGround").GetComponent<LayerSpawner>();
@@ -226,10 +232,33 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		GameObject zoneContainer = GameObject.Find ("Zones");
 		
 		zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>(true) );
-		
+
+		zoneDiff = new List<RunnerInteractionZone>[listCount];
+		zoneRndSeq = new LugusRandomGeneratorSequence[listCount];
+
+		for (int i = 0; i < listCount; i++) 
+		{
+			zoneDiff[i] = new List<RunnerInteractionZone>();
+		}
+
 		foreach( RunnerInteractionZone zone in zones )
 		{
 			zone.gameObject.SetActive(false);
+
+			for (int i = 1; i < listCount+1; i++) 
+			{
+				if(zone.difficulty < maximumDifficulty*i/listCount)
+				{
+					Debug.Log(i + " " + zone.difficulty + " " + zone.name);
+					zoneDiff[i-1].Add(zone);
+					break;
+				}
+			}
+		}
+
+		for (int i = 0; i < listCount; i++) 
+		{
+			zoneRndSeq[i] = new LugusRandomGeneratorSequence(0,zoneDiff[i].Count-1);
 		}
 	}
 
