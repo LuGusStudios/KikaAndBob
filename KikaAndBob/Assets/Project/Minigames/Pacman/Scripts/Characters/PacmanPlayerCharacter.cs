@@ -37,7 +37,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	private void Update () 
 	{
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
 			return;
 
 		DetectCurrentTile();
@@ -219,7 +219,6 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			currentTile.tileType = PacmanTile.TileType.Open;
 			currentTile.rendered.SetActive(false);
 			PacmanLevelManager.use.IncreasePickUpCount();
-			PacmanLevelManager.use.CheckPickedUpItems();
 		}
 		else if (currentTile.tileType == PacmanTile.TileType.Upgrade)
 		{
@@ -356,7 +355,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public void DoHitEffect()
 	{
-		if (hitRoutineBusy)
+		if (hitRoutineBusy || PacmanGameManager.use.Paused)
 			return;
 
 		float duration = 1.5f;
@@ -369,6 +368,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	protected IEnumerator HitRoutine(float duration)
 	{
+		PacmanGameManager.use.LoseLife();
+
 		hitRoutineBusy = true;
 		PacmanGameManager.use.gameRunning = false;
 
@@ -377,6 +378,5 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		yield return new WaitForSeconds(duration);
 
 		hitRoutineBusy = false;
-		PacmanGameManager.use.LoseLife();
 	}
 }

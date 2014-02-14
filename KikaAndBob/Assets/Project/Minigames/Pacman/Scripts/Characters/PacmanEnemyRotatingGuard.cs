@@ -21,7 +21,7 @@ public class PacmanEnemyRotatingGuard : PacmanEnemyCharacter
 
 	protected override void Update () 
 	{	
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
 			return;
 
 		DetectCurrentTile();

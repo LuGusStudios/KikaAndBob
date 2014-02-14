@@ -159,7 +159,9 @@ public class StepLevelMenu : IMenuStep
 
 		if (levelIndices.Count <= 0)
 		{
-			Debug.LogError("StepLevelMenu: There are no level config files! ---------------------------------------------"); 
+			Debug.LogError("StepLevelMenu: There are no level config files!");
+			levelLoader.LoadLevel(1);
+			EnableBars(0);
 			return;
 		}
 		else if (levelIndices.Count == 1)
