@@ -23,11 +23,13 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 
 	protected override void EnterSurfaceEffect (FroggerCharacter character)
 	{
-		StartCoroutine(TillyFly(character));
+		TillyFly(character);
 	}
 
-	protected IEnumerator TillyFly(FroggerCharacter character)
+	protected void TillyFly(FroggerCharacter character)
 	{
+		FroggerGameManager.use.WinGame();
+
 		FroggerGameManager.use.gameRunning = false;
 
 		if (character is FroggerPlayer) // currently this will never not be the case, but for future compatibility it's not a bad idea to check anyway
@@ -45,13 +47,5 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 		};
 
 		gameObject.MoveTo(path).Time(1.0f).IgnoreTimeScale(true).Execute();
-
-		yield return new WaitForSeconds(1.0f);
-
-		FroggerGameManager.use.WinGame();
-
-
-		yield break;
 	}
-	
 }
