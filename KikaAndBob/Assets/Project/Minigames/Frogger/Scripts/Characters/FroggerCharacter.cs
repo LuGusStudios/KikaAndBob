@@ -25,23 +25,57 @@ public class FroggerCharacter : MonoBehaviour {
 	protected FroggerLaneItem currentLaneItem = null;
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
+	protected ParticleSystem hitParticles = null;
+	[HideInInspector]
+	public FroggerCharacterAnimator characterAnimator = null;
 	protected Vector3 originalScale = Vector3.one;
 	protected BoneAnimation[] boneAnimations;
 	protected Renderer[] renderers;
-	protected BoxCollider boundsCollider;
+	protected BoxCollider boundsCollider;	// this is not a 2D collider, because bounds cannot be retrieved for those 
+											// (this collider is primarily used for clamping characters to the screen)
+
+	protected void Awake()
+	{
+		SetUpLocal();
+	}
 
 	protected void Start()
 	{
-		SetUpLocal();
-		PlayAnimation("Idle");
 	}
 
-	public void SetUpLocal()
+	public virtual void SetUpLocal()
 	{
 		boneAnimations = GetComponentsInChildren<BoneAnimation>();
 		renderers = GetComponentsInChildren<Renderer>();
 		originalScale = transform.localScale;
-		boundsCollider = GetComponent<BoxCollider>();
+
+		if (boundsCollider == null)
+		{
+			boundsCollider = GetComponent<BoxCollider>();
+		}
+		if (boundsCollider == null)
+		{
+			Debug.LogError("FroggerPlayer: Missing bounds collider.");
+		}
+
+		if (characterAnimator == null)
+		{
+			characterAnimator = GetComponent<FroggerCharacterAnimator>();
+		}
+		if (characterAnimator == null)
+		{
+			Debug.LogError("FroggerPlayer: Missing character animator.");
+		}
+
+		if (hitParticles == null)
+		{
+			hitParticles = GetComponentInChildren<ParticleSystem>();
+		}
+
+		if (hitParticles == null)
+		{
+			Debug.LogError("FroggerPlayer: Missing hit particles.");
+		}
 	}
 
 	protected void Update () 
@@ -63,6 +97,8 @@ public class FroggerCharacter : MonoBehaviour {
 
 		transform.localScale = Vector3.one * maxScale;
 
+		characterAnimator.PlayAnimation(characterAnimator.idleDown);
+
 		Debug.Log("Reset character: " + gameObject.name);
 	}
 
@@ -75,7 +111,7 @@ public class FroggerCharacter : MonoBehaviour {
 	{
 		if (right)
 		{
-			PlayAnimation("Left");
+			characterAnimator.PlayAnimation(characterAnimator.walkSide);
 
 			if (transform.localScale.x > 0)
 				transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
@@ -87,7 +123,7 @@ public class FroggerCharacter : MonoBehaviour {
 		}
 		else
 		{
-			PlayAnimation("Left");
+			characterAnimator.PlayAnimation(characterAnimator.walkSide);
 
 			if (transform.localScale.x < 0)
 				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
@@ -120,9 +156,8 @@ public class FroggerCharacter : MonoBehaviour {
 			if (GetCollisionVertical(targetLane, true))
 				return;
 
-			PlayAnimation("Up");
+			characterAnimator.PlayAnimation(characterAnimator.walkUp);
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, true));
-
 		}
 		else if (targetLaneIndex < currentLaneIndex)
 		{	
@@ -130,7 +165,7 @@ public class FroggerCharacter : MonoBehaviour {
 			if (GetCollisionVertical(targetLane, false))
 				return;
 
-			PlayAnimation("Down");
+			characterAnimator.PlayAnimation(characterAnimator.walkDown);
 			laneMoveRoutine = LugusCoroutines.use.StartRoutine(LaneMoveRoutine(targetLane, false));
 		}
 		else
@@ -205,24 +240,6 @@ public class FroggerCharacter : MonoBehaviour {
 		return false;
 	}
 
-	private string currentAnimation;
-	protected void PlayAnimation(string animName)
-	{
-		if (animName == currentAnimation)
-			return;
-
-		foreach(BoneAnimation ba in boneAnimations)
-		{
-			ba.gameObject.SetActive(false);
-
-			if (ba.gameObject.name == animName)
-			{
-				currentAnimation = animName;
-				ba.gameObject.SetActive(true);
-			}
-		}
-	}
-
 	protected IEnumerator LaneMoveRoutine(FroggerLane targetLane, bool toHigher)
 	{
 		movingToLane = true;
@@ -271,8 +288,6 @@ public class FroggerCharacter : MonoBehaviour {
 
 			yield return new WaitForEndOfFrame();
 		}
-
-		PlayAnimation("Idle");
 
 		movingToLane = false;
 	}
@@ -397,5 +412,27 @@ public class FroggerCharacter : MonoBehaviour {
 	public void Blink(Color color, float duration, int count)
 	{
 		LugusCoroutines.use.StartRoutine(SmoothMovesUtil.Blink(boneAnimations, color, duration, count));
+	}
+
+	public void DoHitAnimation()
+	{
+		hitParticles.Play();
+		hitParticles.transform.position = hitParticles.transform.position.z(0);
+		characterAnimator.PlayAnimation(characterAnimator.hit);
+
+		// make hit animation 'bend' in direction of hit
+		if (currentLane != null)
+		{
+			if (currentLane.goRight)
+			{
+				if (transform.localScale.x > 0)
+					transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
+			}
+			else
+			{
+				if (transform.localScale.x < 0)
+					transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+			}
+		}
 	}
 }

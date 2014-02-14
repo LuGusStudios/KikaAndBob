@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class RunnerCrossSceneInfo : MonoBehaviour 
+public class RunnerCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
 {
-	public int levelToLoad = 0;
+	public int levelToLoad = -1;
 
 	public static RunnerCrossSceneInfo use	
 	{
@@ -26,6 +26,16 @@ public class RunnerCrossSceneInfo : MonoBehaviour
 	public void Destroy()
 	{
 		GameObject.Destroy( this.gameObject );
+	}
+
+	public void SetLevelIndex(int index)
+	{
+		levelToLoad = index;
+	}
+
+	public int GetLevelIndex()
+	{
+		return levelToLoad;
 	}
 }
 

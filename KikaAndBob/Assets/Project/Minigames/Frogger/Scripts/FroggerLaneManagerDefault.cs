@@ -12,6 +12,10 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 	protected float levelLengthLanePixels = -1;
 	protected float levelLengthLaneCenters = -1;
 
+	public float levelBottomY = 0;
+	public float levelTopY = 0;
+
+
 //	public void FindLanes()
 //	{
 //		lanes.Clear();
@@ -154,26 +158,16 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 		
 		return lanes[lanes.Count - 1].GetCenterPoint();
 	}
-
+	
+	// handy function if we ever want to calculate this in some other way
 	public float GetBottomLaneBottomPixel()
 	{
-		if (lanes.Count < 1)
-			return 0;
-
-		if (lanes[0] == null)
-			return 0;
-
-		return (lanes[0].transform.position + lanes[0].GetComponent<SpriteRenderer>().sprite.bounds.min).y;
+		return levelBottomY;
 	}
 
+	// handy function if we ever want to calculate this in some other way
 	public float GetTopLaneTopPixel()
 	{
-		if (lanes.Count < 1)
-			return 0;
-
-		if (lanes[lanes.Count - 1] == null)
-			return Screen.height;
-		
-		return (lanes[lanes.Count - 1].transform.position + lanes[lanes.Count - 1].GetComponent<SpriteRenderer>().sprite.bounds.max).y;
+		return levelTopY;
 	}
 }

@@ -48,7 +48,7 @@ public class PacmanCameraFollower : LugusSingletonExisting<PacmanCameraFollower>
 
 	protected void FollowCamera()
 	{
-		if (track)
+		if (PacmanGameManager.use.gameRunning && track)
 			transform.position = PacmanGameManager.use.GetActivePlayer().transform.position + playerOffset;
 	}
 }

@@ -8,7 +8,7 @@ public class RunnerCharacterAnimator : MonoBehaviour
 	public BoneAnimation[] animationContainers;
 	public BoneAnimation currentAnimationContainer = null;
 	public string currentAnimationClip = "";
-	public string currentAnimationPath = "";
+	public string currentAnimationPath = ""; 
 	
 	protected bool hitRoutineBusy = false;
 
@@ -31,10 +31,12 @@ public class RunnerCharacterAnimator : MonoBehaviour
 			{
 				currentAnimationContainer = container;
 				currentAnimationContainer.gameObject.SetActive(true);
+				currentAnimationContainer.animation.enabled = true;
 			}
 			else
 			{
 				container.gameObject.SetActive(false);
+				//currentAnimationContainer.animation.enabled = false;
 			}
 		}
 		
@@ -77,12 +79,22 @@ public class RunnerCharacterAnimator : MonoBehaviour
 		
 		if( animationContainers.Length == 0 )
 		{
-			Debug.LogError(name + " : no BoneAnimations found for this animator!");
+			Debug.LogError(transform.Path () + " : no BoneAnimations found for this animator!");
 		}
 	}
-	
+
+	protected virtual void Awake()
+	{
+		SetupLocal();
+	}
+
 	public virtual void SetupGlobal()
 	{
 
+	}
+	
+	protected virtual void Start()
+	{
+		SetupGlobal();
 	}
 }

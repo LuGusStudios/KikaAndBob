@@ -57,7 +57,8 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 
 	public void SetupGlobal()
 	{
-		LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
+		if (RunnerCrossSceneInfo.use.levelToLoad >= -1)
+			LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 	}
 	
 	protected void Awake()

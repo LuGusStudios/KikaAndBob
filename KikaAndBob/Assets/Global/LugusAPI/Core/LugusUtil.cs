@@ -4,16 +4,28 @@ using System.Collections.Generic;
 
 public class LugusUtil 
 {
-	public static int UIWidth
+	public static float UIWidth
 	{
-		get{ return 2048; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 20.48f; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
 	}
 	
-	public static int UIHeight
+	public static float UIHeight
 	{
-		get{ return 1536; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+		get{ return 15.36f; } // TODO: change this per project depending on the scene UI setup (if not using NGUI or unity gui)
+	}
+
+	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
+	public static Rect UIScreenSize
+	{
+		get{ return new Rect(0, 0, LugusUtil.UIWidth, LugusUtil.UIHeight ); }
 	}
 	
+	// Rect here is based at BOTTOM LEFT for 0,0 (instead of default TOP LEFT as in the unity3D docs)
+	public static Rect UIScreenSizePixelPerfect
+	{
+		get{ return new Rect(0, 0, LugusUtil.UIWidth * 100, LugusUtil.UIHeight * 100 ); }
+	}
+
 	public static int ScreenWidth
 	{
 		get{ return Screen.width; }
@@ -57,6 +69,20 @@ public class LugusUtil
 	
 	public static Vector3 DEFAULTVECTOR = new Vector3( float.MaxValue, float.MaxValue, float.MaxValue ); 
 	public static Vector3 OFFSCREEN = new Vector3( -9999.0f, -9999.0f, -9999.0f ); 
+
+}
+
+public static class BoundsExtensions
+{
+	public static Rect ToRectXY(this Bounds bounds)
+	{
+		return new Rect( bounds.center.x , bounds.center.y, bounds.size.x, bounds.size.y);
+	}
+
+	public static Bounds Bounds(this BoxCollider2D collider)
+	{
+		return new UnityEngine.Bounds( collider.center, collider.size );
+	}
 }
 
 public static class VectorExtensions

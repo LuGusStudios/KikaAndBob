@@ -60,7 +60,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupLocal()
 	{
-		Transform guiParent = GameObject.Find("GUI").transform;
+		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 
 		if (scoreDisplay == null)
 			scoreDisplay = guiParent.FindChild("ScoreDisplay").GetComponent<TextMesh>();

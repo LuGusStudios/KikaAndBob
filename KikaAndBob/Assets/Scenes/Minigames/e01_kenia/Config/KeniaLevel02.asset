@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
+  m_Name: KeniaLevel02
+  m_EditorClassIdentifier: 
+  backgroundMusicName: e01_kenia_background
+  levelPostFix: 2
+  lanes:
+  - laneID: LaneMud
+    goRight: 1
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 10
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Tree02
+      positioning: .219999999
+    - spawnID: Rock
+      positioning: .689999998
+    - spawnID: Dung
+      positioning: .270000011
+  - laneID: LaneDirt
+    goRight: 1
+    speed: 5
+    minGapDistance: 4
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Rock
+      positioning: .140000001
+    - spawnID: Tree01
+      positioning: .839999974
+    - spawnID: Dung
+      positioning: .720000029
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 5
+    minGapDistance: 6
+    maxGapDistance: 8
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Rock
+      positioning: .479999989
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 3
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Rock
+      positioning: .00999999978
+    - spawnID: Rock
+      positioning: .819999993
+    - spawnID: Dung
+      positioning: .449999988
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 2
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .699999988
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Elephant
+      positioning: 0
+    - spawnID: ElephantSmall
+      positioning: 0
+    - spawnID: Dung
+      positioning: .769999981
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 3.79999995
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .699999988
+    backgroundScrollingSpeed: -0
+    spawnItems:
+    - spawnID: Elephant
+      positioning: 0
+    - spawnID: Dung
+      positioning: .289999992
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 2.5999999
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .699999988
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Elephant
+      positioning: 0
+    - spawnID: ElephantSmall
+      positioning: 0
+    - spawnID: Dung
+      positioning: .899999976
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Dung
+      positioning: .419999987
+    - spawnID: Tree01
+      positioning: .150000006
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Rock
+      positioning: .219999999
+    - spawnID: Tree02
+      positioning: .670000017
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 4
+    minGapDistance: 2
+    maxGapDistance: 4
+    repeatAllowFactor: .5
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Elephant
+      positioning: 0
+    - spawnID: ElephantSmall
+      positioning: 0
+    - spawnID: Dung
+      positioning: .777999997
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 2.45000005
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: ElephantSmall
+      positioning: 0
+    - spawnID: Elephant
+      positioning: 0
+    - spawnID: Dung
+      positioning: .233999997
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 2.45000005
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Dung
+      positioning: .560000002
+  - laneID: LaneDirt
+    goRight: 0
+    speed: 2.45000005
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Tilly
+      positioning: .5

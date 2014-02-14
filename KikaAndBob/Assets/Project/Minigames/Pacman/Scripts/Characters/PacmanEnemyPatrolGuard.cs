@@ -9,7 +9,7 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 
 	protected override void Update() 
 	{
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
 			return;
 		
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
