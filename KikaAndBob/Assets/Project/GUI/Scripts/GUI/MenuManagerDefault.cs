@@ -62,8 +62,14 @@ public class MenuManagerDefault: MonoBehaviour
 		else
 		{
 			string key = Application.loadedLevelName + ".main.background";
+			string backgroundName = Application.loadedLevelName + "BG01";
 
-			Sprite newBackground = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key));
+			if( LugusResources.use.Levels.HasText(key) )
+			{
+				backgroundName = LugusResources.use.Levels.GetText(key);
+			}
+
+			Sprite newBackground = LugusResources.use.Shared.GetSprite(backgroundName);
 
 			if (newBackground != LugusResources.use.errorSprite)
 			{

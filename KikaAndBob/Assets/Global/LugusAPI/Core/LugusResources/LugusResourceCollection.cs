@@ -170,7 +170,7 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		
 		if( output == null )
 		{
-			Debug.LogError(" : TextAsset " + _URL + " " + key + " was not found!");
+			LugusResources.LogResourceLoad(" : TextAsset " + _URL + " " + key + " was not found!");
 			output = LugusResources.use.errorTextAsset; 
 		}
 		

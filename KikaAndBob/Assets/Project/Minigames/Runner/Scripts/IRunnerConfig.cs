@@ -19,10 +19,24 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeMS);
 
-		
-		HUDManager.use.CounterSmallLeft2.gameObject.SetActive(true);
-		HUDManager.use.CounterSmallLeft2.commodity = KikaAndBob.CommodityType.Life;
-		HUDManager.use.CounterSmallLeft2.SetValue( RunnerManager.use.lifeCount, false );
+
+		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+			HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Distance;
+			HUDManager.use.ProgressBarCenter.valueRange = new DataRange(0, RunnerManager.use.targetDistance);
+			HUDManager.use.ProgressBarCenter.SetValue(0);
+
+		}
+		else
+		{
+			if( RunnerManager.use.lifeCount > 0 )
+			{
+				HUDManager.use.CounterSmallLeft2.gameObject.SetActive(true);
+				HUDManager.use.CounterSmallLeft2.commodity = KikaAndBob.CommodityType.Life;
+				HUDManager.use.CounterSmallLeft2.SetValue( RunnerManager.use.lifeCount, false );
+			}
+		}
 
 
 		// TODO: use this for ipad version
@@ -79,6 +93,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 	float difficulty1 = 3.0f;
 	float difficulty2 = 6.0f;
 
+	float targetDistance = 500.0f;
+
 	public void LevelCustom()
 	{
 		//RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
@@ -118,6 +134,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 	
 	
 		RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
+		RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
 	}
 
 	public void LoadGUIVarsFromRealSetup()
@@ -163,6 +180,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		else if( RunnerCharacterControllerFasterSlower.Exists() )
 		{
 			speed = RunnerCharacterControllerFasterSlower.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerFasterSlower.use.speedPercentage );
+			speed *= RunnerCharacterControllerFasterSlower.use.speedModifiers.ValueFromPercentage( RunnerCharacterControllerFasterSlower.use.speedModifierPercentage );
 		}
 		else if( RunnerCharacterControllerClimbing.Exists() )
 		{
@@ -214,14 +232,30 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		timeToMax = float.Parse( GUILayout.TextField( "" + timeToMax ) );
 		
 		GUILayout.EndHorizontal();
-		
-		GUILayout.Label("Starting lives");
-		GUILayout.BeginHorizontal();
-		
-		GUILayout.Label("Lives"); 
-		lifeCount = int.Parse( GUILayout.TextField( "" + lifeCount ) );
-		
-		GUILayout.EndHorizontal();
+
+		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+		{
+			GUILayout.Label("Starting lives");
+			GUILayout.BeginHorizontal();
+			
+			GUILayout.Label("Lives"); 
+			lifeCount = int.Parse( GUILayout.TextField( "" + lifeCount ) );
+			
+			GUILayout.EndHorizontal();
+		}
+		else
+		{
+			GUILayout.Label("Target distance (100 - 2000)");
+			GUILayout.BeginHorizontal();
+			
+			GUILayout.Label("Distance"); 
+			targetDistance = float.Parse( GUILayout.TextField( "" + targetDistance ) );
+			
+			GUILayout.EndHorizontal();
+		}
+
+
+
 
 		if( GUILayout.Button("Load level with these settings") )
 		{
@@ -236,7 +270,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty1", difficulty1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty2", difficulty2, true); 
 			
-			LugusConfig.use.User.SetFloat("runner.custom.lives", lifeCount, true); 
+			LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
+			LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
 
 			LugusConfig.use.SaveProfiles();
 

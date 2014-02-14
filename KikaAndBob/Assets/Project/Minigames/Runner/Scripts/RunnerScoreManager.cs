@@ -62,6 +62,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 
 				// if time penalty, scoreAmount should not be negative but positive
 				RunnerManager.use.AddTime( scoreAmount );
+				scoreAmount *= -1;
 			}
 
 			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position ).Audio("Collide01").Color(Color.red).Execute();

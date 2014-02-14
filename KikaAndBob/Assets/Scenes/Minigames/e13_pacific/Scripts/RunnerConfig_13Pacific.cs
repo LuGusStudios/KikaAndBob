@@ -25,6 +25,8 @@ public class RunnerConfig_13Pacific : IRunnerConfig
 			LevelCustom(); 
 		
 		SetupHUDForGame();
+		
+		LoadGUIVarsFromRealSetup();
 	}
 
 	public void Level0()
@@ -69,7 +71,6 @@ public class RunnerConfig_13Pacific : IRunnerConfig
 
 	public void SetupGlobal()
 	{
-		LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 	}
 	
 	protected void Awake()

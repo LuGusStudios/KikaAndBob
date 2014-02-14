@@ -12,6 +12,8 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	public override void LoadLevel(int index)
 	{
 		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;
+		RunnerManager.use.targetDistance = 300.0f;
+
 		index--;
 
 		if( index == 0 )
@@ -24,6 +26,8 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 			LevelCustom(); 
 		
 		SetupHUDForGame();
+		
+		LoadGUIVarsFromRealSetup();
 	}
 	
 	public void Level0()
@@ -35,6 +39,8 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		RunnerInteractionManager.use.timeToMax = 60;
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,3);
+
+		RunnerManager.use.targetDistance = 300.0f;
 	}
 	
 	public void Level1()
@@ -46,6 +52,8 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		RunnerInteractionManager.use.timeToMax = 120;
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.8f, 0.8f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		
+		RunnerManager.use.targetDistance = 600.0f;
 	}
 	
 	public void Level2()
@@ -65,11 +73,13 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		
 		DisableInteractionZones( inactiveZones );
 		*/
+		
+		
+		RunnerManager.use.targetDistance = 900.0f;
 	}
 	
 	public void SetupGlobal()
 	{
-		LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 	}
 	
 	protected void Awake()

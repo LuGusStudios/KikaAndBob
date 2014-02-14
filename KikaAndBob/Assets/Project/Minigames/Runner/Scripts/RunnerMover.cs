@@ -8,6 +8,7 @@ public class RunnerMover : MonoBehaviour
 	public float speed = 1.0f;
 
 	public bool checkPlayerVicinity = false;
+	public bool adjustForPlayerSpeed = false;
 	
 	
 	protected RunnerInteractionManager directionStore = null;
@@ -42,7 +43,17 @@ public class RunnerMover : MonoBehaviour
 	{
 		if( CanMove () )
 		{
-			transform.position += direction * speed * Time.deltaTime;
+			float useSpeed = speed;
+			if( adjustForPlayerSpeed )
+			{
+				if( RunnerCharacterControllerFasterSlower.Exists() )
+				{
+					RunnerCharacterControllerFasterSlower c = RunnerCharacterControllerFasterSlower.use;
+					useSpeed = speed * c.SpeedRange().ValueFromPercentage( c.speedPercentage );
+				}
+			}
+
+			transform.position += direction * useSpeed * Time.deltaTime;
 		}
 	}
 

@@ -77,6 +77,15 @@ public class RunnerCharacterController : MonoBehaviour
 		}
 	}
 
+	public static MonoBehaviour useBehaviour 
+	{ 
+		get 
+		{
+			return (MonoBehaviour) RunnerCharacterController.use;
+
+		}
+	}
+
 	private static IRunnerCharacterController_JumpSlide _jumpSlide = null;
 
 	public static IRunnerCharacterController_JumpSlide jumpSlide

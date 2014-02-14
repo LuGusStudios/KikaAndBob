@@ -25,6 +25,8 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 			LevelCustom(); 
 		
 		SetupHUDForGame();
+		
+		LoadGUIVarsFromRealSetup();
 
 		Transform background = LugusCamera.game.transform.FindChild("Background");
 		if( background != null )
@@ -80,7 +82,6 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 	
 	public void SetupGlobal()
 	{
-		LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 	}
 	
 	protected void Awake()

@@ -26,7 +26,7 @@ public class RunnerManagerDefault : IGameManager
 	public float timeSpent = 0.0f;
 	public int pickupCount = 0;
 	public int lifeCount = 0;
-	//public float targetScore = -1.0f;
+	public float targetDistance = -1.0f;
 	public float timeout = -1.0f;
 
 	
@@ -75,17 +75,65 @@ public class RunnerManagerDefault : IGameManager
 		}
 	}
 
+	public Vector3 characterReferencePosition = Vector3.zero;
+	public float distanceTraveledStore = 0.0f;
+	public IEnumerator DistanceRoutine()
+	{		
+		if( targetDistance < 0.0f )
+		{
+			yield break;
+		}
+
+		MonoBehaviour character = RunnerCharacterController.useBehaviour;
+		characterReferencePosition = character.transform.position;
+
+		bool horizontal = ( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.EAST ||
+		                   RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.WEST );
+
+		float distance = 0.0f;
+		IHUDElement visualizer = HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Distance);
+
+		while( distance < targetDistance )
+		{
+			if( horizontal )
+			{
+				distance = distanceTraveledStore + Mathf.Abs( character.transform.position.x - characterReferencePosition.x );
+			}
+			else
+			{
+				distance = distanceTraveledStore + Mathf.Abs( character.transform.position.y - characterReferencePosition.y );
+			}
+
+			visualizer.SetValue( distance, false );
+			yield return null;
+		}
+
+		if( GameRunning )
+		{
+			StopGame();
+		}
+
+		yield break;
+	}
 
 
 	// if the camera reaches this x value, the whole level is shifted to the left again
 	// this is to prevent reaching very high x values (which float precision does not like)
 	protected float shiftXTreshold = 500.0f; // TODO: make this larger and test (should be a value of around 1000.0f in production)
-	protected float shiftYTreshold = -500.0f;
+	protected float shiftYTreshold = 500.0f;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	// if horizontal == false -> it's vertical
 	public void ShiftLevel(float units, bool horizontal)
 	{
+		MonoBehaviour character = RunnerCharacterController.useBehaviour;
+		if( horizontal )
+			distanceTraveledStore += Mathf.Abs(character.transform.position.x - characterReferencePosition.x);
+		else
+			distanceTraveledStore += Mathf.Abs(character.transform.position.y - characterReferencePosition.y);
+
+
+
 		// TODO: make this decent... this is kind of hacky with the layer list etc.
 
 		FollowCameraContinuous camera = LugusCamera.game.GetComponent<FollowCameraContinuous>();
@@ -94,7 +142,7 @@ public class RunnerManagerDefault : IGameManager
 		float yOffset = camera.character.transform.position.y - camera.transform.position.y;
 
 		
-		Debug.Log ("Shifting level " + units + " units. Cam offset x : " + xOffset + ", y : " + yOffset);
+		Debug.Log ("Shifting level " + units + " units (horizontal=" + horizontal + "). Cam offset x : " + xOffset + ", y : " + yOffset);
 
 		List<string> layers = new List<string>();
 		layers.Add ("LayerGround");
@@ -105,6 +153,9 @@ public class RunnerManagerDefault : IGameManager
 		foreach( string layer in layers )
 		{
 			GameObject layerObj = GameObject.Find ( layer );
+			//if( layerObj == null )
+			//	Debug.LogWarning("LAYER " + layer + " WAS NULL!");
+
 			if( layerObj.transform.childCount > 0 && layer != "Character" )
 			{
 				foreach( Transform child in layerObj.transform )
@@ -133,6 +184,8 @@ public class RunnerManagerDefault : IGameManager
 		{
 			camera.transform.position = cameraOriginal.y( camera.character.transform.position.y + (-1 * yOffset) );
 		}
+		
+		characterReferencePosition = character.transform.position;
 	}
 
 	public void OnDisable()
@@ -144,17 +197,29 @@ public class RunnerManagerDefault : IGameManager
 
 	protected void LateUpdate()
 	{
-		// TODO: make this work for top and left moving levels as well!!
+		// TODO: FIXME: make this work for top and left moving levels as well!!
 
-		if( LugusCamera.game.transform.position.x > shiftXTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+		// EAST
+		if( LugusCamera.game.transform.position.x > shiftXTreshold /*|| LugusInput.use.KeyDown(KeyCode.R)*/ )
 		{
 			ShiftLevel( -1 * LugusCamera.game.transform.position.x, true ); // shift back to 0.0f
 		}
-		
-		if( LugusCamera.game.transform.position.y < shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+
+		// SOUTH
+
+		if( LugusCamera.game.transform.position.y < -shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
 		{
 			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
 		}
+
+		/*
+		// NORTH // THIS DOES NOT YET SEEM TO WORK... (in Brazil only?) WEIRD
+		if( LugusCamera.game.transform.position.y > shiftYTreshold /*|| LugusInput.use.KeyDown(KeyCode.R) )
+		{
+			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
+		}
+		*/
+
 	}
 
 	public void SetupLocal()
@@ -201,7 +266,8 @@ public class RunnerManagerDefault : IGameManager
 		RunnerInteractionManager.use.StartTimer();
 	
 		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
-	
+		LugusCoroutines.use.StartRoutine( DistanceRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
+
 		if( this.gameType == KikaAndBob.RunnerGameType.NONE )
 		{
 			Debug.LogError(transform.Path () + " : No RunnerGameType set! Config should do this!!!");
@@ -212,10 +278,11 @@ public class RunnerManagerDefault : IGameManager
 	{
 		_gameRunning = false;
 
-		Component cc = ( (MonoBehaviour) RunnerCharacterController.use).GetComponent( typeof(IRunnerCharacterController) );
-		((MonoBehaviour) cc).enabled = false;
-		( (MonoBehaviour) RunnerCharacterController.use).GetComponent<RunnerCharacterAnimator>().StopAll();
-		( (MonoBehaviour) RunnerCharacterController.use).GetComponent<RunnerCharacterAnimator>().enabled = false;
+		RunnerCharacterController.useBehaviour.enabled = false;
+		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
+		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+
+		RunnerInteractionManager.use.Deactivate();
 		
 		HUDManager.use.StopAll();
 		DialogueManager.use.HideAll();
@@ -262,5 +329,29 @@ public class RunnerManagerDefault : IGameManager
 	protected void Update () 
 	{
 	
+	}
+
+	protected void OnGUI()
+	{
+		if( !LugusDebug.debug )
+			return;
+
+
+		bool horizontal = ( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.EAST ||
+		                   RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.WEST );
+		
+		MonoBehaviour character = RunnerCharacterController.useBehaviour;
+
+		float distance = 0.0f;
+		if( horizontal )
+		{
+			distance = distanceTraveledStore + Mathf.Abs( character.transform.position.x );
+		}
+		else
+		{
+			distance = distanceTraveledStore + Mathf.Abs( character.transform.position.y );
+		}
+
+		GUI.Button( new Rect( Screen.width / 2.0f - 50, 20, 100, 40 ),  "DIST: " + distance );
 	}
 }

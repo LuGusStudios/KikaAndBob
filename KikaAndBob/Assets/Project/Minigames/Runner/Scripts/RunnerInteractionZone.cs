@@ -56,7 +56,7 @@ public class RunnerInteractionZone : MonoBehaviour
 
 			float sectionHeight =  background.renderer.bounds.size.y;
 			float zoneHeight = sectionHeight * sectionSpan;
-			float minHeight = sectionWidth * minimumSectionSpan;
+			float minHeight = sectionHeight * minimumSectionSpan;
 			start = transform.position.yAdd( -0.5f * zoneHeight );
 			stop = start.yAdd( zoneHeight );
 
