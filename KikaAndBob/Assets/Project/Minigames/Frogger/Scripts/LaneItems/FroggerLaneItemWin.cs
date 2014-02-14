@@ -42,8 +42,7 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 		Vector3[] path = new Vector3[]
 		{
 			transform.position,
-			transform.position + new Vector3(5, 2, 0),
-			transform.position + new Vector3(13, 5, 0)
+			new Vector3(transform.position.x + 13, FroggerLaneManager.use.levelTopY + 2, transform.position.z)
 		};
 
 		gameObject.MoveTo(path).Time(1.0f).IgnoreTimeScale(true).Execute();
