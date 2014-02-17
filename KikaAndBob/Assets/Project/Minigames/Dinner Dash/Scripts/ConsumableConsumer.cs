@@ -147,7 +147,7 @@ public class ConsumableConsumer : IConsumableUser
 			// TODO:
 			// currentConsumable is now the money. The Mover will process this accordingly
 			GameObject.Destroy( currentConsumable.gameObject.GetComponent<ConsumableHighlight>() );
-			DinnerDashManager.use.Mover.AddConsumable( currentConsumable );
+			DinnerDashManager.use.Mover.AddConsumable( currentConsumable, this );
 			
 			//2. client leaves
 
@@ -200,12 +200,13 @@ public class ConsumableConsumer : IConsumableUser
 		state = State.Paying;
 		PlayAnimation( AnimationType.Idle );
 		
-		LugusCoroutines.use.StartRoutine( PaymentRoutine() );
+		LugusCoroutines.use.StartRoutine( PaymentRoutine( orderTime.Random() ) );
 	}
 
-	protected IEnumerator PaymentRoutine() 
+	protected IEnumerator PaymentRoutine(float delay) 
 	{
-		yield return new WaitForSeconds( orderTime.Random() );
+		if( delay != 0.0f )
+			yield return new WaitForSeconds( delay );
 		
 		Consumable money = (Consumable) GameObject.Instantiate( moneyPrefab );
 		
@@ -214,6 +215,8 @@ public class ConsumableConsumer : IConsumableUser
 		currentConsumable.transform.parent = this.transform.parent;
 		currentConsumable.transform.position = place.consumableLocation.position;
 		currentConsumable.gameObject.AddComponent<ConsumableHighlight>();
+
+		yield break;
 	}
 
 	protected void PlayAnimation(AnimationType type)
@@ -313,8 +316,8 @@ public class ConsumableConsumer : IConsumableUser
 		}
 
 		//Debug.LogError("PlayingAnimation " + animationName + " // " + transform.Path () );
-		//animation.CrossFade( animationName, 1.0f );
-		animation.Play ( animationName );
+		animation.CrossFade( animationName, 1.0f );
+		//animation.Play ( animationName );
 	}
 
 	protected IEnumerator WaitingRoutine(State beginningState)
@@ -489,8 +492,17 @@ public class ConsumableConsumer : IConsumableUser
 	}
 	
 	// Update is called once per frame 
-	void Update () {
-		
+	void Update () 
+	{
+		// TODO: just for testing, remove this!
+		if( LugusInput.use.KeyDown( KeyCode.P ) && this.place != null )
+		{
+			this.happiness = Random.Range(0, 11);
+			LugusCoroutines.use.StartRoutine( PaymentRoutine(0.0f) );
+			this.state = State.Paying;
+			Use ();
+		}
+
 	}
 
 	void OnGUI()

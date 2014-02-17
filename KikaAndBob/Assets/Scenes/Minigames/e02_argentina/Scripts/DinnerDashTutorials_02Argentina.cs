@@ -8,6 +8,9 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 
 	public override void NextStep()
 	{
+		if( !DinnerDashManager.use.GameRunning )
+			return;
+
 		if( config == null )
 		{
 			config = (DinnerDashConfig_02Argentina) IDinnerDashConfig.use;
@@ -43,7 +46,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 
 		++stepCount;
 
-		Debug.LogError ("Tutorial0 step " + stepCount);
+		Debug.Log ("Tutorial0 step " + stepCount);
 
 		if( stepCount == 1 )
 		{
@@ -52,15 +55,15 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 9 )
 		{
-			SingleOrderFull( 2, config.BurgerProducer );
+			SingleOrderFull( 2, "e02_argentina.tutorial.1.burger", config.BurgerProducer );
 		}
 		else if( stepCount < 16 )
 		{
-			SingleOrderFull( 9, config.BurgerLongProducer );
+			SingleOrderFull( 9, "e02_argentina.tutorial.1.burgerLong", config.BurgerLongProducer );
 		}
 		else if( stepCount < 24 )
 		{
-			DoubleOrderFull( 16, config.BurgerProducer, config.BurgerLongProducer );
+			DoubleOrderFull( 16, "e02_argentina.tutorial.1.doubleOrder", config.BurgerProducer, config.BurgerLongProducer );
 		}
 
 	}
@@ -78,7 +81,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 12 )
 		{
-			SingleProcessorOrderFull( 2, config.VegetableProducer, config.StewPot );
+			SingleProcessorOrderFull( 2, "e02_argentina.tutorial.2.stew" , config.VegetableProducer, config.StewPot );
 		} 
 
 		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
@@ -86,6 +89,8 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		}
 	}
+
+	protected bool dumpFoodShown = false;
 
 	public void Tutorial2_Step()
 	{
@@ -100,21 +105,28 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		}
 		else if( stepCount < 12 )
 		{
-			SingleProcessorOrderFull( 2, config.OrangeProducer, config.Blender );
+			SingleProcessorOrderFull( 2, "e02_argentina.tutorial.3.juice", config.OrangeProducer, config.Blender );
 		} 
 		
 		if( DinnerDashManager.use.consumerManager.currentOrderIndex == 3 )
 		{
 			DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 			// TODO: if excessive food: dishwasher, penalty
+
+			if( !dumpFoodShown )
+			{
+				dumpFoodShown = true;
+				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.dumpFood") ).Show (10.0f);
+			}
 		}
 	}
 
+	protected bool streakShown = false;
 	public void Tutorial3_Step()
 	{
 		++stepCount;
 		
-		Debug.LogError ("Tutorial3 step " + stepCount);
+		Debug.LogError ("Tutorial3 step " + stepCount + " // orderindex : " + DinnerDashManager.use.consumerManager.currentOrderIndex);
 		
 		if( stepCount == 1 )
 		{
@@ -124,5 +136,21 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 			// first step before beginning : CTOR
 			DinnerDashManager.use.consumerManager.onConsumerStateChange += OnConsumerStateChanged;
 		}
+
+		if( stepCount == 3 )
+		{
+			DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.angry") ).Show (10.0f);
+		}
+
+		/*
+		if( stepCount == 11 )
+		{
+			if( !streakShown ) 
+			{
+				streakShown = true;
+				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.streak") ).Show (10.0f);
+			}
+		} 
+		*/
 	}
 }

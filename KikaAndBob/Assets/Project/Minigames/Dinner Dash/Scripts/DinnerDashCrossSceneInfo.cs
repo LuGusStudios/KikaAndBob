@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DinnerDashCrossSceneInfo : MonoBehaviour 
+public class DinnerDashCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
 {
 		
 	public static DinnerDashCrossSceneInfo use	
@@ -27,16 +27,16 @@ public class DinnerDashCrossSceneInfo : MonoBehaviour
 		GameObject.Destroy( this.gameObject );
 	}
 	
-	public int levelToLoad = 0;
-	
-	// Use this for initialization
-	void Start () {
-		
+	public int levelToLoad = -1;
+
+	public void SetLevelIndex(int index)
+	{
+		levelToLoad = index;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	public int GetLevelIndex()
+	{
+		return levelToLoad;
 	}
 
 }

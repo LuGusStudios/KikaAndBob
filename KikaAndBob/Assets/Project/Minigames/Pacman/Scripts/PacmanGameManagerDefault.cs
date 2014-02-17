@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault> {
 }
 
-public class PacmanGameManagerDefault : MonoBehaviour {
+public class PacmanGameManagerDefault : IGameManager {
 
 	public bool gameRunning = false;
-	protected float timer = 120;
+	protected float timer = 0.0f;
 	protected int lives = 3;
 	protected bool gameDone = false;
 	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
@@ -16,6 +16,22 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	protected Transform level = null;
 	protected List<PacmanPlayerCharacter> playerChars = new List<PacmanPlayerCharacter>();
 	protected int currentLevelIndex = 0;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+
+	public override void StartGame()
+	{
+
+	}
+
+	public override void StopGame()
+	{
+		
+	}
+
+	public override bool GameRunning
+	{
+		get{ return gameRunning; }
+	}
 
 	protected void Awake () 
 	{
@@ -29,7 +45,42 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 	protected void Start()
 	{
-		StartNewLevel();
+		levelLoader.FindLevels();
+		
+		PacmanLevelManager.use.ClearLevel();
+		
+		if (PacmanCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			string levelData = levelLoader.GetLevelData(PacmanCrossSceneInfo.use.GetLevelIndex());
+			
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				PacmanLevelDefinition newLevel = PacmanLevelDefinition.FromXML(levelData);
+				PacmanLevelManager.use.levels = new PacmanLevelDefinition[]{newLevel};
+			}
+			else
+			{
+				Debug.LogError("FroggerGameManager: Invalid level data!");
+			}
+			
+			// if a level wasn't found above, we can still load a default level
+			StartNewLevel();
+		}
+	}
+
+	protected void Update()
+	{
+		if (!gameRunning || Paused)
+			return;
+
+
+		timer += Time.deltaTime;
 	}
 
 	public List<PacmanPlayerCharacter> GetPlayerChars()
@@ -88,8 +139,9 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		// reset lives
 		lives = 3;
+
+		PacmanGUIManager.use.ResetGUI();
 		PacmanGUIManager.use.UpdateLives(lives);
-	//	PacmanGUIManager.use.UpdateKeyGUIItems();
 
 		gameRunning = true;
 
@@ -151,7 +203,7 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 	
 	public void ResetGame()
 	{
-		timer = 120;
+		timer = 0.0f;
 		lives = 3;
 		gameDone = false;
 		
@@ -175,15 +227,21 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 
 		if (lives > 0)
 		{
-			PacmanGUIManager.use.UpdateLives(lives);
-			StartNewRound();
 			Debug.Log("You lose one life!");
+
+			PacmanGUIManager.use.UpdateLives(lives);
+			PacmanGUIManager.use.PauseTimer(true);
+			HUDManager.use.FailScreen.Show(2.5f);
+
+			yield return new WaitForSeconds(2.5f);
+
+			PacmanGUIManager.use.PauseTimer(false);
+			StartNewRound();
 		}
 		else
 		{
-			PacmanGUIManager.use.ShowGameOverMessage();
-			yield return new WaitForSeconds(1f);
-			StartNewLevel();
+			PacmanGUIManager.use.UpdateLives(lives);
+			PacmanGUIManager.use.ShowGameOverMessage(timer);
 			Debug.Log("You lost the game!");
 		}
 	}
@@ -203,9 +261,21 @@ public class PacmanGameManagerDefault : MonoBehaviour {
 			currentLevelIndex ++;
 		}
 
-		PacmanGUIManager.use.ShowWinMessage();
+		PacmanGUIManager.use.ShowWinMessage(timer);
 	}
-	
 
+	protected void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+		
+		foreach(int index in levelLoader.levelIndices)
+		{
+			if (GUILayout.Button("Load level: " + index))
+			{
+				levelLoader.LoadLevel(index);
+			}
+		}	
+	}
 }
 

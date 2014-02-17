@@ -5,6 +5,23 @@ using System.Collections.Generic;
 [System.Serializable]
 public class FroggerLevelDefinition : ScriptableObject {
 
+	public static FroggerLevelDefinition FromXML(string rawData)
+	{
+		TinyXmlReader parser = new TinyXmlReader(rawData);
+
+		while (parser.Read())
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) &&
+				(parser.tagName == "Level"))
+			{
+				return FroggerLevelDefinition.FromXML(parser);
+			}
+		}
+
+		// If we end up here, then no level tag was found...
+		return null;
+	}
+
 	public static FroggerLevelDefinition FromXML(TinyXmlReader parser)
 	{
 		// Check whether the parser is at the correct tag first.
@@ -73,7 +90,10 @@ public class FroggerLevelDefinition : ScriptableObject {
 	}
 
 	public string backgroundMusicName = "";
+	[HideInInspector]
+	public int levelPostFix = 1;
 	public FroggerLaneDefinition[] lanes;
+
 
 	// Arrays of serialized classes are not created with default values
 	// Instead, initialize values once in OnEnable (which runs AFTER deserialization), checking for null / zero value

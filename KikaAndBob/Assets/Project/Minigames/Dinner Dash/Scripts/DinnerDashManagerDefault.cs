@@ -7,7 +7,7 @@ public class DinnerDashManager : LugusSingletonExisting<IDinnerDashManager>
 
 }
 
-public abstract class IDinnerDashManager : MonoBehaviour
+public abstract class IDinnerDashManager : IGameManager
 {
 	protected ConsumableMover _mover = null;
 	public ConsumableMover Mover
@@ -25,13 +25,37 @@ public abstract class IDinnerDashManager : MonoBehaviour
 
 	public ConsumableConsumerManager consumerManager = null;
 
-	public abstract void StartGame();
-	public abstract void StopGame();
+	public float moneyScore = 0.0f;
+	public float targetMoneyScore = -1.0f; // < 0 means no money score
+	public float timeout = 300.0f; // how long the user can play in SECONDS (this is default 5 minutes). < 0 = no timeout
+
+	public IEnumerator TimeoutRoutine()
+	{
+		if( timeout < 0.0f )
+		{
+			// no timeout set (for example for tutorial levels)
+			// so skip this function
+			yield break;
+		}
+
+		yield return new WaitForSeconds(timeout);
+
+		if( GameRunning )
+		{
+			StopGame();
+		}
+	}
 }
 
 public class DinnerDashManagerDefault : IDinnerDashManager
 {
 	public GameObject checkMark = null;
+
+	protected bool _gameRunning = false;
+	public override bool GameRunning
+	{
+		get{ return _gameRunning; }
+	}
 
 	public void SetupLocal()
 	{
@@ -51,23 +75,117 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	
 	public void SetupGlobal()
 	{
+		HUDManager.use.RepositionPauseButton( KikaAndBob.ScreenAnchor.Top);
+
 		// lookup references to objects / scripts outside of this script
+
+		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
+#if UNITY_EDITOR
+		//if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
+		//	DinnerDashCrossSceneInfo.use.levelToLoad = 1;
+#endif
+
+		//Debug.LogError("DINNER DASH TO LOAD" + DinnerDashCrossSceneInfo.use.levelToLoad);
+
+		
+		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+		if( background != LugusResources.use.errorAudio )
+		{
+			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+		}
+
+
+		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+
+			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad) + ".intro") );  
+			introBox.boxType = DialogueBox.BoxType.Continue;
+			introBox.onContinueButtonClicked += OnStartButtonClicked;
+			introBox.Show(); 
+		}
+	}
+
+	protected void OnStartButtonClicked(DialogueBox box)
+	{
+		box.onContinueButtonClicked -= OnStartButtonClicked;
+		box.Hide();
+
+		StartGame ();
 	}
 
 	public override void StartGame()
 	{
-		StopGame ();
+		_gameRunning = true;
+
+		//StopGame ();
 		Debug.Log ("Starting dinner dash");
 
+		// empty the queue
+		// when this was added, you could click on the items in the level while the beginning dialoguebox was still showing
+		// the queue would fill up and the mover would start moving to sometimes no-longer existing items
+		foreach( IConsumableUser obj in queue )
+		{
+			ToggleCheckmark( obj, false );
+		}
+		queue.Clear();
+
+		
+		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
 
 		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
 
 		consumerManager.StartConsumerGeneration();
 	}
 
-	public override void StopGame()
+	public override void StopGame() 
 	{
-		Debug.Log ("Stopping dinner dash");
+		_gameRunning = false;
+
+		HUDManager.use.StopAll();
+		DialogueManager.use.HideAll();
+
+
+		/*
+		DialogueBox outroBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".outro") );  
+		outroBox.boxType = DialogueBox.BoxType.Continue;
+		outroBox.onContinueButtonClicked += BackToMenu; 
+		outroBox.Show(); 
+		*/
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+
+		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
+		bool success = true;
+		if( targetMoneyScore > 0.0f )
+		{
+			HUDManager.use.LevelEndScreen.Counter1.suffix = " / " + targetMoneyScore;
+
+			if( moneyScore < targetMoneyScore )
+			{
+				success = false;
+			}
+		}
+
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Money;
+		HUDManager.use.LevelEndScreen.Show(success);
+		HUDManager.use.LevelEndScreen.Counter1.SetValue( moneyScore, true );
+
+		if( success )
+		{
+
+			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad) );
+			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad, true, true );
+			LugusConfig.use.SaveProfiles();
+		}
+
+
+		Debug.Log ("Stopping dinner dash " + moneyScore + " >= " + targetMoneyScore);
 
 		if( queueRoutineHandle != null )
 		{
@@ -81,12 +199,27 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		}
 	}
 
+	/*
+	protected void BackToMenu(DialogueBox box)
+	{
+		box.onContinueButtonClicked -= BackToMenu;
+		box.Hide(); 
+
+		HUDManager.use.DisableAll();
+
+		MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
+	}
+	*/
+
 	public List<IConsumableUser> queue = new List<IConsumableUser>();
 
 	protected ILugusCoroutineHandle queueRoutineHandle = null;
 
 	protected void Update()
 	{
+		if( LugusInput.use.KeyDown(KeyCode.S) )
+			StopGame();
+
 		Transform hit = LugusInput.use.RayCastFromMouseUp( LugusCamera.game );
 		if( hit == null )
 			return;

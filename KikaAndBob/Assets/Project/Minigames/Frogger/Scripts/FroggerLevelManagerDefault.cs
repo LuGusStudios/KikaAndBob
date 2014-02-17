@@ -14,11 +14,22 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 	public GameObject[] lanePrefabs;
 	public GameObject[] laneItemPrefabs;
 	protected LugusAudioTrackSettings musicSettings = null;
+	protected Transform lanesRoot = null;
 
-	void Awake()
+	public void SetupLocal()
 	{
 		musicSettings = new LugusAudioTrackSettings();
 		musicSettings.Loop(true).Volume(0.2f);
+
+		if (lanesRoot == null)
+			lanesRoot = GameObject.Find("Level/Lanes").transform;
+		if (lanesRoot == null)
+			Debug.LogError("FroggerLevelManagerDefault: Missing lanes root transform.");
+	}
+
+	void Awake()
+	{
+		SetupLocal();
 	}
 
 	public void LoadLevel(string levelName)
@@ -58,6 +69,22 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		}
 	}
 
+	public void ClearLevel()
+	{
+		#if UNITY_EDITOR
+		// clear existing level
+		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+		{
+			DestroyImmediate(lanesRoot.GetChild(i).gameObject);
+		}
+		#else
+		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+		{
+			Destroy(lanesRoot.GetChild(i).gameObject);
+		}
+		#endif
+	}
+
 	public void BuildLevel(FroggerLevelDefinition level)
 	{
 		if (level == null)
@@ -69,23 +96,12 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		FroggerLaneManager.use.levelBottomY = 0;
 		FroggerLaneManager.use.levelTopY = 0;
 
+		ClearLevel();
+
 		Transform lanesRoot = GameObject.Find("Level/Lanes").transform;
 		int laneIndex = 0;
 		float currentY = 0;
 		List<FroggerLane> lanes = new List<FroggerLane>();
-	
-		#if UNITY_EDITOR
-		// clear existing level
-			for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
-			{
-				DestroyImmediate(lanesRoot.GetChild(i).gameObject);
-			}
-		#else
-			for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
-			{
-				Destroy(lanesRoot.GetChild(i).gameObject);
-			}
-		#endif
 
 		// set up new level
 		foreach (FroggerLaneDefinition laneDefinition in level.lanes) 
@@ -147,10 +163,6 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		}
 
 		FroggerLaneManager.use.SetLanes(lanes);
-
-
-
-
 
 		if (lanes.Count > 0)
 		{

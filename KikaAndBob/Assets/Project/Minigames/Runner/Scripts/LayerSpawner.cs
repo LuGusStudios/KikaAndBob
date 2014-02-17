@@ -89,12 +89,12 @@ public class LayerSpawner : MonoBehaviour
 			// EAST
 			float rightBound = currentSection.transform.position.x + (currentSection.width / 2.0f);
 			// TODO: add some pixels to UIWidth so we're 100% sure offscreen? 
-			float leftBound = LugusCamera.game.transform.position.x - (LugusUtil.UIWidth / 200.0f); // by 2 to get half, by 100 for pixels to units ratio
+			float leftBound = LugusCamera.game.transform.position.x - (LugusUtil.UIWidth / 2.0f);
 
 
 			// SOUTH
 			float bottomBound = currentSection.transform.position.y - (currentSection.height / 2.0f);
-			float topBound = LugusCamera.game.transform.position.y + (LugusUtil.UIHeight / 200.0f);
+			float topBound = LugusCamera.game.transform.position.y + (LugusUtil.UIHeight / 2.0f);
 
 
 			// TODO: find a better way? now we can only detect left an bottom, what about up and right?
@@ -104,7 +104,7 @@ public class LayerSpawner : MonoBehaviour
 			// NORTH
 			// moving up, so if we're offscreen on the bottom we can respawn
 			topBound = currentSection.transform.position.y + (currentSection.height / 2.0f);
-			bottomBound = LugusCamera.game.transform.position.y - (LugusUtil.UIHeight / 200.0f);
+			bottomBound = LugusCamera.game.transform.position.y - (LugusUtil.UIHeight / 2.0f);
 
 			bool offscreenBottom = bottomBound > topBound;
 

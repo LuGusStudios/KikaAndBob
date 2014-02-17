@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
   m_Name: KeniaLevel02
   m_EditorClassIdentifier: 
-  backgroundMusicName: 
+  backgroundMusicName: e01_kenia_background
+  levelPostFix: 2
   lanes:
   - laneID: LaneMud
     goRight: 1
@@ -73,6 +74,8 @@ MonoBehaviour:
       positioning: .819999993
     - spawnID: Dung
       positioning: .449999988
+    - spawnID: Pickup
+      positioning: .119999997
   - laneID: LaneGrass
     goRight: 1
     speed: 2
@@ -125,6 +128,8 @@ MonoBehaviour:
       positioning: .419999987
     - spawnID: Tree01
       positioning: .150000006
+    - spawnID: Pickup
+      positioning: .779999971
   - laneID: LaneGrass
     goRight: 1
     speed: 4
@@ -137,6 +142,8 @@ MonoBehaviour:
       positioning: .219999999
     - spawnID: Tree02
       positioning: .670000017
+    - spawnID: Pickup
+      positioning: .0700000003
   - laneID: LaneDirt
     goRight: 0
     speed: 4
@@ -182,4 +189,6 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems: []
+    spawnItems:
+    - spawnID: Tilly
+      positioning: .5

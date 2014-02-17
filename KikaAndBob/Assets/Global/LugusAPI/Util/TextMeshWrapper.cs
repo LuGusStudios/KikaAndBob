@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(TextMesh))] 
 public class TextMeshWrapperHelper : LugusSingletonRuntime<TextMeshWrapperHelper>
 {
-	public void WrapText( TextMesh targetMesh, float maxWidth )
+	public void WrapText( TextMesh targetMesh, float maxWidth, bool allowSplit = true )
 	{
 		TextMesh workMesh = GetComponent<TextMesh>();
 
@@ -14,6 +14,8 @@ public class TextMeshWrapperHelper : LugusSingletonRuntime<TextMeshWrapperHelper
 		workMesh.characterSize = targetMesh.characterSize;
 		
 		targetMesh.text = targetMesh.text.Replace("<br>", "\n");
+		targetMesh.text = targetMesh.text.Replace("<br/>", "\n");
+		targetMesh.text = targetMesh.text.Replace("\\n", "\n");
 		
 		string[] words = targetMesh.text.Split(' ');
 		
@@ -30,7 +32,7 @@ public class TextMeshWrapperHelper : LugusSingletonRuntime<TextMeshWrapperHelper
 			
 			//Debug.Log("WrapText : textSize is now " + textSize + ", ySize: " + mesh.renderer.bounds.size.y + ", zSize: " + mesh.renderer.bounds.size.z + " -> " + newString);
 			
-			if( textSize > maxWidth )
+			if( allowSplit && (textSize > maxWidth) )
 			{
 				textString = words[i] + " ";
 				newString += "\n" + words[i] + " ";
@@ -57,6 +59,7 @@ public class TextMeshWrapper : MonoBehaviour
 	public float width = -1;
 	public bool autoUpdate = false;
 	public bool allowSmallerCharacterSize = true;
+	public bool allowSplit = true;
 
 	public TextMesh textMesh;
 
@@ -89,6 +92,12 @@ public class TextMeshWrapper : MonoBehaviour
 		}
 
 		textMesh = GetComponent<TextMesh>(); 
+		if (textMesh == null)
+		{
+			Debug.LogError("TextMeshWrapper: Missing text mesh!", gameObject);
+			return;
+		}
+
 		savedText = textMesh.text;
 
 		originalCharacterSize = textMesh.characterSize;
@@ -96,7 +105,19 @@ public class TextMeshWrapper : MonoBehaviour
 
 	void Start ()
 	{
-		TextMeshWrapperHelper.use.WrapText(textMesh, width);
+		//TextMeshWrapperHelper.use.WrapText(textMesh, width, allowSplit);
+		UpdateWrapping();
+	}
+
+	public void SetTextKey(string key)
+	{
+		SetText ( LugusResources.use.Localized.GetText(key) );
+	}
+
+	public void SetText(string text)
+	{
+		textMesh.text = text;
+		UpdateWrapping();
 	}
 
 	public void UpdateWrapping()
@@ -110,7 +131,7 @@ public class TextMeshWrapper : MonoBehaviour
 			textMesh.text = savedText;
 
 
-			TextMeshWrapperHelper.use.WrapText(textMesh, width);
+			TextMeshWrapperHelper.use.WrapText(textMesh, width, allowSplit);
 
 			
 			if( textMesh.renderer.bounds.size.x > width )

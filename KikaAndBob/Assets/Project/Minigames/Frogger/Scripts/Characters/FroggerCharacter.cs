@@ -26,16 +26,21 @@ public class FroggerCharacter : MonoBehaviour {
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
 	protected ParticleSystem hitParticles = null;
-	protected FroggerCharacterAnimator characterAnimator = null;
+	[HideInInspector]
+	public FroggerCharacterAnimator characterAnimator = null;
 	protected Vector3 originalScale = Vector3.one;
 	protected BoneAnimation[] boneAnimations;
 	protected Renderer[] renderers;
 	protected BoxCollider boundsCollider;	// this is not a 2D collider, because bounds cannot be retrieved for those 
 											// (this collider is primarily used for clamping characters to the screen)
 
-	protected void Start()
+	protected void Awake()
 	{
 		SetUpLocal();
+	}
+
+	protected void Start()
+	{
 	}
 
 	public virtual void SetUpLocal()

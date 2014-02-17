@@ -4,6 +4,58 @@ using System.Collections.Generic;
 
 public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig> 
 {
+	public virtual void LoadLevel(int index)
+	{
+		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
+	}
+
+	public void SetupHUDForTutorial()//int targetScore)
+	{
+		// top left is simple timer
+		// top right is x/y for money
+
+		HUDManager.use.DisableAll();
+
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.TimeS;
+		HUDManager.use.CounterLargeLeft1.StartTimer();
+		
+		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Money;
+		HUDManager.use.CounterLargeRight1.suffix = "/" + DinnerDashManager.use.targetMoneyScore;
+		HUDManager.use.CounterLargeRight1.SetValue(0);
+
+		
+		//HUDManager.use.Counter1.gameObject.SetActive(true);
+		//HUDManager.use.Counter2.gameObject.SetActive(true);
+		//HUDManager.use.Counter3.gameObject.SetActive(true); 
+		
+		//HUDManager.use.Counter1.SetValue(10);
+		//HUDManager.use.Counter2.StartTimer(HUDCounter.Formatting.TimeMS);
+		//HUDManager.use.Counter3.StartTimer();
+	}
+	
+	public void SetupHUDForGame()
+	{
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+		HUDManager.use.RepositionPauseButton( KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopLeft );
+		
+		HUDManager.use.ProgressBarLeft.gameObject.SetActive(true); 
+		HUDManager.use.ProgressBarLeft.SetTimer(DinnerDashManager.use.timeout);
+		
+		//HUDManager.use.Counter1.gameObject.SetActive(true);
+		//HUDManager.use.Counter2.gameObject.SetActive(true);
+		//HUDManager.use.Counter3.gameObject.SetActive(true);
+		
+		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Money;
+		HUDManager.use.CounterLargeRight1.SetValue(0);
+	}
 
 	public List<ConsumableDefinition> CreateOrder(ConsumableDefinition one)
 	{

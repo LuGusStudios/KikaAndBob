@@ -30,7 +30,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 	
 	public void SetupGlobal()
 	{
-		RunnerInteractionManager.use.Deactivate(); 
+		//RunnerInteractionManager.use.Deactivate(); 
 
 		// de-parent from a section and parent to the character
 		transform.parent = LugusCamera.game.transform; //null; //GameObject.Find ("Character").transform;
@@ -60,7 +60,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		yield return new WaitForSeconds(1.0f);
 
 
-		RunnerInteractionManager.use.Activate();
+		//RunnerInteractionManager.use.Activate();
 		
 		GameObject.Destroy(this.gameObject);
 	}
