@@ -24,7 +24,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected int scoreModifierStep = 1;
 	protected int nextMessageIndex = 1;
 	protected float scoreIncreaseStep = 0.2f;
-	protected TextMesh scoreDisplay = null;
 	protected TextMesh message = null;
 	protected ILugusCoroutineHandle messageRoutine = null;
 	protected string[] messages = new string[]
@@ -54,18 +53,12 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	void Start()
 	{
 		SetupGlobal();
-		scoreDisplay.text = "0";
 		message.gameObject.SetActive(false);
 	}
 
 	public void SetupLocal()
 	{
 		Transform guiParent = GameObject.Find("GUI_Debug").transform;
-
-		if (scoreDisplay == null)
-			scoreDisplay = guiParent.FindChild("ScoreDisplay").GetComponent<TextMesh>();
-		if (scoreDisplay == null)
-			Debug.LogError("No score display found in scene.");
 
 		if (message == null)
 			message = guiParent.FindChild("Message").gameObject.GetComponent<TextMesh>();
@@ -75,6 +68,14 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupGlobal()
 	{
+	}
+
+	public void ResetGUI()
+	{
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeLeft1.SetValue(0);
 	}
 
 	public float GetScoreModifier()
@@ -100,7 +101,8 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
 			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
-			DisplayScoreGainAtLane(lane, scoreAdd, true);
+		//	DisplayScoreGainAtLane(lane, scoreAdd, true);
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(lane.laneColor).Execute();
 
 			if (scoreModifier >= (maxScoreModifier / 6) * nextMessageIndex)
 			{
@@ -147,10 +149,16 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 			// incorrect pressing does not lower modifier, but does subtract penalty score
 
-			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f);
-			DisplayScoreGainAtLane(lane, scoreAdd, false);
+			if (score <= 0)
+			{
+				return;
+			}
 
-			score -= scoreAdd;	// subtract half of maximum score
+			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f) * -1;
+			//DisplayScoreGainAtLane(lane, scoreAdd, false);
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(Color.red).MinValue(0).Execute();
+
+			score += scoreAdd;	// subtract half of maximum score
 
 			if (score < 0)
 			{
@@ -165,7 +173,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
-		scoreDisplay.text = score.ToString();
+	
+
+		//HUDManager.use.CounterLargeLeft1.SetValue(score);
 
 		if (type == ScoreType.PRESS_CORRECT)
 		{

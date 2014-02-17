@@ -21,7 +21,7 @@ public abstract class IHUDElement : MonoBehaviour
 	}
 
 	public abstract void SetValue(float value, bool animate = true);
-	public abstract void AddValue(float value, bool animate = true);
+	public abstract void AddValue(float value, bool animate = true, float minValue = Mathf.NegativeInfinity, float maxValue = Mathf.Infinity);
 
 	public abstract void Stop();
 
