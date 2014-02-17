@@ -15,6 +15,7 @@ public class StepLevelMenu : IMenuStep
 	protected float offScreenDistance = 20.0f;
 	protected int pageCounter = 0;
 	protected List<int> levelIndices;
+	protected bool switchingPages = false;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void SetupLocal()
@@ -65,7 +66,6 @@ public class StepLevelMenu : IMenuStep
 		{
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
-
 		levelIndices = levelLoader.FindLevels();
 	}
 	
@@ -106,7 +106,7 @@ public class StepLevelMenu : IMenuStep
 			}
 		}
 
-		if (buttonLeft.pressed)
+		if (buttonLeft.pressed && !switchingPages)
 		{
 			if (pageCounter >= 1)
 			{
@@ -121,9 +121,9 @@ public class StepLevelMenu : IMenuStep
 			LugusCoroutines.use.StartRoutine(SwitchPages(false));
 		}
 
-		if (buttonRight.pressed)
+		if (buttonRight.pressed && !switchingPages)
 		{
-			if (pageCounter < 1)		// TO DO: Figure out the maximum here based on nr of levels. Now set to 1 max.
+			if (pageCounter < Mathf.CeilToInt(levelIndices.Count / 5 ))		// TO DO: Figure out the maximum here based on nr of levels. Now set to 1 max.
 			{
 				++pageCounter;
 			}
@@ -144,10 +144,34 @@ public class StepLevelMenu : IMenuStep
 
 	public override void Activate()
 	{
-		activated = true;
-		//levelIndices =
 		gameObject.SetActive(true);
-		FlyIn(true);
+		
+//		if (levelIndices == null)
+//			SetupLocal();
+
+		HUDManager.use.LevelEndScreen.gameObject.SetActive(false);
+		HUDManager.use.DisableAll();
+
+		// make sure the very first level is always available
+		// it would make sense to put this under Start or Awake, but since this menu can start inactive, it's possible that those get called AFTER this method, which is unwanted
+//		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
+//			LugusConfig.use.User.SetBool(Application.loadedLevelName + ".1", true, true);
+
+		if (levelIndices.Count <= 0)
+		{
+			Debug.LogError("StepLevelMenu: There are no level config files!");
+			levelLoader.LoadLevel(1);
+			EnableBars(0);
+			return;
+		}
+		else if (levelIndices.Count == 1)
+		{
+			levelLoader.LoadLevel(1);
+			return;
+		}
+		
+		activated = true;
+		UpdateAndFlyIn(true);
 		LoadLevelData();
 	}
 
@@ -162,8 +186,6 @@ public class StepLevelMenu : IMenuStep
 	protected void LoadLevelData()
 	{
 		// TO DO: Set data about levels here (name, description, etc.)
-
-		EnableBars(levelIndices.Count);
 	}
 
 	protected void EnableBars(int amount)
@@ -171,30 +193,49 @@ public class StepLevelMenu : IMenuStep
 		for (int i = 0; i < levelBars.Count; i++) 
 		{
 			if (i < amount)
+			{
 				levelBars[i].gameObject.SetActive(true);
+
+			}
 			else
+			{
 				levelBars[i].gameObject.SetActive(false);
+			}
 		}
 
- 		if (amount >= 5 && levelIndices.Count > 5)
+		if (levelIndices.Count <= 5)
+		{
+			buttonLeft.gameObject.SetActive(false);
+			buttonRight.gameObject.SetActive(false);
+		}
+		else if ((levelIndices.Count - (pageCounter * 5)) <= 5)
 		{
 			buttonLeft.gameObject.SetActive(true);
+			buttonRight.gameObject.SetActive(false);
+		}
+		else if (pageCounter == 0)
+		{
+			buttonLeft.gameObject.SetActive(false);
 			buttonRight.gameObject.SetActive(true);
 		}
 		else
 		{
-			buttonLeft.gameObject.SetActive(false);
-			buttonRight.gameObject.SetActive(false);
+			buttonLeft.gameObject.SetActive(true);
+			buttonRight.gameObject.SetActive(true);
 		}
 	}
 
 	protected IEnumerator SwitchPages(bool toRight)
 	{
+		switchingPages = true;
+
 		FlyOut(toRight);
 
 		yield return new WaitForSeconds(0.51f);	// a little longer than the iTween animation to prevent double iTweens
 
-		FlyIn(toRight);
+		UpdateAndFlyIn(toRight);
+
+		switchingPages = false;
 	}
 
 	protected void FlyOut(bool toRight)
@@ -216,7 +257,7 @@ public class StepLevelMenu : IMenuStep
 		}
 	}
 
-	protected void FlyIn(bool toRight)
+	protected void UpdateAndFlyIn(bool toRight)
 	{
 		float delay = 0.0f;
 		foreach(Transform t in levelBars)
@@ -233,13 +274,60 @@ public class StepLevelMenu : IMenuStep
 
 		int pageStart = pageCounter * 5;
 
-		for (int i = pageStart + 1; i < pageStart + 6; i++) 
-		{
-			string levelName = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".name");
-			levelBars[i-1].transform.FindChild("Name").GetComponent<TextMeshWrapper>().SetText(levelName);
+		EnableBars(levelIndices.Count - pageStart);
 
-			string levelDescription = LugusResources.use.Levels.GetText(Application.loadedLevelName + "." + i.ToString() + ".description");
-			levelBars[i-1].transform.FindChild("Description").GetComponent<TextMeshWrapper>().SetText(levelDescription); 
+		bool previousUnlocked = true;
+		
+		for (int i = pageStart; i < pageStart + 5; i++)
+		{
+			if (i >= levelIndices.Count)
+				break;
+
+			Transform bar = levelBars[i % 5]; // always count between 0 and 4
+
+			if (!bar.gameObject.activeInHierarchy)
+				continue;
+
+			string levelKey = Application.loadedLevelName + "." + levelIndices[i];
+
+			string levelName = LugusResources.use.Levels.GetText(levelKey + ".name");
+			bar.FindChild("Name").GetComponent<TextMeshWrapper>().SetText(levelName);
+
+			string levelDescription = LugusResources.use.Levels.GetText(levelKey + ".description");
+			bar.FindChild("Description").GetComponent<TextMeshWrapper>().SetText(levelDescription); 
+
+			bool currentUnlocked = LugusConfig.use.User.GetBool(levelKey, false);
+
+			bool unlocked = false;
+
+			if (i == 0)	// first item is always unlocked
+			{
+				unlocked = true;
+			}
+			else // subsequent items are unlocked if previous one has been won
+			{
+				unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i-1], false);
+			}
+
+			bar.FindChild("ButtonPlay").gameObject.SetActive(unlocked);
+
+			foreach(SpriteRenderer sr in bar.GetComponentsInChildren<SpriteRenderer>(false))
+			{
+				if (unlocked)
+					sr.color = sr.color.a(1.0f);
+				else
+					sr.color = sr.color.a(0.6f);
+			}
+
+			foreach(TextMesh tm in bar.GetComponentsInChildren<TextMesh>(false))
+			{
+				if (unlocked)
+					tm.color = tm.color.a(1.0f);
+				else
+					tm.color = tm.color.a(0.6f);
+			}
+
+
 		}
 	}
 }

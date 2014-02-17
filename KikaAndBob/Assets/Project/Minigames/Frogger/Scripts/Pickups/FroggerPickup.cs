@@ -18,25 +18,8 @@ public class FroggerPickup : FroggerLaneItem
 
 		bool foundAll = true;
 
-		// could cache these at the level start, but this we can also add pickups at runtime if need be
-		foreach(FroggerPickup p in (FroggerPickup[]) FindObjectsOfType(typeof(FroggerPickup)))
-		{
-			if (p.GetPickedUp() == false)
-			{
-				foundAll = false;
-				break;
-			}
-		}
-
-		if (foundAll)
-		{
-			Debug.Log("All pickups found.");
-			FroggerGameManager.use.WinGame();
-		}
-		else
-		{
-			Debug.Log("Not all pickups found.");
-		}
+		FroggerGameManager.use.ModifyPickUpCount(1);
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(this.transform.position).Execute();
 	}
 
 	public bool GetPickedUp()

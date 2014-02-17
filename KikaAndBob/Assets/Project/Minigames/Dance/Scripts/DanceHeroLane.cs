@@ -12,6 +12,8 @@ public class DanceHeroLane : MonoBehaviour
 	public Transform scoreDisplay = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
+
+	public Color laneColor = Color.white;
 	
 //	[HideInInspector]
 //	public BoneAnimation characterAnim = null;
@@ -29,6 +31,7 @@ public class DanceHeroLane : MonoBehaviour
 	protected int currentLeadingItemIndex = 0;
 
 	protected ILugusCoroutineHandle highlightRoutine = null;
+
 
 
 	public void Hide()

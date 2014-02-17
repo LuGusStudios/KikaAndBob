@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
   m_Name: KeniaLevel_lion
   m_EditorClassIdentifier: 
-  backgroundMusicName: 
+  backgroundMusicName: e01_kenia_background
+  levelPostFix: 5
   lanes:
   - laneID: LaneGrass
     goRight: 0
@@ -63,16 +64,12 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems:
-    - spawnID: Pickup
-      positioning: .200000003
-    - spawnID: Pickup
-      positioning: .400000006
-    - spawnID: Pickup
-      positioning: .600000024
-    - spawnID: Pickup
-      positioning: .800000012
-    - spawnID: Rock
-      positioning: .5
+    - spawnID: SpikyShrub
+      positioning: .519999981
+    - spawnID: SpikyShrub
+      positioning: .790000021
+    - spawnID: SpikyShrub
+      positioning: .189999998
   - laneID: LaneDirt
     goRight: 1
     speed: 4
@@ -81,8 +78,12 @@ MonoBehaviour:
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
     spawnItems:
-    - spawnID: Rock
+    - spawnID: Tree01
       positioning: .550000012
+    - spawnID: Dung
+      positioning: .340000004
+    - spawnID: Pickup
+      positioning: .430000007
   - laneID: LaneDirt
     goRight: 1
     speed: 4
@@ -99,8 +100,6 @@ MonoBehaviour:
       positioning: .769999981
     - spawnID: SpikyShrub
       positioning: .0500000007
-    - spawnID: Pickup
-      positioning: .200000003
   - laneID: LaneLionAmbush
     goRight: 1
     speed: 4
@@ -121,7 +120,7 @@ MonoBehaviour:
     spawnItems:
     - spawnID: SpikyShrub
       positioning: .449999988
-    - spawnID: Rock
+    - spawnID: Tree02
       positioning: .200000003
     - spawnID: SpikyShrub
       positioning: .899999976
@@ -138,7 +137,7 @@ MonoBehaviour:
     backgroundScrollingSpeed: 0
     spawnItems:
     - spawnID: Rock
-      positioning: .5
+      positioning: .430000007
     - spawnID: Pickup
       positioning: .699999988
     - spawnID: Pickup
@@ -157,8 +156,10 @@ MonoBehaviour:
       positioning: .550000012
     - spawnID: Pickup
       positioning: .850000024
-    - spawnID: Rock
+    - spawnID: Tree03
       positioning: .699999988
+    - spawnID: Tree01
+      positioning: .449999988
   - laneID: LaneLionAmbush
     goRight: 1
     speed: 4
