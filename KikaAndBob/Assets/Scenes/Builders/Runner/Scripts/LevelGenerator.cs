@@ -13,6 +13,7 @@ public class LevelGenerator : MonoBehaviour
 	public void Generate()
 	{
 		LugusCoroutines.use.StartRoutine( GenerationRoutine() );
+		RunnerInteractionManager.use.ResetSeed();
 	}
 
 	public IEnumerator GenerationRoutine()

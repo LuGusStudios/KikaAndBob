@@ -50,6 +50,13 @@ public interface IRunnerCharacterController_FasterSlower
 public class RunnerCharacterController : MonoBehaviour 
 {
 	private static IRunnerCharacterController _use = null;
+
+	public static void Reset()
+	{
+		_use = null;
+		_jumpSlide = null;
+		_fasterSlower = null;
+	}
 	
 	public static IRunnerCharacterController use 
 	{ 

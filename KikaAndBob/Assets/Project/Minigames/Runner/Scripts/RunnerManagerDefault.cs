@@ -82,6 +82,11 @@ public class RunnerManagerDefault : MonoBehaviour
 		}
 	}
 
+	public void OnDisable()
+	{
+		RunnerCharacterController.Reset();
+	}
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only

@@ -17,6 +17,13 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public List<RunnerInteractionZone> zones = new List<RunnerInteractionZone>();
 	public LayerSpawner groundLayer = null;
 
+	private int listCount = 3;
+	public List<RunnerInteractionZone>[] zoneDiff ;
+	public LugusRandomGeneratorSequence[] zoneRndSeq;
+	public LugusRandomGeneratorUniform zoneRndUni;
+	public LugusRandomGeneratorDistribution zoneRndDist;
+	private int rndSeed = 5;
+
 	public enum Direction
 	{
 		NONE = -1,
@@ -29,7 +36,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public Direction direction = Direction.EAST;
 
-	public float sectionSpanMultiplier = 1.0f;
+	public float sectionSpanMultiplier = 2f;
 	public float maximumDifficulty = 6;
 
 	//protected int nextZoneCountdown = 0;
@@ -65,8 +72,12 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 			do
 			{
-				zonePrefab = zones[ Random.Range(0, zones.Count) ];
-				zoneOK = (zonePrefab != lastSpawned);
+				int nextZone = Mathf.Clamp((int)zoneRndDist.Next(),0,zoneDiff[0].Count-1);
+				//Debug.Log("nextzone : " + nextZone);
+				//zonePrefab = zoneDiff[nextZone][(int)zoneRndSeq[nextZone].Next()];
+				zonePrefab = zoneDiff[0][nextZone];
+				//zonePrefab = zones[ Random.Range(0, zones.Count) ];
+				//zoneOK = (zonePrefab.sectionSpan != lastSpawned.sectionSpan);
 
 				if( zoneOK ) // if equal to the previous, we're probably not going to spawn it anyway, so avoid these next checks
 				{
@@ -189,6 +200,12 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		sectionSpanOverflow = Mathf.Max ( sectionSpanOverflow, -0.4f ); // make sure we don't spawn too far in the "previous" section or we might see some popping there
 
 		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
+
+		zoneRndDist.Delta ++;
+		if (zoneRndDist.Delta >= zoneDiff[0].Count) 
+		{
+			zoneRndDist.Delta = 1;
+		}
 	}
 
 	public void SetupLocal()
@@ -216,21 +233,53 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		{
 			Debug.LogError(name + " : no InteractionZones found!");
 		}
+
 	}
 
 	public void CacheInteractionZones()
 	{
+		zoneRndUni = new LugusRandomGeneratorUniform(rndSeed);
+
 		if( zones.Count > 0 )
 			zones.Clear();
 
 		GameObject zoneContainer = GameObject.Find ("Zones");
 		
 		zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>(true) );
-		
+
+		zoneDiff = new List<RunnerInteractionZone>[listCount];
+		zoneRndSeq = new LugusRandomGeneratorSequence[listCount];
+
+		for (int i = 0; i < listCount; i++) 
+		{
+			zoneDiff[i] = new List<RunnerInteractionZone>();
+		}
+
 		foreach( RunnerInteractionZone zone in zones )
 		{
 			zone.gameObject.SetActive(false);
 		}
+
+		for (int i = 0; i < maximumDifficulty; i++) 
+		{
+			foreach( RunnerInteractionZone zone in zones )
+			{
+				if(zone.difficulty == i)
+				{
+					zoneDiff[0].Add(zone);
+				}
+			}
+		}
+
+		zoneRndDist = new LugusRandomGeneratorDistribution(Distribution.Triangular,-2,zoneDiff[0].Count+1,9999,rndSeed);
+
+		ResetSeed();
+//		for (int i = 0; i < listCount; i++) 
+//		{
+//			zoneRndSeq[i] = new LugusRandomGeneratorSequence(0,zoneDiff[i].Count-1);
+//			zoneRndSeq[i].SetSeed(rndSeed);
+//			Debug.Log("zone count : " + zoneDiff[i].Count);
+//		}
 	}
 
 	public void SetupGlobal()
@@ -260,5 +309,31 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	protected void Update () 
 	{
 	
+	}
+
+	public void ResetSeed()
+	{
+		zoneRndDist.Delta = 0;
+		zoneRndUni.SetSeed(rndSeed);
+		zoneRndDist.SetSeed(rndSeed);
+		sectionSpanOverflow = 0.0f;
+	}
+	private string _seed = "";
+	void OnGUI()
+	{
+		if (!LugusDebug.debug)
+			return;
+
+		GUILayout.BeginArea( new Rect(210, Screen.height - 150, 200, 150) );
+		GUILayout.Label("Current Seed : " + rndSeed);
+		_seed = GUILayout.TextField(rndSeed.ToString());
+		int.TryParse(_seed, out rndSeed);
+		if (GUILayout.Button("Change Seed"))
+		{
+
+			ResetSeed();
+		}
+
+		GUILayout.EndArea();
 	}
 }
