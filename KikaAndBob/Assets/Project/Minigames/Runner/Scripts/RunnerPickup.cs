@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class RunnerPickup : MonoBehaviour 
 {
+	public bool activated = true;
+
 	// if positive: disappear and grant points
 	// if negative: remain, hit and possibly detract points
 	public bool positive = true;
@@ -25,6 +27,9 @@ public class RunnerPickup : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other) 
 	{
+		if( !activated )
+			return;
+
 		IRunnerCharacterController controller = other.transform.GetComponent( typeof(IRunnerCharacterController) ) as IRunnerCharacterController;
 		if( controller != null )
 		{
@@ -32,7 +37,19 @@ public class RunnerPickup : MonoBehaviour
 		}
 	}
 
-	public virtual void ProcessHit(IRunnerCharacterController character)
+	void OnCollisionEnter2D(Collision2D collision) 
+	{
+		if( !activated )
+			return;
+
+		IRunnerCharacterController controller = collision.transform.GetComponent( typeof(IRunnerCharacterController) ) as IRunnerCharacterController;
+		if( controller != null )
+		{
+			ProcessHit( controller, false );
+		}
+	}
+
+	public virtual void ProcessHit(IRunnerCharacterController character, bool canDisableCollider = true)
 	{
 		character.OnPickupHit(this);
 		
@@ -45,14 +62,15 @@ public class RunnerPickup : MonoBehaviour
 		}
 		else
 		{
-			this.collider2D.enabled = false;
+			if( canDisableCollider )
+				this.collider2D.enabled = false;
 		}
 	}
 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
-		if( this.collider2D == null || !this.collider2D.isTrigger )
+		if( this.collider2D == null )//|| !this.collider2D.isTrigger )
 		{
 			Debug.LogError(transform.Path() + " : RunnerPickup has no collider or the collider is not set as Trigger!!");
 		}

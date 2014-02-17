@@ -75,6 +75,26 @@ public class RunnerManagerDefault : IGameManager
 		}
 	}
 
+	public float TraveledDistance
+	{
+		get
+		{
+			bool horizontal = ( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.EAST ||
+			                   RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.WEST );
+			
+			MonoBehaviour character = RunnerCharacterController.useBehaviour;
+
+			if( horizontal )
+			{
+				return distanceTraveledStore + Mathf.Abs( character.transform.position.x - characterReferencePosition.x );
+			}
+			else
+			{
+				return distanceTraveledStore + Mathf.Abs( character.transform.position.y - characterReferencePosition.y );
+			}
+		}
+	}
+
 	public Vector3 characterReferencePosition = Vector3.zero;
 	public float distanceTraveledStore = 0.0f;
 	public IEnumerator DistanceRoutine()
@@ -83,26 +103,17 @@ public class RunnerManagerDefault : IGameManager
 		{
 			yield break;
 		}
-
+		
 		MonoBehaviour character = RunnerCharacterController.useBehaviour;
 		characterReferencePosition = character.transform.position;
 
-		bool horizontal = ( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.EAST ||
-		                   RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.WEST );
 
 		float distance = 0.0f;
 		IHUDElement visualizer = HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Distance);
 
 		while( distance < targetDistance )
 		{
-			if( horizontal )
-			{
-				distance = distanceTraveledStore + Mathf.Abs( character.transform.position.x - characterReferencePosition.x );
-			}
-			else
-			{
-				distance = distanceTraveledStore + Mathf.Abs( character.transform.position.y - characterReferencePosition.y );
-			}
+			distance = TraveledDistance;
 
 			visualizer.SetValue( distance, false );
 			yield return null;

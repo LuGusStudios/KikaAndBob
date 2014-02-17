@@ -165,6 +165,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		difficulty2 = RunnerInteractionManager.use.difficultyRange.to;
 
 		lifeCount = RunnerManager.use.lifeCount;
+
+		targetDistance = RunnerManager.use.targetDistance;
 	}
 
 	public void ShowAdjustmentGUI()
