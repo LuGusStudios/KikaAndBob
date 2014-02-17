@@ -149,9 +149,14 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 			// incorrect pressing does not lower modifier, but does subtract penalty score
 
+			if (score <= 0)
+			{
+				return;
+			}
+
 			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f) * -1;
 			//DisplayScoreGainAtLane(lane, scoreAdd, false);
-			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(Color.red).Execute();
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(Color.red).MinValue(0).Execute();
 
 			score += scoreAdd;	// subtract half of maximum score
 
