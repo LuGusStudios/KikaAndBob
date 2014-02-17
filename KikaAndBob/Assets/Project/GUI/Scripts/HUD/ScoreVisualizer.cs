@@ -122,9 +122,21 @@ public class Score
 		return this;
 	}
 
+	public Score TextKey(string textKey)
+	{
+		_text = LugusResources.use.Localized.GetText(textKey);
+		return this;
+	}
+
 	public Score Title(string title)
 	{
 		_title = title;
+		return this;
+	}
+	
+	public Score TitleKey(string titleKey)
+	{
+		_title = LugusResources.use.Localized.GetText(titleKey);
 		return this;
 	}
 

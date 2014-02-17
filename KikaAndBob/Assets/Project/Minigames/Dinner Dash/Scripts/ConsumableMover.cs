@@ -442,7 +442,7 @@ public class ConsumableMover : LugusSingletonExisting<ConsumableMover>
 			}
 
 			text = "" + order + " +" + extra;
-			title = "" + LugusResources.use.Localized.GetText("dinerdash.tutorial.score.title." + happinessBucket);
+			title = "" + LugusResources.use.Localized.GetText("dinerdash.score.title." + happinessBucket);
 		}
 
 		// TODO: score!
