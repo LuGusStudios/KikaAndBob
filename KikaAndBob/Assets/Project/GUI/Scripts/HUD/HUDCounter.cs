@@ -43,7 +43,7 @@ public class HUDCounter : IHUDElement
 			StopTimer();
 	}
 
-	public override void AddValue(float value, bool animate = true)
+	public override void AddValue(float value, bool animate = true, float minValue = Mathf.NegativeInfinity, float maxValue = Mathf.Infinity)
 	{
 
 		if( timerMode )
@@ -56,8 +56,12 @@ public class HUDCounter : IHUDElement
 			value = currentValue + value;
 		}
 
+		value = Mathf.Clamp(value, minValue, maxValue);
+		
 		SetValue( value, animate );
 	}
+
+
 
 	public override void SetValue(float value, bool animate = true)
 	{
