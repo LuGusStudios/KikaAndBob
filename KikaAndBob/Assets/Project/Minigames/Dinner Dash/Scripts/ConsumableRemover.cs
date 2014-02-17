@@ -76,6 +76,7 @@ public class ConsumableRemover : IConsumableUser
 			ScoreVisualizer
 				.Score ( KikaAndBob.CommodityType.Money, scoreAmount )
 					.Audio ("BugSquash01")
+					.MinValue( 0.0f )
 					.Color ( Color.red )
 					.Position( position ) // 100 pixels
 					.Text ( "" + Mathf.FloorToInt(scoreAmount) )
