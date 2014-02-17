@@ -35,13 +35,25 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	}
 
 	public Direction direction = Direction.EAST;
+	
+	public DataRange sectionSpanMultiplierRange = null;
+	public DataRange difficultyRange = null;
+	public float timeToMax = 60.0f;
+	protected float startTime = -1.0f;
 
-	public float sectionSpanMultiplier = 2f;
+	// READ_ONLY for external classes: constantly adjusted. Use the Range-vars above to adjust these values over time
+	public float sectionSpanMultiplier = 1.0f;
 	public float maximumDifficulty = 6;
 
 	//protected int nextZoneCountdown = 0;
 	protected float sectionSpanOverflow = 0.0f;
 	protected RunnerInteractionZone lastSpawned = null;
+
+	public void StartTimer()
+	{
+		// needed to correctly interpolate between the sectionspans and difficulty ranges
+		startTime = Time.time;
+	}
 
 	public void OnSectionSwitch(LayerSection currentSection, LayerSection newSection)
 	{
@@ -53,6 +65,17 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		//Debug.LogError("SECTION SWITCH ACCEPTED " + zones.Count + " // " + sectionSpanOverflow);
 
 		//return;
+
+		float progressionPercentage = 1.0f;
+		if( (Time.time - startTime) < timeToMax )
+		{
+			DataRange timeRange = new DataRange( startTime, startTime + timeToMax );
+			progressionPercentage = timeRange.PercentageInInterval( Time.time );
+		}
+
+		sectionSpanMultiplier = sectionSpanMultiplierRange.ValueFromPercentage( progressionPercentage );
+		maximumDifficulty = difficultyRange.ValueFromPercentage( progressionPercentage );
+
 
 		float sectionSpan = sectionSpanOverflow;
 
@@ -133,6 +156,8 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 
 			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
+			if( newSectionSpan < zonePrefab.minimumSectionSpan )
+				newSectionSpan = zonePrefab.minimumSectionSpan;
 
 			if( (sectionSpan + newSectionSpan > 0.9f) && zonePrefab.autoDestroy ) // not 1.0f but 0.9f, to provide some extra padding
 			{
