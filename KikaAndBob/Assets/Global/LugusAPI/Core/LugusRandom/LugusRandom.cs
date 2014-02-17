@@ -151,6 +151,7 @@ public class LugusRandomDefault
 	public LugusRandomDefault()
 	{
 		//rndList = new Light<ILugusRandomGenerator>();
+		_uniform = new LugusRandomGeneratorUniform();
 	}
 
 	public float Next()

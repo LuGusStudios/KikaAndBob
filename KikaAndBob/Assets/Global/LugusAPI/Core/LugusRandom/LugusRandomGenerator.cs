@@ -67,7 +67,7 @@ public abstract class ILugusRandomGenerator
 
 public class LugusRandomGeneratorUniform : ILugusRandomGenerator
 {
-	public LugusRandomGeneratorUniform(){}
+	public LugusRandomGeneratorUniform():this(System.DateTime.Now.Millisecond){}
 	public LugusRandomGeneratorUniform(int seed)
 	{
 		SetSeed(seed);
@@ -182,7 +182,7 @@ public class LugusRandomGeneratorSequence : ILugusRandomGenerator
 	}
 	public IEnumerator Sequence()
 	{
-		while (true) 
+		while (true && _listRange.Count != 0) 
 		{
 			float previous = _listRange[ListRange.Count-1];
 			int x = 0;
@@ -196,6 +196,7 @@ public class LugusRandomGeneratorSequence : ILugusRandomGenerator
 				yield return (float)_listRange[i];
 			}
 		}
+		yield return -1.0f;
 	}
 	protected void FillList(DataRange dr)
 	{

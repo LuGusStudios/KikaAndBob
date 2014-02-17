@@ -48,11 +48,11 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 		RunnerInteractionManager.use.maximumDifficulty = 6;
 
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
-		List<string> inactiveZones = new List<string>();
-		inactiveZones.Add("Enemy1"); // tasmanian devil 1
-		inactiveZones.Add("Enemy2"); // tasmanian devil 2
+		//List<string> inactiveZones = new List<string>();
+		//inactiveZones.Add("Enemy1"); // tasmanian devil 1
+		//inactiveZones.Add("Enemy2"); // tasmanian devil 2
 
-		DisableInteractionZones( inactiveZones );
+		//DisableInteractionZones( inactiveZones );
 	}
 
 	public void SetupGlobal()
