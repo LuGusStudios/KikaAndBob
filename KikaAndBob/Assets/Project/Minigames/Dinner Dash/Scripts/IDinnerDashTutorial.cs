@@ -71,7 +71,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			//Debug.Log ("TAP CUSTOMER for DISHES");
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "MouseLeftSmall01" ).Show ();
 		}
 		else if( stepCount == startCount + 2 )
 		{
@@ -80,7 +80,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed += OnConsumableUsed;
 			arrow.Show( GameObject.Find ("GarbageBin") );
 
-			DialogueManager.use.CreateBox( GameObject.Find ("GarbageBin").transform, text, "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( GameObject.Find ("GarbageBin").transform, text, "MouseLeftSmall01" ).Show ();
 		}
 		else if( stepCount == startCount + 3 )
 		{
@@ -89,7 +89,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			GameObject.Find ("GarbageBin").GetComponent<ConsumableRemover>().onUsed -= OnConsumableUsed;
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, text, "MouseLeftSmall01" ).Show ();
 		}
 		else if( stepCount == startCount + 4 )
 		{
@@ -114,7 +114,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	{
 		if( stepCount == startCount  ) 
 		{
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "MouseLeftSmall01" ).Show ();
 
 			arrow.Show( producer );
 			producer.GetComponent<ConsumableProducer>().onUsed += OnConsumableUsed;
@@ -122,7 +122,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "MouseLeftSmall01" ).Show ();
 
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			producer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
@@ -138,7 +138,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	{
 		if( stepCount == startCount )
 		{
-			DialogueManager.use.CreateBox( producer1.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( producer1.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "MouseLeftSmall01" ).Show ();
 
 			arrow.Show( producer1 );
 			producer1.GetComponent<IConsumableUser>().onUsed += OnConsumableUsed;
@@ -146,7 +146,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( producer2.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( producer2.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "MouseLeftSmall01" ).Show ();
 
 			producer1.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
 			
@@ -156,7 +156,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 2 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, LugusResources.use.Localized.GetText(textBase + ".3"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, LugusResources.use.Localized.GetText(textBase + ".3"), "MouseLeftSmall01" ).Show ();
 
 			producer2.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
 
@@ -208,7 +208,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 	{
 		if( stepCount == startCount )
 		{
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".1"), "MouseLeftSmall01" ).Show ();
 
 			arrow.Show( producer );
 			producer.GetComponent<IConsumableUser>().onUsed += OnConsumableUsed;
@@ -216,7 +216,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( processor.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( processor.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "MouseLeftSmall01" ).Show ();
 
 			producer.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
 			
@@ -243,7 +243,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		{
 			// sandwich tapped
 			//Debug.Log ("TAP processor");
-			DialogueManager.use.CreateBox( processor.transform, LugusResources.use.Localized.GetText(textBase + ".4"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( processor.transform, LugusResources.use.Localized.GetText(textBase + ".4"), "MouseLeftSmall01" ).Show ();
 
 			processor.GetComponent<ConsumableProcessor>().onProcessingEnd -= OnProcessorEnd;
 			
@@ -254,7 +254,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		{
 			// sandwich tapped
 			//Debug.Log ("TAP CUSTOMER");
-			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, LugusResources.use.Localized.GetText(textBase + ".5"), "mouse.left.click" ).Show ();
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, LugusResources.use.Localized.GetText(textBase + ".5"), "MouseLeftSmall01" ).Show ();
 
 			processor.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
 			
