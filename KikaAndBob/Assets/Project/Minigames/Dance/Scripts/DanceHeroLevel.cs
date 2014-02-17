@@ -266,7 +266,9 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	protected IEnumerator LevelEndRoutine(float levelDuration)
 	{
 		yield return new WaitForSeconds(levelDuration);
-		
+
+		yield return new WaitForSeconds(2.0f);
+
 		LevelFinished();
 	}
 	
@@ -276,6 +278,13 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		{
 			onLevelFinished();
 		}
+
+		HUDManager.use.LevelEndScreen.Show(true);
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
 
 		Debug.Log("Level finished!");
 	}
@@ -318,7 +327,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-			
+
 			string levelData = levelLoader.GetLevelData(DanceHeroCrossSceneInfo.use.GetLevelIndex());
 			
 			if (!string.IsNullOrEmpty(levelData))
@@ -329,6 +338,8 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 			{
 				Debug.LogError("DanceHeroLevel: Invalid level data!");
 			}
+
+			DanceHeroFeedback.use.ResetGUI();
 		}
 	}
 
