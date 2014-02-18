@@ -116,7 +116,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
-		//HUDManager.use.LevelEndScreen.Counter1.se
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer);
 
 	}
 
