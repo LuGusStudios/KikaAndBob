@@ -20,7 +20,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		}
 		if (guiParent == null)
 		{
-			Debug.LogError("Could not find GUI parent object.");
+			Debug.LogError("Could not find GUI parent object."); 
 		}
 
 		if (keysParent == null)
@@ -116,6 +116,8 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
+		//HUDManager.use.LevelEndScreen.Counter1.se
+
 	}
 
 	// this will get called each time a new key index has been added
