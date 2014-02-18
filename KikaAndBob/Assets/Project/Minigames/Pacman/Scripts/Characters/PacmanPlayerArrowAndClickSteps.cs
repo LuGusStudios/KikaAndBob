@@ -9,7 +9,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	private void Update () 
 	{
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
 			return;
 		
 		DetectCurrentTile();
@@ -30,7 +30,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	private void CheckClick()
 	{
-		if (LugusInput.use.down)
+		if (LugusInput.use.down && PacmanGameManager.use.GameRunning)
 		{
 			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
 				return;

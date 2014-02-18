@@ -19,7 +19,7 @@ public class ProgressBar : IHUDElement
 			StopTimer();
 	}
 
-	public override void AddValue(float value, bool animate = true)
+	public override void AddValue(float value, bool animate = true, float minValue = Mathf.NegativeInfinity, float maxValue = Mathf.Infinity)
 	{
 		if( timerMode )
 		{
@@ -30,7 +30,9 @@ public class ProgressBar : IHUDElement
 		{
 			value = currentValue + value;
 		}
-		
+
+		value = Mathf.Clamp(value, minValue, maxValue);
+
 		SetValue( value, animate );
 	}
 

@@ -7,7 +7,7 @@ public class PacmanPlayerCharacterClick : PacmanPlayerCharacter {
 
 	private void Update () 
 	{
-		if (!PacmanGameManager.use.gameRunning)
+		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
 			return;
 		
 		DetectCurrentTile();
