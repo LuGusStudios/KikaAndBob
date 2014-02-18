@@ -106,6 +106,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		/*
 		if( up )
 		{

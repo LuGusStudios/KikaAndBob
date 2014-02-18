@@ -130,7 +130,7 @@ public class RunnerManagerDefault : IGameManager
 					finishLinePositioned = true;
 
 					GameObject finishLine = GameObject.Find ("FinishLine01");
-					finishLine.transform.position = character.transform.position.x (0.0f).yAdd( -1.0f * LugusUtil.UIHeight);
+					finishLine.transform.position = character.transform.position.x (0.0f).yAdd( -1.0f * LugusUtil.UIHeight + 2.0f); // +2f so we stop when kika is halfway in the line instead of before
 
 					//Debug.LogError ("POSITIONING FINISHLINE " + finishLine.transform.position );
 
@@ -271,6 +271,13 @@ public class RunnerManagerDefault : IGameManager
 		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
 		//	RunnerCrossSceneInfo.use.levelToLoad = 1;
 		#endif
+
+		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+		if( background != LugusResources.use.errorAudio ) 
+		{
+			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+		}
+
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
 		{
@@ -312,6 +319,7 @@ public class RunnerManagerDefault : IGameManager
 		_gameRunning = false;
 
 		RunnerCharacterController.useBehaviour.enabled = false;
+		RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
 

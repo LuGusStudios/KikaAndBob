@@ -97,6 +97,8 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
 
 		//this.rigidbody2D.AddForce(Vector2.right * speed * 10 * Time.fixedDeltaTime);
 

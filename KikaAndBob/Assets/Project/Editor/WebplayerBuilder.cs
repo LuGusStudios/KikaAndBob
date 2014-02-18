@@ -38,11 +38,6 @@ public class WebplayerBuilder : MonoBehaviour
 	[MenuItem("KikaAndBob/Build for web")]
 	public static void BuildGame ()
 	{
-		// Get filename.
-		string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "KikaAndBob");
-
-		// Application.datapath is /Assets in the editor
-		File.Copy(Application.dataPath + "/Project/Editor/index.php", path + "/index.php");
 
 		// Build players
 
@@ -51,10 +46,13 @@ public class WebplayerBuilder : MonoBehaviour
 		/* 0.3
 		levels.Add( "Assets/Scenes/Builders/Dance/DanceBuilder.unity" );
 		levels.Add( "Assets/Scenes/Builders/Pacman/PacmanBuilder.unity" );
-		levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" );  
-		levels.Add( "Assets/Scenes/Minigames/e05_Mexico/e05_Mexico.unity" ); 
+		levels.Add( "Assets/Scenes/Builders/Runner/RunnerBuilder.unity" ); 
+		levels.Add( "Assets/Scenes/Minigames/e05_Mexico/e05_Mexico.unity" );  
 		*/
 
+		levels.Add( "Assets/Scenes/Minigames/e05_Mexico/e05_Mexico.unity" ); 
+
+		/*
 		// 0.4
 		levels.Add("Assets/Scenes/Minigames/e13_pacific/e13_pacific.unity");
 		levels.Add("Assets/Scenes/Minigames/e09_Brazil/e09_Brazil.unity");
@@ -67,10 +65,21 @@ public class WebplayerBuilder : MonoBehaviour
 		levels.Add("Assets/Scenes/Minigames/e20_morocco/e20_morocco.unity");
 		levels.Add("Assets/Scenes/Minigames/e15_india/e15_india.unity");
 		levels.Add("Assets/Scenes/Builders/DartsBuilder/DartsBuilder.unity");
+		*/
 
-
-
-
+		string levelListOutput = "";
+		foreach( string levelName in levels )
+		{
+			levelListOutput += "" + levelName + "\n";
+		}
+		
+		EditorUtility.DisplayDialog("Scene list", levelListOutput, "ok");
+		
+		// Get filename.
+		string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "KikaAndBob");
+		
+		// Application.datapath is /Assets in the editor
+		File.Copy(Application.dataPath + "/Project/Editor/index.php", path + "/index.php");
 
 		foreach( string currentLevel in levels ) 
 		{

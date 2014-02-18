@@ -74,6 +74,9 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		float timeDiff = Time.time - startTime;
 		if( timeDiff > timeToMaxSpeed )
 		{

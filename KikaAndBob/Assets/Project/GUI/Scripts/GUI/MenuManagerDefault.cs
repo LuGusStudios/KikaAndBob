@@ -118,11 +118,23 @@ public class MenuManagerDefault: MonoBehaviour
 
 		if (nextStep != null)
 		{
-			if (!background.gameObject.activeSelf)
-				background.gameObject.SetActive(true);
+			// if there is only one level, we want to bypass the level selection screen and go directly to the level
+			bool proceed = true;
+			if( nextStep.GetComponent<StepLevelMenu>()!= null )
+			{
+				proceed = !nextStep.GetComponent<StepLevelMenu>().LoadSingleLevel();
+			}
 
-			DeactivateAllMenus();
-			nextStep.Activate();
+			Debug.LogError("PROCEED " + proceed);
+
+			if( proceed )
+			{
+				if (!background.gameObject.activeSelf)
+					background.gameObject.SetActive(true);
+
+				DeactivateAllMenus();
+				nextStep.Activate();
+			}
 		}
 		else
 		{
