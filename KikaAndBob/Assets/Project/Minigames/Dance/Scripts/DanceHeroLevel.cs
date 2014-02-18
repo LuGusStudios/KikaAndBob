@@ -286,6 +286,11 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
 
+		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
+		
+		LugusConfig.use.User.SetBool(saveKey, true, true); 
+		LugusConfig.use.SaveProfiles();
+
 		Debug.Log("Level finished!");
 	}
 	
