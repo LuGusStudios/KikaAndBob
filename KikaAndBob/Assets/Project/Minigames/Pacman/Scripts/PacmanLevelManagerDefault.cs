@@ -65,9 +65,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 //	public delegate void OnLevelBuilt();
 //	public OnLevelBuilt onLevelBuilt;
 	
-	protected int itemsToBePickedUp = 0;
-	protected int itemsPickedUp = 0;
-	protected int doorIteration = 0;
+	public int itemsToBePickedUp = 0;
+	public int itemsPickedUp = 0;
+	//protected int doorIteration = 0;
 
 	protected GameObject doorPrefab = null;
 
@@ -929,6 +929,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		itemsPickedUp++;
 		PacmanGUIManager.use.UpdatePickupCounter(itemsToBePickedUp - itemsPickedUp);
+		CheckPickedUpItems();
 	}
 	
 	public bool AllItemsPickedUp()

@@ -33,6 +33,9 @@ public class Score
 	public string _text = ""; // normally we show the _amount. This can override that.
 	public string _title = ""; // adds a second line of text above the score
 
+	public float _minAmount = Mathf.NegativeInfinity;
+	public float _maxAmount = Mathf.Infinity;
+
 	protected IHUDElement _hud = null;
 	public IHUDElement GetHUDElement()
 	{
@@ -122,9 +125,33 @@ public class Score
 		return this;
 	}
 
+	public Score TextKey(string textKey)
+	{
+		_text = LugusResources.use.Localized.GetText(textKey);
+		return this;
+	}
+
 	public Score Title(string title)
 	{
 		_title = title;
+		return this;
+	}
+	
+	public Score TitleKey(string titleKey)
+	{
+		_title = LugusResources.use.Localized.GetText(titleKey);
+		return this;
+	}
+
+	public Score MinValue(float minAmount)
+	{
+		_minAmount = minAmount;
+		return this;
+	}
+
+	public Score MaxValue(float maxAmount)
+	{
+		_maxAmount = maxAmount;
 		return this;
 	}
 
@@ -240,7 +267,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 	{
 		IHUDElement hud = score.GetHUDElement();
 
-		hud.AddValue( score._amount, score._animate );
+		hud.AddValue( score._amount, score._animate, score._minAmount, score._maxAmount );
 
 
 		// TODO: recycle score object 

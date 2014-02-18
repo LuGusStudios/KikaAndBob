@@ -141,7 +141,8 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 		{
 			DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.angry") ).Show (10.0f);
 		}
-		
+
+		/*
 		if( stepCount == 11 )
 		{
 			if( !streakShown ) 
@@ -149,6 +150,7 @@ public class DinnerDashTutorials_02Argentina : IDinnerDashTutorial
 				streakShown = true;
 				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.TopLeft, LugusResources.use.Localized.GetText("dinerdash.tutorial.streak") ).Show (10.0f);
 			}
-		}
+		} 
+		*/
 	}
 }
