@@ -71,6 +71,6 @@ public class FroggerLaneItemSubmarine : FroggerLaneItem
 
 	private IEnumerator SurfaceRoutine()
 	{
-
+		yield break;
 	}
 }
