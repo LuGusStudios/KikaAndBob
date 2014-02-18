@@ -28,23 +28,24 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 
 	protected void TillyFly(FroggerCharacter character)
 	{
-		FroggerGameManager.use.WinGame();
-
 		FroggerGameManager.use.gameRunning = false;
-
+		
 		if (character is FroggerPlayer) // currently this will never not be the case, but for future compatibility it's not a bad idea to check anyway
 		{
 			character.characterAnimator.PlayAnimation(character.characterAnimator.idleUp);
 		}
-
+		
 		tilly.Play("Tilly_Flying");
-
+		
 		Vector3[] path = new Vector3[]
 		{
 			transform.position,
 			new Vector3(transform.position.x + 13, FroggerLaneManager.use.levelTopY + 2, transform.position.z)
 		};
-
+		
 		gameObject.MoveTo(path).Time(1.0f).IgnoreTimeScale(true).Execute();
+		
+		FroggerGameManager.use.WinGame();
 	}
+
 }

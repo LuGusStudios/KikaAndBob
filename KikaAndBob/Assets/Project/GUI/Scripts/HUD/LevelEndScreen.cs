@@ -52,7 +52,7 @@ public class LevelEndScreen : MonoBehaviour
 			Message.SetTextKey( "global.levelend.failure.message" );
 		}
 
-		Debug.LogError("LevelEndScreen SHOW " + originalPosition);
+		//Debug.LogError("LevelEndScreen SHOW " + originalPosition);
 
 		transform.position = originalPosition; 
 	}
@@ -122,6 +122,10 @@ public class LevelEndScreen : MonoBehaviour
 	{
 		if( ContinueButton.pressed )
 		{
+			HUDManager.use.DisableAll();
+			HUDManager.use.LevelEndScreen.Hide ();
+			DialogueManager.use.HideAll();
+
 			MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
 		}
 		

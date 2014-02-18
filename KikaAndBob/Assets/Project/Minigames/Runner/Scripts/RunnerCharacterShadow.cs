@@ -10,7 +10,9 @@ public class RunnerCharacterShadow : MonoBehaviour
 	public DataRange yRange = new DataRange(-3.982845f, 2.9f);
 	public DataRange scaleFactors = new DataRange(1.0f, 0.5f);
 
-	protected Vector3 originalScale = Vector3.one;
+	public float xOffset = 0.0f;
+
+	public Vector3 originalScale = Vector3.one;
 	
 	public void SetupLocal()
 	{
@@ -29,7 +31,7 @@ public class RunnerCharacterShadow : MonoBehaviour
 	
 	public void SetupGlobal()
 	{
-		transform.position = transform.position.x (character.transform.position.x );
+		transform.position = transform.position.x (character.transform.position.x + xOffset );
 		
 	}
 	
@@ -45,7 +47,7 @@ public class RunnerCharacterShadow : MonoBehaviour
 	
 	protected void Update()
 	{
-		transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x, Time.deltaTime * speed) );
+		transform.position = transform.position.x ( Mathf.Lerp(transform.position.x, character.transform.position.x + xOffset, Time.deltaTime * speed) );
 	
 		float scalePercentage = yRange.PercentageInInterval( character.transform.position.y );
 

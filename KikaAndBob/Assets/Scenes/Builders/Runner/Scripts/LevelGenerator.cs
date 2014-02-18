@@ -8,7 +8,7 @@ public class LevelGenerator : MonoBehaviour
 {
 
 	public int sectionCount = 50;
-	public bool transitionThemes = true;
+	//public bool transitionThemes = true;
 
 	public void Generate()
 	{
@@ -119,9 +119,26 @@ public class LevelGenerator : MonoBehaviour
 		EditorApplication.isPaused = true;
 
 
+		DataRange sectionSpanRange = RunnerInteractionManager.use.sectionSpanMultiplierRange;
+		DataRange difficultyRange = RunnerInteractionManager.use.difficultyRange;
+
+		// 1/5th at the end is full difficulty (as if we're playing after timeToMax has ended)
+		// this means 4/5th at the beginning should progress through the ranges
+
+		DataRange sectionRange = new DataRange(0, sectionCount * 0.8f);
+
+		int currentSectionNr = 0;
 		// 5. spawn new InteractionZones
 		foreach( LayerSection section in sections )
 		{
+			currentSectionNr++;
+
+			float sectionPercentage = sectionRange.PercentageInInterval( currentSectionNr );
+
+			// hard-set the range to the same from-and-to to make sure this value is chosen
+			RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( sectionSpanRange.ValueFromPercentage(sectionPercentage), sectionSpanRange.ValueFromPercentage(sectionPercentage) );
+			RunnerInteractionManager.use.difficultyRange = new DataRange( difficultyRange.ValueFromPercentage(sectionPercentage), difficultyRange.ValueFromPercentage(sectionPercentage) );
+
 			//Debug.Log ("InteractionManager for " + section.name);
 			RunnerInteractionManager.use.activated = true; // combat that nasty eagle and other zones that disable the interactionManager...
 			RunnerInteractionManager.use.OnSectionSwitch( null, section );
