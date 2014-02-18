@@ -135,7 +135,8 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 
 	protected void OnLevelStarted()
 	{
-
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
 	}
 
 	protected void OnLevelFinished()
