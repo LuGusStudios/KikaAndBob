@@ -145,6 +145,13 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	{
 		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Bottom, KikaAndBob.ScreenAnchor.Bottom);
 		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
+		print ("zjxck");
+
+		HUDManager.use.CounterLargeBottomLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeBottomLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeBottomLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeBottomLeft1.SetValue(0);
 		
 		sculptures = new List<Transform>();
 		List<Transform> sculpturePrefabsSelect = new List<Transform>(sculpturePrefabs);
