@@ -40,7 +40,7 @@ public abstract class IHUDElement : MonoBehaviour
 		else if( _commodity == KikaAndBob.CommodityType.Life )
 			iconKey = "IconHeart01";
 		else if( _commodity == KikaAndBob.CommodityType.Score )
-			iconKey = "IconBob01";
+			iconKey = "IconScore01";
 		else if( _commodity == KikaAndBob.CommodityType.Distance )
 			iconKey = "IconSpeed01";
 

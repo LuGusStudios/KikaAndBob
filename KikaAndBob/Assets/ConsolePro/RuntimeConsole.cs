@@ -1,4 +1,5 @@
-﻿#define DEBUG_CONSOLE
+﻿/*
+#define DEBUG_CONSOLE
 #define DEBUG_LEVEL_LOG
 #define DEBUG_LEVEL_WARN
 #define DEBUG_LEVEL_ERROR
@@ -12,7 +13,7 @@
 #endif
 
 // V.M10.D31.2011.R1
-/************************************************************************
+/ ************************************************************************
 * DebugConsole.cs
 * Copyright 2011 Calvin Rien
 * (http://the.darktable.com)
@@ -30,7 +31,7 @@
 * WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, ALL
 * IMPLIED WARRANTIES OF MERCHANTABILITY AND ALL IMPLIED WARRANTIES OF
 * FITNESS FOR A PARTICULAR PURPOSE.
-* ************************************************************************/
+* ************************************************************************ /
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1366,4 +1367,4 @@ namespace UnityMock {
 #endif
     }
   }
-}
+}*/
