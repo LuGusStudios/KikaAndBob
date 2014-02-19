@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class FroggerLaneSubmarine : FroggerLane 
 {
-	public float submarineMoveSpeed = 1f;
+	public float submarineMoveSpeed = 5f;
 
 	protected List<FroggerLaneItemSubmarine> submarines = new List<FroggerLaneItemSubmarine>();
 	protected FroggerCharacter character = null;
+
+	private bool createdIceHole = false;
 
 	protected override void FillStaticItems()
 	{
@@ -26,35 +28,7 @@ public class FroggerLaneSubmarine : FroggerLane
 
 		foreach(KeyValuePair<float, FroggerLaneItem> item in staticSpawnItems)
 		{
-			GameObject spawned = (GameObject)Instantiate(item.Value.gameObject);
-
-			spawned.transform.parent = this.transform;
-			spawned.transform.localPosition = Vector3.zero;
-			spawned.transform.localRotation = Quaternion.identity;
-
-			if (item.Value.behindPlayer) // center transform, so first subtract half the lane size, then position between 0 - 1 lane Length
-				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -1);
-			else
-				spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -10);
-
-
-			// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
-			BoxCollider2D itemCollider = spawned.GetComponent<BoxCollider2D>();
-
-			itemCollider.size = itemCollider.size.y(height / itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
-			itemCollider.center = itemCollider.center.y(surfaceCollider.center.y);
-
-			FroggerLaneItem laneItemScript = spawned.GetComponent<FroggerLaneItem>();
-			staticSpawnedItems.Add(laneItemScript);
-
-			FroggerLaneItemSubmarine submarine = spawned.GetComponent<FroggerLaneItemSubmarine>();
-
-			if (submarine != null)
-			{
-				// Initialize submarine
-
-				submarines.Add(submarine);
-			}
+			SpawnItem(item);
 		}
 
 	}
@@ -68,7 +42,6 @@ public class FroggerLaneSubmarine : FroggerLane
 	protected override void LeaveSurfaceEffect(FroggerCharacter character)
 	{
 		base.LeaveSurfaceEffect(character);
-		this.character = null;
 	}
 
 	protected override void Update()
@@ -100,10 +73,68 @@ public class FroggerLaneSubmarine : FroggerLane
 
 			// If the submarine gets close enough, then let it break through the ice
 			BoxCollider2D subCollider = sub.GetComponent<BoxCollider2D>();
-			if (Mathf.Abs(subCollider.center.x - character.transform.position.x) < subCollider.size.x)
+			if (Mathf.Abs(sub.transform.position.x - character.transform.position.x) < (subCollider.size.x /2))
 			{
-				
+				sub.Surface();
 			}
+		}
+		else if ((sub.state == FroggerLaneItemSubmarine.State.SUBMARINE) && (!createdIceHole))
+		{
+			// Create a ice hole where the submarine was
+			if (sub.iceHolePrefab != null)
+			{
+				float pos = Mathf.InverseLerp(-(laneSize.x * 0.5f), laneSize.x * 0.5f, sub.transform.localPosition.x);
+				KeyValuePair<float, FroggerLaneItem> iceHole = new KeyValuePair<float, FroggerLaneItem>(pos, sub.iceHolePrefab);
+				SpawnItem(iceHole);
+			}
+
+			createdIceHole = true;
+		}
+		else if (sub.state == FroggerLaneItemSubmarine.State.DONE)
+		{
+			
+			// Destroy the submarine
+			submarines.RemoveAt(0);
+			GameObject.Destroy(sub.gameObject);
+			createdIceHole = false;
+
+			if (!onSurface)
+			{
+				character = null;
+			}
+		}
+	}
+
+	private void SpawnItem(KeyValuePair<float, FroggerLaneItem> item)
+	{
+		GameObject spawned = (GameObject)Instantiate(item.Value.gameObject);
+
+		spawned.transform.parent = this.transform;
+		spawned.transform.localPosition = Vector3.zero;
+		spawned.transform.localRotation = Quaternion.identity;
+
+		if (item.Value.behindPlayer) // center transform, so first subtract half the lane size, then position between 0 - 1 lane Length
+			spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -1);
+		else
+			spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -10);
+
+
+		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
+		BoxCollider2D itemCollider = spawned.GetComponent<BoxCollider2D>();
+
+		itemCollider.size = itemCollider.size.y(height / itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
+		itemCollider.center = itemCollider.center.y(surfaceCollider.center.y);
+
+		FroggerLaneItem laneItemScript = spawned.GetComponent<FroggerLaneItem>();
+		staticSpawnedItems.Add(laneItemScript);
+
+		FroggerLaneItemSubmarine submarine = spawned.GetComponent<FroggerLaneItemSubmarine>();
+
+		if (submarine != null)
+		{
+			// Initialize submarine
+			spawned.transform.localPosition = new Vector3(-(laneSize.x * 0.5f) + ((laneSize.x * item.Key)), 0, -0.5f);
+			submarines.Add(submarine);
 		}
 	}
 
