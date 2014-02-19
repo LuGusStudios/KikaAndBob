@@ -367,8 +367,6 @@ public class DanceHeroLevelDefault : IGameManager
 			{
 				Debug.LogError("DanceHeroLevel: Invalid level data!");
 			}
-
-			DanceHeroFeedback.use.ResetGUI();
 		}
 	}
 

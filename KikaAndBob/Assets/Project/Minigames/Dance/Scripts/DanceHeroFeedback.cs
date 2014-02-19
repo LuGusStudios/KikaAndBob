@@ -72,10 +72,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void ResetGUI()
 	{
-		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
-		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
-		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
-		HUDManager.use.CounterLargeLeft1.SetValue(0);
+//		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+//		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+//		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+//		HUDManager.use.CounterLargeLeft1.SetValue(0);
 	}
 
 	public float GetScoreModifier()

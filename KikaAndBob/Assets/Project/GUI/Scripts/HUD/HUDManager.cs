@@ -24,6 +24,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public HUDCounter CounterSmallRight1 = null;
 	public HUDCounter CounterSmallRight2 = null;
 
+	public HUDCounter CounterLargeBottomLeft1 = null;
+
 	public Button PauseButton = null;
 	public PausePopup PausePopup = null;
 
@@ -88,6 +90,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		CounterSmallRight1 = transform.FindChild("CommodityVisualizers/CounterSmallRight1").GetComponent<HUDCounter>();
 		CounterSmallRight2 = transform.FindChild("CommodityVisualizers/CounterSmallRight2").GetComponent<HUDCounter>();
 
+		CounterLargeBottomLeft1 = transform.FindChild("CommodityVisualizers/CounterLargeBottomLeft1").GetComponent<HUDCounter>();
+
 		Counter1 = CounterSmallLeft1;
 		Counter2 = CounterLargeLeft2;
 		Counter3 = CounterSmallRight1;
@@ -102,6 +106,7 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		CounterSmallRight1.gameObject.SetActive( false );
 		CounterSmallRight2.gameObject.SetActive( false );
 
+		CounterLargeBottomLeft1.gameObject.SetActive( false );
 
 		elements.Add ( ProgressBarCenter );
 		elements.Add ( ProgressBarLeft );
@@ -117,6 +122,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		elements.Add ( CounterSmallLeft2 );
 		elements.Add ( CounterSmallRight1 );
 		elements.Add ( CounterSmallRight2 );
+
+		elements.Add ( CounterLargeBottomLeft1 );
 
 		if( PauseButton == null )
 		{
