@@ -124,9 +124,9 @@ public class LevelGenerator : MonoBehaviour
 		DataRange difficultyRange = RunnerInteractionManager.use.difficultyRange;
 
 		// 1/5th at the end is full difficulty (as if we're playing after timeToMax has ended)
-		// this means 4/5th at the beginning should progress through the ranges
+		// this means 1/2th at the beginning should progress through the ranges
 
-		DataRange sectionRange = new DataRange(0, sectionCount * 0.8f);
+		DataRange sectionRange = new DataRange(0, sectionCount * 0.5f);
 
 		int currentSectionNr = 0;
 		// 5. spawn new InteractionZones
@@ -143,6 +143,11 @@ public class LevelGenerator : MonoBehaviour
 			//Debug.Log ("InteractionManager for " + section.name);
 			RunnerInteractionManager.use.activated = true; // combat that nasty eagle and other zones that disable the interactionManager...
 			RunnerInteractionManager.use.OnSectionSwitch( null, section );
+
+			if(sectionCount * 0.6f < currentSectionNr)
+			{
+				currentSectionNr=0;
+			}
 		}
 	}
 

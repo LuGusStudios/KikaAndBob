@@ -87,11 +87,14 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 	int lifeCount = 1;
 	
+	float timeToMaxSpeed = 60.0f;
 	float timeToMax = 60.0f;
 	float sectionSpan1 = 1.0f;
 	float sectionSpan2 = 0.8f;
 	float difficulty1 = 3.0f;
 	float difficulty2 = 6.0f;
+	float timeToHold = 10.0f;
+	int seed = 1;
 
 	float targetDistance = 500.0f;
 
@@ -108,20 +111,23 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		character.SpeedRange().from = LugusConfig.use.User.GetFloat("runner.custom.speed1", speed1);
 		character.SpeedRange().to   = LugusConfig.use.User.GetFloat("runner.custom.speed2", speed2);
 
+		
 		float timeToMax2 = LugusConfig.use.User.GetFloat("runner.custom.timeToMax", timeToMax);
 		RunnerInteractionManager.use.timeToMax = timeToMax2;
 
+		float timeToMaxSpeed2 = LugusConfig.use.User.GetFloat("runner.custom.timeToMaxSpeed",timeToMaxSpeed);
+
 		if( RunnerCharacterControllerJumpSlide.Exists() )
 		{
-			RunnerCharacterControllerJumpSlide.use.timeToMaxSpeed = timeToMax2;
+			RunnerCharacterControllerJumpSlide.use.timeToMaxSpeed = timeToMaxSpeed2;
 		}
 		else if( RunnerCharacterControllerFasterSlower.Exists() )
 		{
-			RunnerCharacterControllerFasterSlower.use.timeToMaxSpeed = timeToMax2;
+			RunnerCharacterControllerFasterSlower.use.timeToMaxSpeed = timeToMaxSpeed2;
 		}
 		else if( RunnerCharacterControllerClimbing.Exists() )
 		{
-			RunnerCharacterControllerClimbing.use.timeToMaxSpeed = timeToMax2;
+			RunnerCharacterControllerClimbing.use.timeToMaxSpeed = timeToMaxSpeed2;
 		}
 
 		
@@ -132,9 +138,12 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		RunnerInteractionManager.use.difficultyRange = new DataRange( LugusConfig.use.User.GetFloat("runner.custom.difficulty1", difficulty1), 
 		                                                              LugusConfig.use.User.GetFloat("runner.custom.difficulty2", difficulty2) );  
 	
-	
+		RunnerInteractionManager.use.timeToHold = LugusConfig.use.User.GetFloat("runner.custom.timeToHold",timeToHold);
+
 		RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
 		RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
+
+		RunnerInteractionManager.use.randomSeed = LugusConfig.use.User.GetInt("runner.custom.seed",seed);
 	}
 
 	public void LoadGUIVarsFromRealSetup()
@@ -147,16 +156,19 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		if( RunnerCharacterControllerJumpSlide.Exists() )
 		{
-			timeToMax = RunnerCharacterControllerJumpSlide.use.timeToMaxSpeed;
+			timeToMaxSpeed = RunnerCharacterControllerJumpSlide.use.timeToMaxSpeed;
 		}
 		else if( RunnerCharacterControllerFasterSlower.Exists() )
 		{
-			timeToMax = RunnerCharacterControllerFasterSlower.use.timeToMaxSpeed;
+			timeToMaxSpeed = RunnerCharacterControllerFasterSlower.use.timeToMaxSpeed;
 		}
 		else if( RunnerCharacterControllerClimbing.Exists() )
 		{
-			timeToMax = RunnerCharacterControllerClimbing.use.timeToMaxSpeed;
+			timeToMaxSpeed = RunnerCharacterControllerClimbing.use.timeToMaxSpeed;
 		}
+
+		timeToMax = RunnerInteractionManager.use.timeToMax;
+		timeToHold = RunnerInteractionManager.use.timeToHold;
 
 		sectionSpan1 = RunnerInteractionManager.use.sectionSpanMultiplierRange.from;
 		sectionSpan2 = RunnerInteractionManager.use.sectionSpanMultiplierRange.to;
@@ -167,6 +179,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		lifeCount = RunnerManager.use.lifeCount;
 
 		targetDistance = RunnerManager.use.targetDistance;
+
+		seed = RunnerInteractionManager.use.randomSeed;
 	}
 
 	public void ShowAdjustmentGUI()
@@ -189,10 +203,10 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			speed = RunnerCharacterControllerClimbing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerClimbing.use.speedPercentage );
 		}
 
-		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 1.5f ) );
+		GUILayout.BeginArea( new Rect(0, 0, 200, Screen.height / 1.1f ) );
 		GUILayout.BeginVertical(GUI.skin.box);
 
-		GUILayout.Label("Speed (1 to 30) Current: " + speed);
+		GUILayout.Label("Speed (1 to 30) Current: " + speed.ToString("F2"));
 		GUILayout.BeginHorizontal();
 
 		GUILayout.Label("From");
@@ -202,6 +216,13 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 		GUILayout.EndHorizontal();
 
+		GUILayout.Label("Time to max speed in seconds");
+		GUILayout.BeginHorizontal();
+		
+		GUILayout.Label("Time"); 
+		timeToMaxSpeed = float.Parse( GUILayout.TextField( "" + timeToMaxSpeed ) );
+		
+		GUILayout.EndHorizontal();
 
 		GUILayout.Label("Distance between zones (1.5f to 0.5f) Current: " + RunnerInteractionManager.use.sectionSpanMultiplier);
 		GUILayout.Label("(lower is more hectic)");
@@ -235,6 +256,13 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		GUILayout.EndHorizontal();
 
+		GUILayout.BeginHorizontal();
+
+		GUILayout.Label("Time to hold max ");
+		timeToHold = float.Parse( GUILayout.TextField( "" + timeToHold ) );
+		
+		GUILayout.EndHorizontal();
+
 		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
 		{
 			GUILayout.Label("Starting lives");
@@ -256,15 +284,27 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			GUILayout.EndHorizontal();
 		}
 
+		GUILayout.Label("Current Seed: " + RunnerInteractionManager.use.randomSeed);
+		GUILayout.BeginHorizontal();
+
+		GUILayout.Label("Seed");
+		if(GUILayout.Button("Random Seed"))
+		{
+			seed = System.DateTime.Now.Millisecond;
+		}
+		seed = int.Parse( GUILayout.TextField(""+seed) );
 
 
+		GUILayout.EndHorizontal();
 
 		if( GUILayout.Button("Load level with these settings") )
 		{
 			LugusConfig.use.User.SetFloat("runner.custom.speed1", speed1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.speed2", speed2, true);
-			
+
+			LugusConfig.use.User.SetFloat("runner.custom.timeToMaxSpeed", timeToMaxSpeed, true);
 			LugusConfig.use.User.SetFloat("runner.custom.timeToMax", timeToMax, true);
+			LugusConfig.use.User.SetFloat("runner.custom.timeToHold", timeToHold, true);
 
 			LugusConfig.use.User.SetFloat("runner.custom.sectionSpan1", sectionSpan1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.sectionSpan2", sectionSpan2, true);  
@@ -274,6 +314,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			
 			LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
 			LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
+
+			LugusConfig.use.User.SetInt("runner.custom.seed",seed,true);
 
 			LugusConfig.use.SaveProfiles();
 
@@ -294,7 +336,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		ShowAdjustmentGUI();
 		
-		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
+		GUILayout.BeginArea( new Rect(0, Screen.height - 120, 200, 120) );
 		GUILayout.Label("Current level : " + (RunnerCrossSceneInfo.use.levelToLoad - 1));
 		for (int i = 0; i < 3; i++) 
 		{
@@ -313,5 +355,6 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			Application.LoadLevel( Application.loadedLevelName );
 		}
 		GUILayout.EndArea();
+		
 	}
 }

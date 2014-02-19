@@ -233,11 +233,6 @@ public class RunnerManagerDefault : IGameManager
 
 	}
 
-	public void OnDisable()
-	{
-		RunnerCharacterController.Reset();
-	}
-
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -251,8 +246,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 1;
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )

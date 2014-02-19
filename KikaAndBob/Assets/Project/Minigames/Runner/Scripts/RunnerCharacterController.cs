@@ -57,13 +57,6 @@ public class RunnerCharacterController : MonoBehaviour
 		_jumpSlide = null;
 		_fasterSlower = null;
 	}
-	
-	public static void Reset()
-	{
-		_use = null;
-		_jumpSlide = null;
-		_fasterSlower = null;
-	}
 
 	public static IRunnerCharacterController use 
 	{ 
