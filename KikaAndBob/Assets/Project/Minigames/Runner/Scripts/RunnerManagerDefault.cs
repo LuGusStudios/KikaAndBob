@@ -95,6 +95,8 @@ public class RunnerManagerDefault : IGameManager
 		}
 	}
 
+	protected bool finishLinePositioned = false;
+
 	public Vector3 characterReferencePosition = Vector3.zero;
 	public float distanceTraveledStore = 0.0f;
 	public IEnumerator DistanceRoutine()
@@ -110,12 +112,32 @@ public class RunnerManagerDefault : IGameManager
 
 		float distance = 0.0f;
 		IHUDElement visualizer = HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Distance);
+		
+		bool horizontal = ( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.EAST ||
+		                   RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.WEST );
 
 		while( distance < targetDistance )
 		{
 			distance = TraveledDistance;
 
 			visualizer.SetValue( distance, false );
+
+			if( !finishLinePositioned && !horizontal )
+			{
+				// vertical: show finish line if almost there!
+				if( targetDistance - distance < (LugusUtil.UIHeight))
+				{
+					finishLinePositioned = true;
+
+					GameObject finishLine = GameObject.Find ("FinishLine01");
+					finishLine.transform.position = character.transform.position.x (0.0f).yAdd( -1.0f * LugusUtil.UIHeight);
+
+					//Debug.LogError ("POSITIONING FINISHLINE " + finishLine.transform.position );
+
+					//finishLine.transform.parent = LayerManager.use.groundLayer.currentSection.transform;
+				}
+			}
+
 			yield return null;
 		}
 

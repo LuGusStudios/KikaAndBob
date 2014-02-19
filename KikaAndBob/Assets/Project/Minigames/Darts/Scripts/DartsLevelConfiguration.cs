@@ -6,6 +6,8 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 {
 	public DartsLevelDefinition[] levels;
 	protected DartsFunctionalityGroup[] groups;
+	protected int currentIndex = 0;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
 	public void SetupLocal()
 	{
@@ -34,10 +36,20 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-			// TO DO: Implement proper loading once XML serialization of level configs has been completed
 
-			// for now, we just take editor-assigned levels (NOTE: DartsCrossSceneInfo.use.GetLevelIndex() is not zero-based!)
-			ConfigureLevel(DartsCrossSceneInfo.use.GetLevelIndex() - 1);
+			string levelData = levelLoader.GetLevelData(DartsCrossSceneInfo.use.GetLevelIndex());
+
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
+				ConfigureLevel(newLevel);
+			}
+			else
+			{
+				Debug.LogError("DartsLevelConfiguration: Invalid level data!");
+			}
+
+			//ConfigureLevel(DartsCrossSceneInfo.use.GetLevelIndex() - 1);
 		}
 	}
 	

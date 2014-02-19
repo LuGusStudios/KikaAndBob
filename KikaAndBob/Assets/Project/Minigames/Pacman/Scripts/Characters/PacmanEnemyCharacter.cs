@@ -61,7 +61,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		
 	protected virtual void Update() 
 	{
-		if (!PacmanGameManager.use.gameRunning || enemyState == EnemyState.Defeated)
+		if (!PacmanGameManager.use.gameRunning || enemyState == EnemyState.Defeated || PacmanGameManager.use.Paused)
 			return;
 
 		// update player in case we've changed players (two character game etc.)

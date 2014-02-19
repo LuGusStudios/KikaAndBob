@@ -21,7 +21,7 @@ public abstract class IHUDElement : MonoBehaviour
 	}
 
 	public abstract void SetValue(float value, bool animate = true);
-	public abstract void AddValue(float value, bool animate = true);
+	public abstract void AddValue(float value, bool animate = true, float minValue = Mathf.NegativeInfinity, float maxValue = Mathf.Infinity);
 
 	public abstract void Stop();
 
@@ -40,7 +40,7 @@ public abstract class IHUDElement : MonoBehaviour
 		else if( _commodity == KikaAndBob.CommodityType.Life )
 			iconKey = "IconHeart01";
 		else if( _commodity == KikaAndBob.CommodityType.Score )
-			iconKey = "IconBob01";
+			iconKey = "IconScore01";
 		else if( _commodity == KikaAndBob.CommodityType.Distance )
 			iconKey = "IconSpeed01";
 

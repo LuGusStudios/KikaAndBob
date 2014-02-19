@@ -87,6 +87,14 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		//Debug.LogError("DINNER DASH TO LOAD" + DinnerDashCrossSceneInfo.use.levelToLoad);
 
+		
+		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+		if( background != LugusResources.use.errorAudio )
+		{
+			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+		}
+
+
 		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);

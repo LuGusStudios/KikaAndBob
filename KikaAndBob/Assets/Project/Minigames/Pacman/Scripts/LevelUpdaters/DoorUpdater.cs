@@ -31,7 +31,8 @@ public class DoorUpdater : PacmanLevelUpdater {
 
 	public override void Deactivate()
 	{
-		loopHandle.StopRoutine();
+		if (loopHandle != null && loopHandle.Running)
+			loopHandle.StopRoutine();
 	}
 
 	protected IEnumerator DoorUpdateRoutine()
