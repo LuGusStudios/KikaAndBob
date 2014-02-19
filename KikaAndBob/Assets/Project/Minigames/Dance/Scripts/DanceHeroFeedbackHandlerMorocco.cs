@@ -15,6 +15,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	protected List<Transform> sculptures = new List<Transform>();
 	protected int sculptureIndex = 0;
 	protected int previousBatchScore = 0;
+	protected Transform tillySculpture = null;
 
 	protected DanceHeroLane currentLane = null;
 	
@@ -41,6 +42,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		feedback.onScoreRaised += OnScoreRaised;
 		feedback.onScoreLowered += OnScoreLowered;
 		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
+		DanceHeroLevel.use.onLevelRestart += OnLevelRestart;
 		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
 		
 		Transform guiParent = GameObject.Find("GUI_Debug").transform;
@@ -67,8 +69,15 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		GameObject sculptures = GameObject.Find("Sculptures");
 
+		tillySculpture = sculptures.transform.FindChild("1");
+
+		sculpturePrefabs.Add(tillySculpture);
+
 		foreach(Transform t in sculptures.transform)
 		{
+			if (t.name == "1")	// 1 is the Tilly sculpture, which is always added first
+				continue;
+
 			sculpturePrefabs.Add(t);
 		}
 	}
@@ -88,6 +97,8 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 	protected void OnScoreRaised(DanceHeroLane lane)
 	{
+		LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
+		
 		if (currentLane == lane)
 			return;
 
@@ -143,21 +154,23 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 	protected void OnLevelStarted()
 	{
-		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Bottom, KikaAndBob.ScreenAnchor.Bottom);
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.BottomRight, KikaAndBob.ScreenAnchor.BottomRight);
 		HUDManager.use.PauseButton.gameObject.SetActive(true);
-
-		print ("zjxck");
 
 		HUDManager.use.CounterLargeBottomLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeBottomLeft1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.CounterLargeBottomLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterLargeBottomLeft1.SetValue(0);
-		
-		sculptures = new List<Transform>();
-		List<Transform> sculpturePrefabsSelect = new List<Transform>(sculpturePrefabs);
-		sculptureIndex = 0;
 
-		for (int i = 0; i < 3; i++) 
+		sculptureIndex = 0;
+			
+		sculptures = new List<Transform>();
+		sculptures.Add(tillySculpture);
+
+		List<Transform> sculpturePrefabsSelect = new List<Transform>(sculpturePrefabs);
+
+
+		for (int i = 0; i < 2; i++) 
 		{
 			Transform randomItem = sculpturePrefabsSelect[Random.Range(0, sculpturePrefabsSelect.Count)];
 			sculpturePrefabsSelect.Remove(randomItem);
@@ -169,26 +182,101 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 			sculptures.Add(newItem.transform);
 		}
 
-		UpdateSculptures(sculptureIndex);
+		UpdateSculptures(sculptureIndex, true);
+	}
+
+	protected void OnLevelRestart()
+	{
+		LugusCoroutines.use.StartRoutine(PauseRoutine());
+	}
+
+	protected IEnumerator PauseRoutine()
+	{
+		Debug.Log("DanceHeroFeedbackHandlerMorocco: Started break.");
+		DanceHeroLevel.use.SetGameRunning(false);
+
+		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
+
+		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
+		{
+			if (sculptureIndex < 4)
+			{
+				sculptureIndex ++;
+				
+				sculptureIndex =
+					Mathf.Clamp(sculptureIndex, 4 - (DanceHeroLevel.use.GetLevelRepeatAmount() - 1), 4);	// skip steps as a function of how many times the level is repeated
+																											// e.g. if we don't repeat the level, we'll immediately see the final scultpture stageultpture stage
+			
+				AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
+				
+				if (clip != LugusResources.use.errorAudio)
+				{
+					LugusAudio.use.Music().Play(clip);
+				}
+			}
+
+			DanceHeroFeedback.use.DisplayMessage("Great job!"); // TO DO: Replace with translateable text
+		}
+		else
+		{
+//			if (sculptureIndex > 0)
+//				sculptureIndex--;
+			
+			DanceHeroFeedback.use.DisplayMessage("Try again!"); // TO DO: Replace with translateable text
+		}
+		
+		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
+		{
+			ParticleSystem particles = lane.transform.FindChild("ClayParticles").GetComponent<ParticleSystem>();
+			if (particles != null)
+			{
+				particles.Stop();
+			}
+		}
+		
+		UpdateSculptures(sculptureIndex, true);
+		previousBatchScore = DanceHeroFeedback.use.GetScore();
+
+		yield return new WaitForSeconds(3.0f);
+
+		DanceHeroFeedback.use.DisplayMessage("Here we go again!"); // TO DO: Replace with translateable text
+
+		yield return new WaitForSeconds(1.0f);
+		
+		Debug.Log("DanceHeroFeedbackHandlerMorocco: Ended break.");
+		DanceHeroLevel.use.SetGameRunning(true);
 	}
 
 	protected void OnLevelFinished()
 	{
-		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= 300)
+		LugusCoroutines.use.StartRoutine(FinishRoutine());
+	}
+
+	protected IEnumerator FinishRoutine()
+	{
+		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
+		
+		DanceHeroFeedback.use.DisplayMessage("And now... the result!");		// TO DO: Replace with translateable text
+		
+		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
 		{
 			if (sculptureIndex < 4)
-				sculptureIndex++;
+			{
+				sculptureIndex ++;
+				
+				sculptureIndex =
+				Mathf.Clamp(sculptureIndex, 4 - (DanceHeroLevel.use.GetLevelRepeatAmount() - 1), 4);	// skip steps as a function of how many times the level is repeated
+																										// e.g. if we don't repeat the level, we'll immediately see the final scultpture stageultpture stage
+			
+				AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
 
-			DanceHeroFeedback.use.DisplayMessage("Great job!");
+				if (clip != LugusResources.use.errorAudio)
+				{
+					LugusAudio.use.Music().Play(clip);
+				}
+			}
 		}
-		else
-		{
-			if (sculptureIndex > 0)
-				sculptureIndex--;
-
-			DanceHeroFeedback.use.DisplayMessage("Try again!");
-		}
-
+		
 		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
 		{
 			ParticleSystem particles = lane.transform.FindChild("ClayParticles").GetComponent<ParticleSystem>();
@@ -201,19 +289,31 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				Debug.LogError("Could not find clay particles!");
 			}
 		}
-
-		UpdateSculptures(sculptureIndex);
+		
+		UpdateSculptures(sculptureIndex, false);
 		previousBatchScore = DanceHeroFeedback.use.GetScore();
+
+		yield return new WaitForSeconds(5.0f);
+		
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+		
+		HUDManager.use.LevelEndScreen.Show(true);
+		
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
 	}
 
-	protected void UpdateSculptures(int index)
+	protected void UpdateSculptures(int index, bool restart, float showTime = 5.0f)
 	{
-		LugusCoroutines.use.StartRoutine(StartSpinRoutine(index));
+		LugusCoroutines.use.StartRoutine(ShowSculptureRoutine(index, restart, showTime));
 	}
 
-	protected IEnumerator StartSpinRoutine(int index)
+	protected IEnumerator ShowSculptureRoutine(int index, bool restart, float showTime)
 	{
-
 		// enable right index sculpture and scale it up
 		foreach(Transform t in sculptures)
 		{
@@ -245,7 +345,10 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 			}
 		}
 
-		yield return new WaitForSeconds(5.0f);
+		if (!restart)
+			yield break;
+
+		yield return new WaitForSeconds(showTime);
 
 		// re-enable twist animation
 		foreach(Transform t in sculptures)

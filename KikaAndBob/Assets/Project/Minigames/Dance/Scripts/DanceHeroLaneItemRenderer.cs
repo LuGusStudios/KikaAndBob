@@ -272,6 +272,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		item.lane.HighLightLanePositive();
 	//	DanceHeroFeedbackChina.use.HighLightLane(this.item.lane.actionPoint);
 		DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_CORRECT, item.lane);
+
 		hit = true;
 
 		this.item.lane.IncreaseLeadingLaneItem();
@@ -389,10 +390,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			this.item.lane.StopHighlight();
 
 			item.lane.HighLightLanePositive();
-		
-			DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_CORRECT, item.lane);
 
 			DeleteActionPoint(actionPoint);
+
+			LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
 
 			this.item.lane.IncreaseLeadingLaneItem();
 
