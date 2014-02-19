@@ -2,8 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel> 
+public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevelDefault> 
 {
+	public enum TimeProgressionMode
+	{
+		NONE = -1,
+		
+		PER_LANE = 1,
+		GLOBAL_CUMULATIVE = 2
+	}
+}
+
+public class DanceHeroLevelDefault : IGameManager
+{	
+	public DanceHeroLevel.TimeProgressionMode mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
+
 	public AudioClip musicClip; // TO DO: Remove
 
 	public delegate void OnLevelStarted();
@@ -12,15 +25,6 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	public delegate void OnLevelFinished();
 	public OnLevelFinished onLevelFinished = null;
 
-	public enum TimeProgressionMode
-	{
-		NONE = -1,
-
-		PER_LANE = 1,
-		GLOBAL_CUMULATIVE = 2
-	}
-
-	public TimeProgressionMode mode = TimeProgressionMode.PER_LANE;
 	public List<DanceHeroLane> lanes = new List<DanceHeroLane>();
 	public float cumulativeDelay = 0.0f;
 	public int currentLevel = 0;
@@ -29,6 +33,24 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 	protected ILugusCoroutineHandle endLevelRoutine = null;
 	protected ILugusAudioTrack backgroundMusic = null;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+
+	public override void StartGame ()
+	{
+	}
+
+	public override void StopGame ()
+	{
+	}
+
+	public override bool GameRunning {
+		get 
+		{
+			if (endLevelRoutine == null)
+				return false;
+
+			return endLevelRoutine.Running;
+		}
+	}
 
 	public void SetupLocal()
 	{
@@ -228,7 +250,7 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 
 		
 		// GLOBAL_CUMULATIVE
-		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
+		mode = DanceHeroLevel.TimeProgressionMode.GLOBAL_CUMULATIVE;
 		lane1.AddItem( 0.0f );
 		lane2.AddItem( 0.2f );
 		lane3.AddItem( 0.2f );
@@ -279,12 +301,19 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevel>
 			onLevelFinished();
 		}
 
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+
 		HUDManager.use.LevelEndScreen.Show(true);
 
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
+
+		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
+		
+		LugusConfig.use.User.SetBool(saveKey, true, true); 
+		LugusConfig.use.SaveProfiles();
 
 		Debug.Log("Level finished!");
 	}

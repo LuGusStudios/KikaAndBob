@@ -88,6 +88,8 @@ public class FroggerGameManagerDefault : IGameManager
 
 	public void WinGame()
 	{
+		Debug.Log("FroggerGameManager: Won game!");
+
 		gameRunning = false;
 		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
 
@@ -96,6 +98,13 @@ public class FroggerGameManagerDefault : IGameManager
 
 		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
 		//TO DO: STORE SCORE TOTAL HERE!
+
+		LugusCoroutines.use.StartRoutine(EndGameRoutine(timer, pickupCount, scoreTotal));
+	}
+
+	protected IEnumerator EndGameRoutine(float timer, int pickupCount, int scoreTotal)
+	{
+		yield return new WaitForSeconds(1.0f);
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}
