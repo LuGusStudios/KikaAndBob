@@ -69,10 +69,13 @@ public class MenuManagerDefault: MonoBehaviour
 				backgroundName = LugusResources.use.Levels.GetText(key);
 			}
 
+			//Debug.LogError("BACKGROUND SPRITE " + backgroundName);
+
 			Sprite newBackground = LugusResources.use.Shared.GetSprite(backgroundName);
 
 			if (newBackground != LugusResources.use.errorSprite)
 			{
+				backgroundSprite = newBackground;
 				backgroundRenderer.sprite = newBackground;
 			}
 		}

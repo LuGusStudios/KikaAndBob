@@ -12,6 +12,7 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	public override void LoadLevel(int index)
 	{
 		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Endless;
+		RunnerManager.use.AddLives(100);
 
 		index--;
 
@@ -31,7 +32,7 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public void Level0()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,10);
 		character.timeToMaxSpeed = 60;
@@ -42,7 +43,7 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,14);
 		character.timeToMaxSpeed = 120;
@@ -53,7 +54,7 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;

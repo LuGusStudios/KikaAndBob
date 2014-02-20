@@ -268,8 +268,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 1;
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 1;
 		#endif
 
 		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
