@@ -39,6 +39,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
 
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
+
 	protected float startTime = -1.0f;
 
 	public event KikaAndBob.Runner.OnHit onHit;

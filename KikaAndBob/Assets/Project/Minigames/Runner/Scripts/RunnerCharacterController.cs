@@ -44,6 +44,10 @@ public interface IRunnerCharacterController_JumpSlide
 
 public interface IRunnerCharacterController_FasterSlower
 {
+	DataRange SpeedRange();
+	float SpeedPercentage();
+	float SpeedModifierPercentage();
+
 	event KikaAndBob.Runner.OnSpeedTypeChange onSpeedTypeChange;
 }
 

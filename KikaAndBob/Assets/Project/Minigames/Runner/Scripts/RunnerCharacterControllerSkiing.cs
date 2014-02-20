@@ -32,7 +32,10 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 	[HideInInspector]
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
-	public float speedModifierPercentage = 0.5f; 
+	public float speedModifierPercentage = 0.5f;
+	
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
 
 	protected float startTime = -1.0f;
 
@@ -136,7 +139,7 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 			speedPercentage = timeDiff / timeToMaxSpeed;
 		}
 
-		float rotationSpeed = 75.0f; // degrees / second
+		float rotationSpeed = 95.0f; // degrees / second
 		float rotationClamp = 45.0f;
 
 

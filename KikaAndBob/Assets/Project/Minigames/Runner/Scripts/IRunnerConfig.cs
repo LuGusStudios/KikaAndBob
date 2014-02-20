@@ -188,6 +188,12 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		{
 			speed = RunnerCharacterControllerClimbing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerClimbing.use.speedPercentage );
 		}
+		else if( RunnerCharacterControllerSkiing.Exists() )
+		{
+			speed = RunnerCharacterControllerSkiing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerSkiing.use.speedPercentage );
+			speed *= RunnerCharacterControllerSkiing.use.speedModifiers.ValueFromPercentage( RunnerCharacterControllerSkiing.use.speedModifierPercentage );
+
+		}
 
 		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 1.5f ) );
 		GUILayout.BeginVertical(GUI.skin.box);

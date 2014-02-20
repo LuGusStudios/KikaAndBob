@@ -46,10 +46,10 @@ public class RunnerMover : MonoBehaviour
 			float useSpeed = speed;
 			if( adjustForPlayerSpeed )
 			{
-				if( RunnerCharacterControllerFasterSlower.Exists() )
+				if( RunnerCharacterController.fasterSlower != null )//RunnerCharacterControllerFasterSlower.Exists() )
 				{
-					RunnerCharacterControllerFasterSlower c = RunnerCharacterControllerFasterSlower.use;
-					useSpeed = speed * c.SpeedRange().ValueFromPercentage( c.speedPercentage );
+					IRunnerCharacterController_FasterSlower c = RunnerCharacterController.fasterSlower;
+					useSpeed = speed * c.SpeedRange().ValueFromPercentage( c.SpeedPercentage() );
 				}
 			}
 
