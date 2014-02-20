@@ -18,7 +18,7 @@ public class DanceHeroLevelDefault : IGameManager
 	public DanceHeroLevel.TimeProgressionMode mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
 
 	public delegate void OnLevelStarted();
-	public OnLevelStarted onLevelStarted = null;
+	public OnLevelStarted onLevelStarted = null; 
 
 	public delegate void OnLevelRestart();
 	public OnLevelRestart onLevelRestart= null;
