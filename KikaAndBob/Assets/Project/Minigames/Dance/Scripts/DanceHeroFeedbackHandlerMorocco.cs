@@ -12,10 +12,12 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	protected ParticleSystem poof = null;
 	protected GameObject trail = null;
 	protected List<Transform> sculpturePrefabs = new List<Transform>();
-	protected List<Transform> sculptures = new List<Transform>();
+	protected List<Transform> sculpturesOnScreen = new List<Transform>();
 	protected int sculptureIndex = 0;
 	protected int previousBatchScore = 0;
+	protected Transform tillySculpturePrefab = null;
 	protected Transform tillySculpture = null;
+
 
 	protected DanceHeroLane currentLane = null;
 	
@@ -39,8 +41,9 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		}
 		
 		feedback.onDisplayModifier += OnDisplayModifier;
-		feedback.onScoreRaised += OnScoreRaised;
-		feedback.onScoreLowered += OnScoreLowered;
+//		feedback.onScoreRaised += OnScoreRaised;
+//		feedback.onScoreLowered += OnScoreLowered;
+		feedback.onButtonPress += OnButtonPress;
 		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
 		DanceHeroLevel.use.onLevelRestart += OnLevelRestart;
 		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
@@ -67,13 +70,11 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		if (trail == null)
 			Debug.LogError("No trail game object find.");
 
-		GameObject sculptures = GameObject.Find("Sculptures");
+		GameObject sculpturesParent = GameObject.Find("Sculptures");
 
-		tillySculpture = sculptures.transform.FindChild("1");
+		tillySculpturePrefab = sculpturesParent.transform.FindChild("1");
 
-		sculpturePrefabs.Add(tillySculpture);
-
-		foreach(Transform t in sculptures.transform)
+		foreach(Transform t in sculpturesParent.transform)
 		{
 			if (t.name == "1")	// 1 is the Tilly sculpture, which is always added first
 				continue;
@@ -95,7 +96,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		Destroy(modifierDisplay, 0.5f);
 	}
 
-	protected void OnScoreRaised(DanceHeroLane lane)
+	protected void OnButtonPress(DanceHeroLane lane)
 	{
 		LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
 		
@@ -147,11 +148,6 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		}
 	}
 
-	protected void OnScoreLowered(DanceHeroLane lane)
-	{
-	
-	}
-
 	protected void OnLevelStarted()
 	{
 		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.BottomRight, KikaAndBob.ScreenAnchor.BottomRight);
@@ -164,22 +160,47 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		sculptureIndex = 0;
 			
-		sculptures = new List<Transform>();
-		sculptures.Add(tillySculpture);
+		sculpturesOnScreen.Clear();
 
-		List<Transform> sculpturePrefabsSelect = new List<Transform>(sculpturePrefabs);
+		GameObject tillySculptureClone = (GameObject)Instantiate(tillySculpturePrefab.gameObject);
+		sculpturesOnScreen.Add(tillySculptureClone.transform);
 
+		tillySculpture = tillySculptureClone.transform;
+
+		List<Transform> alreadyPicked = new List<Transform>();	// this list just prevents randomly picking the same object twice
 
 		for (int i = 0; i < 2; i++) 
 		{
-			Transform randomItem = sculpturePrefabsSelect[Random.Range(0, sculpturePrefabsSelect.Count)];
-			sculpturePrefabsSelect.Remove(randomItem);
+			Transform randomItem = null;
+			int counter = 0;
+
+			while(randomItem == null || alreadyPicked.Contains(randomItem))
+			{
+				randomItem = sculpturePrefabs[Random.Range(0, sculpturePrefabs.Count)];
+
+				if (counter >= 20)
+				{
+					break;
+				}
+
+				counter++;
+			}
+
+			alreadyPicked.Add(randomItem);
 
 			GameObject newItem = (GameObject)Instantiate(randomItem.gameObject);
 
-			newItem.transform.position = DanceHeroLevel.use.lanes[i].transform.FindChild("SculpturePosition").position;
+			sculpturesOnScreen.Add(newItem.transform);
+		}
 
-			sculptures.Add(newItem.transform);
+		sculpturesOnScreen.Shuffle();
+
+		for (int i = 0; i <  DanceHeroLevel.use.lanes.Count; i++) 
+		{
+			if ( i >= sculpturesOnScreen.Count)
+				break;
+
+			sculpturesOnScreen[i].transform.position = DanceHeroLevel.use.lanes[i].transform.FindChild("SculpturePosition").position;
 		}
 
 		UpdateSculptures(sculptureIndex, true);
@@ -206,13 +227,15 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				sculptureIndex =
 					Mathf.Clamp(sculptureIndex, 4 - (DanceHeroLevel.use.GetLevelRepeatAmount() - 1), 4);	// skip steps as a function of how many times the level is repeated
 																											// e.g. if we don't repeat the level, we'll immediately see the final scultpture stageultpture stage
-			
+
 				AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
 				
 				if (clip != LugusResources.use.errorAudio)
 				{
 					LugusAudio.use.Music().Play(clip);
 				}
+
+				bobAnim.Play("BobSculpting_IdleHappy");
 			}
 
 			DanceHeroFeedback.use.DisplayMessage("Great job!"); // TO DO: Replace with translateable text
@@ -223,6 +246,8 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 //				sculptureIndex--;
 			
 			DanceHeroFeedback.use.DisplayMessage("Try again!"); // TO DO: Replace with translateable text
+
+			bobAnim.Play("BobSculpting_IdleSad");
 		}
 		
 		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
@@ -267,13 +292,6 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				sculptureIndex =
 				Mathf.Clamp(sculptureIndex, 4 - (DanceHeroLevel.use.GetLevelRepeatAmount() - 1), 4);	// skip steps as a function of how many times the level is repeated
 																										// e.g. if we don't repeat the level, we'll immediately see the final scultpture stageultpture stage
-			
-				AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
-
-				if (clip != LugusResources.use.errorAudio)
-				{
-					LugusAudio.use.Music().Play(clip);
-				}
 			}
 		}
 		
@@ -289,18 +307,56 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				Debug.LogError("Could not find clay particles!");
 			}
 		}
+
+		if (sculptureIndex == 4)	// if we finished sculptures, show the Tilly sculpture
+		{
+			bobAnim.Play("BobSculpting_IdleHappy");
+		}
+		else
+		{
+			bobAnim.Play("BobSculpting_IdleSad");
+		}
+
+		yield return new WaitForSeconds(1.0f);
+
 		
 		UpdateSculptures(sculptureIndex, false);
 		previousBatchScore = DanceHeroFeedback.use.GetScore();
 
-		yield return new WaitForSeconds(5.0f);
+		bool success = false;
+
+		if (sculptureIndex == 4)	// if we finished any sculptures, show the Tilly sculpture in the center of the screen
+		{
+			Vector3 startPosition = tillySculpture.transform.position;
+
+			tillySculpture.gameObject.MoveTo(LugusUtil.ScreenCenter(tillySculpture.position) + new Vector3(0, 1, 0)).Time(1.0f).Execute();
+			tillySculpture.gameObject.ScaleTo(tillySculpture.localScale * 3.0f).Time(1.0f).Execute();
+			success = true;
+
+			yield return new WaitForSeconds(1.0f);
+
+			AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
+			
+			if (clip != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.Music().Play(clip);
+			}
+
+			yield return new WaitForSeconds(0.5f);
+
+			tillySculpture.gameObject.MoveTo(startPosition).Time(1.0f).Execute();
+			tillySculpture.gameObject.ScaleTo(tillySculpture.localScale / 3.0f).Time(1.0f).Execute();
+
+			yield return new WaitForSeconds(1.0f);
+		}
+
+		yield return new WaitForSeconds(2.0f);
 		
 		HUDManager.use.DisableAll();
 		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 		
-		HUDManager.use.LevelEndScreen.Show(true);
-		
+		HUDManager.use.LevelEndScreen.Show(success);
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
@@ -315,7 +371,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	protected IEnumerator ShowSculptureRoutine(int index, bool restart, float showTime)
 	{
 		// enable right index sculpture and scale it up
-		foreach(Transform t in sculptures)
+		foreach(Transform t in sculpturesOnScreen)
 		{
 			foreach(Transform child in t)
 			{
@@ -334,7 +390,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		yield return new WaitForSeconds(0.5f);
 
 		// scale it down again
-		foreach(Transform t in sculptures)
+		foreach(Transform t in sculpturesOnScreen)
 		{
 			foreach(Transform child in t)
 			{
@@ -351,7 +407,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		yield return new WaitForSeconds(showTime);
 
 		// re-enable twist animation
-		foreach(Transform t in sculptures)
+		foreach(Transform t in sculpturesOnScreen)
 		{
 			foreach(Transform child in t)
 			{
@@ -365,5 +421,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				}
 			}
 		}
+
+		bobAnim.Play("BobSculpting_Sculpting");
 	}
 }

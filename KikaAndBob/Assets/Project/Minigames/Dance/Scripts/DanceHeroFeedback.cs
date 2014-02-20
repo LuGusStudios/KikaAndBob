@@ -10,11 +10,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	public delegate void OnDisplayModifier();
 	public OnDisplayModifier onDisplayModifier = null;
 
-	public delegate void OnScoreRaised(DanceHeroLane lane);
-	public OnScoreRaised onScoreRaised = null;
-
-	public delegate void OnScoreLowered(DanceHeroLane lane);
-	public OnScoreRaised onScoreLowered = null;
+	public delegate void OnLaneUsed(DanceHeroLane lane);
+	public OnLaneUsed onScoreRaised = null;
+	public OnLaneUsed onScoreLowered = null;
+	public OnLaneUsed onButtonPress = null;
 	
 	protected int failCount = 0;
 	protected int succesCount = 0;

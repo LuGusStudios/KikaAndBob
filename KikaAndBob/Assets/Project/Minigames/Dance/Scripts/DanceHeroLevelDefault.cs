@@ -259,7 +259,7 @@ public class DanceHeroLevelDefault : IGameManager
 	{
 		return targetBatchScore;
 	}
-	
+
 	protected float GetTotalLevelDuration()
 	{
 		// total level length consists of a number of things:
@@ -323,7 +323,6 @@ public class DanceHeroLevelDefault : IGameManager
 			}
 			else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "TargetBatchScore"))
 			{
-				print ("xfcgjvkvl");
 				targetBatchScore = int.Parse(parser.content.Trim());
 			}
 		}

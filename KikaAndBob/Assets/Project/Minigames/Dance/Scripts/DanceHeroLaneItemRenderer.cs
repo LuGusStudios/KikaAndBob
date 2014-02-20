@@ -145,6 +145,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 						DetectSingle(true, actionPoint);
 					else
 						DetectStreak(true, actionPoint);
+
+					RegisterLaneChange();
 				}
 
 				// TODO: for streak, up also needs to be detected if it happens in between: need to keep it going untill the end!
@@ -154,6 +156,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 						DetectSingle(false, actionPoint);
 					else
 						DetectStreak(false, actionPoint);
+
+					RegisterLaneChange();
 				}
 			}
 		}
@@ -174,6 +178,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 						this.item.lane.HighlightLaneNegative();
 						DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
 						MissedSingle();
+
+						RegisterLaneChange();
 					}
 				}
 				else
@@ -189,6 +195,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 						{
 							this.item.lane.HighlightLaneNegative();
 							DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+
+							RegisterLaneChange();
 						}
 					}
 				}
@@ -248,6 +256,14 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				line.gameObject.ScaleTo(new Vector3(line.localScale.x / 0.6f, line.localScale.y, line.localScale.z)).Time(0.25f).EaseType(iTween.EaseType.easeOutQuad).Execute();
 
 			}
+		}
+	}
+
+	protected void RegisterLaneChange()
+	{
+		if (DanceHeroFeedback.use.onButtonPress != null)
+		{
+			DanceHeroFeedback.use.onButtonPress(item.lane);
 		}
 	}
 
