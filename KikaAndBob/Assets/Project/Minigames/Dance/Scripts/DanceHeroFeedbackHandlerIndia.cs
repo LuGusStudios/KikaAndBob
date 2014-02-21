@@ -23,7 +23,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected float largeFluteAnimDuration = 0.5f;
 	protected List<Transform> coinPrefabs = new List<Transform>();
 	protected List<Transform> coinsDropped = new List<Transform>();
-	protected Transform legs = null;
+	protected List<BoneAnimation> legs = new List<BoneAnimation>();
 
 	
 	protected void Awake()
@@ -88,22 +88,26 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 			coinPrefabs.Add(t);
 		}
 
-		legs = GameObject.Find("Legs").transform;
+		Transform legParent = GameObject.Find("Legs").transform;
 
-		for (int i = 0; i < legs.childCount; i++) 
+		for (int i = 0; i < legParent.childCount; i++) 
 		{
-			BoneAnimation ba = legs.GetChild(i).GetComponent<BoneAnimation>();
-			ba.Play(ba.GetComponent<DefaultBoneAnimation>().clipName);
+			BoneAnimation ba = legParent.GetChild(i).GetComponent<BoneAnimation>();
+			legs.Add(ba);
+			//ba.Play(ba.GetComponent<DefaultBoneAnimation>().clipName);
 		}
 
+		legs.Shuffle();	// randomize legs for variety
 	}
 	
 	public void SetupGlobal()
 	{
 	}
-	
+
 	public void OnDisplayModifier()
 	{
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
+
 		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 17.0f, 1);
@@ -113,6 +117,26 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		Destroy(modifierDisplay, 0.5f);
 
 		AnimateFlute(true);
+
+		UpdateLegs();
+	}
+	
+	protected void UpdateLegs()
+	{
+		int modifier = Mathf.FloorToInt(DanceHeroFeedback.use.GetScoreModifier());
+
+		foreach (BoneAnimation item in legs) 
+		{
+			item.gameObject.SetActive(false);			
+		}
+
+		for (int i = 0; i < modifier; i++) 
+		{
+			if (i > legs.Count)
+				break;
+
+			legs[i].gameObject.SetActive(true);
+		}
 	}
 	
 	protected void OnScoreRaised(DanceHeroLane lane)
@@ -171,16 +195,21 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 
 	protected void DropMoney()
 	{
-		GameObject droppedCoin = (GameObject)Instantiate(coinPrefabs[Random.Range(0, coinPrefabs.Count)].gameObject);
+		int modifier = Mathf.FloorToInt(DanceHeroFeedback.use.GetScoreModifier());
 
-		droppedCoin.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), 0, 0));
-
-		Vector3 destination = 	droppedCoin.transform.position + 
-								new Vector3(0, Random.Range(-6, -10), 0);
-
-		droppedCoin.MoveTo(destination).EaseType(iTween.EaseType.easeOutBounce).Time(1).Execute();
-
-		coinsDropped.Add(droppedCoin.transform);
+		for (int i = 0; i < modifier; i++) 
+		{
+			GameObject droppedCoin = (GameObject)Instantiate(coinPrefabs[Random.Range(0, coinPrefabs.Count)].gameObject);
+			
+			droppedCoin.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), 0, 0)); // horizontally vary the starting point of the coin
+			
+			Vector3 destination = 	droppedCoin.transform.position + 
+				new Vector3(0, Random.Range(-8, -11), 0);
+			
+			droppedCoin.MoveTo(destination).EaseType(iTween.EaseType.easeOutBounce).Time(1).Delay(Random.Range(0.0f, 1.5f)).Execute();	// random delay so coins don't drop simultaneously
+			
+			coinsDropped.Add(droppedCoin.transform);
+		}
 	}
 
 	protected IEnumerator RemoveCoinsRoutine()
@@ -202,6 +231,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 
 	protected void ChangeSnakeAnim()
 	{
+
 		float step = feedback.maxScoreModifier / 3.0f;
 
 		float scoreModifier = feedback.GetScoreModifier();
@@ -244,11 +274,35 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	
 	protected void OnLevelStarted()
 	{
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopRight);
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+		
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeLeft1.SetValue(0);
+
+
 		snake.Play(snakeStage1);
+
+		foreach (BoneAnimation item in legs) 
+		{
+			item.gameObject.SetActive(false);			
+		}
+
+		legs[0].gameObject.SetActive(true);
 	}
 	
 	protected void OnLevelFinished()
 	{
-	
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+		
+		HUDManager.use.LevelEndScreen.Show(true);
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
 	}
 }
