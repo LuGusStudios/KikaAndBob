@@ -2,12 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfiguration>
+public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigurationDefault>
+{
+
+}
+
+public class DartsLevelConfigurationDefault :  IGameManager
 {
 	public DartsLevelDefinition[] levels;
 	protected DartsFunctionalityGroup[] groups;
 	protected int currentIndex = 0;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+	protected bool gameRunning = false;
 
 	public void SetupLocal()
 	{
@@ -16,9 +22,16 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 	
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
+		levelLoader.FindLevels();
 	}
-	
+
+	public override bool GameRunning {
+		get 
+		{
+			return gameRunning;
+		}
+	}
+
 	protected void Awake()
 	{
 		SetupLocal();
@@ -27,7 +40,6 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 	protected void Start () 
 	{
 		SetupGlobal();
-	//	ConfigureLevel(0);
 
 		if (DartsCrossSceneInfo.use.GetLevelIndex() < 0)
 		{
@@ -36,21 +48,29 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-
-			string levelData = levelLoader.GetLevelData(DartsCrossSceneInfo.use.GetLevelIndex());
-
-			if (!string.IsNullOrEmpty(levelData))
-			{
-				DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
-				ConfigureLevel(newLevel);
-			}
-			else
-			{
-				Debug.LogError("DartsLevelConfiguration: Invalid level data!");
-			}
-
-			//ConfigureLevel(DartsCrossSceneInfo.use.GetLevelIndex() - 1);
+			StartGame();
 		}
+	}
+
+	public override void StartGame ()
+	{
+		string levelData = levelLoader.GetLevelData(DartsCrossSceneInfo.use.GetLevelIndex());
+		
+		if (!string.IsNullOrEmpty(levelData))
+		{
+			gameRunning = true;
+			DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
+			ConfigureLevel(newLevel);
+		}
+		else
+		{
+			Debug.LogError("DartsLevelConfiguration: Invalid level data!");
+		}
+	}
+
+	public override void StopGame ()
+	{
+		gameRunning = false;
 	}
 	
 	protected void Update () 
@@ -81,6 +101,11 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 
 	public void ConfigureLevel(DartsLevelDefinition level)
 	{
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeLeft1.SetValue(0, false);
+
 		// first disable groups
 		foreach (DartsFunctionalityGroup group in groups) 
 		{
@@ -121,12 +146,12 @@ public class DartsLevelConfiguration : LugusSingletonRuntime<DartsLevelConfigura
 		if (!LugusDebug.debug)
 			return;
 
-		for (int i = 0; i < levels.Length; i++) 
+		foreach(int index in levelLoader.levelIndices)
 		{
-			if (GUILayout.Button("Level " + i))
+			if (GUILayout.Button("Load level: " + index))
 			{
-				ConfigureLevel(i);
+				levelLoader.LoadLevel(index);
 			}
-		}
+		}	
 	}
 }

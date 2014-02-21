@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SmoothMoves;
 
 public class DartsWindow : IDartsHitable 
 {
@@ -8,6 +9,7 @@ public class DartsWindow : IDartsHitable
 	protected Transform closedItems = null;
 	protected Transform character = null;
 	protected ParticleSystem[] dustClouds = null;
+	protected BoneAnimation characterAnim = null;
 	
 	public override void OnHit()
 	{
@@ -57,11 +59,30 @@ public class DartsWindow : IDartsHitable
 
 	public void SetupLocal()
 	{
-		openItems = transform.FindChild("Open");
-		closedItems = transform.FindChild("Closed");
-		character = transform.FindChild("Character");
+		if (openItems == null)
+			openItems = transform.FindChild("Open");
+		if (openItems == null)
+			Debug.LogError("DartsWindow: Missing open version transform.");
 
-		dustClouds = GetComponentsInChildren<ParticleSystem>();
+		if (closedItems == null)
+			closedItems = transform.FindChild("Closed");
+		if (closedItems == null)
+			Debug.LogError("DartsWindow: Missing closed version transform.");
+
+		if (character == null)
+			character = transform.FindChild("Character");
+		if (character == null)
+			Debug.LogError("DartsWindow: Missing character transform.");
+
+		if (characterAnim == null)
+			characterAnim = character.GetComponent<BoneAnimation>();
+		if (characterAnim == null)
+			Debug.LogError("DartsWindow: Missing character animation transform.");
+
+		if (dustClouds == null)
+			dustClouds = GetComponentsInChildren<ParticleSystem>();
+		if (dustClouds == null)
+			Debug.LogError("DartsWindow: Missing dust cloud particles");
 	}
 
 	public void SetupGlobal()
