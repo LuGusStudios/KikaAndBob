@@ -17,6 +17,7 @@ public class DanceHeroLaneHandlerJapan : MonoBehaviour
 		if (lane == null)
 		{
 			Debug.LogError(name + ": Could not find lane script!");
+			return;
 		}
 
 		lane.onItemSpawned += OnItemSpawned;

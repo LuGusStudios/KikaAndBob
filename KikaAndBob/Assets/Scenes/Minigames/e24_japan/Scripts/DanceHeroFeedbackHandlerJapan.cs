@@ -20,6 +20,8 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 	protected Transform tillySculpturePrefab = null;
 	protected Transform tillySculpture = null;
 	protected SpriteRenderer background = null;
+	protected List<Transform> paperStacks = new List<Transform>();
+	protected int paperStackIndex = 3;
 
 
 	protected DanceHeroLane currentLane = null; 
@@ -109,7 +111,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 
 	protected void OnScoreRaised(DanceHeroLane lane)
 	{
-		LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
 	}
 
 	protected void OnButtonPress(DanceHeroLane lane)
@@ -176,8 +178,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 			
 		sculpturesOnScreen.Clear();
 
-
-		// one of the origami pieces is always the dove (Tilly sort of)
+		// one of the origami pieces is always the dove (Tilly, sort of...)
 		GameObject tillySculptureClone = (GameObject)Instantiate(tillySculpturePrefab.gameObject);
 		sculpturesOnScreen.Add(tillySculptureClone.transform);
 
@@ -222,6 +223,20 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 		bobAnim.transform.position = DanceHeroLevel.use.GetLane("Lane1").transform.FindChild("Stool/SitPosition").position + new Vector3(0, 0, -1);
 
 		UpdateOrigami(sculptureIndex, true);
+
+		paperStackIndex = 1;
+
+		paperStacks.Clear();
+
+		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
+		{
+			Transform paperStack = lane.transform.FindChild("PaperStack");
+
+			if (paperStack != null)
+				paperStacks.Add(paperStack);
+		}
+
+		UpdatePaperStack(1);
 	}
 
 	protected void OnLevelRestart()
@@ -232,9 +247,9 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 	protected IEnumerator PauseRoutine()
 	{
 		Debug.Log("DanceHeroFeedbackHandlerMorocco: Started break.");
-		DanceHeroLevel.use.SetGameRunning(false);
+		DanceHeroLevel.use.SetGameRunning(false);	// next round will not start until this is set to true again
 
-		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
+		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below. Also nicer timing.
 
 		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
 		{
@@ -258,14 +273,20 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 				bobAnim.Play("BobSculpting_IdleHappy");
 			}
 
-			DanceHeroFeedback.use.DisplayMessage("Great job!"); // TO DO: Replace with translateable text
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.positive"));
+
+			if (paperStackIndex < 4)
+			{
+				paperStackIndex ++;
+				UpdatePaperStack(paperStackIndex);
+			}
 		}
 		else
 		{
 //			if (sculptureIndex > 0)
 //				sculptureIndex--;
 			
-			DanceHeroFeedback.use.DisplayMessage("Try again!"); // TO DO: Replace with translateable text
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.negative")); 
 
 			bobAnim.Play("BobSculpting_IdleSad");
 		}
@@ -284,7 +305,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 
 		yield return new WaitForSeconds(3.0f);
 
-		DanceHeroFeedback.use.DisplayMessage("Here we go again!"); // TO DO: Replace with translateable text
+		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.repeat"));
 
 		yield return new WaitForSeconds(1.0f);
 		
@@ -301,7 +322,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 	{
 		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
 		
-		DanceHeroFeedback.use.DisplayMessage("And now... the result!");		// TO DO: Replace with translateable text
+		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.result"));		
 		
 		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
 		{
@@ -424,10 +445,28 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 			{
 				background.sprite = backgroundSprites[j];
 
-
-
 				yield return new WaitForSeconds((duration/times) / backgroundSprites.Length);
 			}
+		}
+	}
+
+	protected void UpdatePaperStack(int index)
+	{
+		if (index < 1 || index > 4)
+		{
+			Debug.LogError("DanceHeroFeedbackHandlerJapan: Paper stack index is out of bounds!");
+			return;
+		}
+
+		foreach (Transform t in paperStacks)
+		{
+			foreach (Transform child in t)
+			{
+				child.gameObject.SetActive(false);
+			}
+
+			if (index <= 3)
+				t.FindChild(index.ToString()).gameObject.SetActive(true);
 		}
 	}
 
