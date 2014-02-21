@@ -189,7 +189,7 @@ public class StepLevelMenu : IMenuStep
 		activated = true;
 		gameObject.SetActive(true);
 
-		Debug.LogError("ACTIVATE stepLevel " + levelIndices.Count);
+		//Debug.LogError("ACTIVATE stepLevel " + levelIndices.Count);
 
 		UpdateAndFlyIn(true);
 		LoadLevelData();
@@ -197,7 +197,7 @@ public class StepLevelMenu : IMenuStep
 
 	public override void Deactivate()
 	{
-		Debug.LogError("DE-ACTIVATE stepLevel");
+		//Debug.LogError("DE-ACTIVATE stepLevel");
 
 		activated = false;
 		gameObject.SetActive(false);

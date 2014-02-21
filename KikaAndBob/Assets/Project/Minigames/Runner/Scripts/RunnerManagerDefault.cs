@@ -55,6 +55,7 @@ public class RunnerManagerDefault : IGameManager
 		{
 			StopGame();
 		}
+		//Debug.LogError("ADD LIVES " + amount + " -> " + lifeCount);
 	}
 
 
@@ -101,7 +102,7 @@ public class RunnerManagerDefault : IGameManager
 	public float distanceTraveledStore = 0.0f;
 	public IEnumerator DistanceRoutine()
 	{		
-		if( targetDistance < 0.0f )
+		if( targetDistance < 0.0f || this.gameType != KikaAndBob.RunnerGameType.Distance )
 		{
 			yield break;
 		}
@@ -128,9 +129,19 @@ public class RunnerManagerDefault : IGameManager
 				if( targetDistance - distance < (LugusUtil.UIHeight))
 				{
 					finishLinePositioned = true;
+					allowShifting = false;
 
 					GameObject finishLine = GameObject.Find ("FinishLine01");
-					finishLine.transform.position = character.transform.position.x (0.0f).yAdd( -1.0f * LugusUtil.UIHeight + 2.0f); // +2f so we stop when kika is halfway in the line instead of before
+
+					// SOUTH
+					float yPos = -1.0f * LugusUtil.UIHeight + 2.0f; // +2f so we stop when kika is halfway in the line instead of before
+					if( RunnerInteractionManager.use.direction == RunnerInteractionManager.Direction.NORTH )
+					{
+						// NORTH
+						yPos = LugusUtil.UIHeight;// - 2.0f; // +2f so we stop when kika is halfway in the line instead of before
+					}
+
+					finishLine.transform.position = character.transform.position.x (0.0f).yAdd( yPos ); 
 
 					//Debug.LogError ("POSITIONING FINISHLINE " + finishLine.transform.position );
 
@@ -156,9 +167,15 @@ public class RunnerManagerDefault : IGameManager
 	protected float shiftYTreshold = 500.0f;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
+	protected bool allowShifting = true;
+
+
 	// if horizontal == false -> it's vertical
 	public void ShiftLevel(float units, bool horizontal)
 	{
+		if( !allowShifting )
+			return;
+
 		MonoBehaviour character = RunnerCharacterController.useBehaviour;
 		if( horizontal )
 			distanceTraveledStore += Mathf.Abs(character.transform.position.x - characterReferencePosition.x);
@@ -240,18 +257,18 @@ public class RunnerManagerDefault : IGameManager
 
 		// SOUTH
 
-		if( LugusCamera.game.transform.position.y < -shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+		if( LugusCamera.game.transform.position.y < -shiftYTreshold /*|| LugusInput.use.KeyDown(KeyCode.R)*/ )
 		{
 			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
 		}
 
-		/*
+
 		// NORTH // THIS DOES NOT YET SEEM TO WORK... (in Brazil only?) WEIRD
-		if( LugusCamera.game.transform.position.y > shiftYTreshold /*|| LugusInput.use.KeyDown(KeyCode.R) )
-		{
+		if( LugusCamera.game.transform.position.y > shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+		{ 
 			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
 		}
-		*/
+
 
 	}
 
@@ -268,8 +285,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-			RunnerCrossSceneInfo.use.levelToLoad = 1;
+		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
@@ -330,18 +347,11 @@ public class RunnerManagerDefault : IGameManager
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 	
 
-		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
-		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
-		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
-		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
-		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Feather;
+		LugusCoroutines.use.StartRoutine( ScoreAnimationRoutine() );
 		
 		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
 		bool success = true;
 
-		HUDManager.use.LevelEndScreen.Show(success);
-		HUDManager.use.LevelEndScreen.Counter1.SetValue( timeSpent + (Time.time - startTime), true );
-		HUDManager.use.LevelEndScreen.Counter2.SetValue( pickupCount, true );
 
 		// TODO: move pickups towards time at the end of showing pickups (Extra coroutine needed)
 		
@@ -357,6 +367,90 @@ public class RunnerManagerDefault : IGameManager
 		Debug.Log ("Stopping Runner game " + (timeSpent + (Time.time - startTime)) + " - " + pickupCount);
 	}
 
+	public int pickupsPerSecondConversion = 1; // how many pickups a user should score before he gets 1 second added or subtracted from his timescore
+
+	protected IEnumerator ScoreAnimationRoutine()
+	{
+		// 1. let time and pickups count up individually
+		// 2. move time over to score (in 1 time)
+		// 3. move pickups over to score (in groups of x, where x = number of pickups to warrant 1 second extra score)
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.suffix = "s";
+
+		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Feather;
+		
+		HUDManager.use.LevelEndScreen.Counter6.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter6.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter6.SetValue(0);
+
+		float timeScore = Mathf.FloorToInt(timeSpent + (Time.time - startTime));
+
+
+		HUDManager.use.LevelEndScreen.Show(true);
+		HUDManager.use.LevelEndScreen.Counter1.SetValue( timeScore, true );
+		HUDManager.use.LevelEndScreen.Counter2.SetValue( pickupCount, true );
+
+		yield return new WaitForSeconds( Mathf.Max(HUDManager.use.LevelEndScreen.Counter1.animationTime, HUDManager.use.LevelEndScreen.Counter2.animationTime) + 1.0f );
+
+		ScoreVisualizer
+				.Score(KikaAndBob.CommodityType.Time, timeScore) 
+				.Position( HUDManager.use.LevelEndScreen.Counter1.transform.position )
+				.HUDElement( HUDManager.use.LevelEndScreen.Counter6 )
+				.UseGUICamera(true)
+				.Time (1.5f)
+				.Audio("Blob01")
+				.Execute();
+
+		yield return new WaitForSeconds( 1.5f + 1.0f);
+
+		float timePerItem = 0.1f;
+		float maxTotalTime = 3.0f;
+		if( pickupCount * timePerItem > maxTotalTime )
+			timePerItem = maxTotalTime / pickupCount;
+
+		int convertedPickupCount = Mathf.FloorToInt(pickupCount / pickupsPerSecondConversion);
+
+		for( int i = 0; i < convertedPickupCount; ++i )
+		{
+
+			HUDManager.use.LevelEndScreen.Counter2.AddValue( -pickupsPerSecondConversion, true );
+
+			float score = -1.0f; // DISTANCE = pickups give lower time = better
+			if( gameType == KikaAndBob.RunnerGameType.Endless )
+			{
+				// ENDLESS: picups give more time (longer untill death) = better
+				score = 1.0f;
+			}
+			 
+
+			Vector3 position = HUDManager.use.LevelEndScreen.Counter2.transform.position.xAdd ( Random.Range(-1.0f, 1.0f) ).yAdd( 0.3f );
+
+			ScoreVisualizer
+				.Score(KikaAndBob.CommodityType.Time, score )
+				.Position( position )
+				.HUDElement( HUDManager.use.LevelEndScreen.Counter6 )
+				.UseGUICamera(true)
+				.Time (1.0f)
+				.Audio("Blob01")
+				.MinValue(0)
+				.Execute();
+
+			// sometimes we get stuck on 1 or 2 (because of the FloorToInt)
+			if( i == (convertedPickupCount - 1) )
+			{
+				HUDManager.use.LevelEndScreen.Counter2.SetValue(0);
+			}
+
+			yield return new WaitForSeconds( timePerItem );
+		}
+
+		yield break;
+
+	}
+
 	protected void Awake()
 	{
 		SetupLocal();
@@ -369,7 +463,15 @@ public class RunnerManagerDefault : IGameManager
 	
 	protected void Update () 
 	{
-	
+		if( LugusInput.use.Key( KeyCode.S) )
+		{
+			timeSpent = Random.Range(50, 100);
+			startTime = Time.time - Random.Range(50, 100);
+
+			pickupCount = Random.Range(10, 50);
+
+			StopGame();
+		}
 	}
 
 	protected void OnGUI()

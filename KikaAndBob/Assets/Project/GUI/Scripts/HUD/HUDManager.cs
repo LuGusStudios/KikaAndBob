@@ -41,6 +41,16 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 				return element;
 		}
 
+		// if we get here, no element was found that is active and has that commodity
+		// this can sometimes happen when we disable all the HUD and we stil have a coroutine calling...
+		// so: repeat the search, but allow inactive elements
+		foreach( IHUDElement element in elements )
+		{
+			if( element.commodity == commodity )
+				return element;
+		}
+
+
 		return null;
 	}
 

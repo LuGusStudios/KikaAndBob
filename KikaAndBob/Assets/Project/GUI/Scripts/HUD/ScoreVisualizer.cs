@@ -53,6 +53,20 @@ public class Score
 		return _hud;
 	}
 
+	public Score HUDElement(IHUDElement element)
+	{
+		_hud = element;
+		return this;
+	}
+
+	// indicates whether the WorldCoordinates of Position are for the Game or the GUI camera
+	public bool _useGUICamera = false;
+	public Score UseGUICamera(bool useGUI)
+	{
+		_useGUICamera = useGUI;
+		return this;
+	}
+
 	public Score Reset()
 	{
 		_amount = 0.0f;
@@ -65,6 +79,8 @@ public class Score
 
 		_worldPosition = Vector3.zero;
 		_color = UnityEngine.Color.white;
+
+		_useGUICamera = false;
 
 		_hud = null;
 
@@ -216,6 +232,10 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 		}
 
 		Vector2 viewportCoords = LugusCamera.game.WorldToViewportPoint( score._worldPosition );
+		if( score._useGUICamera )
+		{
+			viewportCoords = LugusCamera.ui.WorldToViewportPoint( score._worldPosition ); 
+		}
 		viewportCoords = Vector2.Scale( viewportCoords, new Vector2(LugusUtil.UIWidth, LugusUtil.UIHeight) );
 
 		scoreText.transform.localPosition = (viewportCoords.v3 () );// / 100.0f);

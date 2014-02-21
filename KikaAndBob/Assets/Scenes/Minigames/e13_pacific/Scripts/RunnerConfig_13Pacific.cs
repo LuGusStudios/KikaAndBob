@@ -12,6 +12,7 @@ public class RunnerConfig_13Pacific : IRunnerConfig
 	public override void LoadLevel(int index)
 	{
 		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Endless;
+		RunnerManager.use.AddLives(1);
 
 		index--;
 

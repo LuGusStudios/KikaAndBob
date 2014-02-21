@@ -128,7 +128,7 @@ public class MenuManagerDefault: MonoBehaviour
 				proceed = !nextStep.GetComponent<StepLevelMenu>().LoadSingleLevel();
 			}
 
-			Debug.LogError("PROCEED " + proceed);
+			//Debug.LogError("PROCEED " + proceed);
 
 			if( proceed )
 			{

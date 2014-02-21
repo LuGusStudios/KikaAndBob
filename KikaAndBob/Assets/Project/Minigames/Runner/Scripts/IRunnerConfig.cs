@@ -19,6 +19,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeMS);
 
+		//Debug.LogError("Setting up GUI for " + RunnerManager.use.gameType + " // " + RunnerManager.use.lifeCount);
 
 		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Distance )
 		{
@@ -132,9 +133,10 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		RunnerInteractionManager.use.difficultyRange = new DataRange( LugusConfig.use.User.GetFloat("runner.custom.difficulty1", difficulty1), 
 		                                                              LugusConfig.use.User.GetFloat("runner.custom.difficulty2", difficulty2) );  
 	
-	
-		RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
-		RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
+		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+			RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
+		else if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Distance )
+			RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
 	}
 
 	public void LoadGUIVarsFromRealSetup()
@@ -277,9 +279,11 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty1", difficulty1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty2", difficulty2, true); 
-			
-			LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
-			LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
+
+			if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+				LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
+			else
+				LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
 
 			LugusConfig.use.SaveProfiles();
 

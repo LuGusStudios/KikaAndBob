@@ -54,7 +54,7 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		this.collider2D.enabled = false;
 
 		// face towards the offscreen point!
-		transform.localScale = Vector3.Scale (transform.localScale, new Vector3(-1.0f, 1.0f, 1.0f) );
+		//transform.localScale = Vector3.Scale (transform.localScale, new Vector3(-1.0f, 1.0f, 1.0f) );
 		
 		gameObject.MoveTo( currentOffscreen ).IsLocal(true).Time (1.0f).Execute();
 		yield return new WaitForSeconds(1.0f);
@@ -67,7 +67,7 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 
 	protected IEnumerator AnnoyerRoutine()
 	{
-		// Annoyer enters the screen from the left or right side
+		// Annoyer enters the screen from the top
 		// then moves a couple of times up and down (vertically)
 		// leaves the screen vertically (top or bottom)
 
@@ -79,7 +79,7 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		// if character most rightside: spawn left side
 		Vector3 characterScreenPos = LugusCamera.game.WorldToScreenPoint( character.transform.position );
 
-		Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
+		//Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
 
 		/*
 		bool left = true;
@@ -119,27 +119,35 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 			left = false;
 
 
-		// somewhere offscreen, beneath the player
-		Vector3 offscreen = new Vector3(0.0f, Random.Range((this.renderer.bounds.extents.y * 100.0f * 2.0f), characterScreenPos.y - (this.renderer.bounds.extents.y * 100.0f * 2.0f)),  LugusCamera.game.nearClipPlane);
+		// somewhere offscreen, above the player
+		// camera origin is bottom left
+		float offscreenY = LugusUtil.ScreenHeight + this.renderer.bounds.size.y * 100.0f; // just above the screen
+		float screenWidthQuart = LugusUtil.ScreenWidth * 0.25f;
 
-		if( left )
+		// around the x-center, max to the outer quarts of the screen (avoid walls)
+		float offscreenX = Random.Range( screenWidthQuart, screenWidthQuart * 2.0f ); // left
+		if( !left )// right
 		{
-			offscreen = offscreen.x( - this.renderer.bounds.extents.x * 100 );
-		}
-		else
-		{
-			offscreen = offscreen.x( Screen.width + (this.renderer.bounds.extents.x * 100) );
-			transform.localScale = Vector3.Scale (transform.localScale, new Vector3(-1.0f, 1.0f, 1.0f) );
+			offscreenX = Random.Range( screenWidthQuart * 2.0f, screenWidthQuart * 3.0f ); 
 		}
 
+		Vector3 offscreen = new Vector3( offscreenX, offscreenY, LugusCamera.game.nearClipPlane );
+
+
+		// move down in a straight line from where we start
+		Vector3 target1 = new Vector3( offscreen.x, Screen.height * 0.70f, LugusCamera.game.nearClipPlane);
+		Vector3 target2 = new Vector3( offscreen.x, Screen.height * 0.20f, LugusCamera.game.nearClipPlane);
+
+		/*
 		// target should be somewhere in the area of the character, so player is more or less forced to move 
 		float targetX = characterScreenPos.x + Random.Range( -1.0f * Screen.width / 4.0f, Screen.width / 4.0f );
 		Vector3 target1 = new Vector3( targetX, offscreen.y, LugusCamera.game.nearClipPlane);
 
 		DataRange yInterval2 = new DataRange( Screen.height / 1.125f, Screen.height - (this.renderer.bounds.extents.x * 100) ); // top 15% of the screen
 		Vector3 target2 = target1.y (  yInterval2.Random()   );
+		*/
 
-		Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
+		//Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
 
 		//Vector3 worldPos = LugusCamera.game.ScreenToWorldPoint( offscreen ).z( this.transform.position.z );
 		//transform.position = worldPos;
@@ -160,7 +168,7 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		target2 = LugusCamera.game.transform.InverseTransformPoint( target2 );
 		target2 = this.transform.localPosition.x ( target2.x ).y ( target2.y );
 		
-		Debug.Log ("LOCALS " + target1 + " TO " + target2 );
+		//Debug.Log ("LOCALS " + target1 + " TO " + target2 );
 
 
 		gameObject.MoveTo( target1 ).IsLocal(true).Time (1.0f).Execute();
