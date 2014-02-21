@@ -3,25 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
-public class FroggerLaneItemSubmarine : FroggerLaneItem 
+public class FroggerLaneItemSubmarine : FroggerLaneItemLethal
 {
 	public FroggerLaneItemIceHole iceHolePrefab = null;
 	public SpriteRenderer periscope = null;
 	public SpriteRenderer iceHole = null;
 	public SpriteRenderer submarine = null;
+	public Animator splash = null;
+
+	protected FroggerCharacter character = null;
 
 	public enum State
 	{
 		NONE = -1,
 		UNDER = 1,
-		
+		PERISCOPE = 2,
+		SUBMARINE = 3,
+		DONE = 4
 	}
 
-	public State state = State.NONE;
+	public State state = State.UNDER;
 
 	public void Surface()
 	{
-		StartCoroutine(SurfaceRoutine());
+		StartCoroutine(SubmarineAnimationRoutine());
 	}
 
 	public void SetupLocal()
@@ -38,6 +43,10 @@ public class FroggerLaneItemSubmarine : FroggerLaneItem
 			{
 				Debug.LogError("Could not find the sprite renderer for the periscope!");
 			}
+			else
+			{
+				periscope.gameObject.SetActive(false);
+			}
 		}
 
 		if (iceHole == null)
@@ -46,6 +55,10 @@ public class FroggerLaneItemSubmarine : FroggerLaneItem
 			if (iceHole == null)
 			{
 				Debug.LogError("Could not find the sprite renderer for the ice hole!");
+			}
+			else
+			{
+				iceHole.gameObject.SetActive(false);
 			}
 		}
 
@@ -56,7 +69,26 @@ public class FroggerLaneItemSubmarine : FroggerLaneItem
 			{
 				Debug.LogError("Could not find the sprite renderer for the submarine!");
 			}
+			else
+			{
+				submarine.gameObject.SetActive(false);
+			}
 		}
+
+		if (splash == null)
+		{
+			splash = transform.FindChild("Splash").GetComponent<Animator>();
+			if (splash == null)
+			{
+				Debug.LogError("Could not find the splash animation!");
+			}
+			else
+			{
+				splash.gameObject.SetActive(false);
+			}
+		}
+
+		GetComponent<BoxCollider2D>().enabled = false;
 	}
 
 	protected void Awake()
@@ -69,8 +101,74 @@ public class FroggerLaneItemSubmarine : FroggerLaneItem
 		SetupGlobal();
 	}
 
-	private IEnumerator SurfaceRoutine()
+	private IEnumerator SubmarineAnimationRoutine()
 	{
-		yield break;
+		state = State.PERISCOPE;
+
+		iceHole.gameObject.SetActive(true);
+
+		// Animate the periscope
+		periscope.gameObject.SetActive(true);
+		iTweener periscopeAnim = iTweenExtensions.MoveTo(periscope.gameObject, periscope.transform.position + new Vector3(0f, 1.5f, 0f)).Time(0.5f);
+		periscopeAnim.Execute();
+
+		yield return new WaitForSeconds(0.5f);
+		periscope.transform.Rotate(new Vector3(0f, 1, 0f), 180f);
+		yield return new WaitForSeconds(0.5f);
+		periscope.transform.Rotate(new Vector3(0f, 1f, 0f), -180f);
+		yield return new WaitForSeconds(0.5f);
+
+		periscopeAnim = iTweenExtensions.MoveTo(periscope.gameObject, periscope.transform.position + new Vector3(0f, -1.5f, 0f)).Time(0.5f);
+		periscopeAnim.Execute();
+
+		yield return new WaitForSeconds(0.5f);
+
+		periscope.gameObject.SetActive(false);
+
+		// Animate the the ice hole's scale and let the submarine appear above the ice
+		submarine.gameObject.SetActive(true);
+		iTweener iceHoleAnim = iTweenExtensions.ScaleTo(iceHole.gameObject, iceHolePrefab.transform.localScale).Time(0.2f);
+		iTweener submarineAnim = iTweenExtensions.MoveTo(submarine.gameObject, submarine.transform.position + new Vector3(0f, 3f, 0f)).Time(0.4f);
+		iceHoleAnim.Execute();
+		submarineAnim.Execute();
+
+		StartCoroutine(SplashAnimationRoutine());
+
+		yield return new WaitForSeconds(0.2f);
+
+		// Set the this state, so that the lane knows the ice hole has been scaled to the proper size
+		state = State.SUBMARINE;
+		yield return new WaitForSeconds(0.8f);
+
+		// Let the submarine disappear again
+		submarineAnim = iTweenExtensions.MoveTo(submarine.gameObject, submarine.transform.position + new Vector3(0f, -3f, 0f)).Time(0.7f);
+		submarineAnim.Execute();
+
+		yield return new WaitForSeconds(1f);
+
+		state = State.DONE;
+
+		yield return new WaitForEndOfFrame();
+	}
+
+	private IEnumerator SplashAnimationRoutine()
+	{
+		if (splash == null)
+		{
+			yield break;
+		}
+
+		yield return new WaitForSeconds(0.1f);
+
+		GameObject splashCopy = (GameObject)Instantiate(splash.gameObject);
+		splashCopy.transform.position = this.transform.position;
+		splashCopy.SetActive(true);
+
+		yield return new WaitForSeconds(0.8f);
+
+		if (splashCopy != null)	// handy to check in case level was rebuilt
+		{
+			GameObject.Destroy(splashCopy);
+		}
 	}
 }
