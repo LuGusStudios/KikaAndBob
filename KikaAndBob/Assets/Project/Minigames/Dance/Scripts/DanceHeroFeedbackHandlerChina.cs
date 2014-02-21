@@ -35,8 +35,10 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 		feedback.onDisplayModifier += OnDisplayModifier;
 		feedback.onScoreRaised += OnScoreRaised;
 		feedback.onScoreLowered += OnScoreLowered;
+		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
+		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
 
-		Transform guiParent = GameObject.Find("GUI").transform;
+		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 
 		if (modifierDisplayPrefab == null)
 			modifierDisplayPrefab = guiParent.FindChild("ModifierDisplay").gameObject;
@@ -56,10 +58,10 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 
 	public void OnDisplayModifier()
 	{
+		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
-		modifierDisplay.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		Destroy(modifierDisplay, 0.5f);
 	}
 
@@ -130,6 +132,36 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	{
 		ChangeBobAnim();
 	}
-	
 
+	protected void OnLevelStarted()
+	{
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeLeft1.SetValue(0);
+	}
+
+	protected void OnLevelFinished()
+	{
+		LugusCoroutines.use.StartRoutine(FinishRoutine());
+	}
+
+	protected IEnumerator FinishRoutine()
+	{
+		yield return new WaitForSeconds(2.0f);
+
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+		
+		HUDManager.use.LevelEndScreen.Show(true);
+		
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
+	}
 }

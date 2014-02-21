@@ -10,27 +10,17 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 {
 	protected Transform guiParent = null;
 	protected Transform keysParent = null;
-	protected TextMesh livesText = null;
 	protected List<Transform> guiKeyItems = new List<Transform>();
 
 	public void SetupLocal()
 	{
 		if (guiParent == null)
 		{
-			guiParent = GameObject.Find("GUI").transform;
+			guiParent = GameObject.Find("GUI_Debug").transform;
 		}
 		if (guiParent == null)
 		{
-			Debug.LogError("Could not find GUI parent object.");
-		}
-
-		if (livesText == null)
-		{
-			livesText = guiParent.FindChild("Lives").GetComponent<TextMesh>();
-		}
-		if (livesText == null)
-		{
-			Debug.LogError("Could not find lives text mesh.");
+			Debug.LogError("Could not find GUI parent object."); 
 		}
 
 		if (keysParent == null)
@@ -62,50 +52,72 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	{
 		SetupGlobal();
 	}
-	
+
+	public void ResetGUI()
+	{
+		Debug.Log("PacmanGUIManager: Resetting GUI."); 
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
+		HUDManager.use.CounterLargeLeft2.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft2.commodity = KikaAndBob.CommodityType.Life;
+		HUDManager.use.CounterLargeLeft2.SetValue(3, false);
+		
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
+		//HUDManager.use.CounterLargeLeft1.SetValue(0);
+		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeS);
+		
+		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Feather;
+		HUDManager.use.CounterLargeRight1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeRight1.suffix = " / " + PacmanLevelManager.use.itemsToBePickedUp;
+		HUDManager.use.CounterLargeRight1.SetValue(0);
+	}
+
 	public void UpdatePickupCounter(int newValue)
 	{
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
+		//HUDManager.use.CounterLargeRight1.SetValue(newValue, false);
 	}
 
 	public void UpdateLives(int lives)
 	{
-		livesText.text = lives.ToString();
+		HUDManager.use.CounterLargeLeft2.SetValue(lives, false);
 	}
+
+	public void PauseTimer(bool pause)
+	{
+		HUDManager.use.PauseButton.gameObject.SetActive(!pause);
+		HUDManager.use.CounterLargeLeft1.PauseTimer(pause);
+	}
+
+	public void ShowGameOverMessage(float timer)
+	{
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+
+		HUDManager.use.StopAll();
+		HUDManager.use.LevelEndScreen.Show(false);
 	
-	public void ShowGameOverMessage()
-	{
-		LugusCoroutines.use.StartRoutine(PlaceholderGameOver());
-		Debug.Log("Add game over GUI action here. Just restarting for now.");
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer);
 	}
 
-	IEnumerator PlaceholderGameOver()
+	public void ShowWinMessage(float timer)
 	{
-		GameObject gui = GameObject.Find("GUI");
-		Transform child = gui.transform.FindChild("YouLose");
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
-		child.gameObject.SetActive(true);
-		yield return new WaitForSeconds(1f);
+		HUDManager.use.StopAll();
+		HUDManager.use.LevelEndScreen.Show(true);
 
-		child.gameObject.SetActive(false);
-	}
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer);
 
-	public void ShowWinMessage()
-	{
-		LugusCoroutines.use.StartRoutine(PlaceholderWin());
-		Debug.Log("Add win GUI action here.Just restarting for now.");
-	}
-
-	IEnumerator PlaceholderWin()
-	{
-		GameObject gui = GameObject.Find("GUI");
-		Transform child = gui.transform.FindChild("YouWin");
-
-		child.gameObject.SetActive(true);
-		yield return new WaitForSeconds(1f);
-
-		child.gameObject.SetActive(false);
-
-		PacmanGameManager.use.StartNewLevel();
 	}
 
 	// this will get called each time a new key index has been added

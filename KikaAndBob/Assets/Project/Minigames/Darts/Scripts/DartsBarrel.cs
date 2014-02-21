@@ -23,7 +23,6 @@ public class DartsBarrel : IDartsHitable
 	
 	public override void Show()
 	{
-		print ("--------------------------------------------------------------------");
 		this.Shown = true;
 		this.renderer.enabled = true;
 

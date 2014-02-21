@@ -51,6 +51,13 @@ public class RunnerCharacterController : MonoBehaviour
 {
 	private static IRunnerCharacterController _use = null;
 	
+	public static void Reset()
+	{
+		_use = null;
+		_jumpSlide = null;
+		_fasterSlower = null;
+	}
+
 	public static IRunnerCharacterController use 
 	{ 
 		get 
@@ -67,6 +74,15 @@ public class RunnerCharacterController : MonoBehaviour
 			
 			
 			return _use; 
+		}
+	}
+
+	public static MonoBehaviour useBehaviour 
+	{ 
+		get 
+		{
+			return (MonoBehaviour) RunnerCharacterController.use;
+
 		}
 	}
 

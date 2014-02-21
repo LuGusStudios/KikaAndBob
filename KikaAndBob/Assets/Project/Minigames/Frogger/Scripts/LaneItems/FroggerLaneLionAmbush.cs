@@ -82,7 +82,15 @@ public class FroggerLaneLionAmbush : FroggerLane {
 	{
 		if (staticSpawnItems.Count < 1)
 			return;
-		
+
+		#if UNITY_EDITOR
+		// in editor, SetUpLocal() isn't called, which can give problems with surface collider still being null when its required below, so call it once
+		if (surfaceCollider == null)
+		{
+			SetUpLocal();
+		}
+		#endif
+				
 		foreach(KeyValuePair<float, FroggerLaneItem> item in staticSpawnItems)
 		{
 			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
@@ -99,8 +107,9 @@ public class FroggerLaneLionAmbush : FroggerLane {
 			
 			// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
 			BoxCollider2D itemCollider = spawned.GetComponent<BoxCollider2D>();
+
 			itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
-			itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
+			itemCollider.center = itemCollider.center.y(surfaceCollider.center.y);
 
 			FroggerLaneItem laneItemScript = spawned.GetComponent<FroggerLaneItem>();
 			staticSpawnedItems.Add(laneItemScript);
@@ -118,7 +127,7 @@ public class FroggerLaneLionAmbush : FroggerLane {
 	}
 
 
-	void Update()
+	protected override void Update()
 	{
 		if (!onSurface || !FroggerGameManager.use.gameRunning)
 			return;

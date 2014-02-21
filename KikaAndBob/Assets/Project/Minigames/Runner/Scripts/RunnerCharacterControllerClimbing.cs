@@ -214,7 +214,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		checkBottomBoundary = false;
 
-		RunnerScoreManager.use.AddScore( -10, this.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+		RunnerManager.use.AddTime( 10.0f );
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Time, 10.0f).Time (1.0f).Position( this.transform.position ).Audio("Collide01").Color(Color.red).Execute();
+
 
 		if( onHit != null )
 			onHit( null );

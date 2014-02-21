@@ -23,18 +23,13 @@ public abstract class FroggerLane : FroggerSurface
 	protected Transform scrollingBackground = null;
 	protected Vector2 scrollingOffset = Vector2.zero;
 
-	protected void Awake()
-	{
-		SetUpLocal();
-	}
-
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
 		
-		if (boxCollider2D != null)
+		if (surfaceCollider != null)
 		{
-			laneSize = boxCollider2D.size;
+			laneSize = surfaceCollider.size;
 			height = laneSize.y;
 		}
 		else
@@ -118,13 +113,19 @@ public abstract class FroggerLane : FroggerSurface
 			return;
 
 		// just ensures this also works in the editor
-		if (boxCollider2D == null)
+		if (surfaceCollider == null)
 		{
 			SetUpLocal();
 		}
 
 		foreach(KeyValuePair<float, FroggerLaneItem> item in staticSpawnItems)
 		{
+			if (item.Value == null)
+			{
+				Debug.LogError("This static spawn item is null! It probably does not have a LaneItem component?");
+				continue;
+			}
+
 			GameObject spawned = (GameObject) Instantiate(item.Value.gameObject);
 			
 			spawned.transform.parent = this.transform;
@@ -140,7 +141,7 @@ public abstract class FroggerLane : FroggerSurface
 			// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
 			BoxCollider2D itemCollider = spawned.GetComponent<BoxCollider2D>();
 			itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
-			itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
+			itemCollider.center = itemCollider.center.y(surfaceCollider.center.y);
 
 			staticSpawnedItems.Add(spawned.GetComponent<FroggerLaneItem>());
 		}
@@ -156,10 +157,10 @@ public abstract class FroggerLane : FroggerSurface
 	// instead we return the transform position, offset by the collider center (which is in local coords)
 	public Vector2 GetCenterPoint()
 	{
-		return transform.position.v2() + boxCollider2D.center;
+		return transform.position.v2() + surfaceCollider.center;
 	}
 	
-	protected void Update()
+	protected virtual void Update()
 	{
 		// move background if there is a moving one
 		if (scrollingBackground != null)
@@ -203,7 +204,7 @@ public abstract class FroggerLane : FroggerSurface
 	private GameObject SpawnLaneItem()
 	{
 		// just ensures this also works in the editor
-		if (boxCollider2D == null)
+		if (surfaceCollider == null)
 		{
 			SetUpLocal();
 		}
@@ -231,7 +232,7 @@ public abstract class FroggerLane : FroggerSurface
 		// make the height of the spawned item's collider equal to the lane's height - this way it will vertically cover the entire lane no matter what the height that was set
 		BoxCollider2D itemCollider = spawnedItem.GetComponent<BoxCollider2D>();
 		itemCollider.size = itemCollider.size.y(height/itemCollider.transform.localScale.y); // compensate for potential sprite scaling !
-		itemCollider.center = itemCollider.center.y(boxCollider2D.center.y);
+		itemCollider.center = itemCollider.center.y(surfaceCollider.center.y);
 	
 		spawnedItem.transform.parent = this.transform;
 		spawnedItem.transform.localPosition = Vector3.zero;

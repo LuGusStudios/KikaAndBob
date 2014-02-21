@@ -12,6 +12,8 @@ public class DanceHeroLane : MonoBehaviour
 	public Transform scoreDisplay = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
+
+	public Color laneColor = Color.white;
 	
 //	[HideInInspector]
 //	public BoneAnimation characterAnim = null;
@@ -24,6 +26,12 @@ public class DanceHeroLane : MonoBehaviour
 	public OnLaneBegin onLaneBegin = null;
 
 	protected float totalDelay = 0.0f;
+	protected ILugusCoroutineHandle laneRoutine = null;
+
+	protected int currentLeadingItemIndex = 0;
+
+	protected ILugusCoroutineHandle highlightRoutine = null;
+
 
 
 	public void Hide()
@@ -70,7 +78,14 @@ public class DanceHeroLane : MonoBehaviour
 
 	public void Begin()
 	{
-		LugusCoroutines.use.StartRoutine( LaneRoutine() );
+		currentLeadingItemIndex = 0;
+
+		if (laneRoutine != null && laneRoutine.Running)
+		{
+			laneRoutine.StopRoutine();
+		}
+
+		laneRoutine = LugusCoroutines.use.StartRoutine( LaneRoutine() );
 
 		if (onLaneBegin != null)
 			onLaneBegin();
@@ -101,10 +116,17 @@ public class DanceHeroLane : MonoBehaviour
 
 	public float GetFullDuration()
 	{
+		float lastItemDuration = 0;
+
+		if (items.Count > 0)
+		{
+			lastItemDuration = items[items.Count - 1].duration;
+		}
+
 		return 
 			Vector2.Distance(transform.position.v2(), transform.FindChild("ActionPoint").position.v2()) / speed +
 			GetTotalDelay() +
-				items[items.Count - 1].duration;
+				lastItemDuration;
 	}
 
 	protected void SpawnItem(DanceHeroLaneItem item)
@@ -158,20 +180,110 @@ public class DanceHeroLane : MonoBehaviour
 	
 	}
 
-	public void HighLightLane(Transform actionPoint)
+	public void ClearLaneItems()
 	{
-		LugusCoroutines.use.StartRoutine(LaneHighlight(actionPoint));
+		if (laneRoutine != null && laneRoutine.Running)
+		{
+			laneRoutine.StopRoutine();
+		}
+
+		for (int i = items.Count - 1; i >= 0; i--)
+		{
+			DanceHeroLaneItem item = items[i];
+
+			// if the item already hade an associated LaneItemRenderer, destroy it
+			if (item.laneItemRenderer == null)
+				continue;
+
+			for (int j = item.laneItemRenderer.actionPoints.Count - 1; j >= 0; j--)
+			{
+				Destroy(item.laneItemRenderer.actionPoints[j].gameObject);
+			}
+
+			Destroy(item.laneItemRenderer.gameObject);
+		}
+
+		items.Clear();
+
 	}
 
-	IEnumerator LaneHighlight(Transform actionPoint)
+	public void HighlightLaneNegative()
+	{
+		if (highlightRoutine != null && highlightRoutine.Running)
+		{
+			highlightRoutine.StopRoutine();
+		}
+
+		highlightRoutine = LugusCoroutines.use.StartRoutine(HighlightLaneNegativeRoutine());
+	}
+
+	protected IEnumerator HighlightLaneNegativeRoutine()
 	{
 		Transform highlight = actionPoint.FindChild("Highlight");
-		
-		float alpha = 0;
-		float effectTime = 0.5f;
-		
+
+		highlight.renderer.material.color = Color.red;
 		highlight.gameObject.SetActive(true);
 		
+		float alpha = 0;
+		float effectTime = 0.35f;
+		
+		while(alpha < 1)
+		{
+			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+			alpha += (1 / (effectTime * 0.5f)) * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		
+		while(alpha > 0 )
+		{
+			highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+			alpha -= (1 / (effectTime * 0.5f)) * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		
+		highlight.gameObject.SetActive(false);
+	}
+
+	public void HighLightLanePositive(bool permanent = false)
+	{
+		if (highlightRoutine != null && highlightRoutine.Running)
+		{
+			highlightRoutine.StopRoutine();
+		}
+
+		if (permanent)
+		{
+			highlightRoutine = LugusCoroutines.use.StartRoutine(HighlightLanePositivePermanentRoutine());
+		}
+		else
+		{
+			highlightRoutine = LugusCoroutines.use.StartRoutine(HighlightLanePositiveRoutine());
+		}
+	}
+
+	public void StopHighlight()
+	{
+		if (highlightRoutine != null && highlightRoutine.Running)
+		{
+			highlightRoutine.StopRoutine();
+		}
+
+		GameObject highlight = actionPoint.FindChild("Highlight").gameObject;
+
+		iTween.Stop(highlight);
+		highlight.SetActive(false);
+	}
+
+	protected IEnumerator HighlightLanePositiveRoutine()
+	{
+		Transform highlight = actionPoint.FindChild("Highlight");
+
+		highlight.renderer.material.color = Color.white;
+		highlight.gameObject.SetActive(true);
+
+		float alpha = 0;
+		float effectTime = 0.5f;
+
 		iTween.RotateBy(highlight.gameObject, iTween.Hash(
 			"amount", new Vector3(0, 0, -0.5f),
 			"time", effectTime,
@@ -194,5 +306,143 @@ public class DanceHeroLane : MonoBehaviour
 		}
 		
 		highlight.gameObject.SetActive(false);
+	}
+
+	protected IEnumerator HighlightLanePositivePermanentRoutine()
+	{
+		Transform highlight = actionPoint.FindChild("Highlight");
+		
+		highlight.renderer.material.color = Color.white;
+		highlight.gameObject.SetActive(true);
+		
+		float alpha = 0.5f;
+		float effectTime = 1f;
+		
+		iTween.RotateBy(highlight.gameObject, iTween.Hash(
+			"amount", new Vector3(0, 0, -0.2f),
+			"time", effectTime,
+			"easetype", iTween.EaseType.easeInOutQuad,
+			"looptype", iTween.LoopType.loop));
+		
+		//	LugusAudio.use.SFX().Play(laneHitSound);
+
+		while (true)
+		{
+			while(alpha < 0.9f)
+			{
+				highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+				alpha += (1 / (effectTime * 0.5f)) * Time.deltaTime;
+				yield return new WaitForEndOfFrame();
+			}
+			
+			while(alpha > 0.5f )
+			{
+				highlight.renderer.material.color = highlight.renderer.material.color.a(alpha);
+				alpha -= (1 / (effectTime * 0.5f)) * Time.deltaTime;
+				yield return new WaitForEndOfFrame();
+			}
+		}
+	}
+
+
+
+	public DanceHeroLaneItem GetCurrentLeadingItem()
+	{
+		if (items == null || items.Count < 1 || currentLeadingItemIndex >= items.Count)
+		{
+			Debug.LogError("DanceHeroLane: currentLeadingItemIndex is out of bounds.");
+			return null;
+		}
+
+		return items[currentLeadingItemIndex];
+	}
+
+	public void IncreaseLeadingLaneItem()
+	{
+		LugusCoroutines.use.StartRoutine(IncreaseLeadingLaneItemRoutine());
+	}
+
+	// this is stupid, but it makes stuff work
+	// what happens is: if we increase the front most lane item and other lane item renderers still check 
+	// for incorrect presses within the same frame, they will detect one, which means you always get a penalty
+	// SO: instead do not set the next leading lane item until the next frame
+	protected IEnumerator IncreaseLeadingLaneItemRoutine()
+	{
+		yield return new WaitForEndOfFrame();
+
+		currentLeadingItemIndex++;
+		
+		if (currentLeadingItemIndex >= items.Count)
+		{
+			currentLeadingItemIndex = items.Count - 1;
+			Debug.Log("Last lane item reached on lane: " + name);
+		}
+	}
+
+	public void ParseLaneFromXML(TinyXmlReader parser)
+	{
+		// Example Lane xml:
+		/**
+		 *	<Lane>
+		 *		<Item>
+		 *			<Time>4.096</Time>
+		 *			<Duration>0.256</Duration>
+		 *		</Item>
+		 *	</Lane>
+		 **/
+
+		// When parsing an item, its time is compared to the
+		// previous item's time in this lane and a delay is set.
+		// Items whose time is too close to the beginning of the music
+		// are ignored and will not spawn in the game.
+
+		if ((parser.tagType != TinyXmlReader.TagType.OPENING) &&
+			(parser.tagName != "Lane"))
+		{
+			Debug.LogError("Cannot start parsing the xml data.");
+			return;
+		}
+
+		// Delay between the action point and spawning from the character
+		float constDelay = Vector2.Distance(this.transform.position.v2(), this.actionPoint.position.v2()) / this.speed;
+		float prevTime = 0.0f;
+
+		// While still reading valid lane data
+		int itemCount = 0;
+		while (parser.Read("Lane"))
+		{
+			if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Item"))
+			{
+				float time = 0.0f;
+				float duration = 0.0f;
+
+				// Parse the lane item
+				while (parser.Read("Item"))
+				{
+					if (parser.tagType != TinyXmlReader.TagType.OPENING)
+						continue;
+
+					if (parser.tagName == "Time")
+						time = float.Parse(parser.content.Trim());
+					else if (parser.tagName == "Duration")
+						duration = float.Parse(parser.content.Trim());
+				}
+
+				float delay = time - prevTime;
+
+				// If its the first lane item, then it receives the initial constant delay
+				if (itemCount == 0)
+				{
+					delay -= constDelay;
+				}
+
+				if (delay > 0f)
+				{
+					prevTime = time;
+					AddItem(delay, duration);
+					++itemCount;
+				}
+			}
+		}
 	}
 }

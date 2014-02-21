@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using SmoothMoves;
 
 public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
-	public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
+	//public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
 	public float maxScoreModifier = 9.0f;
 
 	public delegate void OnDisplayModifier();
 	public OnDisplayModifier onDisplayModifier = null;
 
-	public delegate void OnScoreRaised(DanceHeroLane lane);
-	public OnScoreRaised onScoreRaised = null;
-
-	public delegate void OnScoreLowered(DanceHeroLane lane);
-	public OnScoreRaised onScoreLowered = null;
+	public delegate void OnLaneUsed(DanceHeroLane lane);
+	public OnLaneUsed onScoreRaised = null;
+	public OnLaneUsed onScoreLowered = null;
+	public OnLaneUsed onButtonPress = null;
 	
 	protected int failCount = 0;
 	protected int succesCount = 0;
@@ -24,18 +24,28 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected int scoreModifierStep = 1;
 	protected int nextMessageIndex = 1;
 	protected float scoreIncreaseStep = 0.2f;
-	protected TextMesh scoreDisplay = null;
 	protected TextMesh message = null;
 	protected ILugusCoroutineHandle messageRoutine = null;
-	protected string[] messages = new string[]
+	protected List<string> messages = new List<string>();
+
+//	protected string[] messages = new string[]
+//	{
+//		"Come on, Bob!",
+//		"You got it!",
+//		"Keep going!",
+//		"Great!",
+//		"Wow!",
+//		"Amazing!"
+//	};
+	protected string missedMessage = "OUCH!";
+
+	public enum ScoreType
 	{
-		"Come on, Bob!",
-		"You got it!",
-		"Keep going!",
-		"Great!",
-		"Wow!",
-		"Amazing!"
-	};
+		NONE,
+		PRESS_CORRECT,
+		PRESS_MISSED,
+		PRESS_INCORRECT
+	}
 	
 	void Awake()
 	{
@@ -45,18 +55,11 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	void Start()
 	{
 		SetupGlobal();
-		scoreDisplay.text = "0";
-		message.gameObject.SetActive(false);
 	}
 
 	public void SetupLocal()
 	{
-		Transform guiParent = GameObject.Find("GUI").transform;
-
-		if (scoreDisplay == null)
-			scoreDisplay = guiParent.FindChild("ScoreDisplay").GetComponent<TextMesh>();
-		if (scoreDisplay == null)
-			Debug.LogError("No score display found in scene.");
+		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 
 		if (message == null)
 			message = guiParent.FindChild("Message").gameObject.GetComponent<TextMesh>();
@@ -66,6 +69,24 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupGlobal()
 	{
+		message.gameObject.SetActive(false);
+
+		// read language specific feedback text
+
+		for (int i = 1; i <= 6; i++) 
+		{
+			messages.Add(LugusResources.use.GetText("dance.feedback.good."+ i.ToString()));
+		}
+
+		missedMessage = LugusResources.use.GetText("dance.feedback.bad.1");
+	}
+
+	public void ResetGUI()
+	{
+//		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+//		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+//		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+//		HUDManager.use.CounterLargeLeft1.SetValue(0);
 	}
 
 	public float GetScoreModifier()
@@ -78,20 +99,21 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		return score;
 	}
 
-	public void UpdateScore(bool succes, DanceHeroLane lane, int amount = 1)
+	public void UpdateScore(ScoreType type, DanceHeroLane lane, int amount = 1)
 	{
 		int scoreAdd = 0;
 
-		if (succes)
+		if (type == ScoreType.PRESS_CORRECT)
 		{
-			scoreValue += amount;
+			//scoreValue += amount;
 			succesCount += amount;
 
 			scoreModifier += scoreIncreaseStep;
 			scoreModifier = Mathf.Clamp(scoreModifier, 1, maxScoreModifier);
 			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
-			DisplayScoreGainAtLane(lane, scoreAdd);
+		//	DisplayScoreGainAtLane(lane, scoreAdd, true);
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(lane.laneColor).Execute();
 
 			if (scoreModifier >= (maxScoreModifier / 6) * nextMessageIndex)
 			{
@@ -108,7 +130,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 				scoreModifierStep++;
 			}
 		}
-		else
+		else if (type == ScoreType.PRESS_MISSED)
 		{
 			// only show a "modifier lost" message if some has been built up - otherwise it shows up all the time
 			bool showChange = false;
@@ -118,9 +140,8 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			}
 
 			if (showChange)
-				DisplayMessage("OUCH!");
+				DisplayMessage(missedMessage);
 
-			scoreValue -= amount;
 			failCount += amount;
 
 			scoreModifier = 1;
@@ -133,14 +154,41 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 					onDisplayModifier();
 			}
 		}
+		else if (type == ScoreType.PRESS_INCORRECT)
+		{
+			Debug.Log("Pressed incorrectly!");
 
-		scoreValue = Mathf.Clamp(scoreValue, 0, 14);
+			// incorrect pressing does not lower modifier, but does subtract penalty score
+
+			if (score <= 0)
+			{
+				return;
+			}
+
+			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f) * -1;
+			//DisplayScoreGainAtLane(lane, scoreAdd, false);
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(Color.red).MinValue(0).Execute();
+
+			score += scoreAdd;	// subtract half of maximum score
+
+			if (score < 0)
+			{
+				score = 0;
+			}
+		}
+		else
+		{
+			Debug.LogError("DanceHeroFeedback: Unknown score change type.");
+		}
+
 
 		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
-		scoreDisplay.text = score.ToString();
+	
 
-		if (succes)
+		//HUDManager.use.CounterLargeLeft1.SetValue(score);
+
+		if (type == ScoreType.PRESS_CORRECT)
 		{
 			if (onScoreRaised != null)
 				onScoreRaised(lane);
@@ -152,7 +200,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		}
 	}
 
-	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain)
+	protected void DisplayScoreGainAtLane(DanceHeroLane lane, int gain, bool positive)
 	{
 		if (lane.scoreDisplay == null)
 		{
@@ -162,12 +210,21 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		GameObject scoreDisplay = (GameObject)Instantiate(lane.scoreDisplay.gameObject);
 		scoreDisplay.transform.parent = lane.transform;
-		scoreDisplay.transform.position = lane.actionPoint.transform.position + new Vector3(0, 0, -1);
-		scoreDisplay.GetComponent<TextMesh>().text = gain.ToString();
+		scoreDisplay.transform.position = lane.actionPoint.transform.position.z(-1.0f);
+		TextMesh textMesh = scoreDisplay.GetComponent<TextMesh>();
+		textMesh.text = gain.ToString();
 
-		scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, 2, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		if (positive)
+		{
+			scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, 2.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		}
+		else
+		{
+			textMesh.color = Color.red;
+			scoreDisplay.MoveTo(scoreDisplay.transform.position + new Vector3(0, -2.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
+		}
+
 		scoreDisplay.transform.localScale = Vector3.zero;
-
 		scoreDisplay.ScaleTo(Vector3.one).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
 
 		Destroy(scoreDisplay, 0.5f);
