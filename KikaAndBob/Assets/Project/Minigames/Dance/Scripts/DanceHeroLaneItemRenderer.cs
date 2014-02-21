@@ -409,9 +409,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 			DeleteActionPoint(actionPoint);
 
-			LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
-
 			this.item.lane.IncreaseLeadingLaneItem();
+
+			DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_CORRECT, item.lane);
 
 			GameObject.Destroy(this.gameObject);
 		}
