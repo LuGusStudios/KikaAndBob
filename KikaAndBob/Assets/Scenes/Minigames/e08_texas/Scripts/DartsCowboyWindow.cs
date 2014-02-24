@@ -3,24 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using SmoothMoves;
 
-public class DartsWindow : IDartsHitable 
+public class DartsCowboyWindow : IDartsHitable 
 {
+	public string idleAnimation;
+	public string hitAnimation;
+
 	protected Transform openItems = null;
 	protected Transform closedItems = null;
 	protected Transform character = null;
 	protected ParticleSystem[] dustClouds = null;
 	protected BoneAnimation characterAnim = null;
+	protected BoxCollider2D boxCollider2D = null;
 	
 	public override void OnHit()
 	{
 		HitCount++;
+		LugusCoroutines.use.StartRoutine(HideRoutine());
+	}
+
+	protected IEnumerator HideRoutine()
+	{
+		characterAnim.Play(hitAnimation);
+		boxCollider2D.enabled = false;	// disable collider so it can't be hit, but the object is still visibile
+
+		yield return new WaitForSeconds(0.25f);
+
 		Hide();
 	}
 	
 	public override void Show()
 	{
 		this.Shown = true;
+		boxCollider2D.enabled = true;
 		SetTogglePartsActive(true);
+		characterAnim.Play(idleAnimation);
 	}
 	
 	public override void Hide()
@@ -83,6 +99,11 @@ public class DartsWindow : IDartsHitable
 			dustClouds = GetComponentsInChildren<ParticleSystem>();
 		if (dustClouds == null)
 			Debug.LogError("DartsWindow: Missing dust cloud particles");
+
+		if (boxCollider2D == null)
+			boxCollider2D = GetComponent<BoxCollider2D>();
+		if (boxCollider2D == null)
+			Debug.LogError(name + " did not find a BoxCollider2D.");
 	}
 
 	public void SetupGlobal()
