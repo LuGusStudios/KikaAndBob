@@ -37,6 +37,9 @@ public class LevelEndScreen : MonoBehaviour
 
 	public void Show(bool success) 
 	{
+		HUDManager.use.DisableAll();
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+
 		if( success )
 		{
 			Kika.PlayAnimation("HAPPY/KikaFront_Victory");
@@ -113,16 +116,17 @@ public class LevelEndScreen : MonoBehaviour
 		SetupLocal();
 	}
 
-	protected void Start () 
+	protected void Start ()  
 	{
 		SetupGlobal();
 	}
 	
 	protected void Update () 
 	{
-		if( ContinueButton.pressed )
+		if( ContinueButton.pressed ) 
 		{
 			HUDManager.use.DisableAll();
+			HUDManager.use.PauseButton.gameObject.SetActive(false);
 			HUDManager.use.LevelEndScreen.Hide ();
 			DialogueManager.use.HideAll();
 
