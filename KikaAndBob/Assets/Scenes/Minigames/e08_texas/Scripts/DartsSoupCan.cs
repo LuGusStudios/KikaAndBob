@@ -19,15 +19,15 @@ public class DartsSoupCan : IDartsHitable
 	public override void OnHit()
 	{
 		// like anyone is ever gonna be this badass...
-		if (hitStreak < 6)
+		if (hitStreak < 10)
 		{
 			hitStreak++;
 
-		HitCount++;
-		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+			HitCount++;
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
 
-		if (!flying)
-			routineHandle = LugusCoroutines.use.StartRoutine(AnimationRoutine());
+			if (!flying)
+				routineHandle = LugusCoroutines.use.StartRoutine(AnimationRoutine());
 		}
 	}
 

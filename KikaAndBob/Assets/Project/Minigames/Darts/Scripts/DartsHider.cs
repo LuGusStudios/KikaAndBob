@@ -40,12 +40,12 @@ public class DartsHider : IDartsHitable
 		gameObject.MoveTo( hiddenPosition ).Time ( 0.1f /*TODO*/).Execute();
 	}
 
-	public void SetupLocal()
+	public virtual void SetupLocal()
 	{
 		// assign variables that have to do with this class only
 	}
 	
-	public void SetupGlobal()
+	public virtual void SetupGlobal()
 	{
 		// lookup references to objects / scripts outside of this script
 	}

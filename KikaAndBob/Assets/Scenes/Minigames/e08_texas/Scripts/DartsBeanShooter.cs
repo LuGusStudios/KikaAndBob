@@ -79,7 +79,7 @@ public class DartsBeanShooter : MonoBehaviour
 	
 	protected void CheckShoot()
 	{
-		if( shooting )
+		if( shooting || !DartsLevelConfiguration.use.GameRunning)
 			return;
 
 		// enables Rambob mode

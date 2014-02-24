@@ -36,6 +36,8 @@ public class Score
 	public float _minAmount = Mathf.NegativeInfinity;
 	public float _maxAmount = Mathf.Infinity;
 
+	public iTween.EaseType _easeType = iTween.EaseType.easeInBack;
+
 	protected IHUDElement _hud = null;
 	public IHUDElement GetHUDElement()
 	{
@@ -155,6 +157,12 @@ public class Score
 		return this;
 	}
 
+	public Score EaseType(iTween.EaseType easeType)
+	{
+		_easeType = easeType;
+		return this;
+	}
+
 	public void Execute()
 	{
 		ScoreVisualizer.use.ShowScore( this );
@@ -230,7 +238,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 			scoreText.MoveTo( scoreText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 		}
 
-		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(score._easeType).Execute(); 
 
 		GameObject.Destroy(scoreText, score._duration);
 
@@ -253,7 +261,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 				titleText.MoveTo( titleText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 			}
 
-			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(score._easeType).Execute(); 
 			GameObject.Destroy(titleText, score._duration);
 		}
 
