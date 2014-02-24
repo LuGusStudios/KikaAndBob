@@ -14,7 +14,7 @@ public class StepLevelMenu : IMenuStep
 	protected ILugusCoroutineHandle moveRoutine = null;
 	protected float offScreenDistance = 20.0f;
 	protected int pageCounter = 0;
-	protected List<int> levelIndices;
+	protected List<int> levelIndices = null; 
 	protected bool switchingPages = false;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 
@@ -29,14 +29,17 @@ public class StepLevelMenu : IMenuStep
 			Debug.LogError("StepLevelMenu: Missing level bars transform!");
 		}
 
-		for (int i = 1; i <= 5; i++) 
+		if( levelBars.Count < 5 )
 		{
-			Transform t = levelBarsParent.transform.FindChild("LevelBar0" + i);
-
-			if (t != null)
+			for (int i = 1; i <= 5; i++) 
 			{
-				levelBars.Add(t);
-				levelButtons.Add(t.FindChild("ButtonPlay").GetComponent<Button>());
+				Transform t = levelBarsParent.transform.FindChild("LevelBar0" + i);
+
+				if (t != null)
+				{
+					levelBars.Add(t);
+					levelButtons.Add(t.FindChild("ButtonPlay").GetComponent<Button>());
+				}
 			}
 		}
 
@@ -66,7 +69,10 @@ public class StepLevelMenu : IMenuStep
 		{
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
-		levelIndices = levelLoader.FindLevels();
+		if( levelIndices == null || levelIndices.Count == 0 )
+		{
+			levelIndices = levelLoader.FindLevels();
+		}
 	}
 	
 	public void SetupGlobal()
@@ -142,10 +148,29 @@ public class StepLevelMenu : IMenuStep
 		}
 	}
 
+	public bool LoadSingleLevel()
+	{
+		SetupLocal(); // because it might be Awake() hasn't been called yet here
+
+		if (levelIndices.Count <= 0)
+		{
+			Debug.LogError("StepLevelMenu: There are no level config files!");
+			levelLoader.LoadLevel(1);
+			EnableBars(0);
+			return true;
+		}
+		else if (levelIndices.Count == 1)
+		{
+			Debug.Log("StepLevelMenu: There is only 1 level: load that one!");
+			levelLoader.LoadLevel(1);
+			return true;
+		}
+
+		return false;
+	}
+
 	public override void Activate()
 	{
-		gameObject.SetActive(true);
-		
 //		if (levelIndices == null)
 //			SetupLocal();
 
@@ -157,26 +182,23 @@ public class StepLevelMenu : IMenuStep
 //		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
 //			LugusConfig.use.User.SetBool(Application.loadedLevelName + ".1", true, true);
 
-		if (levelIndices.Count <= 0)
-		{
-			Debug.LogError("StepLevelMenu: There are no level config files!");
-			levelLoader.LoadLevel(1);
-			EnableBars(0);
+		if( LoadSingleLevel() )
 			return;
-		}
-		else if (levelIndices.Count == 1)
-		{
-			levelLoader.LoadLevel(1);
-			return;
-		}
+
 		
 		activated = true;
+		gameObject.SetActive(true);
+
+		//Debug.LogError("ACTIVATE stepLevel " + levelIndices.Count);
+
 		UpdateAndFlyIn(true);
 		LoadLevelData();
 	}
 
 	public override void Deactivate()
 	{
+		//Debug.LogError("DE-ACTIVATE stepLevel");
+
 		activated = false;
 		gameObject.SetActive(false);
 	}
