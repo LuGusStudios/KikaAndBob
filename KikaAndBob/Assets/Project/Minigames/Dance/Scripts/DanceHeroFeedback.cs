@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using SmoothMoves;
 
 public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
@@ -10,11 +11,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	public delegate void OnDisplayModifier();
 	public OnDisplayModifier onDisplayModifier = null;
 
-	public delegate void OnScoreRaised(DanceHeroLane lane);
-	public OnScoreRaised onScoreRaised = null;
-
-	public delegate void OnScoreLowered(DanceHeroLane lane);
-	public OnScoreRaised onScoreLowered = null;
+	public delegate void OnLaneUsed(DanceHeroLane lane);
+	public OnLaneUsed onScoreRaised = null;
+	public OnLaneUsed onScoreLowered = null;
+	public OnLaneUsed onButtonPress = null;
 	
 	protected int failCount = 0;
 	protected int succesCount = 0;
@@ -26,15 +26,17 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	protected float scoreIncreaseStep = 0.2f;
 	protected TextMesh message = null;
 	protected ILugusCoroutineHandle messageRoutine = null;
-	protected string[] messages = new string[]
-	{
-		"Come on, Bob!",
-		"You got it!",
-		"Keep going!",
-		"Great!",
-		"Wow!",
-		"Amazing!"
-	};
+	protected List<string> messages = new List<string>();
+
+//	protected string[] messages = new string[]
+//	{
+//		"Come on, Bob!",
+//		"You got it!",
+//		"Keep going!",
+//		"Great!",
+//		"Wow!",
+//		"Amazing!"
+//	};
 	protected string missedMessage = "OUCH!";
 
 	public enum ScoreType
@@ -53,7 +55,6 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	void Start()
 	{
 		SetupGlobal();
-		message.gameObject.SetActive(false);
 	}
 
 	public void SetupLocal()
@@ -68,14 +69,24 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupGlobal()
 	{
+		message.gameObject.SetActive(false);
+
+		// read language specific feedback text
+
+		for (int i = 1; i <= 6; i++) 
+		{
+			messages.Add(LugusResources.use.GetText("dance.feedback.good."+ i.ToString()));
+		}
+
+		missedMessage = LugusResources.use.GetText("dance.feedback.bad.1");
 	}
 
 	public void ResetGUI()
 	{
-		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
-		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
-		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
-		HUDManager.use.CounterLargeLeft1.SetValue(0);
+//		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+//		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+//		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+//		HUDManager.use.CounterLargeLeft1.SetValue(0);
 	}
 
 	public float GetScoreModifier()

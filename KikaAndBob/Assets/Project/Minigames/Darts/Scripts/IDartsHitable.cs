@@ -6,7 +6,7 @@ public abstract class IDartsHitable : MonoBehaviour
 {
 	public float lastShownTime = 0.0f;
 	public float lastHideTime = 0.0f;
-
+	
 	public DartsFunctionalityGroup group = null;
 
 	public int score = 100;

@@ -137,14 +137,31 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	{
 		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
 		HUDManager.use.PauseButton.gameObject.SetActive(true);
+
+		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterLargeLeft1.SetValue(0);
 	}
 
 	protected void OnLevelFinished()
 	{
-		if (DanceHeroLevel.use.currentLevel < DanceHeroLevel.use.levels.Length - 1)	
-		{
-//			DanceHeroLevel.use.currentLevel++;
-//			DanceHeroLevel.use.CreateLevel();
-		}
+		LugusCoroutines.use.StartRoutine(FinishRoutine());
+	}
+
+	protected IEnumerator FinishRoutine()
+	{
+		yield return new WaitForSeconds(2.0f);
+
+		HUDManager.use.DisableAll();
+		
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+		
+		HUDManager.use.LevelEndScreen.Show(true);
+		
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
 	}
 }

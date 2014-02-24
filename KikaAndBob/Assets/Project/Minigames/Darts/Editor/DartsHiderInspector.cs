@@ -4,7 +4,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(DartsHider))]
+[CustomEditor(typeof(DartsHider), true)]
 [CanEditMultipleObjects]
 public class DartsHiderInspector : Editor 
 {

@@ -17,11 +17,12 @@ public class DanceHeroLevelDefault : IGameManager
 {	
 	public DanceHeroLevel.TimeProgressionMode mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
 
-	public AudioClip musicClip; // TO DO: Remove
-
 	public delegate void OnLevelStarted();
-	public OnLevelStarted onLevelStarted = null;
+	public OnLevelStarted onLevelStarted = null; 
 
+	public delegate void OnLevelRestart();
+	public OnLevelRestart onLevelRestart= null;
+	
 	public delegate void OnLevelFinished();
 	public OnLevelFinished onLevelFinished = null;
 
@@ -29,28 +30,16 @@ public class DanceHeroLevelDefault : IGameManager
 	public float cumulativeDelay = 0.0f;
 	public int currentLevel = 0;
 	public string[] levels;
-
+	protected AudioClip musicClip = null;
+	
 	protected ILugusCoroutineHandle endLevelRoutine = null;
-	protected ILugusAudioTrack backgroundMusic = null;
+	protected ILugusAudioTrack musicTrack = null;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+	protected string levelData = string.Empty;
+	protected bool gameRunning = false;
 
-	public override void StartGame ()
-	{
-	}
-
-	public override void StopGame ()
-	{
-	}
-
-	public override bool GameRunning {
-		get 
-		{
-			if (endLevelRoutine == null)
-				return false;
-
-			return endLevelRoutine.Running;
-		}
-	}
+	protected int levelRepeatAmount = 1;
+	protected int targetBatchScore = 0;
 
 	public void SetupLocal()
 	{
@@ -58,7 +47,7 @@ public class DanceHeroLevelDefault : IGameManager
 		{
 			lanes.AddRange( GameObject.FindObjectsOfType<DanceHeroLane>() );
 		}
-
+		
 		if( lanes.Count == 0 )
 		{
 			Debug.LogError(name + " : no Lanes in level!");
@@ -70,16 +59,76 @@ public class DanceHeroLevelDefault : IGameManager
 		// levels:
 		// - working with state machines : put something on for a certain duration
 		// - if duration > single unit, you need to keep the button pressed. If not: single press of button
-
+		
 		// - make it possible to change the speed of the lane in itself (speed of movement)?
-
+		
 		// ex. list.Add( new LaneItem( 25 (offset from previous item START in seconds), Enum.ButtonType, duration [, speedmodifier (in percentage)) )
 		// lane.LoadLevel( list )
-
+		
 		// laneItem( 0, Enum.Delay, -x) to adjust the time to next -> so that if we change a part, we can easily keep timing on the next parts?
 		// -> is this really needed... probably it is only change the starting one of the sequence and we're good to go?
-
+		
 		// lanes moeten aan/uit kunnen gezet worden
+	}
+
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
+		
+		levelLoader.FindLevels();
+		
+		if (DanceHeroCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			levelData = levelLoader.GetLevelData(DanceHeroCrossSceneInfo.use.GetLevelIndex());
+			
+			if (!string.IsNullOrEmpty(levelData))
+			{
+				StartGame();
+			}
+			else
+			{
+				Debug.LogError("DanceHeroLevel: Invalid level data!");
+			}
+		}
+	}
+
+	public override void StartGame ()
+	{
+		CreateLevel(levelData);
+	}
+
+	public override void StopGame ()
+	{
+		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
+		
+		LugusConfig.use.User.SetBool(saveKey, true, true); 
+		LugusConfig.use.SaveProfiles();
+
+		// let custom functionality be handled elsewhere
+		if (onLevelFinished != null)
+		{
+			onLevelFinished();
+		}
+		
+		Debug.Log("Level finished!");
+	}
+
+	public override bool GameRunning {
+		get 
+		{
+			return gameRunning;
+		}
 	}
 
 	public DanceHeroLane GetLane(string name)
@@ -93,26 +142,14 @@ public class DanceHeroLevelDefault : IGameManager
 		return null;
 	}
 
-
-	
-//	public void CreateLevel()
-//	{
-//		CreateLevel(currentLevel);
-//	}
-//
-//	public void CreateLevel(int index)
-//	{
-//		if (index < 0 || index >= levels.Length)
-//		{
-//			Debug.LogError("DanceHeroLevel: Level index was out of bounds: " + index);
-//			return;
-//		}
-//
-//		CreateLevel(levels[index]);
-//	}
-	
+		
 	public void CreateLevel(string levelData)
 	{
+		if (string.IsNullOrEmpty(levelData))
+		{
+			Debug.LogError("DanceHeroLevel: Level data was null or empty.");
+		}
+
 		Debug.Log("DanceHeroLevel: Clearing lanes.");
 		foreach(DanceHeroLane lane in lanes)
 		{
@@ -125,10 +162,8 @@ public class DanceHeroLevelDefault : IGameManager
 			return;
 		}
 
-		// add new level items
-		// also, set music file
-
-		
+		levelRepeatAmount = 1;
+		targetBatchScore = 0;
 		cumulativeDelay = 0;
 
 		GetLane("Lane1").defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
@@ -137,187 +172,96 @@ public class DanceHeroLevelDefault : IGameManager
 
 		ParseLevelFromXML(levelData);
 
-		LugusCoroutines.use.StartRoutine(MusicBufferDelay());
-	}
+		LugusCoroutines.use.StartRoutine(LevelRoutine(GetTotalLevelDuration()));
 
-	protected IEnumerator MusicBufferDelay()
-	{
-		Debug.Log("DanceHeroLevel: Waiting for song to be done buffering.");
-
-		backgroundMusic = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
-
-		while(backgroundMusic.Playing == false)
-		{
-			yield return new WaitForEndOfFrame();
-		}
-
-		if (endLevelRoutine != null && endLevelRoutine.Running)
-			endLevelRoutine.StopRoutine();
-		
-		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelEndRoutine(GetTotalLevelDuration()));
-		
-		foreach( DanceHeroLane lane in lanes )
-		{
-			lane.Begin();
-		}
-		
 		if (onLevelStarted != null)
 		{
 			onLevelStarted();
 		}
-		
-		Debug.Log("Finished setting up new level.");
+
+		Debug.Log("Finished setting up new level. It will repeat " + levelRepeatAmount + " times.");
 	}
 
-	protected void LoadLevelChina()
+//	protected IEnumerator MusicBufferDelay()
+//	{
+//		Debug.Log("DanceHeroLevel: Waiting for song to be done buffering.");
+//
+//		backgroundMusic = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
+//
+//		while(backgroundMusic.Playing == false)
+//		{
+//			yield return new WaitForEndOfFrame();
+//		}
+//
+////		if (endLevelRoutine != null && endLevelRoutine.Running)
+////			endLevelRoutine.StopRoutine();
+////		
+////		endLevelRoutine = LugusCoroutines.use.StartRoutine(LevelRoutine(GetTotalLevelDuration()));
+//		
+//
+//
+//
+//		
+//		
+//
+//	}
+
+	protected IEnumerator LevelRoutine(float levelDuration)
 	{
-		Debug.Log("Loading level China");
+		gameRunning = true;
 
-		DanceHeroLane lane1 = GetLane("Lane1");
-		DanceHeroLane lane2 = GetLane("Lane2");
-		DanceHeroLane lane3 = GetLane("Lane3");
-		
-		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
-		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
-		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
-
-	
-
-		/*
-		// GLOBAL_CUMULATIVE
-		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
-		lane1.AddItem( 0.0f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.4f );
-
-		lane2.AddItem( 1f );
-		lane1.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.7f );
-
-		lane1.AddItem( 1.2f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-
-		lane1.AddItem( 6.0f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane1.AddItem( 0.3f );
-		lane3.AddItem( 0.3f, 1 );
-
-		// copy below
-		lane2.AddItem( 1.3f );
-		lane3.AddItem( 0.4f );
-		
-		lane2.AddItem( 1f );
-		lane1.AddItem( 0.3f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.7f );
-		
-		lane1.AddItem( 1.2f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.3f );
-		lane2.AddItem( 0.3f, 1 );*/
-	}
-
-	protected void LoadLevel1()
-	{
-		DanceHeroLane lane1 = GetLane("Lane1");
-		DanceHeroLane lane2 = GetLane("Lane2");
-		DanceHeroLane lane3 = GetLane("Lane3");
-
-		lane2.Hide ();
-		
-		lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT );
-		lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT, 1.2f );
-
-		lane3.AddItem( 4.0f, KikaAndBob.LaneItemActionType.RIGHT );
-		lane3.AddItem( 1.0f, KikaAndBob.LaneItemActionType.RIGHT, 1.2f );
-	}
-
-	protected void LoadLevelMetallica()
-	{
-
-		DanceHeroLane lane1 = GetLane("Lane1");
-		DanceHeroLane lane2 = GetLane("Lane2");
-		DanceHeroLane lane3 = GetLane("Lane3");
-
-		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
-		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
-		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
-
-		
-		// GLOBAL_CUMULATIVE
-		mode = DanceHeroLevel.TimeProgressionMode.GLOBAL_CUMULATIVE;
-		lane1.AddItem( 0.0f );
-		lane2.AddItem( 0.2f );
-		lane3.AddItem( 0.2f );
-		lane1.AddItem( 0.3f ); 
-		
-		lane1.AddItem( 1.6f );
-		lane2.AddItem( 0.2f );
-		lane3.AddItem( 0.2f );
-		lane1.AddItem( 0.3f ); 
-
-		
-		lane3.AddItem( 0.6f, 0.8f  ); 
-
-		
-		lane1.AddItem( 3.6f );
-		lane2.AddItem( 0.2f );
-		lane3.AddItem( 0.2f );
-		lane1.AddItem( 0.3f ); 
-
-		/*
-        // PER_LANE
-		lane1.AddItem( 0.1f );
-		lane2.AddItem( 0.3f );
-		lane3.AddItem( 0.5f );
-		lane1.AddItem( 0.7f );
-		*/
-
-		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT );
-		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT, 1.2f );
-		
-		//lane3.AddItem( 4.0f, KikaAndBob.LaneItemActionType.RIGHT );
-		//lane3.AddItem( 1.0f, KikaAndBob.LaneItemActionType.RIGHT, 1.2f );
-	}
-
-	protected IEnumerator LevelEndRoutine(float levelDuration)
-	{
-		yield return new WaitForSeconds(levelDuration);
-
-		yield return new WaitForSeconds(2.0f);
-
-		LevelFinished();
-	}
-	
-	protected void LevelFinished()
-	{
-		if (onLevelFinished != null)
+		for (int i = 0; i < levelRepeatAmount; i++) 
 		{
-			onLevelFinished();
+			musicTrack = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
+			
+			while(musicTrack.Playing == false)
+			{
+				yield return null;
+			}
+
+			foreach( DanceHeroLane lane in lanes )
+			{
+				lane.Begin();
+			}
+
+			yield return new WaitForSeconds(levelDuration);
+			
+			if (i < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
+			{
+				Debug.Log("DanceHeroLevel: Level stage ended. ------------------------------------------------------");
+
+				if (onLevelRestart != null)
+				{
+					onLevelRestart();
+				}
+			}
+
+			while (!gameRunning)	// onLevelRestart can optionally set gameRunning false to make pause as long as needed
+			{
+				yield return null;
+			}
 		}
 
-		HUDManager.use.PauseButton.gameObject.SetActive(false);
-
-		HUDManager.use.LevelEndScreen.Show(true);
-
-		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
-		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
-		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
-		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
-
-		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
+		//yield return new WaitForSeconds(2.0f);
 		
-		LugusConfig.use.User.SetBool(saveKey, true, true); 
-		LugusConfig.use.SaveProfiles();
-
-		Debug.Log("Level finished!");
+		StopGame();
 	}
-	
+
+	public void SetGameRunning(bool running)
+	{
+		gameRunning = running;
+	}
+
+	public int GetLevelRepeatAmount()
+	{
+		return levelRepeatAmount;
+	}
+
+	public int GetTargetBatchScore()
+	{
+		return targetBatchScore;
+	}
+
 	protected float GetTotalLevelDuration()
 	{
 		// total level length consists of a number of things:
@@ -326,9 +270,9 @@ public class DanceHeroLevelDefault : IGameManager
 		// the duration of the last item in that lane
 		// we compare all lanes and see which one is the longest in total, based on the values above
 		// finally, add a little delay so the level's not immediately over
-
+		
 		float longestLaneDuration = 0;
-
+		
 		foreach(DanceHeroLane lane in lanes)
 		{
 			if (lane.GetFullDuration() > longestLaneDuration)
@@ -337,48 +281,14 @@ public class DanceHeroLevelDefault : IGameManager
 		
 		return longestLaneDuration + 0;
 	}
-
-	protected void Awake()
-	{
-		SetupLocal();
-	}
-
-	protected void Start () 
-	{
-		SetupGlobal();
-
-		levelLoader.FindLevels();
-
-		if (DanceHeroCrossSceneInfo.use.GetLevelIndex() < 0)
-		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
-		}
-		else
-		{
-			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-
-			string levelData = levelLoader.GetLevelData(DanceHeroCrossSceneInfo.use.GetLevelIndex());
-			
-			if (!string.IsNullOrEmpty(levelData))
-			{
-				CreateLevel(levelData);
-			}
-			else
-			{
-				Debug.LogError("DanceHeroLevel: Invalid level data!");
-			}
-
-			DanceHeroFeedback.use.ResetGUI();
-		}
-	}
-
+	
 	void OnGUI()
 	{
 		if (!LugusDebug.debug)
 			return;
-
+		
 		GUILayout.BeginVertical();
-
+		
 		foreach(int index in levelLoader.levelIndices)
 		{
 			if (GUILayout.Button("Load level: " + index))
@@ -389,12 +299,12 @@ public class DanceHeroLevelDefault : IGameManager
 		
 		GUILayout.EndVertical();
 	}
-
-	void ParseLevelFromXML(string rawData)
+	
+	protected void ParseLevelFromXML(string rawData)
 	{
 		TinyXmlReader parser = new TinyXmlReader(rawData);
 		DanceHeroLevel.use.mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
-
+		
 		int laneCount = 0;
 		while (parser.Read())
 		{
@@ -409,6 +319,130 @@ public class DanceHeroLevelDefault : IGameManager
 				lane.ParseLaneFromXML(parser);
 				++laneCount;
 			}
+			else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "Repeat"))
+			{
+				levelRepeatAmount = int.Parse(parser.content.Trim());
+			}
+			else if ((parser.tagType == TinyXmlReader.TagType.OPENING) && (parser.tagName == "TargetBatchScore"))
+			{
+				targetBatchScore = int.Parse(parser.content.Trim());
+			}
 		}
 	}
+
+//	protected void LoadLevelChina()
+//	{
+//		Debug.Log("Loading level China");
+//
+//		DanceHeroLane lane1 = GetLane("Lane1");
+//		DanceHeroLane lane2 = GetLane("Lane2");
+//		DanceHeroLane lane3 = GetLane("Lane3");
+//		
+//		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+//		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+//		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+//
+//	
+//
+//		/*
+//		// GLOBAL_CUMULATIVE
+//		mode = TimeProgressionMode.GLOBAL_CUMULATIVE;
+//		lane1.AddItem( 0.0f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.4f );
+//
+//		lane2.AddItem( 1f );
+//		lane1.AddItem( 0.3f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.7f );
+//
+//		lane1.AddItem( 1.2f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.3f );
+//		lane2.AddItem( 0.3f );
+//
+//		lane1.AddItem( 6.0f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.3f );
+//		lane2.AddItem( 0.3f );
+//		lane1.AddItem( 0.3f );
+//		lane3.AddItem( 0.3f, 1 );
+//
+//		// copy below
+//		lane2.AddItem( 1.3f );
+//		lane3.AddItem( 0.4f );
+//		
+//		lane2.AddItem( 1f );
+//		lane1.AddItem( 0.3f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.7f );
+//		
+//		lane1.AddItem( 1.2f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.3f );
+//		lane2.AddItem( 0.3f, 1 );*/
+//	}
+//
+//	protected void LoadLevel1()
+//	{
+//		DanceHeroLane lane1 = GetLane("Lane1");
+//		DanceHeroLane lane2 = GetLane("Lane2");
+//		DanceHeroLane lane3 = GetLane("Lane3");
+//
+//		lane2.Hide ();
+//		
+//		lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT );
+//		lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT, 1.2f );
+//
+//		lane3.AddItem( 4.0f, KikaAndBob.LaneItemActionType.RIGHT );
+//		lane3.AddItem( 1.0f, KikaAndBob.LaneItemActionType.RIGHT, 1.2f );
+//	}
+//
+//	protected void LoadLevelMetallica()
+//	{
+//
+//		DanceHeroLane lane1 = GetLane("Lane1");
+//		DanceHeroLane lane2 = GetLane("Lane2");
+//		DanceHeroLane lane3 = GetLane("Lane3");
+//
+//		lane1.defaultActionType = KikaAndBob.LaneItemActionType.LEFT;
+//		lane2.defaultActionType = KikaAndBob.LaneItemActionType.DOWN;
+//		lane3.defaultActionType = KikaAndBob.LaneItemActionType.RIGHT;
+//
+//		
+//		// GLOBAL_CUMULATIVE
+//		mode = DanceHeroLevel.TimeProgressionMode.GLOBAL_CUMULATIVE;
+//		lane1.AddItem( 0.0f );
+//		lane2.AddItem( 0.2f );
+//		lane3.AddItem( 0.2f );
+//		lane1.AddItem( 0.3f ); 
+//		
+//		lane1.AddItem( 1.6f );
+//		lane2.AddItem( 0.2f );
+//		lane3.AddItem( 0.2f );
+//		lane1.AddItem( 0.3f ); 
+//
+//		
+//		lane3.AddItem( 0.6f, 0.8f  ); 
+//
+//		
+//		lane1.AddItem( 3.6f );
+//		lane2.AddItem( 0.2f );
+//		lane3.AddItem( 0.2f );
+//		lane1.AddItem( 0.3f ); 
+//
+//		/*
+//        // PER_LANE
+//		lane1.AddItem( 0.1f );
+//		lane2.AddItem( 0.3f );
+//		lane3.AddItem( 0.5f );
+//		lane1.AddItem( 0.7f );
+//		*/
+//
+//		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT );
+//		//lane1.AddItem( 1.0f, KikaAndBob.LaneItemActionType.LEFT, 1.2f );
+//		
+//		//lane3.AddItem( 4.0f, KikaAndBob.LaneItemActionType.RIGHT );
+//		//lane3.AddItem( 1.0f, KikaAndBob.LaneItemActionType.RIGHT, 1.2f );
+//	}	
 }
