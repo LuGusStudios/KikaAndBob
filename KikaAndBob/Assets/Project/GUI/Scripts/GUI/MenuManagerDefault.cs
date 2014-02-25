@@ -13,7 +13,6 @@ public class MenuManagerDefault: MonoBehaviour
 
 	protected Transform background = null;
 
-
 	public enum MenuTypes
 	{
 		NONE = -1,

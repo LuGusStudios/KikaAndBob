@@ -69,9 +69,10 @@ public class StepLevelMenu : IMenuStep
 		{
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
+
 		if( levelIndices == null || levelIndices.Count == 0 )
 		{
-			levelIndices = levelLoader.FindLevels();
+			levelIndices = levelLoader.FindLevels(); 
 		}
 	}
 	
@@ -88,10 +89,25 @@ public class StepLevelMenu : IMenuStep
 	{
 		SetupGlobal();
 	}
+
+	private bool locked = false;
+
+	protected IEnumerator ScreenHideRoutine(int returnedLevel)
+	{
+		locked = true;
+		
+		ScreenFader.use.FadeOut(0.5f);
+		
+		yield return new WaitForSeconds(0.5f);
+		
+		locked = false;
+
+		levelLoader.LoadLevel(returnedLevel);
+	}
 	
 	protected void Update () 
 	{
-		if (!activated)
+		if (!activated || locked)
 			return;
 
 		for (int i = 0; i < levelButtons.Count; i++) 
@@ -107,8 +123,8 @@ public class StepLevelMenu : IMenuStep
 				}
 
 				int returnedLevel = levelIndices[selectedButton];
-
-				levelLoader.LoadLevel(returnedLevel);
+			
+				LugusCoroutines.use.StartRoutine(ScreenHideRoutine(returnedLevel));
 			}
 		}
 

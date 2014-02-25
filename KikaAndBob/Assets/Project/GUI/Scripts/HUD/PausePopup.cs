@@ -59,9 +59,47 @@ public class PausePopup : MonoBehaviour
 	{
 		SetupGlobal();
 	}
+
+	protected IEnumerator RetryButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+		
+		IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+		manager.Paused = false;
+		manager.ReloadLevel();
+	}
+	
+	protected IEnumerator QuitButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+
+		IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+		manager.Paused = false;
+		
+		IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
+		info.SetLevelIndex(-1);
+		
+		Application.LoadLevel( Application.loadedLevelName );
+	}
+
+	private bool locked = false;
+
+	protected IEnumerator ScreenHideRoutine()
+	{
+		locked = true;
+		
+		ScreenFader.use.FadeOut(0.5f);
+		
+		yield return new WaitForSeconds(0.5f);
+		
+		locked = false;
+	}
 	
 	protected void Update () 
 	{
+		if (locked)
+			return;
+
 		Transform hit = LugusInput.use.RayCastFromMouseDown();
 		if( hit == screenCollider || ContinueButton.pressed )
 		{
@@ -70,6 +108,8 @@ public class PausePopup : MonoBehaviour
 
 		if( RetryButton.pressed )
 		{
+			//LugusCoroutines.use.StartRoutine(RetryButtonRoutine());
+
 			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
 			manager.Paused = false;
 			manager.ReloadLevel();
@@ -77,12 +117,14 @@ public class PausePopup : MonoBehaviour
 
 		if( QuitButton.pressed )
 		{
+			//LugusCoroutines.use.StartRoutine(QuitButtonRoutine());
+
 			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
 			manager.Paused = false;
-
+			
 			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
 			info.SetLevelIndex(-1);
-
+			
 			Application.LoadLevel( Application.loadedLevelName );
 		}
 		
