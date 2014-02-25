@@ -14,8 +14,8 @@ MonoBehaviour:
   backgroundMusicName: VaticanBackground
   width: 13
   height: 13
-  cameraTracksPlayer: 1
-  level: xxxxxxxxxxxxxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxoooooooooooxxxxxxxxxxxxxx
+  cameraTracksPlayer: 0
+  level: xxxxxxxxxxxxxxopooxoxooooxxpxxoxpxoxxoxxopooxdxooooxxdxxxxoxxxxoxxooxooooooooxxxoxoxoxoxoxxxooooooooxooxxdxxxxoxxxxoxxooooxoxooooxxooxoxoxoxxoxxooooxoxooooxxxxxxxoxxxxxx
   characters:
   - id: Kika
     speed: 2
@@ -24,9 +24,52 @@ MonoBehaviour:
     spawnDelay: 0
     startDirection: 0
     defaultTargetTiles: []
+  - id: GuardPatrol02
+    speed: 1
+    xLocation: 11
+    yLocation: 7
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles:
+    - {x: 10, y: 7}
+    - {x: 11, y: 9}
+  - id: GuardPatrol02
+    speed: 1
+    xLocation: 2
+    yLocation: 2
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles:
+    - {x: 2, y: 2}
+    - {x: 4, y: 2}
+  - id: GuardPatrol02
+    speed: 2
+    xLocation: 1
+    yLocation: 9
+    spawnDelay: 0
+    startDirection: 8
+    defaultTargetTiles:
+    - {x: 1, y: 9}
+    - {x: 2, y: 9}
   updaters: []
   tileItems:
   - id: Exit
     tileCoordinates: {x: 6, y: 0}
   - id: Key01
     tileCoordinates: {x: 2, y: 4}
+  - id: Door01
+    tileCoordinates: {x: 1, y: 4}
+  - id: Door02
+    tileCoordinates: {x: 6, y: 9}
+  - id: Key01
+    tileCoordinates: {x: 1, y: 1}
+  - id: Key02
+    tileCoordinates: {x: 1, y: 11}
+  - id: Key01
+    tileCoordinates: {x: 9, y: 9}
+  - id: Trap
+    tileCoordinates: {x: 9, y: 7}
+  - id: Door01
+    tileCoordinates: {x: 1, y: 8}
+  - id: Trap
+    tileCoordinates: {x: 1, y: 2}

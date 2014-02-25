@@ -464,8 +464,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if( inspectedTile.tileType == PacmanTile.TileType.Collide ||
 		   	inspectedTile.tileType == PacmanTile.TileType.Locked ||
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
-		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
-		  	inspectedTile.tileType == PacmanTile.TileType.Lethal
+		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid
 			)
 			return false;
 		

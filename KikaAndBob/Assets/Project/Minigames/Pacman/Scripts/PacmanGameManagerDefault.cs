@@ -66,7 +66,7 @@ public class PacmanGameManagerDefault : IGameManager {
 			}
 			else
 			{
-				Debug.LogError("FroggerGameManager: Invalid level data!");
+				Debug.LogError("PacmanGameManager: Invalid level data!");
 			}
 			
 			// if a level wasn't found above, we can still load a default level
