@@ -82,7 +82,7 @@ public class DartsBull : IDartsHitable
 		dust.Clear();
 		boxCollider2D.enabled = false;
 
-		gameObject.MoveTo(originalPosition + firstMove).Time(moveTime).IsLocal(true).Execute();
+		gameObject.MoveTo(originalPosition + firstMove).Time(moveTime).Execute();
 
 		yield return new WaitForSeconds(moveTime);
 
@@ -107,13 +107,17 @@ public class DartsBull : IDartsHitable
 
 		offScreen = true;
 
-		Hide();
+		transform.position = originalPosition;
+		this.Shown = false;
+		stampeding = false;
 	}
 
 	protected IEnumerator RunBackRoutine()
 	{
 		offScreen = false;
-		
+
+		transform.localScale = transform.localScale.x(-transform.localScale.x);	// turn bull around
+
 		characterBoneAnimation[runAnimation].speed = 1.0f;
 		characterBoneAnimation.Play(runAnimation);
 		gameObject.MoveTo(originalPosition).Time(moveTime).Execute();
@@ -122,37 +126,31 @@ public class DartsBull : IDartsHitable
 
 		offScreen = true;
 		
+		transform.position = originalPosition;
 		this.Shown = false;
 	}
 
 	public override void Hide()
 	{	
-		if (stampeding && !offScreen || !stampeding && offScreen)	// if the bull is already running offscreen, don't allow autohide
+		if (!stampeding) // if the bull is already running offscreen, don't allow autohide					
 		{
-			return;
-		}
-		else if (stampeding && offScreen)	// if this was called from the stampede or run back routine, reset bull
-		{
-			print ("2");
-			transform.position = originalPosition;
-			this.Shown = false;
-			
-			if (moveRoutine != null && moveRoutine.Running)
-				moveRoutine.StopRoutine();
-			
 			iTween.Stop(gameObject);
-		}
-		else if (!stampeding && !offScreen) 								// if this is being autohidden and stampede was never started, let bull run back
-		{
-			print ("3");
-			transform.localScale = transform.localScale.x(-transform.localScale.x);	// turn bull around
 
 			if (moveRoutine != null && moveRoutine.Running)
 				moveRoutine.StopRoutine();
-			
-			iTween.Stop(gameObject);
-			
-			moveRoutine = LugusCoroutines.use.StartRoutine(RunBackRoutine());
+
+			// if this is being autohidden and stampede was never started, let bull run back
+
+			// this check will prevent the RunBackRoutine from running when everything is being disabled by the functionality group on Start()
+			if (Vector3.Distance(transform.position, originalPosition) > 0.1f)
+			{
+				moveRoutine = LugusCoroutines.use.StartRoutine(RunBackRoutine());
+			}
+			else
+			{
+				transform.position = originalPosition;
+				this.Shown = false;
+			}
 		}
 	}
 

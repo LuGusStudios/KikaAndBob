@@ -14,6 +14,9 @@ public class DartsLevelConfigurationDefault :  IGameManager
 	protected int currentIndex = 0;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 	protected bool gameRunning = false;
+	protected float levelDuration = 0.0f;
+	protected float levelTimer = 0.0f;
+	protected int minScore = 0;
 
 	public void SetupLocal()
 	{
@@ -59,8 +62,22 @@ public class DartsLevelConfigurationDefault :  IGameManager
 		if (!string.IsNullOrEmpty(levelData))
 		{
 			gameRunning = true;
+
+			HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+			HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+			HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+			HUDManager.use.CounterLargeLeft1.SetValue(0, false);
+
 			DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
 			ConfigureLevel(newLevel);
+
+			levelDuration = newLevel.levelDuration;
+			levelTimer = 0.0f;
+
+			minScore = newLevel.minimumScore;
+
+
+			Debug.Log("Started new Darts level. Time: " + levelDuration + ". Target score: " + minScore +".");
 		}
 		else
 		{
@@ -71,11 +88,38 @@ public class DartsLevelConfigurationDefault :  IGameManager
 	public override void StopGame ()
 	{
 		gameRunning = false;
+
+		Debug.Log("Darts level ended.");
+
+		HUDManager.use.DisableAll();
+
+
+
+		bool success = DartsScoreManager.use.totalScore >= minScore;
+
+		HUDManager.use.LevelEndScreen.Show( DartsScoreManager.use.totalScore >= minScore );
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(DartsScoreManager.use.totalScore, true);
+
+		if (success)
+		{
+			LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
+			LugusConfig.use.SaveProfiles();
+		}
 	}
 	
 	protected void Update () 
 	{
-	
+		if (gameRunning)
+		{
+			levelTimer += Time.deltaTime;
+
+			if (levelTimer >= levelDuration)
+			{
+				StopGame();
+			}
+		}
 	}
 
 	public void ConfigureLevel(int index)
@@ -101,11 +145,6 @@ public class DartsLevelConfigurationDefault :  IGameManager
 
 	public void ConfigureLevel(DartsLevelDefinition level)
 	{
-		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
-		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
-		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
-		HUDManager.use.CounterLargeLeft1.SetValue(0, false);
-
 		// first disable groups
 		foreach (DartsFunctionalityGroup group in groups) 
 		{

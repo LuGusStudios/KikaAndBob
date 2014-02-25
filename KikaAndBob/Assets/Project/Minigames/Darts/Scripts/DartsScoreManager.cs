@@ -8,7 +8,7 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 	
 	public int totalScore = 0;
 
-	public void ShowScore( int score, Vector3 position)
+	public void AddScore( int score, Vector3 position)
 	{
 		if( score == 0 )
 		{
