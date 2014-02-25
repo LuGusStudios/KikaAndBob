@@ -11,6 +11,7 @@ public class StepHelpMenu : IMenuStep
 	protected int page = 1;				// this will be the page counter. We start from 1 here, because this makes more sense in the text file.
 	protected TextMeshWrapper description = null;
 	protected bool switchingPages = false;
+	protected Vector3 originalPosition = Vector3.zero;
 
 	public void SetupLocal()
 	{
@@ -59,6 +60,7 @@ public class StepHelpMenu : IMenuStep
 			Debug.LogError("StepHelpMenu: Missing image.");
 		}
 
+		originalPosition = transform.position;
 	}
 
 	protected IEnumerator ModifyPage(int add, bool startInvisible = false)
@@ -97,77 +99,110 @@ public class StepHelpMenu : IMenuStep
 		{
 			buttonLeft.gameObject.SetActive(true);
 		}
+		iTween.Stop(gameObject);
 
-		float alpha = 1.0f;
-		float time = 0.15f;
-	
+
+		if (!startInvisible)
+		{
+			gameObject.MoveTo(originalPosition + new Vector3(-30, 0, 0)).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+			yield return new WaitForSeconds(0.5f);
+		}
+
 		string key = Application.loadedLevelName+".help." + page.ToString();
 
-		if(startInvisible)
+		description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
+		
+		Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
+
+		if (newImage != null && newImage != LugusResources.use.errorSprite)
 		{
-			alpha = 0.0f;
-
-			description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
-
-			Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
-
-			if (newImage != null && newImage != LugusResources.use.errorSprite)
-			{
-				image.gameObject.SetActive(true);
-				image.sprite = newImage;
-			}
-			else
-			{
-				image.gameObject.SetActive(false); 
-			}
-
-
-			while(alpha < 1)
-			{
-				description.textMesh.color = description.textMesh.color.a(alpha);
-				image.color = image.color.a(alpha);
-
-				alpha += (1/time) * Time.deltaTime;
-
-				yield return null;
-			}
+			image.gameObject.SetActive(true);
+			image.sprite = newImage;
 		}
 		else
 		{
-			while(alpha > 0)
-			{
-				description.textMesh.color = description.textMesh.color.a(alpha);
-				image.color = image.color.a(alpha);
-				
-				alpha -= (0.5f/time) * Time.deltaTime;	// 0.5f because we want the time variable defined above to not count double
-
-				yield return null;
-			}
-			
-			description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
-
-			Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
-			
-			if (newImage != null && newImage != LugusResources.use.errorSprite)
-			{
-				image.gameObject.SetActive(true);
-				image.sprite = newImage;
-			}
-			else
-			{
-				image.gameObject.SetActive(false);
-			}
-
-			while(alpha < 1)
-			{
-				description.textMesh.color = description.textMesh.color.a(alpha);
-				image.color = image.color.a(alpha);
-				
-				alpha += (1/time) * Time.deltaTime;		// 0.5f because we want the time variable defined above to not count double
-				
-				yield return null;
-			}
+			image.gameObject.SetActive(false); 
 		}
+
+		transform.position = originalPosition + new Vector3(30, 0, 0);
+		
+		gameObject.MoveTo(originalPosition).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+
+//		float alpha = 1.0f;
+//		float time = 0.15f;
+//	
+//		string key = Application.loadedLevelName+".help." + page.ToString();
+//
+//		if(startInvisible)
+//		{
+//			alpha = 0.0f;
+//
+//			description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
+//
+//			Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
+//
+//			if (newImage != null && newImage != LugusResources.use.errorSprite)
+//			{
+//				image.gameObject.SetActive(true);
+//				image.sprite = newImage;
+//			}
+//			else
+//			{
+//				image.gameObject.SetActive(false); 
+//			}
+//
+//			// set level invisible
+//			description.textMesh.color = description.textMesh.color.a(alpha);
+//			image.color = image.color.a(alpha);
+//
+//			yield return new WaitForSeconds(0.5f);		// we want some time for other menus to disappear first 
+//
+//			while(alpha < 1)
+//			{
+//				description.textMesh.color = description.textMesh.color.a(alpha);
+//				image.color = image.color.a(alpha);
+//
+//				alpha += (1/time) * Time.deltaTime;
+//
+//				yield return null;
+//			}
+//		}
+//		else
+//		{
+//			while(alpha > 0)
+//			{
+//				description.textMesh.color = description.textMesh.color.a(alpha);
+//				image.color = image.color.a(alpha);
+//				
+//				alpha -= (0.5f/time) * Time.deltaTime;	// 0.5f because we want the time variable defined above to not count double
+//
+//				yield return null;
+//			}
+//			
+//			description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
+//
+//			Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
+//			
+//			if (newImage != null && newImage != LugusResources.use.errorSprite)
+//			{
+//				image.gameObject.SetActive(true);
+//				image.sprite = newImage;
+//			}
+//			else
+//			{
+//				image.gameObject.SetActive(false);
+//			}
+//
+//			while(alpha < 1)
+//			{
+//				description.textMesh.color = description.textMesh.color.a(alpha);
+//				image.color = image.color.a(alpha);
+//				
+//				alpha += (1/time) * Time.deltaTime;		// 0.5f because we want the time variable defined above to not count double
+//				
+//				yield return null;
+//			}
+//		}
 
 		switchingPages = false;
 	}
@@ -188,7 +223,7 @@ public class StepHelpMenu : IMenuStep
 	
 	protected void Update () 
 	{
-		if (!activated)
+		if (!activated || switchingPages)
 			return;
 		
 		if (leaveButton.pressed)

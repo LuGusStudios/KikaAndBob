@@ -9,6 +9,7 @@ public class StepGameMenu : IMenuStep
 	protected TextMeshWrapper title = null;
 	protected TextMeshWrapper description = null;
 	protected SpriteRenderer image = null;
+	protected Vector3 originalPosition = Vector3.zero;
 	
 	public void SetupLocal()
 	{
@@ -56,6 +57,8 @@ public class StepGameMenu : IMenuStep
 		{
 			Debug.Log("StepGameMenu: Missing image sprite renderer!");
 		}
+
+		originalPosition = transform.position;
 	}
 	
 	public void SetupGlobal()
@@ -121,11 +124,21 @@ public class StepGameMenu : IMenuStep
 		activated = true;
 		gameObject.SetActive(true);
 		LoadLevelData();
+
+		iTween.Stop(gameObject);
+
+		transform.position = originalPosition + new Vector3(30, 0, 0);
+
+		gameObject.MoveTo(originalPosition).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+
 	}
 
 	public override void Deactivate()
 	{
 		activated = false;
-		gameObject.SetActive(false);
+		//gameObject.SetActive(false);
+
+		iTween.Stop(gameObject);
+		gameObject.MoveTo(originalPosition + new Vector3(-30, 0, 0)).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
 	}
 }
