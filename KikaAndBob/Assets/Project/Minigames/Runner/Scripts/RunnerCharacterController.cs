@@ -44,13 +44,30 @@ public interface IRunnerCharacterController_JumpSlide
 
 public interface IRunnerCharacterController_FasterSlower
 {
+	DataRange SpeedRange();
+	float SpeedPercentage();
+	float SpeedModifierPercentage();
+
 	event KikaAndBob.Runner.OnSpeedTypeChange onSpeedTypeChange;
+}
+
+public interface IRunnerCharacterController_Skiing
+{
+
 }
 
 public class RunnerCharacterController : MonoBehaviour 
 {
 	private static IRunnerCharacterController _use = null;
 	
+	public static void Reset()
+	{
+		_use = null;
+		_jumpSlide = null;
+		_fasterSlower = null;
+		//_skiing = null;
+	}
+
 	public static IRunnerCharacterController use 
 	{ 
 		get 
@@ -63,10 +80,21 @@ public class RunnerCharacterController : MonoBehaviour
 					_use = RunnerCharacterControllerFasterSlower.use;
 				else if( RunnerCharacterControllerClimbing.Exists() )
 					_use = RunnerCharacterControllerClimbing.use;
+				else if( RunnerCharacterControllerSkiing.Exists() )
+					_use = RunnerCharacterControllerSkiing.use;
 			}
 			
 			
 			return _use; 
+		}
+	}
+
+	public static MonoBehaviour useBehaviour 
+	{ 
+		get 
+		{
+			return (MonoBehaviour) RunnerCharacterController.use;
+
 		}
 	}
 
@@ -101,6 +129,8 @@ public class RunnerCharacterController : MonoBehaviour
 					_fasterSlower = RunnerCharacterControllerFasterSlower.use;
 				else if( RunnerCharacterControllerClimbing.Exists() )
 					_fasterSlower = RunnerCharacterControllerClimbing.use;
+				else if( RunnerCharacterControllerSkiing.Exists() )
+					_fasterSlower = RunnerCharacterControllerSkiing.use;
 			}
 			
 			
@@ -108,7 +138,24 @@ public class RunnerCharacterController : MonoBehaviour
 		}
 	}
 
-
+	/*
+	private static IRunnerCharacterController_Skiing _skiing = null;
+	
+	public static IRunnerCharacterController_Skiing skiing
+	{
+		get 
+		{
+			if ( _skiing == null )
+			{
+				if( RunnerCharacterControllerSkiing.Exists() )
+					_skiing = RunnerCharacterControllerSkiing.use;
+			}
+			
+			
+			return _skiing; 
+		}
+	}
+	*/
 
 
 

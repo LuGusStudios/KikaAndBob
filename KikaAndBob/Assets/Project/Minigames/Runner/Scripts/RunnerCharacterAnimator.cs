@@ -12,8 +12,19 @@ public class RunnerCharacterAnimator : MonoBehaviour
 	
 	protected bool hitRoutineBusy = false;
 
+	public virtual void StopAll()
+	{
+		foreach( BoneAnimation container in animationContainers )
+		{
+			container.Stop();
+		}
+	}
+
 	public void PlayAnimation(string animationPath)
 	{
+		if( !this.enabled )
+			return;
+
 		string[] parts = animationPath.Split('/');
 		if( parts.Length != 2 )
 		{

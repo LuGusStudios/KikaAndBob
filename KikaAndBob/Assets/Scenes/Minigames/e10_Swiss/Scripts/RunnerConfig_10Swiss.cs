@@ -9,43 +9,62 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		// assign variables that have to do with this class only
 	}
 	
-	public void LoadLevel(int index)
+	public override void LoadLevel(int index)
 	{
+		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;
+		RunnerManager.use.targetDistance = 600.0f;
+
+		index--;
+
 		if( index == 0 )
 			Level0 ();
 		else if( index == 1 )
 			Level1 ();
 		else if( index == 2 )
 			Level2(); 
+		else if( index == 666 )
+			LevelCustom(); 
+		
+		SetupHUDForGame();
+		
+		LoadGUIVarsFromRealSetup();
 	}
 	
 	public void Level0()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,10);
-		RunnerInteractionManager.use.sectionSpanMultiplier = 1.0f; 
-		RunnerInteractionManager.use.maximumDifficulty = 3;
+		character.timeToMaxSpeed = 60;
+		RunnerInteractionManager.use.timeToMax = 60;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 1.0f ); 
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,5);
+
+		RunnerManager.use.targetDistance = 600.0f;
 	}
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,14);
-		character.timeToMaxSpeed = 120;
-		RunnerInteractionManager.use.sectionSpanMultiplier = 0.8f; 
-		RunnerInteractionManager.use.maximumDifficulty = 6;
+		character.timeToMaxSpeed = 90;
+		RunnerInteractionManager.use.timeToMax = 90;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
+		
+		RunnerManager.use.targetDistance = 900.0f; 
 	}
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplier = 0.5f; 
-		RunnerInteractionManager.use.maximumDifficulty = 6;
+		RunnerInteractionManager.use.timeToMax = 60;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.5f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
 		List<string> inactiveZones = new List<string>();
@@ -54,11 +73,12 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		
 		DisableInteractionZones( inactiveZones );
 		*/
+		
+		RunnerManager.use.targetDistance = 1500.0f;
 	}
 	
 	public void SetupGlobal()
 	{
-		LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 	}
 	
 	protected void Awake()
@@ -75,11 +95,12 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		
 	}
-	
+
+	/*
 	void OnGUI()
 	{
 		if (!LugusDebug.debug)
-			return;
+			return; 
 		
 		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
 		GUILayout.Label("Current level : " + RunnerCrossSceneInfo.use.levelToLoad);
@@ -87,11 +108,12 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		{
 			if (GUILayout.Button("Start Level " + i))
 			{
-				RunnerCrossSceneInfo.use.levelToLoad = i;
+				RunnerCrossSceneInfo.use.levelToLoad = i + 1;
 				LugusCoroutines.use.StopAllRoutines();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
 		}
 		GUILayout.EndArea();
 	}
+	*/
 }

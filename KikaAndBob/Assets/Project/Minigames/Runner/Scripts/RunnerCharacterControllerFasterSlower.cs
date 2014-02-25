@@ -32,6 +32,9 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
+	
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
 
 	protected float startTime = -1.0f;
 
@@ -74,6 +77,9 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		float timeDiff = Time.time - startTime;
 		if( timeDiff > timeToMaxSpeed )
 		{
@@ -154,6 +160,23 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 			else
 				targetType = SpeedType.SLOW;
 		}
+
+
+		// in mexico, we switch between animations
+		// Going down SLOW sways to the left side, so we need to shift our collider that way too
+		if( this.direction < 0 ) // bit of a hack. Should only be done for MEXICO!
+		{
+			BoxCollider2D box = ( (BoxCollider2D) this.collider2D);
+			if( targetType == SpeedType.SLOW )
+			{
+				box.center = new Vector2( -0.1f, box.center.y);
+			}
+			else
+			{
+				box.center = new Vector2(0.1014484f, box.center.y);;
+			}
+		}
+
 
 		if( currentSpeedType != targetType )
 		{

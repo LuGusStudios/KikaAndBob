@@ -82,10 +82,18 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 #if UNITY_EDITOR
 		//if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
-		//	DinnerDashCrossSceneInfo.use.levelToLoad = 0;
+		//	DinnerDashCrossSceneInfo.use.levelToLoad = 1;
 #endif
 
 		//Debug.LogError("DINNER DASH TO LOAD" + DinnerDashCrossSceneInfo.use.levelToLoad);
+
+		
+		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+		if( background != LugusResources.use.errorAudio )
+		{
+			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+		}
+
 
 		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
 		{

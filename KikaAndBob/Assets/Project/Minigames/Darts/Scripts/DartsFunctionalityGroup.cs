@@ -42,7 +42,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public void HitableHit(IDartsHitable hitable)
 	{
 		Debug.Log ("HIT POSITION " + hitable.transform.position);
-		DartsScoreManager.use.ShowScore(hitable.GetScore(), hitable.transform.position, 1.0f, null, Color.red);
+		DartsScoreManager.use.AddScore(hitable.GetScore(), hitable.transform.position);
 	}
 
 	public void HitableHidden(IDartsHitable hitable)

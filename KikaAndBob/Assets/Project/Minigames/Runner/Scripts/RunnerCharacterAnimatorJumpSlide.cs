@@ -13,6 +13,15 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 	public string hitAnimation = "OTHER/KikaSide_Hit";
 	public string slideAnimation = "OTHER/KikaSide_Slide";
 
+	public ParticleSystem dust = null;
+
+	public override void StopAll()
+	{
+		dust.gameObject.SetActive(false);
+
+		base.StopAll();
+	}
+
 	public override void SetupGlobal()
 	{
 		base.SetupGlobal();
@@ -35,6 +44,18 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 		
 		PlayAnimation(runningAnimation);
 	}
+
+	public override void SetupLocal()
+	{
+		base.SetupLocal();
+
+		if( dust == null )
+		{
+			dust = transform.FindChild("Dust").GetComponent<ParticleSystem>();
+
+			dust.enableEmission = true;
+		}
+	}
 	
 	protected override void Awake()
 	{
@@ -52,10 +73,12 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 
 		if( start )
 		{
-			PlayAnimation( jumpAnimation ); 
+			dust.enableEmission = false;
+			PlayAnimation( jumpAnimation );
 		}
 		else
 		{
+			dust.enableEmission = true;
 			PlayAnimation( runningAnimation );
 		}
 	}
@@ -64,10 +87,12 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 	{
 		if( start )
 		{
+			dust.enableEmission = true;
 			PlayAnimation( slideAnimation ); 
 		}
 		else
 		{
+			dust.enableEmission = true;
 			PlayAnimation( runningAnimation );
 		}
 	}
@@ -86,6 +111,7 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 
 		hitRoutineBusy = false;
 		
+		dust.enableEmission = true;
 		PlayAnimation( runningAnimation );  
 	}
 

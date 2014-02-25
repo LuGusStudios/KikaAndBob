@@ -39,6 +39,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
 
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
+
 	protected float startTime = -1.0f;
 
 	public event KikaAndBob.Runner.OnHit onHit;
@@ -106,6 +109,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		/*
 		if( up )
 		{
@@ -214,7 +220,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		checkBottomBoundary = false;
 
-		RunnerScoreManager.use.AddScore( -10, this.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+		RunnerManager.use.AddTime( 10.0f );
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Time, 10.0f).Time (1.0f).Position( this.transform.position ).Audio("Collide01").Color(Color.red).Execute();
+
 
 		if( onHit != null )
 			onHit( null );

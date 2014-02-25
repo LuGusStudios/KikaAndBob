@@ -11,16 +11,71 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 
 	public void ProcessPickup(RunnerPickup pickup)
 	{
-		if( pickup != null && pickup.positive )
-		{
-			AddScore( 10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
+		if( !RunnerManager.use.GameRunning )
+			return;
+
+
+		Vector3 position;// = Vector3.zero;
+		//if( pickup != null )
+		//	position = pickup.transform.position;
+		//else
+			position = ( (MonoBehaviour) RunnerCharacterController.use).transform.position;
+
+		float scoreAmount = 10.0f;
+		if( pickup != null )
+			scoreAmount = pickup.scoreAmount;
+
+		KikaAndBob.CommodityType commodity = KikaAndBob.CommodityType.NONE;
+
+		if( pickup.positive )
+		{ 
+			//AddScore( 10, position, 1.0f, LugusResources.use.Shared.GetAudio("Blob01"), Color.white);
+
+			if( pickup != null && pickup.commodityType != KikaAndBob.CommodityType.NONE )
+				commodity = pickup.commodityType;
+			else
+				commodity = KikaAndBob.CommodityType.Feather;
+
+			Color c = Color.white;
+			// in swiss, the background is white, so we don't want white text
+			if( RunnerCharacterControllerSkiing.Exists() )
+				c = Color.black;
+
+			RunnerManager.use.AddPickup( Mathf.RoundToInt(scoreAmount) );
+			ScoreVisualizer.Score(commodity, scoreAmount).Time (1.0f).Position( position ).Audio("Blob01").Color(c).Execute();
 		}
 		else // negative
 		{
-			AddScore( -10, pickup.transform.position, 1.0f, LugusResources.use.Shared.GetAudio("Collide01"), Color.red);
+			/*
+			if( pickup != null && pickup.commodityType != KikaAndBob.CommodityType.NONE )
+				commodity = pickup.commodityType;
+			else
+				commodity = KikaAndBob.CommodityType.Time;
+			*/
+
+			if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+			{
+				commodity = KikaAndBob.CommodityType.Life;
+				scoreAmount = 1.0f;
+
+				RunnerManager.use.AddLives( - (Mathf.RoundToInt(scoreAmount)) );
+			}
+			else
+			{
+				commodity = KikaAndBob.CommodityType.Time;
+
+				// if time penalty, scoreAmount should not be negative but positive
+				RunnerManager.use.AddTime( scoreAmount );
+				scoreAmount *= -1;
+			}
+
+			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position ).Audio("Collide01").Color(Color.red).Execute();
 		}
+
+
 	}
 
+	/*
 	public void AddScore( int score, Vector3 position, float time, AudioClip sound, Color color )
 	{
 		if( score == 0 )
@@ -59,9 +114,11 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 	{
 		scoreText.text = "" + totalScore;
 	}
+	*/
 	
 	public void SetupLocal()
 	{
+		/*
 		if( scoreTextPrefab == null )
 		{
 			scoreTextPrefab = GameObject.Find("Score");
@@ -83,6 +140,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 		{
 			Debug.LogError(name + " : no ScoreText found! found!");
 		}
+		*/
 	}
 	
 	public void SetupGlobal()

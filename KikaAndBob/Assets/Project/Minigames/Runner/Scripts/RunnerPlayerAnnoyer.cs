@@ -30,7 +30,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 	
 	public void SetupGlobal()
 	{
-		RunnerInteractionManager.use.Deactivate(); 
+		//RunnerInteractionManager.use.Deactivate(); 
 
 		// de-parent from a section and parent to the character
 		transform.parent = LugusCamera.game.transform; //null; //GameObject.Find ("Character").transform;
@@ -60,7 +60,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		yield return new WaitForSeconds(1.0f);
 
 
-		RunnerInteractionManager.use.Activate();
+		//RunnerInteractionManager.use.Activate();
 		
 		GameObject.Destroy(this.gameObject);
 	}
@@ -79,7 +79,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		// if character most rightside: spawn left side
 		Vector3 characterScreenPos = LugusCamera.game.WorldToScreenPoint( character.transform.position );
 
-		Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
+		//Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
 
 		/*
 		bool left = true;
@@ -139,7 +139,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		DataRange yInterval2 = new DataRange( Screen.height / 1.125f, Screen.height - (this.renderer.bounds.extents.x * 100) ); // top 15% of the screen
 		Vector3 target2 = target1.y (  yInterval2.Random()   );
 
-		Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
+		//Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
 
 		//Vector3 worldPos = LugusCamera.game.ScreenToWorldPoint( offscreen ).z( this.transform.position.z );
 		//transform.position = worldPos;
@@ -160,7 +160,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		target2 = LugusCamera.game.transform.InverseTransformPoint( target2 );
 		target2 = this.transform.localPosition.x ( target2.x ).y ( target2.y );
 		
-		Debug.Log ("LOCALS " + target1 + " TO " + target2 );
+		//Debug.Log ("LOCALS " + target1 + " TO " + target2 );
 
 
 		gameObject.MoveTo( target1 ).IsLocal(true).Time (1.0f).Execute();

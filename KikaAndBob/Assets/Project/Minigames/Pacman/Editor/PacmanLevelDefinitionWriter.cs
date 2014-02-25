@@ -15,11 +15,11 @@ public class PacmanLevelDefinitionWriter : Editor
 
 	protected bool askConfirmation = false;
 
-	public override void OnInspectorGUI()
+	public override void OnInspectorGUI() 
 	{
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Level name:");
-		GUILayout.Label(sceneName + "_level_" + levelPostfix, GUILayout.MaxWidth(150));
+		GUILayout.Label(sceneName + "_level_" + levelPostfix, GUILayout.MaxWidth(150)); 
 		GUILayout.EndHorizontal();
 
 		if (!askConfirmation)
