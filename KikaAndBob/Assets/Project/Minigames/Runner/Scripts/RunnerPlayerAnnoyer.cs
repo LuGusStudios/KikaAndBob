@@ -38,14 +38,17 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		handle = LugusCoroutines.use.StartRoutine( AnnoyerRoutine() );
 	}
 
-	protected void OnHit(RunnerPickup pickup) 
+	public void OnHit(RunnerPickup pickup) 
 	{
 		// player hit us: de-activate and go out of the screen
 		
-		
-		handle.StopRoutine();
+		if( handle != null )
+		{
+			handle.StopRoutine();
+			handle = null;
 
-		LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+			LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+		}
 	}
 
 	protected Vector3 currentOffscreen = Vector3.zero;

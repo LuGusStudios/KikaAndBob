@@ -9,6 +9,11 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
+	public virtual void OnGameStopped()
+	{
+
+	}
+
 	public void SetupHUDForGame()
 	{
 		HUDManager.use.DisableAll();

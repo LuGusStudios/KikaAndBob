@@ -232,7 +232,54 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		down = false;
 		up = true;
 
-		yield return new WaitForSeconds( 2.0f );
+		this.collider2D.enabled = false;
+
+		/*
+		// disable all blocking stones (under halfway?)
+		RunnerBlockingStone[] stones = LayerManager.use.groundLayer.transform.GetComponentsInChildren<RunnerBlockingStone>();
+		foreach( RunnerBlockingStone stone in stones )
+		{
+			stone.enabled = false;
+
+			if( stone.collider != null )
+				stone.collider.enabled = false;
+
+			if( stone.collider2D != null )
+				stone.collider2D.enabled = false;
+		}
+		*/
+
+
+		yield return new WaitForSeconds( 1.5f );
+
+		
+		this.collider2D.enabled = true;
+
+		// we can't just re-enable the character
+		// chances are we would land on top of another blocking collider and we would be stuck
+		// so: check around for other colliders that are too close and just disable them 
+		// this is not 100% "physically correct" but makes possible gameplay bugs a lot less likely
+
+		Collider2D[] stucks = Physics2D.OverlapCircleAll( this.transform.position.v2 (), 4 ); // character is about 2 units wide, so use double that as radius
+		foreach( Collider2D stuck in stucks )
+		{
+			if( stuck == this.collider2D )
+				continue;
+
+			//Debug.LogError("We got stuck in " + stuck.transform.Path() +  " so we disabled it");
+
+			// keep the positive pickups (feathers) enabled
+			// changed: makes no difference... our collider was disabled for 1.5s anyway, so we didn't pick it up anyhow... hmz
+			//RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
+			//if( pickup == null || pickup.positive == false )
+				stuck.enabled = false;
+
+			// DEBUG, TODO: remove!
+			//if( stuck.GetComponent<SpriteRenderer>() )
+			//{
+			//	stuck.GetComponent<SpriteRenderer>().enabled = false;
+			//}
+		}
 
 		downDisabled = false;
 		upDisabled = false;

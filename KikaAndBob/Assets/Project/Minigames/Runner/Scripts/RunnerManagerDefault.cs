@@ -200,6 +200,11 @@ public class RunnerManagerDefault : IGameManager
 		layers.Add ("LayerFront");
 		layers.Add ("Character");
 
+		if( character is RunnerCharacterControllerClimbing )
+		{
+			layers.Add ("CameraPuller"); 
+		}
+
 		foreach( string layer in layers )
 		{
 			GameObject layerObj = GameObject.Find ( layer );
@@ -285,8 +290,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
@@ -335,12 +340,16 @@ public class RunnerManagerDefault : IGameManager
 	{
 		_gameRunning = false;
 
+
+
 		RunnerCharacterController.useBehaviour.enabled = false;
 		RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
 
 		RunnerInteractionManager.use.Deactivate();
+
+		IRunnerConfig.use.OnGameStopped();
 		
 		HUDManager.use.StopAll();
 		DialogueManager.use.HideAll();

@@ -8,7 +8,19 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 	{
 		// assign variables that have to do with this class only
 	}
-	
+
+	public override void OnGameStopped()
+	{
+		RunnerPlayerAnnoyer[] annoyers = GameObject.FindObjectsOfType<RunnerPlayerAnnoyer>();
+		foreach( RunnerPlayerAnnoyer annoyer in annoyers )
+		{
+			if( !annoyer.gameObject.activeSelf )
+				continue;
+			
+			annoyer.OnHit(null);
+		}
+	}
+
 	public override void LoadLevel(int index)
 	{
 		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;

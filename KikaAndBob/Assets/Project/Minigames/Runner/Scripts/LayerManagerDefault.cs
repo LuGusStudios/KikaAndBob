@@ -18,6 +18,7 @@ public class LayerManagerDefault : MonoBehaviour
 	public BackgroundTheme[] themes;
 	public BackgroundTheme[] themeTransitions;
 
+	public bool autoThemeTransitions = true;
 	public DataRange timeBetweenThemes = new DataRange(20.0f, 25.0f);
 
 	public BackgroundTheme CurrentTheme
@@ -193,9 +194,12 @@ public class LayerManagerDefault : MonoBehaviour
 
 	protected IEnumerator NextThemeRoutine()
 	{
+		if( !autoThemeTransitions )
+			yield break;
+
 		yield return new WaitForSeconds( timeBetweenThemes.Random () );
 
-		NextTheme();
+		NextTheme(); 
 	}
 
 
