@@ -22,6 +22,8 @@ public class LevelEndScreen : MonoBehaviour
 	public Vector3 originalPosition = Vector3.zero; 
 
 	public RunnerCharacterAnimator Kika = null;
+
+	protected GameObject cameraFade = null;
 	
 	protected List<IHUDElement> elements = new List<IHUDElement>();
 	public IHUDElement GetCounterForCommodity(KikaAndBob.CommodityType commodity)
@@ -40,6 +42,9 @@ public class LevelEndScreen : MonoBehaviour
 		HUDManager.use.DisableAll();
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
+		//LugusAudio.use.Music().StopAll();
+		LugusAudio.use.Music().CrossFade(LugusResources.use.Shared.GetAudio("Endscreen01"), 1.0f);
+
 		if( success )
 		{
 			Kika.PlayAnimation("HAPPY/KikaFront_Victory");
@@ -57,14 +62,21 @@ public class LevelEndScreen : MonoBehaviour
 
 		//Debug.LogError("LevelEndScreen SHOW " + originalPosition);
 
-		transform.position = originalPosition; 
+		transform.position = originalPosition + new Vector3(30, 0, 0);	// first put menu closer to the edge of the screen; otherwise it'll jerk into view
+
+		gameObject.MoveTo(originalPosition).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+
+		//transform.position = originalPosition; 
 	}
 
-	public void Hide()
+	public void Hide(bool animate = false)
 	{
 		//this.gameObject.SetActive(false); 
-		
-		transform.position = new Vector3(9999.0f, 9999.0f, 9999.0f);
+
+		if (animate)
+			gameObject.MoveTo(originalPosition + new Vector3(-30, 0, 0)).Time(0.5f).EaseType(iTween.EaseType.easeInBack).Execute();
+		else
+			transform.position = new Vector3(9999.0f, 9999.0f, 9999.0f);
 	}
 
 	public void SetupLocal()
@@ -120,32 +132,75 @@ public class LevelEndScreen : MonoBehaviour
 	{
 		SetupGlobal();
 	}
+
+	private bool locked = false;
+	protected IEnumerator ContinueButtonRoutine()
+	{
+		HUDManager.use.DisableAll();
+		HUDManager.use.PauseButton.gameObject.SetActive(false);
+		DialogueManager.use.HideAll();
+
+		yield return StartCoroutine(ScreenHideRoutine());
+
+		LugusAudio.use.Music().StopAll();
+		MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
+
+		locked = false;
+
+		ScreenFader.use.FadeIn(0.5f);
+	}
+
+	protected IEnumerator RetryButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+		
+		IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+		manager.ReloadLevel();
+	}
+
+	protected IEnumerator QuitButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+		
+		IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
+		info.SetLevelIndex(-1); 
+		
+		Application.LoadLevel( Application.loadedLevelName );
+	}
+
+	protected IEnumerator ScreenHideRoutine()
+	{
+		locked = true;
+
+		HUDManager.use.LevelEndScreen.Hide (true); // animate boolean will make this screen fly away
+
+		yield return new WaitForSeconds(0.5f);
+
+		ScreenFader.use.FadeOut(0.5f);
+
+		yield return new WaitForSeconds(0.5f);
+
+		locked = false;
+	}
 	
 	protected void Update () 
 	{
+		if (locked)
+			return;
+
 		if( ContinueButton.pressed ) 
 		{
-			HUDManager.use.DisableAll();
-			HUDManager.use.PauseButton.gameObject.SetActive(false);
-			HUDManager.use.LevelEndScreen.Hide ();
-			DialogueManager.use.HideAll();
-
-			MenuManager.use.ActivateMenu( MenuManagerDefault.MenuTypes.LevelMenu );
+			LugusCoroutines.use.StartRoutine(ContinueButtonRoutine());
 		}
 		
 		if( RetryButton.pressed ) 
 		{
-			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
-			manager.ReloadLevel();
+			LugusCoroutines.use.StartRoutine(RetryButtonRoutine());
 		}
 		
 		if( QuitButton.pressed )
 		{
-			
-			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
-			info.SetLevelIndex(-1); 
-			
-			Application.LoadLevel( Application.loadedLevelName );
+			LugusCoroutines.use.StartRoutine(QuitButtonRoutine());
 		}
 	}
 }

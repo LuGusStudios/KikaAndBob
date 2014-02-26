@@ -5,8 +5,13 @@ public abstract class IMenuStep : MonoBehaviour
 {
 	protected bool activated = false;
 	
-	public abstract void Activate();
-	public abstract void Deactivate();
+	public abstract void Activate(bool animate = true);
+	public abstract void Deactivate(bool animate = true);
+
+	public bool IsActive()
+	{
+		return activated;
+	}
 }
 
 // Menu class template below

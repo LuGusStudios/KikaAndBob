@@ -43,7 +43,7 @@ public class LevelLoaderDefault
 					break;
 				case LoadingSource.RESOURCES:
 
-					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName);
+					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName); 
 					if (asset != LugusResources.use.errorTextAsset)
 					{
 						levelIndices.Add(i + 1);

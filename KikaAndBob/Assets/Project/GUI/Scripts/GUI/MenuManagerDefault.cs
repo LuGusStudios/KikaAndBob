@@ -12,7 +12,7 @@ public class MenuManagerDefault: MonoBehaviour
 	public Sprite backgroundSprite = null;
 
 	protected Transform background = null;
-
+	protected bool firstFrame = true;
 
 	public enum MenuTypes
 	{
@@ -48,7 +48,6 @@ public class MenuManagerDefault: MonoBehaviour
 			background = transform.FindChild("Background");
 		if (background == null)
 			Debug.LogError("MenuManager: Missing background!");
-			
 	}
 	
 	public void SetupGlobal()
@@ -93,13 +92,30 @@ public class MenuManagerDefault: MonoBehaviour
 	
 	protected void Update () 
 	{
+		if (firstFrame)
+			firstFrame = false;
 	}
 
 	protected void DeactivateAllMenus()
 	{
 		foreach(IMenuStep step in menus.Values)
 		{
-			step.Deactivate();
+			if (firstFrame)
+			{
+				step.Deactivate(false);
+			}
+			else
+			{
+				if (step.IsActive() == true)
+				{
+					step.Deactivate(true);
+				}
+				else
+				{
+					step.Deactivate(false);
+				}
+			}
+
 		}
 	}
 
