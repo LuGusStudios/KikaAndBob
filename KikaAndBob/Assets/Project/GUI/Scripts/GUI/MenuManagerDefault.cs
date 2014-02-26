@@ -62,13 +62,16 @@ public class MenuManagerDefault: MonoBehaviour
 		{
 			string key = Application.loadedLevelName + ".main.background";
 			string backgroundName = Application.loadedLevelName + "BG01";
-
+		
 			if( LugusResources.use.Levels.HasText(key) )
 			{
+				Debug.Log("Loading menu background texture from Levels text at key:" + key);
 				backgroundName = LugusResources.use.Levels.GetText(key);
 			}
 
 			//Debug.LogError("BACKGROUND SPRITE " + backgroundName);
+
+			backgroundRenderer.enabled = true;
 
 			Sprite newBackground = LugusResources.use.Shared.GetSprite(backgroundName);
 
@@ -76,6 +79,10 @@ public class MenuManagerDefault: MonoBehaviour
 			{
 				backgroundSprite = newBackground;
 				backgroundRenderer.sprite = newBackground;
+			}
+			else
+			{
+				backgroundRenderer.enabled = false;
 			}
 		}
 	}
