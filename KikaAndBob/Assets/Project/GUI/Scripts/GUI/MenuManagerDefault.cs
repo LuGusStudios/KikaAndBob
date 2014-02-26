@@ -12,7 +12,7 @@ public class MenuManagerDefault: MonoBehaviour
 	public Sprite backgroundSprite = null;
 
 	protected Transform background = null;
-
+	protected bool firstFrame = true;
 
 	public enum MenuTypes
 	{
@@ -48,7 +48,6 @@ public class MenuManagerDefault: MonoBehaviour
 			background = transform.FindChild("Background");
 		if (background == null)
 			Debug.LogError("MenuManager: Missing background!");
-			
 	}
 	
 	public void SetupGlobal()
@@ -63,13 +62,16 @@ public class MenuManagerDefault: MonoBehaviour
 		{
 			string key = Application.loadedLevelName + ".main.background";
 			string backgroundName = Application.loadedLevelName + "BG01";
-
+		
 			if( LugusResources.use.Levels.HasText(key) )
 			{
+				Debug.Log("Loading menu background texture from Levels text at key:" + key);
 				backgroundName = LugusResources.use.Levels.GetText(key);
 			}
 
 			//Debug.LogError("BACKGROUND SPRITE " + backgroundName);
+
+			backgroundRenderer.enabled = true;
 
 			Sprite newBackground = LugusResources.use.Shared.GetSprite(backgroundName);
 
@@ -77,6 +79,10 @@ public class MenuManagerDefault: MonoBehaviour
 			{
 				backgroundSprite = newBackground;
 				backgroundRenderer.sprite = newBackground;
+			}
+			else
+			{
+				backgroundRenderer.enabled = false;
 			}
 		}
 	}
@@ -93,13 +99,30 @@ public class MenuManagerDefault: MonoBehaviour
 	
 	protected void Update () 
 	{
+		if (firstFrame)
+			firstFrame = false;
 	}
 
 	protected void DeactivateAllMenus()
 	{
 		foreach(IMenuStep step in menus.Values)
 		{
-			step.Deactivate();
+			if (firstFrame)
+			{
+				step.Deactivate(false);
+			}
+			else
+			{
+				if (step.IsActive() == true)
+				{
+					step.Deactivate(true);
+				}
+				else
+				{
+					step.Deactivate(false);
+				}
+			}
+
 		}
 	}
 
