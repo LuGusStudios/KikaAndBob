@@ -24,6 +24,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public HUDCounter CounterSmallRight1 = null;
 	public HUDCounter CounterSmallRight2 = null;
 
+	public HUDCounter CounterLargeBottomLeft1 = null;
+
 	public Button PauseButton = null;
 	public PausePopup PausePopup = null;
 
@@ -40,6 +42,16 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 			if( element.gameObject.activeSelf && element.commodity == commodity )
 				return element;
 		}
+
+		// if we get here, no element was found that is active and has that commodity
+		// this can sometimes happen when we disable all the HUD and we stil have a coroutine calling...
+		// so: repeat the search, but allow inactive elements
+		foreach( IHUDElement element in elements )
+		{
+			if( element.commodity == commodity )
+				return element;
+		}
+
 
 		return null;
 	}
@@ -88,6 +100,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		CounterSmallRight1 = transform.FindChild("CommodityVisualizers/CounterSmallRight1").GetComponent<HUDCounter>();
 		CounterSmallRight2 = transform.FindChild("CommodityVisualizers/CounterSmallRight2").GetComponent<HUDCounter>();
 
+		CounterLargeBottomLeft1 = transform.FindChild("CommodityVisualizers/CounterLargeBottomLeft1").GetComponent<HUDCounter>();
+
 		Counter1 = CounterSmallLeft1;
 		Counter2 = CounterLargeLeft2;
 		Counter3 = CounterSmallRight1;
@@ -102,6 +116,7 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		CounterSmallRight1.gameObject.SetActive( false );
 		CounterSmallRight2.gameObject.SetActive( false );
 
+		CounterLargeBottomLeft1.gameObject.SetActive( false );
 
 		elements.Add ( ProgressBarCenter );
 		elements.Add ( ProgressBarLeft );
@@ -117,6 +132,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		elements.Add ( CounterSmallLeft2 );
 		elements.Add ( CounterSmallRight1 );
 		elements.Add ( CounterSmallRight2 );
+
+		elements.Add ( CounterLargeBottomLeft1 );
 
 		if( PauseButton == null )
 		{

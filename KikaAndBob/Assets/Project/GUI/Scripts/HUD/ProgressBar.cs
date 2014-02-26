@@ -85,11 +85,12 @@ public class ProgressBar : IHUDElement
 			animationHandle = LugusCoroutines.use.StartRoutine( ScaleAnimationRoutine(oldScale, newScale) );
 		}
 	}
-
+	
+	public float animationTime = 0.5f;
 	protected IEnumerator ScaleAnimationRoutine(float oldScale, float newScale)
 	{
 		//Debug.LogError("SCALEROUTINE " + oldScale + " // " + newScale); 
-		filler.gameObject.ScaleTo( originalFillerScale.x (newScale) ).EaseType(iTween.EaseType.easeOutBack).Time (0.5f).Execute();
+		filler.gameObject.ScaleTo( originalFillerScale.x (newScale) ).EaseType(iTween.EaseType.easeOutBack).Time (animationTime).Execute();
 		yield break;
 	}
 

@@ -11,7 +11,8 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public override void LoadLevel(int index)
 	{
-		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Endless;
+		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;
+		RunnerManager.use.targetDistance = 600.0f;
 
 		index--;
 
@@ -31,35 +32,39 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	
 	public void Level0()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,10);
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f ); 
-		RunnerInteractionManager.use.difficultyRange = new DataRange(3,3);
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 1.0f ); 
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,5);
+
+		RunnerManager.use.targetDistance = 600.0f;
 	}
 	
 	public void Level1()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(10,14);
-		character.timeToMaxSpeed = 120;
-		RunnerInteractionManager.use.timeToMax = 120;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.8f, 0.8f );  
-		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		character.timeToMaxSpeed = 90;
+		RunnerInteractionManager.use.timeToMax = 90;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
+		
+		RunnerManager.use.targetDistance = 900.0f; 
 	}
 	
 	public void Level2()
 	{
-		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
+		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
 		character.speedRange = new DataRange(14,17);
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.5f, 0.5f );  
-		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.5f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
 		List<string> inactiveZones = new List<string>();
@@ -68,6 +73,8 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		
 		DisableInteractionZones( inactiveZones );
 		*/
+		
+		RunnerManager.use.targetDistance = 1500.0f;
 	}
 	
 	public void SetupGlobal()
