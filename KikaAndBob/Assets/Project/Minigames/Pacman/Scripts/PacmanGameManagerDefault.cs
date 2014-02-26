@@ -87,7 +87,10 @@ public class PacmanGameManagerDefault : IGameManager {
 	{
 		return playerChars;
 	}
-
+    public List<PacmanEnemyCharacter> GetEnemyCharacters()
+    {
+        return enemies;
+    }
 	// starts a completely new level
 	public void StartNewLevel()
 	{
@@ -156,6 +159,7 @@ public class PacmanGameManagerDefault : IGameManager {
 		return activePlayer;
 	}
 
+    
 	// starts new round in the same level
 	public void StartNewRound()
 	{

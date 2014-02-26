@@ -37,7 +37,6 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
-
 		// TO DO replace
 		if (player == null)
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
