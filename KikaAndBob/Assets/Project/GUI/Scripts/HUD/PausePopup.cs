@@ -90,7 +90,13 @@ public class PausePopup : MonoBehaviour
 		
 		ScreenFader.use.FadeOut(0.5f);
 		
-		yield return new WaitForSeconds(0.5f);
+		//yield return new WaitForSeconds(0.5f); // this is not friends with a low Timescale...
+
+		float start = Time.realtimeSinceStartup;
+		while (Time.realtimeSinceStartup < start + 0.5f) 
+		{
+			yield return null;
+		}
 		
 		locked = false;
 	}
@@ -108,24 +114,24 @@ public class PausePopup : MonoBehaviour
 
 		if( RetryButton.pressed )
 		{
-			//LugusCoroutines.use.StartRoutine(RetryButtonRoutine());
+			LugusCoroutines.use.StartRoutine(RetryButtonRoutine());
 
-			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
-			manager.Paused = false;
-			manager.ReloadLevel();
+//			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+//			manager.Paused = false;
+//			manager.ReloadLevel();
 		}
 
 		if( QuitButton.pressed )
 		{
-			//LugusCoroutines.use.StartRoutine(QuitButtonRoutine());
+			LugusCoroutines.use.StartRoutine(QuitButtonRoutine());
 
-			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
-			manager.Paused = false;
+//			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+//			manager.Paused = false;
+//			
+//			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
+//			info.SetLevelIndex(-1);
 			
-			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
-			info.SetLevelIndex(-1);
-			
-			Application.LoadLevel( Application.loadedLevelName );
+//			Application.LoadLevel( Application.loadedLevelName );
 		}
 		
 		

@@ -17,6 +17,7 @@ public class StepLevelMenu : IMenuStep
 	protected List<int> levelIndices = null; 
 	protected bool switchingPages = false;
 	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
+	protected Vector3 originalPosition = Vector3.zero;
 
 	public void SetupLocal()
 	{
@@ -70,14 +71,15 @@ public class StepLevelMenu : IMenuStep
 			Debug.LogError("StepLevelMenu: Missing leave button.");
 		}
 
-		if( levelIndices == null || levelIndices.Count == 0 )
-		{
-			levelIndices = levelLoader.FindLevels(); 
-		}
+		originalPosition = transform.position;
 	}
 	
 	public void SetupGlobal()
 	{
+		if( levelIndices == null || levelIndices.Count == 0 )
+		{
+			levelIndices = levelLoader.FindLevels(); 
+		}
 	}
 	
 	protected void Awake()
@@ -99,8 +101,6 @@ public class StepLevelMenu : IMenuStep
 		ScreenFader.use.FadeOut(0.5f);
 		
 		yield return new WaitForSeconds(0.5f);
-		
-		locked = false;
 
 		levelLoader.LoadLevel(returnedLevel);
 	}
@@ -123,7 +123,7 @@ public class StepLevelMenu : IMenuStep
 				}
 
 				int returnedLevel = levelIndices[selectedButton];
-			
+
 				LugusCoroutines.use.StartRoutine(ScreenHideRoutine(returnedLevel));
 			}
 		}
@@ -167,6 +167,7 @@ public class StepLevelMenu : IMenuStep
 	public bool LoadSingleLevel()
 	{
 		SetupLocal(); // because it might be Awake() hasn't been called yet here
+		SetupGlobal();
 
 		if (levelIndices.Count <= 0)
 		{
@@ -185,10 +186,12 @@ public class StepLevelMenu : IMenuStep
 		return false;
 	}
 
-	public override void Activate()
+	public override void Activate(bool animate = true)
 	{
 //		if (levelIndices == null)
 //			SetupLocal();
+
+		locked = false;
 
 		HUDManager.use.LevelEndScreen.gameObject.SetActive(false);
 		HUDManager.use.DisableAll();
@@ -204,6 +207,7 @@ public class StepLevelMenu : IMenuStep
 		
 		activated = true;
 		gameObject.SetActive(true);
+		transform.localPosition = Vector3.zero;
 
 		//Debug.LogError("ACTIVATE stepLevel " + levelIndices.Count);
 
@@ -211,12 +215,22 @@ public class StepLevelMenu : IMenuStep
 		LoadLevelData();
 	}
 
-	public override void Deactivate()
+	public override void Deactivate(bool animate = true)
 	{
 		//Debug.LogError("DE-ACTIVATE stepLevel");
 
 		activated = false;
-		gameObject.SetActive(false);
+
+
+		if (animate)
+		{
+			gameObject.MoveTo(new Vector3(-30, 0, 0)).IsLocal(true).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+			locked = true;
+		}
+		else
+		{
+			gameObject.SetActive(false);
+		}
 	}
 
 

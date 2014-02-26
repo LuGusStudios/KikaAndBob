@@ -42,6 +42,9 @@ public class LevelEndScreen : MonoBehaviour
 		HUDManager.use.DisableAll();
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
+		//LugusAudio.use.Music().StopAll();
+		LugusAudio.use.Music().CrossFade(LugusResources.use.Shared.GetAudio("Endscreen01"), 1.0f);
+
 		if( success )
 		{
 			Kika.PlayAnimation("HAPPY/KikaFront_Victory");
