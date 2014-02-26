@@ -12,7 +12,7 @@ public class MenuManagerDefault: MonoBehaviour
 	public Sprite backgroundSprite = null;
 
 	protected Transform background = null;
-
+	protected bool firstFrame = true;
 
 	public enum MenuTypes
 	{
@@ -48,7 +48,6 @@ public class MenuManagerDefault: MonoBehaviour
 			background = transform.FindChild("Background");
 		if (background == null)
 			Debug.LogError("MenuManager: Missing background!");
-			
 	}
 	
 	public void SetupGlobal()
@@ -69,10 +68,13 @@ public class MenuManagerDefault: MonoBehaviour
 				backgroundName = LugusResources.use.Levels.GetText(key);
 			}
 
+			//Debug.LogError("BACKGROUND SPRITE " + backgroundName);
+
 			Sprite newBackground = LugusResources.use.Shared.GetSprite(backgroundName);
 
 			if (newBackground != LugusResources.use.errorSprite)
 			{
+				backgroundSprite = newBackground;
 				backgroundRenderer.sprite = newBackground;
 			}
 		}
@@ -90,13 +92,30 @@ public class MenuManagerDefault: MonoBehaviour
 	
 	protected void Update () 
 	{
+		if (firstFrame)
+			firstFrame = false;
 	}
 
 	protected void DeactivateAllMenus()
 	{
 		foreach(IMenuStep step in menus.Values)
 		{
-			step.Deactivate();
+			if (firstFrame)
+			{
+				step.Deactivate(false);
+			}
+			else
+			{
+				if (step.IsActive() == true)
+				{
+					step.Deactivate(true);
+				}
+				else
+				{
+					step.Deactivate(false);
+				}
+			}
+
 		}
 	}
 
@@ -118,11 +137,23 @@ public class MenuManagerDefault: MonoBehaviour
 
 		if (nextStep != null)
 		{
-			if (!background.gameObject.activeSelf)
-				background.gameObject.SetActive(true);
+			// if there is only one level, we want to bypass the level selection screen and go directly to the level
+			bool proceed = true;
+			if( nextStep.GetComponent<StepLevelMenu>()!= null )
+			{
+				proceed = !nextStep.GetComponent<StepLevelMenu>().LoadSingleLevel();
+			}
 
-			DeactivateAllMenus();
-			nextStep.Activate();
+			//Debug.LogError("PROCEED " + proceed);
+
+			if( proceed )
+			{
+				if (!background.gameObject.activeSelf)
+					background.gameObject.SetActive(true);
+
+				DeactivateAllMenus();
+				nextStep.Activate();
+			}
 		}
 		else
 		{

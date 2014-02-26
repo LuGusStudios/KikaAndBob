@@ -59,9 +59,53 @@ public class PausePopup : MonoBehaviour
 	{
 		SetupGlobal();
 	}
+
+	protected IEnumerator RetryButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+		
+		IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+		manager.Paused = false;
+		manager.ReloadLevel();
+	}
+	
+	protected IEnumerator QuitButtonRoutine()
+	{
+		yield return StartCoroutine(ScreenHideRoutine());
+
+		IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+		manager.Paused = false;
+		
+		IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
+		info.SetLevelIndex(-1);
+		
+		Application.LoadLevel( Application.loadedLevelName );
+	}
+
+	private bool locked = false;
+
+	protected IEnumerator ScreenHideRoutine()
+	{
+		locked = true;
+		
+		ScreenFader.use.FadeOut(0.5f);
+		
+		//yield return new WaitForSeconds(0.5f); // this is not friends with a low Timescale...
+
+		float start = Time.realtimeSinceStartup;
+		while (Time.realtimeSinceStartup < start + 0.5f) 
+		{
+			yield return null;
+		}
+		
+		locked = false;
+	}
 	
 	protected void Update () 
 	{
+		if (locked)
+			return;
+
 		Transform hit = LugusInput.use.RayCastFromMouseDown();
 		if( hit == screenCollider || ContinueButton.pressed )
 		{
@@ -70,20 +114,24 @@ public class PausePopup : MonoBehaviour
 
 		if( RetryButton.pressed )
 		{
-			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
-			manager.Paused = false;
-			manager.ReloadLevel();
+			LugusCoroutines.use.StartRoutine(RetryButtonRoutine());
+
+//			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+//			manager.Paused = false;
+//			manager.ReloadLevel();
 		}
 
 		if( QuitButton.pressed )
 		{
-			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
-			manager.Paused = false;
+			LugusCoroutines.use.StartRoutine(QuitButtonRoutine());
 
-			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
-			info.SetLevelIndex(-1);
-
-			Application.LoadLevel( Application.loadedLevelName );
+//			IGameManager manager = GameObject.FindObjectOfType<IGameManager>();
+//			manager.Paused = false;
+//			
+//			IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
+//			info.SetLevelIndex(-1);
+			
+//			Application.LoadLevel( Application.loadedLevelName );
 		}
 		
 		

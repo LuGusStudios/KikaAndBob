@@ -32,6 +32,9 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
+	
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
 
 	protected float startTime = -1.0f;
 
@@ -74,6 +77,9 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		float timeDiff = Time.time - startTime;
 		if( timeDiff > timeToMaxSpeed )
 		{

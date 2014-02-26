@@ -8,36 +8,30 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 	
 	public int totalScore = 0;
 
-	public void ShowScore( int score, Vector3 position, float time, AudioClip sound, Color color )
+	public void AddScore( int score, Vector3 position)
 	{
 		if( score == 0 )
 		{
-			if( sound != null )
-				LugusAudio.use.SFX().Play( sound );
-			
 			return;
 		}
 		
 		//position += new Vector3( Random.Range(-2, 2), Random.Range(-2,2), 0);
-		
-		GameObject scoreText = (GameObject) GameObject.Instantiate( scoreTextPrefab );
-		scoreText.transform.position = position.z( 0.0f );
-		scoreText.GetComponent<TextMesh>().text = "" + score;
-		scoreText.GetComponent<TextMesh>().color = color;
 
-		scoreText.MoveTo( scoreText.transform.position + new Vector3(0, 2, 0) ).Time ( time ).Execute(); 
-		GameObject.Destroy(scoreText, time);
-		
-		if( sound != null )
-			LugusAudio.use.SFX().Play( sound );
-		
-		int newScore = totalScore + score;
-		if( newScore >= 0 )
-			totalScore += score;
-		else
+
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, score).Color(Color.white).MinValue(0).Time(0.4f).EaseType(iTween.EaseType.linear).Position(position).Execute();
+
+//		GameObject scoreText = (GameObject) GameObject.Instantiate( scoreTextPrefab );
+//		scoreText.transform.position = position.z( 0.0f );
+//		scoreText.GetComponent<TextMesh>().text = "" + score;
+//		scoreText.GetComponent<TextMesh>().color = color;
+//
+//		scoreText.MoveTo( scoreText.transform.position + new Vector3(0, 2, 0) ).Time ( time ).Execute(); 
+//		GameObject.Destroy(scoreText, time);
+
+		totalScore += score;
+
+		if (totalScore < 0)
 			totalScore = 0;
-		
-		//ShowTotalScore();
 	}
 
 	public void SetupLocal()

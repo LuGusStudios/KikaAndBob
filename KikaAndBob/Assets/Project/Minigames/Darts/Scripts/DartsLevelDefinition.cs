@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class DartsLevelDefinition : ScriptableObject 
 {
+	public float levelDuration = 0.0f;
+	public int minimumScore = 0;
+
 	public static DartsLevelDefinition FromXML(string rawData)
 	{
 		TinyXmlReader parser = new TinyXmlReader(rawData);
@@ -47,6 +50,12 @@ public class DartsLevelDefinition : ScriptableObject
 					case "Group":
 						groups.Add(DartsGroupDefinition.FromXML(parser));
 						break;
+					case "LevelDuration":
+						level.levelDuration = float.Parse(parser.content);
+						break;
+					case "MinimumScore":
+						level.minimumScore = int.Parse(parser.content);
+						break;
 				}
 			}
 		}
@@ -66,6 +75,11 @@ public class DartsLevelDefinition : ScriptableObject
 		}
 
 		rawData += "<Level>\r\n";
+
+		rawData += "\t<LevelDuration>" + level.levelDuration.ToString() + "</LevelDuration>\r\n";
+
+		rawData += "\t<MinimumScore>" + level.minimumScore.ToString() + "</MinimumScore>\r\n";
+
 		rawData += "\t<Groups>\r\n";
 		foreach (DartsGroupDefinition group in level.groupDefinitions)
 		{
