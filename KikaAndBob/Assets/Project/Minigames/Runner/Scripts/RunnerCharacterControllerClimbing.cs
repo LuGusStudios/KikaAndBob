@@ -17,6 +17,8 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 	protected Vector3 originalScale = Vector3.zero;
 
+	public DataRange xEdges = new DataRange(-6.192653f, 8.181341f);
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -160,6 +162,18 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			this.transform.localScale = originalScale;
 		}
 
+		// make sure the character doesn't leave the gameplay area
+		// normally, we would do this with colliders
+		// but sometimes we disable the collider of the character... so we have to resort to these foul methods
+		if( this.transform.position.x < xEdges.from )
+		{
+			this.transform.position = this.transform.position.x ( xEdges.from );
+		}
+		else if( this.transform.position.x > xEdges.to )
+		{
+			this.transform.position = this.transform.position.x ( xEdges.to );
+		}
+
 
 		/*
 		float timeDiff = Time.time - startTime;
@@ -273,6 +287,13 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			//RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
 			//if( pickup == null || pickup.positive == false )
 				stuck.enabled = false;
+
+			// disable the feathers -> we cannot pick them up anyway, would only confuse the player
+			RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
+			if( pickup != null && pickup.positive  )
+			{
+
+			}
 
 			// DEBUG, TODO: remove!
 			//if( stuck.GetComponent<SpriteRenderer>() )

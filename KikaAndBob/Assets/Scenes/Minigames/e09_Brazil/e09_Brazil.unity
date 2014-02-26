@@ -13177,7 +13177,7 @@ Transform:
   m_PrefabInternal: {fileID: 78214389}
   m_GameObject: {fileID: 229828309}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.0082397, y: 13.8345404, z: 0}
+  m_LocalPosition: {x: 18.043602, y: 13.8433809, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 255575845}
@@ -16104,7 +16104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &255575845
 Transform:
   m_ObjectHideFlags: 0
@@ -17770,7 +17770,7 @@ GameObject:
   - 61: {fileID: 343889182}
   m_Layer: 0
   m_Name: ColliderRight
-  m_TagString: Untagged
+  m_TagString: SideWalls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19892,7 +19892,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 495759212}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -50}
   m_LocalScale: {x: -.0258906521, y: .0258906558, z: .0258906558}
   m_Children:
   - {fileID: 2041628988}
@@ -28291,6 +28291,9 @@ MonoBehaviour:
     to: 1.20000005
   timeToMaxSpeed: 60
   horizontalSpeed: 6
+  xEdges:
+    from: -6.19265318
+    to: 8.18134117
   speedPercentage: 0
   speedModifierPercentage: .5
   currentSpeedType: 2
@@ -28343,8 +28346,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 3.44504619, y: 4.63878679}
-  m_Center: {x: -.469942391, y: 3.10027456}
+  m_Size: {x: 2.72015715, y: 4.18314362}
+  m_Center: {x: -.99807471, y: 2.87245226}
 --- !u!50 &573294614
 Rigidbody2D:
   m_ObjectHideFlags: 0
@@ -43373,7 +43376,7 @@ GameObject:
   - 61: {fileID: 984381412}
   m_Layer: 0
   m_Name: ColliderLeft
-  m_TagString: Untagged
+  m_TagString: SideWalls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48851,6 +48854,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1125569127}
   - 114: {fileID: 1125569128}
+  - 114: {fileID: 1125569129}
   m_Layer: 20
   m_Name: GUI
   m_TagString: Untagged
@@ -48886,6 +48890,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxPrefab: {fileID: 0}
   boxes: []
+--- !u!114 &1125569129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400078, guid: 7660359396c9c4552a649f739da6eb8b,
+    type: 2}
+  m_PrefabInternal: {fileID: 78214389}
+  m_GameObject: {fileID: 1125569126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d004cbe699e5a0a4aac4a3caa0439d22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeImage: {fileID: 21300000, guid: d788be8496a0961488a2b1584bdf5129, type: 3}
 --- !u!1 &1130292873
 GameObject:
   m_ObjectHideFlags: 0
@@ -55351,7 +55368,7 @@ GameObject:
   - 61: {fileID: 1346591239}
   m_Layer: 0
   m_Name: ColliderLeft
-  m_TagString: Untagged
+  m_TagString: SideWalls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68601,7 +68618,7 @@ GameObject:
   - 61: {fileID: 1646589091}
   m_Layer: 0
   m_Name: ColliderRight
-  m_TagString: Untagged
+  m_TagString: SideWalls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75139,7 +75156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2003988505
 Transform:
   m_ObjectHideFlags: 0
@@ -76626,7 +76643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2071003242
 Transform:
   m_ObjectHideFlags: 0
