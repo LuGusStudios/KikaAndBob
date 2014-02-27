@@ -83,13 +83,15 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 
 	private IEnumerator LoseRoutine()
 	{
+		yield return new WaitForSeconds(1.0f);
+
 		float timer = 2.5f;
 
 		HUDManager.use.FailScreen.Show(timer);
 
 		yield return new WaitForSeconds(timer);
 
-		FroggerGameManager.use.StartNewGame();
+		FroggerGameManager.use.SetUpLevel();
 	}
 
 
