@@ -20,18 +20,34 @@ public class FroggerGameManagerDefault : IGameManager
 		get{ return gameRunning; }
 	}
 
-	public void StartNewGame()
-	{
-		StartNewGame(currentIndex);
-	}
-
 	public override void StartGame()
-	{}
+	{
+		string levelData = levelLoader.GetLevelData(FroggerCrossSceneInfo.use.GetLevelIndex());
+		
+		if (!string.IsNullOrEmpty(levelData))
+		{
+			FroggerLevelDefinition newLevel = FroggerLevelDefinition.FromXML(levelData);
+			FroggerLevelManager.use.levels = new FroggerLevelDefinition[]{newLevel};
+			SetUpLevel(0);
+		}
+		else
+		{
+			Debug.LogError("FroggerGameManager: Invalid level data!");
+		}
+		
+		// if a level wasn't found above, we can still load a default level
+	
+	}
 
 	public override void StopGame()
 	{}
 
-	public void StartNewGame(int levelIndex)
+	public void SetUpLevel()
+	{
+		SetUpLevel(currentIndex);
+	}
+
+	public void SetUpLevel(int levelIndex)
 	{
 		currentIndex = levelIndex;
 		Debug.Log ("Starting new game.");
@@ -68,21 +84,7 @@ public class FroggerGameManagerDefault : IGameManager
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-
-			string levelData = levelLoader.GetLevelData(FroggerCrossSceneInfo.use.GetLevelIndex());
-
-			if (!string.IsNullOrEmpty(levelData))
-			{
-				FroggerLevelDefinition newLevel = FroggerLevelDefinition.FromXML(levelData);
-				FroggerLevelManager.use.levels = new FroggerLevelDefinition[]{newLevel};
-			}
-			else
-			{
-				Debug.LogError("FroggerGameManager: Invalid level data!");
-			}
-
-			// if a level wasn't found above, we can still load a default level
-			StartNewGame();
+			StartGame();
 		}
 	}
 
