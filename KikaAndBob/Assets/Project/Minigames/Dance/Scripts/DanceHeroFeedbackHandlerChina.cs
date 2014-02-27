@@ -92,7 +92,7 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 			float animWeight = Mathf.Lerp(1, 0, scoreModifier - 1);
 			bobAnim.Blend(animationWin, 0);
 			bobAnim.Blend(animationIdle, 1 - animWeight);
-			bobAnim.Blend(animationStruggle, animWeight);
+			bobAnim.Blend(animationStruggle, animWeight); 
 		}
 		
 		
@@ -136,13 +136,17 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 
 	protected void OnLevelStarted()
 	{
-		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopRight);
 		HUDManager.use.PauseButton.gameObject.SetActive(true);
 
 		HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterLargeLeft1.SetValue(0);
+
+		HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+		HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
 	}
 
 	protected void OnLevelFinished()

@@ -141,7 +141,6 @@ public class DanceHeroLevelDefault : IGameManager
 
 		return null;
 	}
-
 		
 	public void CreateLevel(string levelData)
 	{
@@ -262,7 +261,7 @@ public class DanceHeroLevelDefault : IGameManager
 		return targetBatchScore;
 	}
 
-	protected float GetTotalLevelDuration()
+	public float GetTotalLevelDuration()
 	{
 		// total level length consists of a number of things:
 		// the amount of time it takes the first point of a lane to reach the input point
