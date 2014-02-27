@@ -215,10 +215,10 @@ public class LayerManagerDefault : MonoBehaviour
 	
 	protected void Update () 
 	{
-		if( LugusInput.use.KeyDown(KeyCode.N) )
-		{
-			NextTheme();
-		}
+		//if( LugusInput.use.KeyDown(KeyCode.N) )
+		//{
+		//	NextTheme();
+		//}
 
 		if( /*LugusDebug.debug &&*/ !themeTransitionInProgress )
 		{

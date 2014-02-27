@@ -473,6 +473,7 @@ public class RunnerManagerDefault : IGameManager
 	
 	protected void Update () 
 	{
+		/*
 		if( LugusInput.use.Key( KeyCode.S) )
 		{
 			timeSpent = Random.Range(50, 100);
@@ -481,7 +482,8 @@ public class RunnerManagerDefault : IGameManager
 			pickupCount = Random.Range(10, 50);
 
 			StopGame();
-		}
+		}  
+		*/
 	}
 
 	protected void OnGUI()

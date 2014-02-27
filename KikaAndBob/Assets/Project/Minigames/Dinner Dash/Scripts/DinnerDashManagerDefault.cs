@@ -217,8 +217,8 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 	protected void Update()
 	{
-		if( LugusInput.use.KeyDown(KeyCode.S) )
-			StopGame();
+		//if( LugusInput.use.KeyDown(KeyCode.S) )
+		//	StopGame();
 
 		Transform hit = LugusInput.use.RayCastFromMouseUp( LugusCamera.game );
 		if( hit == null )
