@@ -2,11 +2,44 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager> 
+public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager> 
 {
 	public GameObject scoreTextPrefab = null;
-	
 	public int totalScore = 0;
+
+	protected List<IDartsHitable> hitStreak = new List<IDartsHitable>();
+	protected float streakTimer = 0;
+	protected float streakTimeOut = 0.5f;
+	protected TextMesh streakCounter = null;
+
+
+	public void Reset()
+	{
+		streakTimer = 0;
+		streakTimeOut = 0;
+		hitStreak.Clear();
+		streakCounter.text = hitStreak.Count.ToString();
+	}
+
+	protected void ApplyStreak()
+	{
+		Debug.Log("Applying streak.");
+		ClearStreak();
+		streakCounter.text = hitStreak.Count.ToString();
+	}
+
+	public void ClearStreak()
+	{
+		hitStreak.Clear();
+	}
+
+	public void AddToStreak(IDartsHitable hitable)
+	{
+		streakTimer = 0.0f;
+		hitStreak.Add(hitable);
+		print (streakCounter);
+		streakCounter.text = hitStreak.Count.ToString();
+	}
 
 	public void AddScore( int score, Vector3 position)
 	{
@@ -36,20 +69,34 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 
 	public void SetupLocal()
 	{
-		if( scoreTextPrefab == null )
-		{
-			scoreTextPrefab = GameObject.Find("Score");
-		}
-
-		if( scoreTextPrefab == null )
-		{
-			Debug.LogError(name + " : no ScoreTextPrefab found!");
-		}
 	}
 	
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
+		if( scoreTextPrefab == null )
+		{
+			scoreTextPrefab = GameObject.Find("Score");
+		}
+		
+		if( scoreTextPrefab == null )
+		{
+			Debug.LogError(name + " : no ScoreTextPrefab found!");
+		}
+
+		if (streakCounter == null)
+		{
+			GameObject streakCounterObject = GameObject.Find("StreakCounter");
+
+			if (streakCounterObject != null)
+			{
+				streakCounter = streakCounterObject.GetComponent<TextMesh>();
+			}
+		}
+
+		if (streakCounter == null)
+		{
+			Debug.LogError("DartsScoreManager: Missing streak counter text mesh!");
+		}
 	}
 	
 	protected void Awake()
@@ -64,6 +111,16 @@ public class DartsScoreManager : LugusSingletonRuntime<DartsScoreManager>
 	
 	protected void Update () 
 	{
-	
+		if (streakTimer < streakTimeOut)
+		{
+			streakTimer += Time.deltaTime;
+		}
+		else
+		{
+			if (hitStreak.Count > 0)
+			{
+				ApplyStreak();
+			}
+		}
 	}
 }

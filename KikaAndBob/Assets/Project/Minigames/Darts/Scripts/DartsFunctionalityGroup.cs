@@ -43,6 +43,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	{
 		Debug.Log ("HIT POSITION " + hitable.transform.position);
 		DartsScoreManager.use.AddScore(hitable.GetScore(), hitable.transform.position);
+		DartsScoreManager.use.AddToStreak(hitable);
 	}
 
 	public void HitableHidden(IDartsHitable hitable)

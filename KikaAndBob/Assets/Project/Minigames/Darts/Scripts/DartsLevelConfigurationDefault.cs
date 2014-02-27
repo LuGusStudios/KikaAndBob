@@ -62,12 +62,7 @@ public class DartsLevelConfigurationDefault :  IGameManager
 		if (!string.IsNullOrEmpty(levelData))
 		{
 			gameRunning = true;
-
-			HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
-			HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
-			HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
-			HUDManager.use.CounterLargeLeft1.SetValue(0, false);
-
+		
 			DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
 			ConfigureLevel(newLevel);
 
@@ -76,7 +71,25 @@ public class DartsLevelConfigurationDefault :  IGameManager
 
 			minScore = newLevel.minimumScore;
 
+			HUDManager.use.CounterLargeLeft1.gameObject.SetActive(true);
+			HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
+			HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
+			HUDManager.use.CounterLargeLeft1.SetValue(0, false);
+			
+			HUDManager.use.ProgressBarRight.gameObject.SetActive(true);
+			HUDManager.use.ProgressBarRight.commodity = KikaAndBob.CommodityType.Time;
+			HUDManager.use.ProgressBarRight.SetTimer(levelDuration);
 
+			DartsScoreManager.use.Reset();
+
+			if (!string.IsNullOrEmpty(newLevel.backgroundMusicName))
+			{
+				AudioClip backgroundMusic = LugusResources.use.Shared.GetAudio(newLevel.backgroundMusicName);
+
+				if (backgroundMusic != null || backgroundMusic != LugusResources.use.errorAudio)
+					LugusAudio.use.Music().Play(backgroundMusic);
+			}
+		
 			Debug.Log("Started new Darts level. Time: " + levelDuration + ". Target score: " + minScore +".");
 		}
 		else
@@ -92,8 +105,6 @@ public class DartsLevelConfigurationDefault :  IGameManager
 		Debug.Log("Darts level ended.");
 
 		HUDManager.use.DisableAll();
-
-
 
 		bool success = DartsScoreManager.use.totalScore >= minScore;
 
