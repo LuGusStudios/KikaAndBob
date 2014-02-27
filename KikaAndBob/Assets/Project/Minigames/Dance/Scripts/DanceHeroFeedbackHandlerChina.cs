@@ -130,6 +130,7 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	// blend three animations for value
 	protected void OnScoreRaised(DanceHeroLane lane)
 	{
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
 		ChangeBobAnim();
 	}
 
