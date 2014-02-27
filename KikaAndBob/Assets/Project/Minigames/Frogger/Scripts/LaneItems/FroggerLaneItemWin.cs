@@ -28,6 +28,8 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 
 	protected void TillyFly(FroggerCharacter character)
 	{
+		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("DoveFly01"));
+
 		FroggerGameManager.use.gameRunning = false;
 		
 		if (character is FroggerPlayer) // currently this will never not be the case, but for future compatibility it's not a bad idea to check anyway

@@ -9,6 +9,8 @@ public class StepGameMenu : IMenuStep
 	protected TextMeshWrapper title = null;
 	protected TextMeshWrapper description = null;
 	protected SpriteRenderer image = null;
+	protected Vector3 originalPosition = Vector3.zero;
+	protected LugusAudioTrackSettings musicTrackSettings;
 	
 	public void SetupLocal()
 	{
@@ -56,6 +58,11 @@ public class StepGameMenu : IMenuStep
 		{
 			Debug.Log("StepGameMenu: Missing image sprite renderer!");
 		}
+
+		originalPosition = transform.position;
+
+
+		musicTrackSettings = new LugusAudioTrackSettings().Loop(true);
 	}
 	
 	public void SetupGlobal()
@@ -116,16 +123,40 @@ public class StepGameMenu : IMenuStep
 	
 	}
 
-	public override void Activate()
+	public override void Activate(bool animate = true)
 	{
 		activated = true;
 		gameObject.SetActive(true);
 		LoadLevelData();
+
+		iTween.Stop(gameObject);
+
+		transform.position = originalPosition + new Vector3(30, 0, 0);
+
+		gameObject.MoveTo(originalPosition).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+
+		LugusCoroutines.use.StartRoutine(MusicLoop());
 	}
 
-	public override void Deactivate()
+	protected IEnumerator MusicLoop()
+	{
+		LugusAudio.use.Music().StopAll();
+		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuIntro01"));
+
+		while ( LugusAudio.use.Music().IsPlaying )
+		{
+			yield return new WaitForEndOfFrame();
+		}
+	
+		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuLoop01"), true, musicTrackSettings);
+	}
+
+	public override void Deactivate(bool animate = true)
 	{
 		activated = false;
-		gameObject.SetActive(false);
+		//gameObject.SetActive(false);
+
+		iTween.Stop(gameObject);
+		gameObject.MoveTo(originalPosition + new Vector3(-30, 0, 0)).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
 	}
 }
