@@ -13,7 +13,8 @@ namespace KikaAndBob
 		Time = 3,
 		Life = 4,
 		Score = 5,
-		Distance = 6
+		Distance = 6,
+		Custom = 7
 	}
 }
 

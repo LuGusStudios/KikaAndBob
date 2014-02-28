@@ -75,10 +75,15 @@ public class DartsLevelConfigurationDefault :  IGameManager
 			HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Score;
 			HUDManager.use.CounterLargeLeft1.formatting = HUDCounter.Formatting.Int;
 			HUDManager.use.CounterLargeLeft1.SetValue(0, false);
+
+			HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
+			HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Custom;
+			HUDManager.use.CounterLargeRight1.formatting = HUDCounter.Formatting.Int;
+			HUDManager.use.CounterLargeRight1.SetValue(0, false);
 			
-			HUDManager.use.ProgressBarRight.gameObject.SetActive(true);
-			HUDManager.use.ProgressBarRight.commodity = KikaAndBob.CommodityType.Time;
-			HUDManager.use.ProgressBarRight.SetTimer(levelDuration);
+			HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+			HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Time;
+			HUDManager.use.ProgressBarCenter.SetTimer(levelDuration);
 
 			DartsScoreManager.use.Reset();
 
@@ -106,18 +111,31 @@ public class DartsLevelConfigurationDefault :  IGameManager
 
 		HUDManager.use.DisableAll();
 
-		bool success = DartsScoreManager.use.totalScore >= minScore;
 
-		HUDManager.use.LevelEndScreen.Show( DartsScoreManager.use.totalScore >= minScore );
+		// TO DO: Currently not using version with target score
+//		bool success = DartsScoreManager.use.totalScore >= minScore;
+//
+//		HUDManager.use.LevelEndScreen.Show( DartsScoreManager.use.totalScore >= minScore );
+//
+//		if (success)
+//		{
+//			LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
+//			LugusConfig.use.SaveProfiles();
+//		}
+
+		HUDManager.use.LevelEndScreen.Show(true);
+		
+
+		LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
+		LugusConfig.use.SaveProfiles();
+
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DartsScoreManager.use.totalScore, true);
 
-		if (success)
-		{
-			LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
-			LugusConfig.use.SaveProfiles();
-		}
+	
 	}
 	
 	protected void Update () 
