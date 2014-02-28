@@ -266,6 +266,11 @@ public class PacmanGameManagerDefault : IGameManager {
 		}
 
 		PacmanGUIManager.use.ShowWinMessage(timer);
+
+		
+		Debug.Log ("Pacman : set level success : " + (Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad) );
+		LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad, true, true );
+		LugusConfig.use.SaveProfiles();
 	}
 
 	protected void OnGUI()

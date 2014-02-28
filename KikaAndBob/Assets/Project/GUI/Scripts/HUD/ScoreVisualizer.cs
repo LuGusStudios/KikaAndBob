@@ -36,6 +36,8 @@ public class Score
 	public float _minAmount = Mathf.NegativeInfinity;
 	public float _maxAmount = Mathf.Infinity;
 
+	public iTween.EaseType _easeType = iTween.EaseType.easeInBack;
+
 	protected IHUDElement _hud = null;
 	public IHUDElement GetHUDElement()
 	{
@@ -53,6 +55,20 @@ public class Score
 		return _hud;
 	}
 
+	public Score HUDElement(IHUDElement element)
+	{
+		_hud = element;
+		return this;
+	}
+
+	// indicates whether the WorldCoordinates of Position are for the Game or the GUI camera
+	public bool _useGUICamera = false;
+	public Score UseGUICamera(bool useGUI)
+	{
+		_useGUICamera = useGUI;
+		return this;
+	}
+
 	public Score Reset()
 	{
 		_amount = 0.0f;
@@ -65,6 +81,8 @@ public class Score
 
 		_worldPosition = Vector3.zero;
 		_color = UnityEngine.Color.white;
+
+		_useGUICamera = false;
 
 		_hud = null;
 
@@ -155,6 +173,12 @@ public class Score
 		return this;
 	}
 
+	public Score EaseType(iTween.EaseType easeType)
+	{
+		_easeType = easeType;
+		return this;
+	}
+
 	public void Execute()
 	{
 		ScoreVisualizer.use.ShowScore( this );
@@ -216,6 +240,10 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 		}
 
 		Vector2 viewportCoords = LugusCamera.game.WorldToViewportPoint( score._worldPosition );
+		if( score._useGUICamera )
+		{
+			viewportCoords = LugusCamera.ui.WorldToViewportPoint( score._worldPosition ); 
+		}
 		viewportCoords = Vector2.Scale( viewportCoords, new Vector2(LugusUtil.UIWidth, LugusUtil.UIHeight) );
 
 		scoreText.transform.localPosition = (viewportCoords.v3 () );// / 100.0f);
@@ -230,7 +258,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 			scoreText.MoveTo( scoreText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 		}
 
-		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+		scoreText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(score._easeType).Execute(); 
 
 		GameObject.Destroy(scoreText, score._duration);
 
@@ -253,7 +281,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 				titleText.MoveTo( titleText.transform.position.yAdd(1.0f) ).Time ( score._duration - 1.0f - 0.1f ).Execute();
 			}
 
-			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(iTween.EaseType.easeInBack).Execute(); 
+			titleText.MoveTo( score.GetHUDElement().transform.position ).Delay(moveOverDelay).Time ( moveDuration ).EaseType(score._easeType).Execute(); 
 			GameObject.Destroy(titleText, score._duration);
 		}
 

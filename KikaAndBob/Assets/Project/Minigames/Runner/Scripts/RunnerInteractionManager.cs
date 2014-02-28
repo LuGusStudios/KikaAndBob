@@ -60,6 +60,8 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		timeToHoldRatio = timeToHold * zoneRandomGeneratorGaussian.Next();
 	}
 
+	protected int zonesSinceLongZone = 0; // specific for e13_pacific
+
 	public void OnSectionSwitch(LayerSection currentSection, LayerSection newSection)
 	{
 		if( !activated )
@@ -147,6 +149,26 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 					{
 						zoneOK = false;
 					}
+
+					if( Application.loadedLevelName == "e13_pacific" )
+					{
+						Debug.LogError("InteractionManager: checking pacific : " + zonePrefab.sectionSpan + " from " + zonesSinceLongZone);
+						// in pacific, we have water-zones that are quite long and sometimes difficult
+						// we want to prevent them from spawning back-to-back
+						// so: keep tabs and only spawn a new water zone after 3 other zones have spawned
+						if( zonePrefab.sectionSpan > 1.5f ) // water zones are longer than other zones
+						{
+							if( zonesSinceLongZone < 4  ) 
+							{
+								zoneOK = false;
+							}
+							else
+							{
+								zonesSinceLongZone = 0;
+								zoneOK = true;
+							}
+						}
+					}
 				}
 
 
@@ -182,6 +204,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 
 			lastSpawned = zonePrefab;
+			zonesSinceLongZone += 1;
 			
 			RunnerInteractionZone newZone = (RunnerInteractionZone) GameObject.Instantiate( zonePrefab );
 
