@@ -54,23 +54,27 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         // is player near
         DetectPlayer();
 
-       
-
-        // is a butler
-        //DetectButler();
-
         // move
         UpdateMovement();
 
-        if(playerFound && !player.poweredUp && !detectedRoutineRunning) 
+        //when player is found and not disguised and hasn't been already seen
+        if (playerFound && !player.poweredUp && !detectedRoutineRunning)
         {
             PlayerSeenEffect();
+            //playerChaseCount = 0;
             ResetMovement();
             targetTile = currentTile;
             MoveTo(FindTileClosestTo(targetTile));
             DestinationReached();
-            
+
         }
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        FollowTiles.Clear();
+        playerChaseCounter = int.MaxValue;
     }
 
     public override void DestinationReached()
@@ -83,31 +87,34 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 			playerChaseCounter = 0;
 			targetTile = player.currentTile;
 		    butlerFound = false;
-            FollowTiles.Add(currentTile);
+            FollowTiles.Add(targetTile);
 		    //Debug.Log("Player detected! Giving chase.");
 		}
 		else	// if player isn't close
 		{
             //// if enemy has only just lost sight of the player, try chasing him for a number of tiles (playerChaseCount)
-           
-            if (playerChaseCounter < playerChaseCount)
+            if (playerChaseCounter < playerChaseCount && !player.poweredUp)
             {
-                PlayerSeenEffect();
-                playerChaseCounter++;
-                targetTile = player.currentTile;
+                Debug.Log("Player lost! Trying to find them back.");
+
+                //if player is hiding, randomize search
+                if (player.currentTile.tileType == PacmanTile.TileType.Hide)
+                {
+                    PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
+                                         PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile));
+                    targetTile = tiles[Random.Range(0, tiles.Length - 1)];
+                    
+                }
+                else //chase the player
+                {
+                    PlayerSeenEffect();
+                    targetTile = player.currentTile;
+                    
+                }
                 FollowTiles.Add(currentTile);
-                //Debug.Log("Player lost! Trying to find them back.");
+                playerChaseCounter++; 
+                
             }
-            //else if (butlerFound)
-            //{
-            //    PlayerSeenEffect();
-            //    targetTile = player.currentTile;
-            //    if (lastKnowPlayerTile == currentTile)
-            //    {
-            //        NeutralEffect();
-            //        butlerFound = false;
-            //    }
-            //}
             else // if enemy has lost sight of the player for a while, resume patrol
 			{
 				NeutralEffect();
@@ -118,6 +125,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 			    {
 			        targetTile = FollowTiles[FollowTiles.Count - 1];
                     FollowTiles.RemoveAt(FollowTiles.Count-1);
+                    Debug.Log("Following back path " + (FollowTiles.Count - 1) + targetTile.gridIndices);
 			    }
 			    else if (patrolPath.Count > 0)
 				{
@@ -176,7 +184,31 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
         }   
     }
-
+    protected override void DetectPlayer()
+    {
+        base.DetectPlayer();
+        //check further from base when no player has found in direction
+        if (!playerFound)
+        {
+            // this default implementation looks around itself and detects player if the player is moving
+            foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(this.currentTile))
+            {
+                if (tile != null)
+                {
+                    // check if any players are on the currently inspected tile and moving
+                    foreach (PacmanPlayerCharacter playerChar in PacmanGameManager.use.GetPlayerChars())
+                    {
+                        if (tile == playerChar.currentTile && playerChar.moving )
+                        {
+                            playerFound = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            playerFound = false;
+        }
+    }
     protected override void PlayerSeenEffect()
     {
         if (enemyState == EnemyState.Chasing)
@@ -191,28 +223,4 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         detectedRoutineRunning = true;
     }
 
-    protected virtual void DetectButler()
-    {
-        // this while look at all the tiles around the current tile
-        foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(currentTile))
-        {
-            if (tile != null)
-            {
-               
-                // check if any players are on the currently inspected tile
-                foreach (PacmanEnemyCharacter enemy in PacmanGameManager.use.GetEnemyCharacters())
-                {
-                    if (tile == enemy.currentTile && enemy.enemyState == EnemyState.Frightened)
-                    {
-                        butlerFound = true;
-                        //lastKnowPlayerTile = enemy._lastKnowTileOfPlayer;
-                        return;
-                    }
-                }
-                
-            }
-        }
-
-        playerFound = false;
-    }
 }

@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28dfe5ee59229a42a5e1021d65930ff, type: 3}
   m_Name: EnglandLevel01
   m_EditorClassIdentifier: 
-  backgroundMusicName: VaticanBackground
+  backgroundMusicName: 
   width: 13
   height: 13
   cameraTracksPlayer: 0
-  level: xxxxxxxxxxxxxxopooxoxooooxxpxxoxpxoxxoxxopooxdxooooxxdxxxxoxxxxoxxooxooooooooxxxoxoxoxoxoxxxooooooooxooxxdxxxxoxxxxoxxooooxoxooooxxooxoxoxoxxoxxooooxoxooooxxxxxxxoxxxxxx
+  level: xxxxxxxxxxxxxxopooxoxooooxxpxxoxpxoxxoxxopooxoxooooxxoxxxxoxxxxoxxooxooooooooxxxoxoxtxoxoxxxooooooooxooxxoxxxxoxxxxoxxooooxoxooooxxooxoxoxoxxoxxooooxtxooooxxxxxxxoxxxxxx
   characters:
   - id: Kika
     speed: 2
@@ -50,7 +50,16 @@ MonoBehaviour:
     startDirection: 8
     defaultTargetTiles:
     - {x: 1, y: 9}
-    - {x: 2, y: 9}
+    - {x: 2, y: 7}
+  - id: GuardPatrol02
+    speed: 2
+    xLocation: 4
+    yLocation: 6
+    spawnDelay: 0
+    startDirection: 8
+    defaultTargetTiles:
+    - {x: 4, y: 7}
+    - {x: 4, y: 5}
   updaters: []
   tileItems:
   - id: Exit
@@ -59,7 +68,7 @@ MonoBehaviour:
     tileCoordinates: {x: 2, y: 4}
   - id: Door01
     tileCoordinates: {x: 1, y: 4}
-  - id: Door02
+  - id: Door01
     tileCoordinates: {x: 6, y: 9}
   - id: Key01
     tileCoordinates: {x: 1, y: 1}
@@ -73,3 +82,5 @@ MonoBehaviour:
     tileCoordinates: {x: 1, y: 8}
   - id: Trap
     tileCoordinates: {x: 1, y: 2}
+  - id: HidingSpot
+    tileCoordinates: {x: 7, y: 2}

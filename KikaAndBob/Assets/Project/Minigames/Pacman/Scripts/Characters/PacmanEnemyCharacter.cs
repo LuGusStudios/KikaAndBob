@@ -187,7 +187,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			if (tile != null)
 			{
 				// if the tile is not open, line of sight is broken
-				if (tile.tileType == PacmanTile.TileType.Collide)
+				if (tile.tileType == PacmanTile.TileType.Collide || tile.tileType == PacmanTile.TileType.Hide)
 				{
 					playerFound = false;
 					return;
@@ -408,6 +408,14 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		inspectedTile = PacmanLevelManager.use.GetTile(xCoord-1 , yCoord);
 		if (inspectedTile != null)
 		{
+            // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+            foreach (GameObject go in inspectedTile.tileItems)
+            {
+                if (go.GetComponent<PacmanTileItem>() != null)
+                {
+                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
 			if (IsEnemyWalkable(inspectedTile))
 			{
 				float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
@@ -463,7 +471,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if( inspectedTile.tileType == PacmanTile.TileType.Collide ||
 		   	inspectedTile.tileType == PacmanTile.TileType.Locked ||
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
-		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid
+		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
+            inspectedTile.tileType == PacmanTile.TileType.Hide
 			)
 			return false;
 		

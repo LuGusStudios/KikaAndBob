@@ -162,11 +162,11 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			return;
 
 		DoCurrentTileBehavior();
-		
+ 
 		moving = false;
-
 		// if we can move in the next selected direction, go there
 		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
+
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
@@ -240,6 +240,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		else if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
 		{
 			LugusCoroutines.use.StartRoutine(TeleportRoutine());
+            
 		}
 	}
 
@@ -316,7 +317,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			{
 				if (go.GetComponent<PacmanTileItem>() != null)
 				{
-					go.GetComponent<PacmanTileItem>().OnTryEnter();
+					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
 				}
 			}
 

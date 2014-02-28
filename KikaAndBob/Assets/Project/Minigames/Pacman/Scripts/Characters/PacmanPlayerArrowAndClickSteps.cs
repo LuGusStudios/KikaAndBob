@@ -19,6 +19,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		
 		if (allowControl == true)
 		{
+            
 			CheckArrows();
 			CheckClick();
 		}
@@ -98,9 +99,9 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	private void CheckArrows()
 	{
-		if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
-			return;
-
+	    if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+            return;
+	    
 		if (moving)
 			return;
 
@@ -140,13 +141,14 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			if (!moving)
 				DestinationReachedArrows();
 		}
+	    
 	}
 
 	private void CheckArrowsContinuous()
 	{
-		if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
-			return;
-		
+        if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport || alreadyTeleported)
+            return;
+        
 		if (moving)
 			return;
 		
@@ -174,6 +176,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Right;
 		}
+        
 	}
 
 
@@ -195,15 +198,15 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		moving = false;
 
 		moveTargetTile = null;
-//		
-//		// if there is no tile that was clicked, don't move any more
-//		if (clickedTile == null)
-//		{
-//			characterAnimator.PlayAnimation(characterAnimator.idle);
-//			return;
-//		}
+        		
+        // if there is no tile that was clicked, don't move any more
+        if (clickedTile == null)
+        {
+            characterAnimator.PlayAnimation(characterAnimator.idle);
+            return;
+        }
 		// if clicked tile was reached, success
-		if (currentTile == clickedTile)
+		if (currentTile == clickedTile )
 		{
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
@@ -265,9 +268,10 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		}
 
 		// if arrows weren't being held down, stop
-		if (nextDirection == CharacterDirections.Undefined)
+        if (nextDirection == CharacterDirections.Undefined )
 		{
 			characterAnimator.PlayAnimation(characterAnimator.idle);
+		    moveTargetTile = null;
 			return;
 		}
 
@@ -304,4 +308,13 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 //		
 
 	}
+
+    protected override void MoveTo(PacmanTile target)
+    {
+        base.MoveTo(target);
+        if (currentTile.tileType == PacmanTile.TileType.Teleport)
+        {
+            clickedTile = currentTile;
+        }
+    }
 }

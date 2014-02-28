@@ -36,7 +36,7 @@ public class PacmanTileItem : MonoBehaviour
 
 	}
 
-	public virtual void OnTryEnter()
+	public virtual void OnTryEnter(PacmanCharacter character)
 	{
 
 	}

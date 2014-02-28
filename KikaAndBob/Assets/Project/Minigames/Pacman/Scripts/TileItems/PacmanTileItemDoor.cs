@@ -12,7 +12,7 @@ public class PacmanTileItemDoor : PacmanTileItem
 		parentTile.tileType = PacmanTile.TileType.Collide;
 	}
 
-	public override void OnTryEnter ()
+	public override void OnTryEnter (PacmanCharacter character)
 	{
 		if (!opened && PacmanPickups.use.GetPickupAmount(keyID) >= 1)
 		{

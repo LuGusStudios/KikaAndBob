@@ -15,7 +15,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected Vector2 spawnLocation = Vector2.zero;
 	protected float movementTimer = 0;
 	protected float movementDuration = 0;
-	protected bool moving = false;
+	public bool moving = false;
 	protected bool horizontalMovement = false;
 	protected bool alreadyTeleported = false;
 

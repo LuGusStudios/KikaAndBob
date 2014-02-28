@@ -61,39 +61,140 @@ public class PacmanEnemyPatrolButler : PacmanEnemyPatrolGuard
         UpdateMovement();
 
     }
+    protected override PacmanTile FindTileClosestTo(PacmanTile target)
+    {
+        PacmanTile closestTile = null;
+        PacmanTile inspectedTile;
+        float closestDistance = Mathf.Infinity;
+        PacmanCharacter.CharacterDirections proposedDirection = PacmanCharacter.CharacterDirections.Undefined;
 
+        int xCoord = (int)currentTile.gridIndices.x;
+        int yCoord = (int)currentTile.gridIndices.y;
+
+        // Apparently the direction decision making for Pacman ghosts values up > left > down in case of equivalent distances.
+        // This order is maintained below.
+
+        // check up
+        inspectedTile = PacmanLevelManager.use.GetTile(xCoord, yCoord + 1);
+        if (inspectedTile != null)
+        {
+            // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+            foreach (GameObject go in inspectedTile.tileItems)
+            {
+                if (go.GetComponent<PacmanTileItem>() != null)
+                {
+                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
+            if (IsEnemyWalkable(inspectedTile))
+            {
+                //print (targetTile);
+                float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
+                if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Down || currentTile.exitCount <= 1))
+                {
+                    closestDistance = distance;
+                    closestTile = inspectedTile;
+                    proposedDirection = PacmanCharacter.CharacterDirections.Up;
+                }
+            }
+        }
+
+        // check left
+        inspectedTile = PacmanLevelManager.use.GetTile(xCoord - 1, yCoord);
+        if (inspectedTile != null)
+        {
+            // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+            foreach (GameObject go in inspectedTile.tileItems)
+            {
+                if (go.GetComponent<PacmanTileItem>() != null)
+                {
+                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
+            if (IsEnemyWalkable(inspectedTile))
+            {
+                float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
+                if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Right || currentTile.exitCount <= 1))
+                {
+                    closestDistance = distance;
+                    closestTile = inspectedTile;
+                    proposedDirection = PacmanCharacter.CharacterDirections.Left;
+                }
+            }
+        }
+
+        // check down
+        inspectedTile = PacmanLevelManager.use.GetTile(xCoord, yCoord - 1);
+        if (inspectedTile != null)
+        {
+            // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+            foreach (GameObject go in inspectedTile.tileItems)
+            {
+                if (go.GetComponent<PacmanTileItem>() != null)
+                {
+                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
+            if (IsEnemyWalkable(inspectedTile))
+            {
+                float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
+                if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Up || currentTile.exitCount <= 1))
+                {
+                    closestDistance = distance;
+                    closestTile = inspectedTile;
+                    proposedDirection = PacmanCharacter.CharacterDirections.Down;
+                }
+            }
+        }
+
+        // check right
+        inspectedTile = PacmanLevelManager.use.GetTile(xCoord + 1, yCoord);
+        if (inspectedTile != null)
+        {
+            // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
+            foreach (GameObject go in inspectedTile.tileItems)
+            {
+                if (go.GetComponent<PacmanTileItem>() != null)
+                {
+                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
+            if (IsEnemyWalkable(inspectedTile))
+            {
+                float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
+                if (distance < closestDistance && (allowUTurns || currentDirection != PacmanCharacter.CharacterDirections.Left || currentTile.exitCount <= 1))
+                {
+                    closestDistance = distance;
+                    closestTile = inspectedTile;
+                    proposedDirection = PacmanCharacter.CharacterDirections.Right;
+                }
+            }
+        }
+
+        if (proposedDirection != PacmanCharacter.CharacterDirections.Undefined)
+            currentDirection = proposedDirection;
+
+        return closestTile;
+    }
     public override void DestinationReached()
     {
 
 
-        // if the player was detected, chase him, and the player has no power up
+        // if the player was detected and the player has no power up, flee from him
         if (playerFound && !player.poweredUp || enemyState == EnemyState.Frightened)
         {
             PlayerSeenEffect();
-            PacmanEnemyCharacter enemyCharacter = _enemies[0] ;
-            //if the enemy in the list is himself change enemy from the list
-            if (enemyCharacter.currentTile == _enemies[0].currentTile)
-            {
-                enemyCharacter = _enemies[1];
-            }
-            foreach (PacmanEnemyCharacter enemy in _enemies)
-            {
-                //search the closest tile to go to and which is not his own tile
-                if (PacmanLevelManager.use.GetDistanceBetweenTiles(this.currentTile,enemy.currentTile) < PacmanLevelManager.use.GetDistanceBetweenTiles(this.currentTile,enemyCharacter.currentTile)
-                    && this.currentTile != enemy.currentTile
-                    && enemy.gameObject.activeSelf)
-                {
-                    enemyCharacter = enemy;
-                }
-            }
-            targetTile = enemyCharacter.currentTile;
+
+            //Go to your door
+
+
+            targetTile = player.currentTile;
             //when it reaches the enemy go back to patrol
             if (targetTile ==  this.currentTile)
             {
                 Debug.Log("Reached!!");
                 NeutralEffect();
             }
-            Debug.Log("Player detected! Giving flee. to " + targetTile + enemyCharacter.transform.name);
         }
         else	// if player isn't close
         {   
