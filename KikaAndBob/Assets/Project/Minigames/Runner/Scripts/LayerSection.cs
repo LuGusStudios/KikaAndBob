@@ -248,7 +248,14 @@ public class LayerSection : MonoBehaviour
 		if( spawner == null )
 		{
 			spawner = this.transform.parent.GetComponent<LayerSpawner>();
+		
 		}
+		
+		if( spawner == null && this.transform.parent.parent != null )
+		{
+			spawner = this.transform.parent.parent.GetComponent<LayerSpawner>();
+		}
+
 		if( spawner == null )
 		{
 			Debug.LogError(transform.Path () + " : No spawner known for this LayerSection! ");
