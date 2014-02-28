@@ -156,7 +156,7 @@ public class DartsBull : IDartsHitable
 
 	public override int GetScore ()
 	{
-		return score * hitStreak;
+		return group.score * hitStreak;
 	}
 	
 	public void SetupLocal()

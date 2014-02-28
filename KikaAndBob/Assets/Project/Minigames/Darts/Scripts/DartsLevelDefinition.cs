@@ -160,6 +160,9 @@ public class DartsGroupDefinition
 					case "AvoidRepeat":
 						group.avoidRepeat = bool.Parse(parser.content.Trim());
 						break;
+					case "Score":
+						group.score = int.Parse(parser.content.Trim());
+						break;
 				}
 			}
 		}
@@ -184,12 +187,14 @@ public class DartsGroupDefinition
 
 		rawData += tabs + "<Group>\r\n";
 		rawData += tabs + "\t<ID>" + group.id + "</ID>\r\n";
+		rawData += tabs + "\t<ItemsOnScreen>" + group.itemsOnScreen.ToString() + "</ItemsOnScreen>\r\n";
 		rawData += tabs + "\t<MinTimeBetweenShows>" + group.minTimeBetweenShows.ToString() + "</MinTimeBetweenShows>\r\n";
 		rawData += tabs + "\t<AutoHideTimes>\r\n";
 		rawData += tabs + "\t\t<Min>" + group.autoHideTimes.from.ToString() + "</Min>\r\n";
 		rawData += tabs + "\t\t<Max>" + group.autoHideTimes.to.ToString() + "</Max>\r\n";
 		rawData += tabs + "\t</AutoHideTimes>\r\n";
 		rawData += tabs + "\t<AvoidRepeat>" + group.avoidRepeat.ToString() + "</AvoidRepeat>\r\n";
+		rawData += tabs + "\t<Score>" + group.score.ToString() + "</Score>\r\n";
 		rawData += tabs + "</Group>\r\n";
 
 		return rawData;
@@ -198,6 +203,7 @@ public class DartsGroupDefinition
 	public string id = "";
 	public float itemsOnScreen = 1.0f;
 	public float minTimeBetweenShows = 1.0f;
-	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
+	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f); 
 	public bool avoidRepeat = false;
+	public int score = 100;
 }

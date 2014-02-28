@@ -9,7 +9,7 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 
 	protected List<IDartsHitable> hitStreak = new List<IDartsHitable>();
 	protected float streakTimer = 0.0f;
-	protected float streakTimeOut = 0.5f;
+	protected float streakTimeOut = 1.5f;
 	protected TextMesh streakCounter = null;
 	protected int minStreakLength = 3;
 
@@ -31,7 +31,7 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 
 		Debug.Log("Applying streak.");
 
-		int score = hitStreak[hitStreak.Count - 1].score;
+		int score = hitStreak[hitStreak.Count - 1].group.score;
 
 		float multiplier = 1 + ((float)hitStreak.Count * 0.1f);	// every item in the streak adds 10 %
 
@@ -39,7 +39,7 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 		
 		if (score > 0)
 		{
-			Vector3 position = HUDManager.use.CounterLargeRight1.transform.position + new Vector3(0, -0.2f, -20);	// a little offset makes the score text align nicer
+			Vector3 position = HUDManager.use.CounterLargeRight1.transform.position + new Vector3(0, -0.2f, 20);	// a little offset makes the score text align nicer
 
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
 
@@ -64,6 +64,9 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 			Debug.LogError("DartsScoreManager: Hitable was null!");
 			return;
 		}
+
+		if (hitStreak.Contains(hitable))	// we don't want duplicates
+			return;
 
 		streakTimer = 0.0f;
 		hitStreak.Add(hitable);
