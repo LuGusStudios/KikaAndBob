@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class DartsEagle : IDartsHitable 
 {
 	public Vector3 move = new Vector3(20.0f, 0, 0);
-	public string hitSoundKey = "";
+	protected string hitSoundKey = "Eagle02"; 
 	protected Vector3 originalPosition = Vector3.one;
 	protected ILugusCoroutineHandle moveRoutine = null;
 	protected float moveTime = 3.0f;

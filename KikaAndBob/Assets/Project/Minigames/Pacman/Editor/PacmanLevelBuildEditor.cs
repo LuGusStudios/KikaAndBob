@@ -17,6 +17,7 @@ public class PacmanLevelBuildEditor : EditorWindow
 	static void Init () 
 	{
 		PacmanLevelBuildEditor window = (PacmanLevelBuildEditor)EditorWindow.GetWindow (typeof (PacmanLevelBuildEditor));
+		window.Show();
 	}
 	
 	protected void Update () 
