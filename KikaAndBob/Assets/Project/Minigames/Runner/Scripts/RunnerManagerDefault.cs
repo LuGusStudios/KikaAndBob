@@ -294,11 +294,13 @@ public class RunnerManagerDefault : IGameManager
 		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
+		/* 
 		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
 		if( background != LugusResources.use.errorAudio ) 
 		{
 			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
 		}
+		*/
 
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
@@ -377,7 +379,7 @@ public class RunnerManagerDefault : IGameManager
 		Debug.Log ("Stopping Runner game " + (timeSpent + (Time.time - startTime)) + " - " + pickupCount);
 	}
 
-	public int pickupsPerSecondConversion = 1; // how many pickups a user should score before he gets 1 second added or subtracted from his timescore
+	//public int pickupsPerSecondConversion = 1; // how many pickups a user should score before he gets 1 second added or subtracted from his timescore
 
 	protected IEnumerator ScoreAnimationRoutine()
 	{
@@ -396,12 +398,29 @@ public class RunnerManagerDefault : IGameManager
 		HUDManager.use.LevelEndScreen.Counter6.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter6.SetValue(0);
 
+		// this is for Endless runner
+		// there, we just take the time as score
 		float timeScore = Mathf.FloorToInt(timeSpent + (Time.time - startTime));
+
 
 
 		HUDManager.use.LevelEndScreen.Show(true);
 		HUDManager.use.LevelEndScreen.Counter1.SetValue( timeScore, true );
 		HUDManager.use.LevelEndScreen.Counter2.SetValue( pickupCount, true );
+		 
+		// for fixed distance levels, we want a HIGHscore, but the goal is to reach the end as quickly as possible...
+		// so we need to convert low numbers to high scores
+		// approach: 
+		// - 0s is 10.000 points
+		// - every second spent is -50 points
+		// - every enemy hit was 5 seconds extra, so basically -250 points
+		// - every feather counts for 50 points at the end (so 1 feather = win 1 second back. 5 seconds = 1 enemy hit)
+		if( gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			timeScore = 10000 - (timeScore * 50);
+		}
+
+		timeScore = Mathf.Max (0.0f, timeScore); // prevent going under 0
 
 		yield return new WaitForSeconds( Mathf.Max(HUDManager.use.LevelEndScreen.Counter1.animationTime, HUDManager.use.LevelEndScreen.Counter2.animationTime) + 1.0f );
 
@@ -416,29 +435,66 @@ public class RunnerManagerDefault : IGameManager
 
 		yield return new WaitForSeconds( 1.5f + 1.0f);
 
-		float timePerItem = 0.1f;
-		float maxTotalTime = 3.0f;
-		if( pickupCount * timePerItem > maxTotalTime )
-			timePerItem = maxTotalTime / pickupCount;
+		int pickupsPerBatch = 1;
 
-		int convertedPickupCount = Mathf.FloorToInt(pickupCount / pickupsPerSecondConversion);
+		float minTimePerItem = 0.3f;
+		float timePerItem = minTimePerItem;
+		float totalTime = 3.0f;
+		int batchCount = pickupCount;
 
-		for( int i = 0; i < convertedPickupCount; ++i )
+		int restValue = 0;
+
+		if( (totalTime / pickupCount) < minTimePerItem )
 		{
+			// too many pickups to process them one by one (would go over totalTime)
+			// group them into batches of pickups, so we retain the minTimePerItem and totalTime
+			batchCount = Mathf.RoundToInt( totalTime / minTimePerItem );
+			pickupsPerBatch = Mathf.CeilToInt( ( (float) pickupCount ) / ( (float) batchCount) ); 
+			
+			Debug.LogError ("SCORE PICKUPS 1 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
 
-			HUDManager.use.LevelEndScreen.Counter2.AddValue( -pickupsPerSecondConversion, true );
+			if( pickupsPerBatch * batchCount > pickupCount )
+			{
+				// ex. 26 pickups, batchCount = 15 -> ceiled pickupsPerBatch is 2, but there are no 30 pickups
+				// so -> reduce pickups per batch and use a different approach for the rest value
+				pickupsPerBatch -= 1;
+				pickupsPerBatch = Mathf.Max (1, pickupsPerBatch); // make sure it's never 0. Shouldn't be necessary, but do it just in case ;)
 
-			float score = -1.0f; // DISTANCE = pickups give lower time = better
-			if( gameType == KikaAndBob.RunnerGameType.Endless )
+				restValue = pickupCount - (batchCount * pickupsPerBatch);
+
+				if( restValue < 0 )
+				{
+					// once again: shouldn't happen, but if it does...
+					Debug.LogError(transform.Path () + " : Rest value was < 0 : " + restValue + " // " + pickupCount + " - (" + batchCount + " * " + pickupsPerBatch );
+					restValue = 0;
+				}
+			} 
+
+			Debug.LogError ("SCORE PICKUPS 2 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
+		} 
+		else
+		{ 
+			timePerItem = totalTime / pickupCount; // prolongue the timePerItem a little if possible
+		}
+
+		for( int i = 0; i < batchCount; ++i )
+		{ 
+
+			HUDManager.use.LevelEndScreen.Counter2.AddValue( -pickupsPerBatch, true );
+
+			float score = 50.0f; // DISTANCE 
+			if( gameType == KikaAndBob.RunnerGameType.Endless ) 
 			{
 				// ENDLESS: picups give more time (longer untill death) = better
-				score = 1.0f;
+				score = 1.0f; 
 			}
-			 
+
+			score *= pickupsPerBatch;
+
 
 			Vector3 position = HUDManager.use.LevelEndScreen.Counter2.transform.position.xAdd ( Random.Range(-1.0f, 1.0f) ).yAdd( 0.3f );
 
-			ScoreVisualizer
+			ScoreVisualizer 
 				.Score(KikaAndBob.CommodityType.Time, score )
 				.Position( position )
 				.HUDElement( HUDManager.use.LevelEndScreen.Counter6 )
@@ -448,12 +504,30 @@ public class RunnerManagerDefault : IGameManager
 				.MinValue(0)
 				.Execute();
 
-			// sometimes we get stuck on 1 or 2 (because of the FloorToInt)
-			if( i == (convertedPickupCount - 1) )
+
+			// now we've done all the batches, we might have to process the resting values
+			if( (i == (batchCount - 1)) && restValue > 0 )
+			{
+				i = -1; // account for the ++i at the end of this loop: effectively restart it
+				batchCount = restValue;
+				pickupsPerBatch = 1;
+				timePerItem = minTimePerItem; 
+
+				restValue = 0;
+
+				Debug.LogError("RESET THE LOOP " + i + " //" + batchCount);
+			}
+
+			Debug.Log("LOOP score " + i + " // " + score); 
+
+			/*
+			if( i == (batchCount - 1) ) 
 			{
 				HUDManager.use.LevelEndScreen.Counter2.SetValue(0);
 			}
+			*/
 
+			
 			yield return new WaitForSeconds( timePerItem );
 		}
 
@@ -469,11 +543,11 @@ public class RunnerManagerDefault : IGameManager
 	protected void Start () 
 	{
 		SetupGlobal();
-	}
+	} 
 	
 	protected void Update () 
 	{
-		/*
+
 		if( LugusInput.use.Key( KeyCode.S) )
 		{
 			timeSpent = Random.Range(50, 100);
@@ -483,7 +557,7 @@ public class RunnerManagerDefault : IGameManager
 
 			StopGame();
 		}  
-		*/
+
 	}
 
 	protected void OnGUI()

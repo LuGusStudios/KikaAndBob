@@ -73,10 +73,10 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 
 		// in brazil, the camera is moving at at constant speed
 		// the speed here is much lower than that of other runners!!!!
-		character.speedRange = new DataRange(5,8);
+		character.speedRange = new DataRange(6,8);
 		character.timeToMaxSpeed = 60; 
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f ); 
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.5f, 1.0f ); 
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		
 		RunnerManager.use.targetDistance = 400.0f;
@@ -91,7 +91,7 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 		character.speedRange = new DataRange(6,9);
 		character.timeToMaxSpeed = 120;
 		RunnerInteractionManager.use.timeToMax = 120;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.5f, 1.0f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		
 		RunnerManager.use.targetDistance = 800.0f;
@@ -103,10 +103,10 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 		
 		// in brazil, the camera is moving at at constant speed
 		// the speed here is much lower than that of other runners!!!!
-		character.speedRange = new DataRange(6,11);
-		character.timeToMaxSpeed = 60;
+		character.speedRange = new DataRange(6,10); 
+		character.timeToMaxSpeed = 60; 
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.5f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.3f, 1.0f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here

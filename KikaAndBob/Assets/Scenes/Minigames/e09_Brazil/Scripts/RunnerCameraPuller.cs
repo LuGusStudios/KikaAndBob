@@ -67,6 +67,7 @@ public class RunnerCameraPuller : LugusSingletonExisting<RunnerCameraPuller>
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
+		startTime = Time.time;
 	}
 	
 	public void SetupGlobal()
