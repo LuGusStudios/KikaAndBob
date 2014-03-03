@@ -451,7 +451,7 @@ public class RunnerManagerDefault : IGameManager
 			batchCount = Mathf.RoundToInt( totalTime / minTimePerItem );
 			pickupsPerBatch = Mathf.CeilToInt( ( (float) pickupCount ) / ( (float) batchCount) ); 
 			
-			Debug.LogError ("SCORE PICKUPS 1 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
+			//Debug.LogError ("SCORE PICKUPS 1 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
 
 			if( pickupsPerBatch * batchCount > pickupCount )
 			{
@@ -470,17 +470,21 @@ public class RunnerManagerDefault : IGameManager
 				}
 			} 
 
-			Debug.LogError ("SCORE PICKUPS 2 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
+			//Debug.LogError ("SCORE PICKUPS 2 : " + pickupCount + " pickups : " + batchCount + " batches with "+ pickupsPerBatch + " per batch and rest " +  restValue); 
 		} 
-		else
+		else 
 		{ 
 			timePerItem = totalTime / pickupCount; // prolongue the timePerItem a little if possible
 		}
 
 		for( int i = 0; i < batchCount; ++i )
 		{ 
+			
+			//Debug.Log("LOOP STart " + i + " // " + batchCount + " // per batch " + pickupsPerBatch); 
 
-			HUDManager.use.LevelEndScreen.Counter2.AddValue( -pickupsPerBatch, true );
+			// note: this should not animate the counter.
+			// otherwhise, if the timePerItem < counterAnimationTime, we can sometimes see jumpy values
+			HUDManager.use.LevelEndScreen.Counter2.AddValue( -pickupsPerBatch, false );
 
 			float score = 50.0f; // DISTANCE 
 			if( gameType == KikaAndBob.RunnerGameType.Endless ) 
@@ -515,10 +519,10 @@ public class RunnerManagerDefault : IGameManager
 
 				restValue = 0;
 
-				Debug.LogError("RESET THE LOOP " + i + " //" + batchCount);
+				//Debug.LogError("RESET THE LOOP " + i + " //" + batchCount);
 			}
 
-			Debug.Log("LOOP score " + i + " // " + score); 
+			//Debug.Log("LOOP score " + i + " // " + score); 
 
 			/*
 			if( i == (batchCount - 1) ) 
@@ -553,7 +557,7 @@ public class RunnerManagerDefault : IGameManager
 			timeSpent = Random.Range(50, 100);
 			startTime = Time.time - Random.Range(50, 100);
 
-			pickupCount = Random.Range(10, 50);
+			pickupCount = Random.Range(20, 50);
 
 			StopGame();
 		}  
