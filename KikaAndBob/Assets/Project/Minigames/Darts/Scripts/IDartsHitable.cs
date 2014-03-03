@@ -79,7 +79,7 @@ public abstract class IDartsHitable : MonoBehaviour
 	public abstract void Show();
 	public abstract void Hide();
 
-	// standard the same as Hide() - can be used to define a "fast" hide method, e.g. not animated
+	// standard the same as Hide() - can be used to define a "fast" hide method, e.g. not animated 
 	public virtual void Disable()
 	{
 		Hide();
