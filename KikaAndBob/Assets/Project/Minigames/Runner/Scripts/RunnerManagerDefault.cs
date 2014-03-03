@@ -290,8 +290,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		/* 
@@ -415,6 +415,15 @@ public class RunnerManagerDefault : IGameManager
 		// - every second spent is -50 points
 		// - every enemy hit was 5 seconds extra, so basically -250 points
 		// - every feather counts for 50 points at the end (so 1 feather = win 1 second back. 5 seconds = 1 enemy hit)
+
+		/*
+		 * target is 200s
+
+		0 sec = 10.000 punten
+		elke 1 sec = -50 punten?
+		elke hit = 5 sec bij = -250 punten
+		elke feather = + 50 punten
+		*/
 		if( gameType == KikaAndBob.RunnerGameType.Distance )
 		{
 			timeScore = 10000 - (timeScore * 50);

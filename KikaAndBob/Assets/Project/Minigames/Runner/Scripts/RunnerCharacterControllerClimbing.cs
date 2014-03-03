@@ -153,14 +153,16 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 		if( right )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 		else if( left )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed );
-			this.transform.localScale = originalScale;
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
+			this.transform.localScale = originalScale; 
 		}
+
+		horizontalSpeedBoost = 1.0f;
 
 		// make sure the character doesn't leave the gameplay area
 		// normally, we would do this with colliders
@@ -319,16 +321,31 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public bool upDisabled = false;
 	public bool downDisabled = false;
 
+	public float horizontalSpeedBoost = 1.0f;
+	public float leftStartTime = -1.0f; 
+	public float rightStartTime = -1.0f; 
+
 	public void Update()
 	{
 		if( !leftDisabled )
 		{
 			if( LugusInput.use.Key(KeyCode.LeftArrow) )
 			{
+				if( !left && (Time.time - leftStartTime < 0.3f) )
+				{
+					// dash to the left
+					Debug.LogWarning("DASH LEFT");
+					horizontalSpeedBoost = 500.0f;
+				}
+
+				leftStartTime = Time.time;
+
 				left = true;
 			}
 			else
 			{
+				//leftStartTime = -1.0f;
+
 				left = false;
 			}
 		}
@@ -337,6 +354,15 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		{
 			if( LugusInput.use.Key(KeyCode.RightArrow) )
 			{
+				if( !right && (Time.time - rightStartTime < 0.3f) )
+				{
+					// dash to the right
+					Debug.LogWarning("DASH RIGHT");
+					horizontalSpeedBoost = 500.0f;
+				}
+				
+				rightStartTime = Time.time;
+
 				right = true;
 			}
 			else
