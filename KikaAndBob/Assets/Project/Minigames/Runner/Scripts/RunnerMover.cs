@@ -14,6 +14,8 @@ public class RunnerMover : MonoBehaviour
 	protected RunnerInteractionManager directionStore = null;
 	protected GameObject character = null;
 
+	protected IRunnerCharacterController_FasterSlower controller = null;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -27,6 +29,11 @@ public class RunnerMover : MonoBehaviour
 
 		if( character == null )
 			character = ( (MonoBehaviour) RunnerCharacterController.use).gameObject;
+
+		if( controller == null )
+		{
+			controller = RunnerCharacterController.fasterSlower;
+		}
 	}
 	
 	protected void Awake()
@@ -46,10 +53,10 @@ public class RunnerMover : MonoBehaviour
 			float useSpeed = speed;
 			if( adjustForPlayerSpeed )
 			{
-				if( RunnerCharacterControllerFasterSlower.Exists() )
+				if( controller != null )//RunnerCharacterControllerFasterSlower.Exists() )
 				{
-					RunnerCharacterControllerFasterSlower c = RunnerCharacterControllerFasterSlower.use;
-					useSpeed = speed * c.SpeedRange().ValueFromPercentage( c.speedPercentage );
+					IRunnerCharacterController_FasterSlower c = controller;//RunnerCharacterController.fasterSlower;
+					useSpeed = speed * c.SpeedRange().ValueFromPercentage( c.SpeedPercentage() );
 				}
 			}
 

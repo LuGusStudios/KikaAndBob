@@ -48,6 +48,9 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 
 	public void OnSpeedTypeChange(SpeedType oldType, SpeedType newType)
 	{
+		if( !this.enabled )
+			return;
+
 		if( newType == SpeedType.NORMAL )
 		{
 			PlayAnimation( normalAnimation );
@@ -69,6 +72,9 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 
 	public void OnHit(RunnerPickup pickup)
 	{
+		if( !this.enabled )
+			return;
+
 		if( pickup == null || pickup.negative )
 		{
 			LugusCoroutines.use.StartRoutine( HitRoutine(pickup) );
@@ -88,6 +94,9 @@ public class RunnerCharacterAnimatorFasterSlower : RunnerCharacterAnimator
 
 	protected IEnumerator HitRoutine(RunnerPickup pickup)
 	{
+		if( !this.enabled )
+			yield break;
+
 		//Debug.LogError("HITROUTINE FASTERSLOWER");
 		LugusCoroutines.use.StartRoutine( SmoothMovesUtil.Blink(animationContainers, Color.red, 1.5f, 5) );
 		yield break;

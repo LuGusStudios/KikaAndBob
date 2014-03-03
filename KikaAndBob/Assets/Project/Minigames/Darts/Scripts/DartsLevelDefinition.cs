@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class DartsLevelDefinition : ScriptableObject 
 {
+	public float levelDuration = 0.0f;
+	public int minimumScore = 0;
+	public string backgroundMusicName = "";
+
 	public static DartsLevelDefinition FromXML(string rawData)
 	{
 		TinyXmlReader parser = new TinyXmlReader(rawData);
@@ -47,6 +51,15 @@ public class DartsLevelDefinition : ScriptableObject
 					case "Group":
 						groups.Add(DartsGroupDefinition.FromXML(parser));
 						break;
+					case "BackgroundMusicName":
+					level.backgroundMusicName = parser.content;
+						break;
+					case "LevelDuration":
+						level.levelDuration = float.Parse(parser.content);
+						break;
+					case "MinimumScore":
+						level.minimumScore = int.Parse(parser.content);
+						break;
 				}
 			}
 		}
@@ -66,6 +79,13 @@ public class DartsLevelDefinition : ScriptableObject
 		}
 
 		rawData += "<Level>\r\n";
+
+		rawData += "\t<BackgroundMusicName>" + level.backgroundMusicName + "</BackgroundMusicName>\r\n";
+
+		rawData += "\t<LevelDuration>" + level.levelDuration.ToString() + "</LevelDuration>\r\n";
+
+		rawData += "\t<MinimumScore>" + level.minimumScore.ToString() + "</MinimumScore>\r\n";
+
 		rawData += "\t<Groups>\r\n";
 		foreach (DartsGroupDefinition group in level.groupDefinitions)
 		{
@@ -140,6 +160,9 @@ public class DartsGroupDefinition
 					case "AvoidRepeat":
 						group.avoidRepeat = bool.Parse(parser.content.Trim());
 						break;
+					case "Score":
+						group.score = int.Parse(parser.content.Trim());
+						break;
 				}
 			}
 		}
@@ -164,12 +187,14 @@ public class DartsGroupDefinition
 
 		rawData += tabs + "<Group>\r\n";
 		rawData += tabs + "\t<ID>" + group.id + "</ID>\r\n";
+		rawData += tabs + "\t<ItemsOnScreen>" + group.itemsOnScreen.ToString() + "</ItemsOnScreen>\r\n";
 		rawData += tabs + "\t<MinTimeBetweenShows>" + group.minTimeBetweenShows.ToString() + "</MinTimeBetweenShows>\r\n";
 		rawData += tabs + "\t<AutoHideTimes>\r\n";
 		rawData += tabs + "\t\t<Min>" + group.autoHideTimes.from.ToString() + "</Min>\r\n";
 		rawData += tabs + "\t\t<Max>" + group.autoHideTimes.to.ToString() + "</Max>\r\n";
 		rawData += tabs + "\t</AutoHideTimes>\r\n";
 		rawData += tabs + "\t<AvoidRepeat>" + group.avoidRepeat.ToString() + "</AvoidRepeat>\r\n";
+		rawData += tabs + "\t<Score>" + group.score.ToString() + "</Score>\r\n";
 		rawData += tabs + "</Group>\r\n";
 
 		return rawData;
@@ -178,6 +203,7 @@ public class DartsGroupDefinition
 	public string id = "";
 	public float itemsOnScreen = 1.0f;
 	public float minTimeBetweenShows = 1.0f;
-	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
+	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f); 
 	public bool avoidRepeat = false;
+	public int score = 100;
 }
