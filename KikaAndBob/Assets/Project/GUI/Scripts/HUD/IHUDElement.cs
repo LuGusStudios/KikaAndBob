@@ -30,6 +30,8 @@ public abstract class IHUDElement : MonoBehaviour
 		if( icon == null )
 			return;
 
+		icon.enabled = true;
+
 		string iconKey = "";
 		if( _commodity == KikaAndBob.CommodityType.Money )
 			iconKey = "IconMoney01";
@@ -43,6 +45,10 @@ public abstract class IHUDElement : MonoBehaviour
 			iconKey = "IconScore01";
 		else if( _commodity == KikaAndBob.CommodityType.Distance )
 			iconKey = "IconSpeed01";
+		else if( _commodity == KikaAndBob.CommodityType.Custom )
+		{
+			icon.enabled = false;
+		}
 
 		//Debug.LogError("Setting icon " + iconKey + " for " + _commodity );
 

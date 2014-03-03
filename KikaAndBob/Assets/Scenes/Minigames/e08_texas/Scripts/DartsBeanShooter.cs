@@ -15,6 +15,7 @@ public class DartsBeanShooter : MonoBehaviour
 
 	protected BoneAnimation bobAnimation = null;
 	protected Transform spitStart = null;
+	protected GameObject bulletHitParticles = null;
 	
 	protected bool shooting = false;
 	
@@ -54,6 +55,15 @@ public class DartsBeanShooter : MonoBehaviour
 		if( spitStart == null )
 		{
 			Debug.LogError(name + " : No spit start transform found for this shooter!");
+		}
+
+		if (bulletHitParticles == null)
+		{
+			bulletHitParticles = transform.FindChild("HitParticles").gameObject;
+		}
+		if (bulletHitParticles == null)
+		{
+			Debug.LogError(name + " : No hit particles found for this shooter!");
 		}
 	}
 	
@@ -160,14 +170,19 @@ public class DartsBeanShooter : MonoBehaviour
 			//yield return new WaitForSeconds(15.0f);
 			
 
-			
-			// TODO: GetComponent<DartsHitable>.OnHit()
 			hitable.OnHit();
+		
+			GameObject hitParticlesSpawn = (GameObject)Instantiate(bulletHitParticles); 
+			hitParticlesSpawn.transform.position = worldTarget;
+			hitParticlesSpawn.transform.localScale = Vector3.one;	// for neatness, the particle effect prefab is now parented to Bob. However this means Bob's scale also affects it, which will screw with the effect when it's instantiated.
+			hitParticlesSpawn.GetComponent<ParticleSystem>().Play();
+
+			Destroy(hitParticlesSpawn, 1.5f);
 		}
 		
 		shooting = false; // the shooter can be used again for another bullet
 
-//		while(bobAnimation.IsPlaying(shootAnimation))
+//		while(bobAnimation.IsPlaying(shootAnimation)) 
 //		{
 //			yield return new WaitForEndOfFrame();
 //		}
