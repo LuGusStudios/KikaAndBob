@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
 	public Sprite[] blockDecorations = null;
+    public Sprite[] OpenDecorations = null;
+    public float openDecorationScale = 1.5f;
 	public Sprite pickupSprite = null;
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
@@ -506,13 +509,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		if (levelTiles == null)
 			return;
-
+       
 		foreach(PacmanTile tile in levelTiles)
 		{
 			if (tile == null)
 				continue;
-
-			if (tile.tileType == PacmanTile.TileType.Collide)
+		    
+            // randomly add a tile decorator to some tiles
+            if (Random.value > 0.85f && OpenDecorations.Length > 0)
+            {
+                GameObject decoration = new GameObject(tile.gridIndices.ToString() + "Decoration");
+                decoration.transform.localScale = decoration.transform.localScale * wallTileScaleFactor;
+                decoration.transform.parent = levelParent;
+                decoration.transform.localPosition = new Vector3(tile.location.x * openDecorationScale + (width / 2 - (width * openDecorationScale) / 2),
+                    tile.location.y * openDecorationScale + ((height / 2) - (height * openDecorationScale) / 2), 5);
+                SpriteRenderer decorationSpriteRenderer = decoration.AddComponent<SpriteRenderer>();
+                decorationSpriteRenderer.sprite = OpenDecorations[Random.Range(0, OpenDecorations.Length)]; 
+            }
+		    if (tile.tileType == PacmanTile.TileType.Collide)
 			{
 				GameObject block = new GameObject(tile.gridIndices.ToString() + ": Block");
 
@@ -524,13 +538,16 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				SpriteRenderer spriteRenderer = block.AddComponent<SpriteRenderer>();
 				spriteRenderer.sprite = blockSprites[randomIndex];
 
-				GameObject shadow = new GameObject("Shadow");
-				shadow.transform.localScale = shadow.transform.localScale * wallTileScaleFactor;
-				shadow.transform.parent = block.transform;
-				shadow.transform.localPosition = new Vector3(0, 0, 1);
-				SpriteRenderer spriteRenderer2 = shadow.AddComponent<SpriteRenderer>();
-				spriteRenderer2.sprite = blockShadows[randomIndex];
-
+			    if (blockShadows.Length > 0)
+			    {
+                    GameObject shadow = new GameObject("Shadow");
+                    shadow.transform.localScale = shadow.transform.localScale * wallTileScaleFactor;
+                    shadow.transform.parent = block.transform;
+                    shadow.transform.localPosition = new Vector3(0, 0, 1);
+                    SpriteRenderer spriteRenderer2 = shadow.AddComponent<SpriteRenderer>();
+                    spriteRenderer2.sprite = blockShadows[randomIndex];
+			    }
+				
 				tile.rendered = block;
 
 				// also randomly add a tile decorator to some tiles

@@ -4,7 +4,6 @@ using System.Collections;
 
 public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 {
-    protected bool butlerFound = false;
     protected List<PacmanTile> FollowTiles = new List<PacmanTile>(); 
     public override void SetUpLocal()
     {
@@ -53,13 +52,14 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
         // is player near
         DetectPlayer();
-
+        
         // move
         UpdateMovement();
 
         //when player is found and not disguised and hasn't been already seen
         if (playerFound && !player.poweredUp && !detectedRoutineRunning)
         {
+            Debug.Log("PLAYER FOUND");
             PlayerSeenEffect();
             //playerChaseCount = 0;
             ResetMovement();
@@ -67,7 +67,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             MoveTo(FindTileClosestTo(targetTile));
             DestinationReached();
 
-        }
+        } 
     }
 
     public override void Reset()
@@ -79,6 +79,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
     public override void DestinationReached()
     {
+        DoCurrentTileBehavior();
 
 		// if the player was detected, chase him, and the player has no power up
 		if (playerFound && !player.poweredUp)
@@ -86,7 +87,6 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 			PlayerSeenEffect();
 			playerChaseCounter = 0;
 			targetTile = player.currentTile;
-		    butlerFound = false;
             FollowTiles.Add(targetTile);
 		    //Debug.Log("Player detected! Giving chase.");
 		}
@@ -95,7 +95,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             //// if enemy has only just lost sight of the player, try chasing him for a number of tiles (playerChaseCount)
             if (playerChaseCounter < playerChaseCount && !player.poweredUp)
             {
-                Debug.Log("Player lost! Trying to find them back.");
+                Debug.Log("Player lost! Trying to find them back. playerCounter " + playerChaseCounter );
 
                 //if player is hiding, randomize search
                 if (player.currentTile.tileType == PacmanTile.TileType.Hide)
@@ -121,6 +121,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 			    detectedRoutineRunning = false;
 				// turn off player sighted effect TO DO: Remove
 				transform.localScale = originalScale;
+                //Follow the player followed path back
 			    if (FollowTiles.Count > 0)
 			    {
 			        targetTile = FollowTiles[FollowTiles.Count - 1];
@@ -184,8 +185,47 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
         }   
     }
+
+    protected virtual void DoCurrentTileBehavior()
+    {
+        // if we just teleported and hit the next non-teleport tile, we're done teleporting
+        if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
+        {
+            alreadyTeleported = false;
+        }
+        if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
+        {
+            LugusCoroutines.use.StartRoutine(TeleportRoutine());
+        }
+    }
+    protected override IEnumerator TeleportRoutine()
+    {
+        alreadyTeleported = true;
+
+        PacmanTile targetTile = null;
+
+        foreach (PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+        {
+            if (currentTile != tile)
+            {
+                targetTile = tile;
+                break;
+            }
+        }
+
+        if (targetTile == null)
+        {
+            Debug.LogError("No other teleport tile found!");
+            yield break;
+        }
+
+        transform.localPosition = targetTile.location.v3();
+        currentTile = targetTile; 
+        DestinationReached();
+    }
     protected override void DetectPlayer()
     {
+        
         base.DetectPlayer();
         //check further from base when no player has found in direction
         if (!playerFound)
@@ -222,5 +262,17 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
         detectedRoutineRunning = true;
     }
+    public new static bool IsEnemyWalkable(PacmanTile inspectedTile)
+    {
+        if (inspectedTile.tileType == PacmanTile.TileType.Collide ||
+            inspectedTile.tileType == PacmanTile.TileType.Locked ||
+            inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
+            inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
+            inspectedTile.tileType == PacmanTile.TileType.Hide ||
+            inspectedTile.tileType == PacmanTile.TileType.Teleport
+            )
+            return false;
 
+        return true;
+    }
 }
