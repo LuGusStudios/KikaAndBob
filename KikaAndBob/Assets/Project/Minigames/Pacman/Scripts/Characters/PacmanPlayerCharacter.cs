@@ -5,7 +5,7 @@ using SmoothMoves;
 public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public bool poweredUp = false;
-	public float powerupDuration = 10;
+	public float powerupDuration = 10.0f;
 
 	protected bool allowControl = true;
 	protected bool cutScene = false;
@@ -15,6 +15,9 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected AudioClip walkSoundClip = null;
 	protected BoneAnimation[] boneAnimations = null;
 	protected ParticleSystem powerUpParticles = null;
+	protected ILugusCoroutineHandle powerUpRoutine = null;
+	protected ILugusCoroutineHandle powerUpBlinkRoutine = null;
+	protected float powerUpDurationLeft = 0.0f;
 
 
 	public override void SetUpLocal()
@@ -241,7 +244,20 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			currentTile.tileType = PacmanTile.TileType.Open;
 			if (currentTile.rendered != null)
 				currentTile.rendered.SetActive(false);
-			LugusCoroutines.use.StartRoutine(PowerupRoutine());
+
+			powerUpDurationLeft += powerupDuration;
+
+			if (powerUpRoutine == null || !powerUpRoutine.Running)
+			{
+				powerUpRoutine = LugusCoroutines.use.StartRoutine(PowerupRoutine());
+			}
+
+			// if this character is still blinking, stop
+			if (powerUpBlinkRoutine != null && powerUpBlinkRoutine.Running)
+			{
+				powerUpBlinkRoutine.StopRoutine();
+				SmoothMovesUtil.SetColor(boneAnimations, Color.white);
+			}
 		}
 		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
 		{
@@ -362,12 +378,36 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (powerUpParticles != null)
 		{
 			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(powerUpParticles);
+			spawnedParticles.transform.position = this.transform.position;
 
 			spawnedParticles.Play();
 			Destroy(spawnedParticles.gameObject, 2.0f);
 		}
 
-		yield return new WaitForSeconds(powerupDuration);
+		// this way, we can add on to powerUpDurationLeft at will to keep it going
+		while (powerUpDurationLeft > 0.0f)
+		{
+			yield return new WaitForEndOfFrame();
+
+			powerUpDurationLeft -= Time.deltaTime;
+
+			if (powerUpDurationLeft <= 3.0f)
+			{
+				if (powerUpBlinkRoutine == null || !powerUpBlinkRoutine.Running)
+				{
+					powerUpBlinkRoutine = LugusCoroutines.use.StartRoutine(SmoothMovesUtil.Blink(boneAnimations, Color.blue, 3.0f, 5));
+				}
+			}
+		}
+
+		if (powerUpParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(powerUpParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
 
 		poweredUp = false;
 	}

@@ -21,6 +21,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	protected PacmanPlayerCharacter player = null;
 	protected iTweener playerDetectedItweener = null;
 	protected iTweener frightenedItweener = null;
+	protected ParticleSystem defeatParticles = null;
+	protected ParticleSystem frightenedParticles = null;
+
 	private bool debugPathFinding = false;		// set true to mark targetTile in game (Debugging)
 
 	protected Transform targetMarker = null;
@@ -44,6 +47,34 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		if (player == null)
 			Debug.Log("Could not find player.");
+
+		if (defeatParticles == null)
+		{
+			Transform child = transform.FindChild("DefeatParticles");
+			if (child != null)
+			{
+				defeatParticles = child.GetComponent<ParticleSystem>();
+				
+				if (defeatParticles == null)
+				{
+					Debug.LogError("PacmanEnemyCharacter: Missing defeat particles!");
+				}
+			}
+		}
+
+		if (frightenedParticles == null)
+		{
+			Transform child = transform.FindChild("FrightenedParticles");
+			if (child != null)
+			{
+				frightenedParticles = child.GetComponent<ParticleSystem>();
+				
+				if (frightenedParticles == null)
+				{
+					Debug.LogError("PacmanEnemyCharacter: Missing frightened particles!");
+				}
+			}
+		}
 
 		#if UNITY_EDITOR	// handy for debugging - not to be included in build
 		// used for visualizing enemy target tile
@@ -253,6 +284,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Frightened)
 			return;
 
+		frightenedParticles.Play();
+
 		characterAnimator.PlayAnimation(characterAnimator.runScared);
 
 		enemyState = EnemyState.Frightened;
@@ -280,7 +313,6 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 
 		// instatiate the particles, because we don't want them to scale or be affected by anything similar taking place on the enemy proper
-		ParticleSystem defeatParticles = GetComponentInChildren<ParticleSystem>();
 		if (defeatParticles != null)
 		{
 			ParticleSystem particlesSpawn = (ParticleSystem)Instantiate(defeatParticles);
