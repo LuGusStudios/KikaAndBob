@@ -15,6 +15,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected AudioClip walkSoundClip = null;
 	protected BoneAnimation[] boneAnimations = null;
 	protected ParticleSystem powerUpParticles = null;
+	protected ParticleSystem teleportParticles = null;	// TO DO: Remove from here.
 	protected ILugusCoroutineHandle powerUpRoutine = null;
 	protected ILugusCoroutineHandle powerUpBlinkRoutine = null;
 	protected float powerUpDurationLeft = 0.0f;
@@ -49,6 +50,21 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 				if (powerUpParticles == null)
 				{
 					Debug.LogError("PacmanCharacter: Missing power up particles!");
+				}
+			}
+		}
+
+		if (teleportParticles == null)
+		{
+			GameObject teleportParticlesObject = PacmanLevelManager.use.GetPrefab("TeleportParticles");
+			
+			if (teleportParticlesObject != null)
+			{
+				teleportParticles = teleportParticlesObject.GetComponent<ParticleSystem>();
+				
+				if (teleportParticles == null)
+				{
+					Debug.LogError("PacmanCharacter: Missing teleport particles!");
 				}
 			}
 		}
@@ -123,6 +139,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
 		DetectCurrentTile();
 		ResetMovement();
+		moveTargetTile = null;
 		PlaceAtSpawnLocation();
 	}
 
@@ -288,6 +305,17 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			yield break;
 		}
 
+		if (teleportParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
+
+
+
 		// this idea is not what we want, because it links teleports in a circle (always to the next), but not in two directions (i.e. also to the previous one)
 //		int indexCurrentTeleport = PacmanLevelManager.use.teleportTiles.IndexOf(currentTile);
 //		int	indexCounterpart = indexCurrentTeleport  + 1;
@@ -311,9 +339,18 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			Debug.LogError("No other teleport tile found!");
 			yield break;
 		}
-
+		
 		transform.localPosition = targetTile.location.v3();
 
+		if (teleportParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
+		
 		DestinationReached();
 	}
 

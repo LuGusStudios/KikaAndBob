@@ -284,6 +284,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Frightened)
 			return;
 
+		// flip their direction to make the scorpions run in fear
+		currentDirection = PacmanLevelManager.use.GetOppositeDirection(currentDirection);
+
 		frightenedParticles.Play();
 
 		characterAnimator.PlayAnimation(characterAnimator.runScared);
