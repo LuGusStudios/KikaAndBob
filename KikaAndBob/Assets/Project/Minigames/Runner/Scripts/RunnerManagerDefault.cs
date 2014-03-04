@@ -294,14 +294,6 @@ public class RunnerManagerDefault : IGameManager
 			RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
-		/* 
-		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
-		if( background != LugusResources.use.errorAudio ) 
-		{
-			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
-		}
-		*/
-
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
 		{
@@ -312,6 +304,12 @@ public class RunnerManagerDefault : IGameManager
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+			if( background != LugusResources.use.errorAudio ) 
+			{
+				LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+			}
 
 			StartGame();
 		}

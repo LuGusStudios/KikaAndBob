@@ -36,6 +36,9 @@ public class ThemeTransitioner_09Brazil : MonoBehaviour
 
 	protected void Update () 
 	{
+		if( !runnerManager.GameRunning )
+			return;
+
 		/*
 		if( phase == 0 && runnerManager.TraveledDistance > (runnerManager.targetDistance * 0.3f) )
 		{
