@@ -33,7 +33,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 	{
 		if (LugusInput.use.down && PacmanGameManager.use.GameRunning)
 		{
-			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+			if (moveTargetTile != null)// && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
 				return;
 
 			clickedTile = PacmanLevelManager.use.GetTileByClick(LugusInput.use.lastPoint);
@@ -146,7 +146,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	private void CheckArrowsContinuous()
 	{
-        if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport || alreadyTeleported)
+        if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)// || alreadyTeleported)
             return;
         
 		if (moving)
@@ -206,8 +206,9 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
             return;
         }
 		// if clicked tile was reached, success
-		if (currentTile == clickedTile )
+		if (currentTile == clickedTile)// || (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)) 
 		{
+            Debug.Log("Current clicked Tile has been reached");
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
@@ -312,9 +313,12 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
     protected override void MoveTo(PacmanTile target)
     {
         base.MoveTo(target);
-        if (currentTile.tileType == PacmanTile.TileType.Teleport)
-        {
-            clickedTile = currentTile;
-        }
+        //if (currentTile.tileType == PacmanTile.TileType.Teleport)
+        //{
+        //    clickedTile = currentTile;
+        //    ResetMovement();
+        //    DestinationReached();
+        //}
     }
+
 }

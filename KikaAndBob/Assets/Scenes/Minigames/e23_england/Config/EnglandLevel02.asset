@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Name: EnglandLevel02
   m_EditorClassIdentifier: 
   backgroundMusicName: VaticanBackground
-  width: 8
-  height: 8
-  cameraTracksPlayer: 0
-  level: xxxxxxxxxtoooooxxooooooxxooooooxxxxxxxxxoooooooootooooxooooooxxx
+  width: 9
+  height: 9
+  cameraTracksPlayer: 1
+  level: xxxxxxxxxxoooxoooxxoooxoooxxoooxoooxxxxxxxxxxxoooxoooxxoooxoooxxoooxoooxxxxxxxxxx
   characters:
   - id: Kika
     speed: 2
@@ -27,13 +27,27 @@ MonoBehaviour:
   - id: GuardPatrol02
     speed: 1
     xLocation: 1
-    yLocation: 4
+    yLocation: 5
     spawnDelay: 0
     startDirection: 2
     defaultTargetTiles:
-    - {x: 1, y: 4}
-    - {x: 1, y: 0}
+    - {x: 7, y: 1}
+    - {x: 5, y: 1}
   updaters: []
   tileItems:
-  - id: HidingSpot
-    tileCoordinates: {x: 0, y: 0}
+  - id: Teleport01
+    uniqueId: tp01
+    linkedId: tp02
+    tileCoordinates: {x: 2, y: 2}
+  - id: Teleport01
+    uniqueId: tp02
+    linkedId: tp03
+    tileCoordinates: {x: 2, y: 6}
+  - id: Teleport01
+    uniqueId: tp03
+    linkedId: tp04
+    tileCoordinates: {x: 6, y: 6}
+  - id: Teleport01
+    uniqueId: tp04
+    linkedId: tp01
+    tileCoordinates: {x: 6, y: 2}

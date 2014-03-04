@@ -200,10 +200,12 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected virtual void DoCurrentTileBehavior()
 	{
 		// if we just teleported and hit the next non-teleport tile, we're done teleporting
-		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
-		{
-			alreadyTeleported = false;
-		}
+
+        //Important! this need to be uncommented for egypt. Testing purposes for england!!!
+        //if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
+        //{
+        //    alreadyTeleported = false;
+        //}
 
 		// check all sorts things placed on this tile
 		foreach(GameObject go in currentTile.tileItems)
@@ -282,6 +284,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 
 		transform.localPosition = targetTile.location.v3();
+
+	    currentTile = targetTile;
 
 		DestinationReached();
 	}

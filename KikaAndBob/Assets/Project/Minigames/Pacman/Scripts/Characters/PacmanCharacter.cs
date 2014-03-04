@@ -17,7 +17,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected float movementDuration = 0;
 	public bool moving = false;
 	protected bool horizontalMovement = false;
-	protected bool alreadyTeleported = false;
+	public bool alreadyTeleported = false;
 
 	public PacmanTile currentTile = null;
 	protected PacmanTile startTile;

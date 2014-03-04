@@ -363,7 +363,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			// and we're a quarter level or less way from a teleport
 			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 			{
-				if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width * 0.25f)
+				if (Vector2.Distance(currentTile.location, tile.location) <= Vector2.Distance(currentTile.location,player.currentTile.location))
 				{
 					targetTile = tile;
 					break;

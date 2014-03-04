@@ -10,13 +10,13 @@
 		xpxxoxpxoxxox
 		xopooxoxoooox
 		xoxxxxoxxxxox
-		xooxoootoooox
+		xooxoooooooox
 		xxoxoxoxoxoxx
 		xooooooooxoox
 		xoxxxxoxxxxox
 		xooooxoxoooox
 		xooxoxoxoxxox
-		xooooxtxoooox
+		xooooxoxoooox
 		xxxxxxoxxxxxx
 	</Layout>
 	<Characters>
@@ -121,7 +121,7 @@
 			</TileCoordinates>
 		</TileItem>
 		<TileItem>
-			<ID>Gate01</ID>
+			<ID>Gate02</ID>
 			<TileCoordinates>
 				<X>6</X>
 				<Y>9</Y>
@@ -149,13 +149,6 @@
 			</TileCoordinates>
 		</TileItem>
 		<TileItem>
-			<ID>Trap</ID>
-			<TileCoordinates>
-				<X>9</X>
-				<Y>7</Y>
-			</TileCoordinates>
-		</TileItem>
-		<TileItem>
 			<ID>Gate01</ID>
 			<TileCoordinates>
 				<X>1</X>
@@ -163,17 +156,45 @@
 			</TileCoordinates>
 		</TileItem>
 		<TileItem>
-			<ID>Trap</ID>
-			<TileCoordinates>
-				<X>1</X>
-				<Y>2</Y>
-			</TileCoordinates>
-		</TileItem>
-		<TileItem>
 			<ID>HidingSpot</ID>
 			<TileCoordinates>
 				<X>7</X>
 				<Y>2</Y>
+			</TileCoordinates>
+		</TileItem>
+		<TileItem>
+			<ID>Teleport01</ID>
+			<UniqueID>tp01</UniqueID>
+			<LinkedID>tp02</LinkedID>
+			<TileCoordinates>
+				<X>6</X>
+				<Y>2</Y>
+			</TileCoordinates>
+		</TileItem>
+		<TileItem>
+			<ID>Teleport01</ID>
+			<UniqueID>tp02</UniqueID>
+			<LinkedID>tp01</LinkedID>
+			<TileCoordinates>
+				<X>7</X>
+				<Y>5</Y>
+			</TileCoordinates>
+		</TileItem>
+		<TileItem>
+			<ID>Door03</ID>
+			<LinkedID>GuardPatrol02</LinkedID>
+			<TileCoordinates>
+				<X>6</X>
+				<Y>8</Y>
+			</TileCoordinates>
+		</TileItem>
+		<TileItem>
+			<ID>Teleport01</ID>
+			<UniqueID>tp03</UniqueID>
+			<LinkedID>tp01</LinkedID>
+			<TileCoordinates>
+				<X>6</X>
+				<Y>5</Y>
 			</TileCoordinates>
 		</TileItem>
 	</TileItems>

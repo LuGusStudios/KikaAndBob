@@ -27,7 +27,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
-
+    
 	// MOVE TO SCRIPTABLE OBJECT 'THEME'?
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
@@ -64,7 +64,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public PacmanTile[,] levelTiles;
 	public List<PacmanTile> teleportTiles = new List<PacmanTile>();
-
+    public List<PacmanTileItem> tileItemScripts = new List<PacmanTileItem>();
 //	public delegate void OnLevelBuilt();
 //	public OnLevelBuilt onLevelBuilt;
 	
@@ -408,9 +408,18 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemScript != null)
 			{
 				tileItemScript.parentTile = targetTile;
+                if (!string.IsNullOrEmpty(definition.uniqueId) )
+			    {
+			        tileItemScript.uniqueId = definition.uniqueId;
+			    }
+			    if (!string.IsNullOrEmpty(definition.linkedId))
+			    {
+                    tileItemScript.linkedId = definition.linkedId;
+			    }
 				tileItemScript.Initialize();
+                tileItemScripts.Add(tileItemScript);
 			}
-
+            
 			targetTile.tileItems.Add(tileItem);
 		}
 	}

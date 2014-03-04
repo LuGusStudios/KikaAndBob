@@ -4,7 +4,7 @@ using System.Collections;
 
 public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 {
-    protected List<PacmanTile> FollowTiles = new List<PacmanTile>(); 
+    protected List<PacmanTile> FollowTiles = new List<PacmanTile>();
     public override void SetUpLocal()
     {
         base.SetUpLocal();
@@ -55,6 +55,8 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         
         // move
         UpdateMovement();
+
+        TryOpenDoor();
 
         //when player is found and not disguised and hasn't been already seen
         if (playerFound && !player.poweredUp && !detectedRoutineRunning)
@@ -188,6 +190,13 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
     protected virtual void DoCurrentTileBehavior()
     {
+        foreach (GameObject go in currentTile.tileItems)
+        {
+            if (go.GetComponent<PacmanTileItem>() != null)
+            {
+                go.GetComponent<PacmanTileItem>().OnEnter(this);
+            }
+        }
         // if we just teleported and hit the next non-teleport tile, we're done teleporting
         if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
         {
@@ -220,7 +229,9 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
 
         transform.localPosition = targetTile.location.v3();
+
         currentTile = targetTile; 
+
         DestinationReached();
     }
     protected override void DetectPlayer()
@@ -249,6 +260,22 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             playerFound = false;
         }
     }
+
+    protected virtual void TryOpenDoor()
+    {
+        foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(this.currentTile))
+        {
+            if (tile != null)
+            {
+                
+                // check if any players are on the currently inspected tile and moving
+                foreach (GameObject tileItem in tile.tileItems)
+                {
+                    tileItem.GetComponent<PacmanTileItem>().OnTryEnter(this);
+                }
+            }
+        }
+    }
     protected override void PlayerSeenEffect()
     {
         if (enemyState == EnemyState.Chasing)
@@ -262,17 +289,22 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
         detectedRoutineRunning = true;
     }
-    public new static bool IsEnemyWalkable(PacmanTile inspectedTile)
+    protected override void CheckTeleportProximity()
     {
-        if (inspectedTile.tileType == PacmanTile.TileType.Collide ||
-            inspectedTile.tileType == PacmanTile.TileType.Locked ||
-            inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
-            inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
-            inspectedTile.tileType == PacmanTile.TileType.Hide ||
-            inspectedTile.tileType == PacmanTile.TileType.Teleport
-            )
-            return false;
-
-        return true;
+        base.CheckTeleportProximity();
+        
+        // detect if it is more efficient to use a teleport than to find target tile directly
+        if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width * 0.5f) // if targetTile is (more than) half a level away in x distance
+        {
+            // and we're a quarter level or less way from a teleport
+            foreach (PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+            {
+                if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width * 0.25f)
+                {
+                    targetTile = tile;
+                    break;
+                }
+            }
+        }
     }
 }
