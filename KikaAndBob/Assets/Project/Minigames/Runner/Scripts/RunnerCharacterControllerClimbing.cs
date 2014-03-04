@@ -17,6 +17,8 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 	protected Vector3 originalScale = Vector3.zero;
 
+	public DataRange xEdges = new DataRange(-6.192653f, 8.181341f);
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -38,6 +40,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
+
+	public float SpeedPercentage(){ return speedPercentage; }
+	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
 
 	protected float startTime = -1.0f;
 
@@ -106,6 +111,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	
 	protected void FixedUpdate ()  
 	{
+		if( !this.enabled )
+			return;
+
 		/*
 		if( up )
 		{
@@ -145,13 +153,27 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 		if( right )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed );
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 		else if( left )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed );
-			this.transform.localScale = originalScale;
+			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
+			this.transform.localScale = originalScale; 
+		}
+
+		horizontalSpeedBoost = 1.0f;
+
+		// make sure the character doesn't leave the gameplay area
+		// normally, we would do this with colliders
+		// but sometimes we disable the collider of the character... so we have to resort to these foul methods
+		if( this.transform.position.x < xEdges.from )
+		{
+			this.transform.position = this.transform.position.x ( xEdges.from );
+		}
+		else if( this.transform.position.x > xEdges.to )
+		{
+			this.transform.position = this.transform.position.x ( xEdges.to );
 		}
 
 
@@ -226,7 +248,61 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		down = false;
 		up = true;
 
-		yield return new WaitForSeconds( 2.0f );
+		this.collider2D.enabled = false;
+
+		/*
+		// disable all blocking stones (under halfway?)
+		RunnerBlockingStone[] stones = LayerManager.use.groundLayer.transform.GetComponentsInChildren<RunnerBlockingStone>();
+		foreach( RunnerBlockingStone stone in stones )
+		{
+			stone.enabled = false;
+
+			if( stone.collider != null )
+				stone.collider.enabled = false;
+
+			if( stone.collider2D != null )
+				stone.collider2D.enabled = false;
+		}
+		*/
+
+
+		yield return new WaitForSeconds( 1.5f );
+
+		
+		this.collider2D.enabled = true;
+
+		// we can't just re-enable the character
+		// chances are we would land on top of another blocking collider and we would be stuck
+		// so: check around for other colliders that are too close and just disable them 
+		// this is not 100% "physically correct" but makes possible gameplay bugs a lot less likely
+
+		Collider2D[] stucks = Physics2D.OverlapCircleAll( this.transform.position.v2 (), 4 ); // character is about 2 units wide, so use double that as radius
+		foreach( Collider2D stuck in stucks )
+		{
+			if( stuck == this.collider2D )
+				continue;
+
+			//Debug.LogError("We got stuck in " + stuck.transform.Path() +  " so we disabled it");
+
+			// keep the positive pickups (feathers) enabled
+			// changed: makes no difference... our collider was disabled for 1.5s anyway, so we didn't pick it up anyhow... hmz
+			//RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
+			//if( pickup == null || pickup.positive == false )
+				stuck.enabled = false;
+
+			// disable the feathers -> we cannot pick them up anyway, would only confuse the player
+			RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
+			if( pickup != null && pickup.positive  )
+			{
+
+			}
+
+			// DEBUG, TODO: remove!
+			//if( stuck.GetComponent<SpriteRenderer>() )
+			//{
+			//	stuck.GetComponent<SpriteRenderer>().enabled = false;
+			//}
+		}
 
 		downDisabled = false;
 		upDisabled = false;
@@ -245,16 +321,31 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public bool upDisabled = false;
 	public bool downDisabled = false;
 
+	public float horizontalSpeedBoost = 1.0f;
+	public float leftStartTime = -1.0f; 
+	public float rightStartTime = -1.0f; 
+
 	public void Update()
 	{
 		if( !leftDisabled )
 		{
 			if( LugusInput.use.Key(KeyCode.LeftArrow) )
 			{
+				if( !left && (Time.time - leftStartTime < 0.3f) )
+				{
+					// dash to the left
+					Debug.LogWarning("DASH LEFT");
+					horizontalSpeedBoost = 500.0f;
+				}
+
+				leftStartTime = Time.time;
+
 				left = true;
 			}
 			else
 			{
+				//leftStartTime = -1.0f;
+
 				left = false;
 			}
 		}
@@ -263,6 +354,15 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		{
 			if( LugusInput.use.Key(KeyCode.RightArrow) )
 			{
+				if( !right && (Time.time - rightStartTime < 0.3f) )
+				{
+					// dash to the right
+					Debug.LogWarning("DASH RIGHT");
+					horizontalSpeedBoost = 500.0f;
+				}
+				
+				rightStartTime = Time.time;
+
 				right = true;
 			}
 			else

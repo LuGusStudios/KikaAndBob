@@ -7,6 +7,8 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 	public RunnerPickup pickup = null;
 	public GameObject character = null;
 
+	public bool allowCenterOfScreen = true;
+
 	public void SetupLocal()
 	{
 		pickup = GetComponent<RunnerPickup>();
@@ -38,14 +40,17 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		handle = LugusCoroutines.use.StartRoutine( AnnoyerRoutine() );
 	}
 
-	protected void OnHit(RunnerPickup pickup) 
+	public void OnHit(RunnerPickup pickup) 
 	{
 		// player hit us: de-activate and go out of the screen
 		
-		
-		handle.StopRoutine();
+		if( handle != null )
+		{
+			handle.StopRoutine();
+			handle = null;
 
-		LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+			LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+		}
 	}
 
 	protected Vector3 currentOffscreen = Vector3.zero;
@@ -79,7 +84,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		// if character most rightside: spawn left side
 		Vector3 characterScreenPos = LugusCamera.game.WorldToScreenPoint( character.transform.position );
 
-		Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
+		//Debug.Log ("CHARACTER SCREEN POS " + characterScreenPos);
 
 		/*
 		bool left = true;
@@ -134,12 +139,28 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 
 		// target should be somewhere in the area of the character, so player is more or less forced to move 
 		float targetX = characterScreenPos.x + Random.Range( -1.0f * Screen.width / 4.0f, Screen.width / 4.0f );
+
+		if( !allowCenterOfScreen )
+		{
+			// start at 1/8th of the sides and add a quart
+			// this way, there is always a quart "safe zone|" in the center of the screen
+			float quart = Screen.width / 4.0f;
+			if( left )
+			{
+				targetX = (quart * 0.5f) + Random.Range(0, quart);
+			}
+			else
+			{
+				targetX = ((quart * 3.0f) + (quart * 0.5f)) - Random.Range(0, quart);
+			}
+		}
+
 		Vector3 target1 = new Vector3( targetX, offscreen.y, LugusCamera.game.nearClipPlane);
 
 		DataRange yInterval2 = new DataRange( Screen.height / 1.125f, Screen.height - (this.renderer.bounds.extents.x * 100) ); // top 15% of the screen
 		Vector3 target2 = target1.y (  yInterval2.Random()   );
 
-		Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
+		//Debug.Log ("FROM " + offscreen + " TO " + target1 + " AND " + target2 + " // extents.x " + this.renderer.bounds.extents.x );
 
 		//Vector3 worldPos = LugusCamera.game.ScreenToWorldPoint( offscreen ).z( this.transform.position.z );
 		//transform.position = worldPos;
@@ -160,7 +181,7 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		target2 = LugusCamera.game.transform.InverseTransformPoint( target2 );
 		target2 = this.transform.localPosition.x ( target2.x ).y ( target2.y );
 		
-		Debug.Log ("LOCALS " + target1 + " TO " + target2 );
+		//Debug.Log ("LOCALS " + target1 + " TO " + target2 );
 
 
 		gameObject.MoveTo( target1 ).IsLocal(true).Time (1.0f).Execute();

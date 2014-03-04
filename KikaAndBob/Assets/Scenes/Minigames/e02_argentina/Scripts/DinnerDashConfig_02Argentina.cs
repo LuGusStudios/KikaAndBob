@@ -78,22 +78,6 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 
 	}
 
-	protected void DisableObjects(GameObject[] objects)
-	{
-		foreach( GameObject obj in objects )
-		{
-			if( obj == null )
-			{
-				Debug.LogError(name + " : DisableObjects : one of the objects was null!");
-			}
-			else
-			{
-				//Debug.LogError(name + " : De-activating " + obj.name);
-				obj.SetActive(false);
-			}
-		}
-	}
-
 	public void Level0()
 	{
 		DinnerDashManager.use.targetMoneyScore = 190;
@@ -254,19 +238,6 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
-	}
-
-
-	public bool started = false;
-
-	// Update is called once per frame
-	void Update () 
-	{
-		if( !started )
-		{
-			started = true;
-			//DinnerDashManager.use.StartGame();
-		}
 	}
 
 	

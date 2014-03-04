@@ -53,9 +53,5 @@ public class FailScreen : MonoBehaviour
 	
 	protected void Update () 
 	{
-		if( LugusInput.use.KeyDown (KeyCode.F) )
-		{
-			Show (2.5f);
-		}
 	}
 }

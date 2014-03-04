@@ -8,6 +8,34 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 	{
 		// assign variables that have to do with this class only
 	}
+	 
+	public override void OnGameStopped()
+	{		
+		RunnerCameraPuller puller = GameObject.FindObjectOfType<RunnerCameraPuller>();
+		puller.enabled = false;
+		puller.rigidbody2D.isKinematic = true;
+
+		Transform background = LugusCamera.game.transform.FindChild("Background");
+		if( background != null )
+		{
+			background.gameObject.StopTweens();
+		}
+		else
+		{
+			Debug.LogError(name + " : No Background found under Game Camera!");
+		}
+
+
+		RunnerPlayerAnnoyer[] annoyers = GameObject.FindObjectsOfType<RunnerPlayerAnnoyer>();
+		foreach( RunnerPlayerAnnoyer annoyer in annoyers )
+		{
+			if( !annoyer.gameObject.activeSelf )
+				continue;
+			
+			annoyer.OnHit(null);
+		}
+
+	}
 	
 	public override void LoadLevel(int index)
 	{
@@ -31,7 +59,7 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 		Transform background = LugusCamera.game.transform.FindChild("Background");
 		if( background != null )
 		{
-			background.gameObject.MoveTo( background.transform.localPosition.y ( background.transform.localPosition.y * -1.0f ) ).IsLocal(true).Time(60).Execute();
+			background.gameObject.MoveTo( background.transform.localPosition.y ( background.transform.localPosition.y * -1.0f ) ).IsLocal(true).Time(RunnerInteractionManager.use.timeToMax).Execute();
 		}
 		else
 		{
@@ -42,34 +70,44 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 	public void Level0()
 	{
 		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
-		
-		character.speedRange = new DataRange(10,10);
-		character.timeToMaxSpeed = 60;
+
+		// in brazil, the camera is moving at at constant speed
+		// the speed here is much lower than that of other runners!!!!
+		character.speedRange = new DataRange(6,8);
+		character.timeToMaxSpeed = 60; 
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f ); 
-		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.5f, 1.0f ); 
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
+		
+		RunnerManager.use.targetDistance = 400.0f;
 	}
 	
 	public void Level1()
 	{
 		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
-		character.speedRange = new DataRange(10,14);
+		// in brazil, the camera is moving at at constant speed
+		// the speed here is much lower than that of other runners!!!!
+		character.speedRange = new DataRange(6,9);
 		character.timeToMaxSpeed = 120;
 		RunnerInteractionManager.use.timeToMax = 120;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.8f, 0.8f );  
-		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.5f, 1.0f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
+		
+		RunnerManager.use.targetDistance = 800.0f;
 	}
 	
 	public void Level2()
 	{
 		RunnerCharacterControllerClimbing character = RunnerCharacterControllerClimbing.use;
 		
-		character.speedRange = new DataRange(14,17);
-		character.timeToMaxSpeed = 60;
+		// in brazil, the camera is moving at at constant speed
+		// the speed here is much lower than that of other runners!!!!
+		character.speedRange = new DataRange(6,10); 
+		character.timeToMaxSpeed = 60; 
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.5f, 0.5f );  
-		RunnerInteractionManager.use.difficultyRange = new DataRange(6,6);
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.3f, 1.0f );  
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
 		List<string> inactiveZones = new List<string>();
@@ -78,6 +116,8 @@ public class RunnerConfig_09Brazil : IRunnerConfig
 		
 		DisableInteractionZones( inactiveZones );
 		*/
+
+		RunnerManager.use.targetDistance = 1200.0f;
 	}
 	
 	public void SetupGlobal()

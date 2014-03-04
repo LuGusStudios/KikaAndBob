@@ -9,6 +9,11 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
+	public virtual void OnGameStopped()
+	{
+
+	}
+
 	public void SetupHUDForGame()
 	{
 		HUDManager.use.DisableAll();
@@ -19,6 +24,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		HUDManager.use.CounterLargeLeft1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.CounterLargeLeft1.StartTimer(HUDCounter.Formatting.TimeMS);
 
+		//Debug.LogError("Setting up GUI for " + RunnerManager.use.gameType + " // " + RunnerManager.use.lifeCount);
 
 		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Distance )
 		{
@@ -132,9 +138,10 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		RunnerInteractionManager.use.difficultyRange = new DataRange( LugusConfig.use.User.GetFloat("runner.custom.difficulty1", difficulty1), 
 		                                                              LugusConfig.use.User.GetFloat("runner.custom.difficulty2", difficulty2) );  
 	
-	
-		RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
-		RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
+		if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+			RunnerManager.use.lifeCount = LugusConfig.use.User.GetInt("runner.custom.lives", lifeCount); 
+		else if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Distance )
+			RunnerManager.use.targetDistance = LugusConfig.use.User.GetFloat("runner.custom.targetDistance", targetDistance); 
 	}
 
 	public void LoadGUIVarsFromRealSetup()
@@ -188,11 +195,17 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		{
 			speed = RunnerCharacterControllerClimbing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerClimbing.use.speedPercentage );
 		}
+		else if( RunnerCharacterControllerSkiing.Exists() )
+		{
+			speed = RunnerCharacterControllerSkiing.use.SpeedRange().ValueFromPercentage( RunnerCharacterControllerSkiing.use.speedPercentage );
+			speed *= RunnerCharacterControllerSkiing.use.speedModifiers.ValueFromPercentage( RunnerCharacterControllerSkiing.use.speedModifierPercentage );
+
+		}
 
 		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 1.5f ) );
 		GUILayout.BeginVertical(GUI.skin.box);
 
-		GUILayout.Label("Speed (1 to 30) Current: " + speed);
+		GUILayout.Label("Speed (1 to 30)\nCurrent: " + speed);
 		GUILayout.BeginHorizontal();
 
 		GUILayout.Label("From");
@@ -271,9 +284,11 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty1", difficulty1, true);
 			LugusConfig.use.User.SetFloat("runner.custom.difficulty2", difficulty2, true); 
-			
-			LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
-			LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
+
+			if( RunnerManager.use.gameType == KikaAndBob.RunnerGameType.Endless )
+				LugusConfig.use.User.SetInt("runner.custom.lives", lifeCount, true); 
+			else
+				LugusConfig.use.User.SetFloat("runner.custom.targetDistance", targetDistance, true); 
 
 			LugusConfig.use.SaveProfiles();
 
