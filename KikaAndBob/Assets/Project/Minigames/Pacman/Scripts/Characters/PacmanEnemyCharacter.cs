@@ -70,14 +70,14 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 
 		// the player is in neutral state unless something else is happening
 
-		enemyState = EnemyState.Neutral;
+		EnemyState nextState = EnemyState.Neutral;
 
 		// iterate over players to see if we're on the same tile as any of them
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{
 			if (p.poweredUp) 
 			{
-				enemyState = EnemyState.Frightened;
+				nextState = EnemyState.Frightened;
 			}
 
 			// if we're on the same tile as a player, determine behavior
@@ -86,7 +86,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				// if player is powered up, defeat this enemy
 				if (p.poweredUp)
 				{
-					enemyState = EnemyState.Defeated;
+					nextState = EnemyState.Defeated;
 				}
 				// else, player loses life
 				else
@@ -100,19 +100,19 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			}
 		}
 
-		if (enemyState == EnemyState.Neutral)
+		if (nextState == EnemyState.Neutral)
 		{
 			NeutralEffect();
 		}
-		else if (enemyState == EnemyState.Frightened)
+		else if (nextState == EnemyState.Frightened)
 		{
 			FrightenedEffect();
 		}
-		else if (enemyState == EnemyState.Defeated)
+		else if (nextState == EnemyState.Defeated)
 		{
 			DefeatedEffect();
 		}
-		else if (enemyState == EnemyState.Chasing)
+		else if (nextState == EnemyState.Chasing)
 		{
 			PlayerSeenEffect();
 		}
@@ -234,6 +234,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	// override for custom effect when the enemy loses track of the player
 	protected virtual void NeutralEffect()
 	{
+		if (enemyState == EnemyState.Neutral)
+			return;
+
 		characterAnimator.PlayAnimation(walkAnimation);
 
 		enemyState = EnemyState.Neutral;
@@ -247,13 +250,23 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	// override for custom effect when the enemy runs away from the player
 	protected virtual void FrightenedEffect()
 	{
+		if (enemyState == EnemyState.Frightened)
+			return;
+
 		characterAnimator.PlayAnimation(characterAnimator.runScared);
+
+		enemyState = EnemyState.Frightened;
 	}
 
 	// override for custom death anim	
 	protected virtual void DefeatedEffect()
 	{
+		if (enemyState == EnemyState.Defeated)
+			return;
+
 		StartCoroutine(DefeatAnim());
+
+		enemyState = EnemyState.Defeated;
 	}
 	
 	private IEnumerator DefeatAnim()
