@@ -43,7 +43,7 @@ public class LevelLoaderDefault
 					break;
 				case LoadingSource.RESOURCES:
 
-					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName);
+					TextAsset asset = LugusResources.use.Shared.GetTextAsset(levelName); 
 					if (asset != LugusResources.use.errorTextAsset)
 					{
 						levelIndices.Add(i + 1);
@@ -122,7 +122,7 @@ public class LevelLoaderDefault
 			return PacmanCrossSceneInfo.use;
 		}
 		else if (Application.loadedLevelName == "e03_china" || Application.loadedLevelName == "e20_morocco"
-		         || Application.loadedLevelName == "e15_india")
+		         || Application.loadedLevelName == "e15_india" || Application.loadedLevelName == "e24_japan" )
 		{
 			return DanceHeroCrossSceneInfo.use;
 		}
@@ -130,7 +130,7 @@ public class LevelLoaderDefault
 		{
 			return DartsCrossSceneInfo.use;
 		}		
-		else if( Application.loadedLevelName == "e02_argentina" )
+		else if( Application.loadedLevelName == "e02_argentina" || Application.loadedLevelName == "e12_newyork" )
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}

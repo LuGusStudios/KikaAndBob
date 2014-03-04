@@ -86,10 +86,10 @@ foreach( $files as $file )
 	$size = "";
 		
 	echo "<table width=\"100%\">";
-	foreach( $gameFiles as $gameFile )
+	foreach( $gameFiles as $gameFile ) 
 	{
 		
-		if( strpos($gameFile, ".html") !== FALSE )
+		if( strpos($gameFile, ".html") !== FALSE && strpos($gameFile, ".meta") === FALSE ) // subverse the .html.meta file
 		{
 			$htmlFile = $gameFile;
 		}
@@ -100,21 +100,18 @@ foreach( $files as $file )
 			//print_r("\n");
 			$size = filesize($dir . "/" . $file . "/" . $gameFile);
 		}
-		
-		if( $htmlFile != "" && $size != "" )
-		{
-			echo '<tr><td><a target="_blank" href="'. $file . '/' . $htmlFile .'">' . $file  . '</a></td><td  width="50%">'. human_filesize($size) .'</td></tr>';
-		}
 	}	
+
+	
+	if( $htmlFile != "" && $size != "" )
+	{
+		echo '<tr><td><a target="_blank" href="'. $file . '/' . $htmlFile .'">' . $file  . '</a></td><td  width="50%">'. human_filesize($size) .'</td></tr>';
+	}
+		
 	echo "</table>";
 }
 
 ?>
-
-	<h2>Extra</h2>
-		<a href="http://lugus.be/KikaAndBob/AnimationSheets/1/Kika&Bob_AnimationTest.html">Animation Sheet 1</a><br/><br/>
-		
-		<a href="https://www.dropbox.com/s/78e4aa1yl2k0rwy/SceneMockups1.zip">Graphic Scene Mockups 1 (.zip)</a><br/>
 
 		</div>
 

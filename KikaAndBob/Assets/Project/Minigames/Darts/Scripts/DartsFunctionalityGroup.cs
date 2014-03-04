@@ -9,6 +9,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public float minTimeBetweenShows = 1.0f;
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
 	public bool avoidRepeat = false;
+	public int score = 100;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected IDartsHitable lastHitable = null;
@@ -42,7 +43,8 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public void HitableHit(IDartsHitable hitable)
 	{
 		Debug.Log ("HIT POSITION " + hitable.transform.position);
-		DartsScoreManager.use.ShowScore(hitable.GetScore(), hitable.transform.position, 1.0f, null, Color.red);
+		DartsScoreManager.use.AddScore(hitable.GetScore(), hitable.transform.position);
+		DartsScoreManager.use.AddToStreak(hitable);
 	}
 
 	public void HitableHidden(IDartsHitable hitable)

@@ -123,12 +123,13 @@ public class HUDCounter : IHUDElement
 
 		SetText( text );
 	}
-	
+
+	public float animationTime = 1.0f;
 	
 	protected ILugusCoroutineHandle animationHandle = null;
 	protected IEnumerator AnimationRoutine(float oldValue, float newValue)
 	{
-		DataRange timeRange = new DataRange(Time.time, Time.time + 1.0f);
+		DataRange timeRange = new DataRange(Time.time, Time.time + animationTime);
 		DataRange valueRange = new DataRange(oldValue, newValue);
 
 		while( Time.time < timeRange.to )

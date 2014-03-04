@@ -21,7 +21,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 		//else
 			position = ( (MonoBehaviour) RunnerCharacterController.use).transform.position;
 
-		float scoreAmount = 10.0f;
+		float scoreAmount = 5.0f; 
 		if( pickup != null )
 			scoreAmount = pickup.scoreAmount;
 
@@ -36,9 +36,13 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 			else
 				commodity = KikaAndBob.CommodityType.Feather;
 
+			Color c = Color.white;
+			// in swiss, the background is white, so we don't want white text
+			if( RunnerCharacterControllerSkiing.Exists() )
+				c = Color.black;
 
 			RunnerManager.use.AddPickup( Mathf.RoundToInt(scoreAmount) );
-			ScoreVisualizer.Score(commodity, scoreAmount).Time (1.0f).Position( position ).Audio("Blob01").Color(Color.white).Execute();
+			ScoreVisualizer.Score(commodity, scoreAmount).Time (1.0f).Position( position ).Audio("Blob01").Color(c).Execute();
 		}
 		else // negative
 		{
