@@ -127,7 +127,8 @@ public class ConsumableConvertor : IConsumableUser
 		if( onProcessingStart != null )
 			onProcessingStart( currentConsumable );
 
-		LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(processingSound) );
+		if( !string.IsNullOrEmpty(processingSound) )
+			LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(processingSound) );
 
 		yield return new WaitForSeconds( processingTime );
 		

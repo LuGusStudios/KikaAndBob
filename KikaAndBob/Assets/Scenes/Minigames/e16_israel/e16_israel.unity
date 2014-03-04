@@ -1290,7 +1290,6 @@ MonoBehaviour:
     to: 8
   useAlternativeAnimations: 0
   happiness: 10
-  state: -1
   currentConsumable: {fileID: 0}
   place: {fileID: 0}
   moneyPrefab: {fileID: 0}
@@ -5254,7 +5253,6 @@ MonoBehaviour:
     to: 8
   useAlternativeAnimations: 0
   happiness: 10
-  state: -1
   currentConsumable: {fileID: 0}
   place: {fileID: 0}
   moneyPrefab: {fileID: 0}
@@ -11304,6 +11302,7 @@ MonoBehaviour:
     to: 4
   idleAnimation: BobFront_DoingstuffIdle
   busyAnimation: BobFront_Doingstuff
+  busyParticles: {fileID: 0}
 --- !u!1 &444250806
 GameObject:
   m_ObjectHideFlags: 0
@@ -12677,6 +12676,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumerManager: {fileID: 0}
+  moneyScore: 0
+  targetMoneyScore: -1
+  timeout: 300
   checkMark: {fileID: 0}
   queue: []
 --- !u!4 &616618172
@@ -12738,6 +12740,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorTexture: {fileID: 0}
   errorAudio: {fileID: 0}
+  errorSprite: {fileID: 0}
+  errorTextAsset: {fileID: 0}
 --- !u!1 &620580002
 GameObject:
   m_ObjectHideFlags: 0
