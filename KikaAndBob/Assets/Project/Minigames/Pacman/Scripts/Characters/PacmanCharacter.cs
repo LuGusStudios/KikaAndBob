@@ -24,6 +24,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected CharacterDirections currentDirection;
 	protected CharacterDirections startDirection;
 	protected BoneAnimation currentAnimation = null;
+	protected ParticleSystem teleportParticles = null;	// TO DO: Remove from here.
 
 	protected PacmanCharacterAnimator characterAnimator = null;
 		
@@ -65,6 +66,20 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	public virtual void SetUpGlobal()
 	{
+		if (teleportParticles == null)
+		{
+			GameObject teleportParticlesObject = PacmanLevelManager.use.GetPrefab("TeleportParticles");
+			
+			if (teleportParticlesObject != null)
+			{
+				teleportParticles = teleportParticlesObject.GetComponent<ParticleSystem>();
+				
+				if (teleportParticles == null)
+				{
+					Debug.LogError("PacmanCharacter: Missing teleport particles!");
+				}
+			}
+		}
 	}
 	
 	// does actual moving and calls appropriate methods when destination was reached
@@ -84,6 +99,13 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			}
 		}
 	}
+
+	// override for custom behavior on reaching a tile
+	protected virtual void DoCurrentTileBehavior()
+	{
+
+	}
+
 	
 	protected virtual void MoveTo(PacmanTile target)
 	{
@@ -144,9 +166,58 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	protected virtual IEnumerator TeleportRoutine()
 	{				
-		alreadyTeleported = true;
+//		alreadyTeleported = true;
+//
+//		PacmanTile targetTile = null;	
+//		
+//		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+//		{
+//			if (currentTile != tile)
+//			{
+//				targetTile = tile;
+//				break;
+//			}
+//		}
+//		
+//		if (targetTile == null)
+//		{
+//			Debug.LogError("No other teleport tile found!");
+//			yield break;
+//		}
+//		
+//		transform.localPosition = targetTile.location.v3();
 
-		PacmanTile targetTile = null;	
+		alreadyTeleported = true;
+		
+		
+		
+		if (PacmanLevelManager.use.teleportTiles.Count <= 1)
+		{
+			Debug.LogError("There's only one teleport tile in this level!");
+			yield break;
+		}
+		
+		if (teleportParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
+		
+		
+		
+		// this idea is not what we want, because it links teleports in a circle (always to the next), but not in two directions (i.e. also to the previous one)
+		//		int indexCurrentTeleport = PacmanLevelManager.use.teleportTiles.IndexOf(currentTile);
+		//		int	indexCounterpart = indexCurrentTeleport  + 1;
+		//
+		//		if (indexCounterpart >= PacmanLevelManager.use.teleportTiles.Count)
+		//		{
+		//			indexCounterpart = 0;
+		//		}
+		
+		PacmanTile targetTile = null;
 		
 		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 		{
@@ -164,6 +235,17 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		}
 		
 		transform.localPosition = targetTile.location.v3();
+		
+		if (teleportParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
+		
+		DestinationReached();
 	}
 
 

@@ -368,8 +368,11 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (runBehavior == true)
 		{
+			DoCurrentTileBehavior();
+
 			if (enemyState == EnemyState.Frightened)
 			{
+				// run away to faraway tile
 				PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
 					PacmanLevelManager.use.GetOppositeQuadrant(
 					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
@@ -378,8 +381,12 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			}
 			else
 			{
+				// head for player
 				targetTile = player.currentTile;
 			}
+
+			// before finding the next tile to move to, check if target tile cannot be reached more easily through a teleport
+			CheckTeleportProximity(); 
 
 			MoveTo(FindTileClosestTo(targetTile));
 				
@@ -401,6 +408,13 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 	}
 
+	protected override void DoCurrentTileBehavior()
+	{
+		if (currentTile.tileType == PacmanTile.TileType.Teleport )
+		{
+			LugusCoroutines.use.StartRoutine(TeleportRoutine());
+		}
+	}
 
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
@@ -410,7 +424,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 
 		// detect if it is more efficient to use a teleport than to find target tile directly
 		// if target is more than half a level away
-		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if targetTile is (more than) half a level away in x distance
+		if ( Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float) PacmanLevelManager.use.width * 0.5f ) // if targetTile is (more than) half a level away in x distance
 		{
 			// and we're a quarter level or less way from a teleport
 			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)

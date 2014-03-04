@@ -9,6 +9,41 @@ public class DoorUpdater : PacmanLevelUpdater {
 	public int minimumDoorsOpen = 1;
 
 	protected List<PacmanTile> doors = new List<PacmanTile>();
+	protected ParticleSystem doorParticles = null;
+
+	public void SetupLocal()
+	{
+
+	}
+	
+	public void SetupGlobal()
+	{
+		if (doorParticles == null)
+		{
+			GameObject doorParticlesObject = PacmanLevelManager.use.GetPrefab("DoorParticles");
+			
+			if (doorParticlesObject != null)
+			{
+				doorParticles = doorParticlesObject.GetComponent<ParticleSystem>();
+			}
+
+			if (doorParticles == null)
+			{
+				Debug.LogError("PacmanCharacter: Missing door particles!");
+			}
+		}
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
+
 
 	public override void Activate()
 	{
@@ -81,6 +116,15 @@ public class DoorUpdater : PacmanLevelUpdater {
 			PacmanTile doorTile = doors[randomIndex];
 			doorTile.tileType = PacmanTile.TileType.Collide;
 			closedDoors++;
+
+			if (doorParticles != null)
+			{
+				ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(doorParticles);
+				spawnedParticles.transform.position = doorTile.GetWorldLocation().v3().zAdd(-5.0f);
+				
+				spawnedParticles.Play();
+				Destroy(spawnedParticles.gameObject, 2.0f);
+			}
 
 			// update exit count for tiles around the door tile
 			//GameTile updatedTile;
