@@ -14,6 +14,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected LugusAudioTrackSettings walkTrackSettings = null;
 	protected AudioClip walkSoundClip = null;
 	protected BoneAnimation[] boneAnimations = null;
+	protected ParticleSystem powerUpParticles = null;
 
 
 	public override void SetUpLocal()
@@ -33,6 +34,21 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			walkSoundClip = LugusResources.use.Shared.GetAudio(walkSoundKey);
 
 		boneAnimations = (BoneAnimation[])GetComponentsInChildren<BoneAnimation>(true);
+
+		if (powerUpParticles == null)
+		{
+			GameObject powerUpParticlesObject = PacmanLevelManager.use.GetPrefab("PowerUpParticles");
+
+			if (powerUpParticlesObject != null)
+			{
+				powerUpParticles = powerUpParticlesObject.GetComponent<ParticleSystem>();
+
+				if (powerUpParticles == null)
+				{
+					Debug.LogError("PacmanCharacter: Missing power up particles!");
+				}
+			}
+		}
 	}
 
 	private void Update () 
@@ -342,6 +358,14 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected IEnumerator PowerupRoutine()
 	{
 		poweredUp = true;
+
+		if (powerUpParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(powerUpParticles);
+
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
 
 		yield return new WaitForSeconds(powerupDuration);
 

@@ -7,6 +7,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public bool allowUTurns = true;
 	public int forwardDetectDistance = 5;
 	public string walkAnimation = "";
+	public string scaredWalkAnimation = "";
 	public string defeatSoundKey = "";
 	public string attackSoundKey = "";
 
@@ -68,14 +69,15 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		player = PacmanGameManager.use.GetActivePlayer();	
 
 		// the player is in neutral state unless something else is happening
-		NeutralEffect();
+
+		EnemyState nextState = EnemyState.Neutral;
 
 		// iterate over players to see if we're on the same tile as any of them
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{
-			if (p.poweredUp)
+			if (p.poweredUp) 
 			{
-				FrightenedEffect();
+				nextState = EnemyState.Frightened;
 			}
 
 			// if we're on the same tile as a player, determine behavior
@@ -84,7 +86,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				// if player is powered up, defeat this enemy
 				if (p.poweredUp)
 				{
-					DefeatedEffect();
+					nextState = EnemyState.Defeated;
 				}
 				// else, player loses life
 				else
@@ -97,6 +99,24 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				}
 			}
 		}
+
+		if (nextState == EnemyState.Neutral)
+		{
+			NeutralEffect();
+		}
+		else if (nextState == EnemyState.Frightened)
+		{
+			FrightenedEffect();
+		}
+		else if (nextState == EnemyState.Defeated)
+		{
+			DefeatedEffect();
+		}
+		else if (nextState == EnemyState.Chasing)
+		{
+			PlayerSeenEffect();
+		}
+
 
 		// what tile is character currently on?
 		DetectCurrentTile();
@@ -217,16 +237,14 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Neutral)
 			return;
 
+		characterAnimator.PlayAnimation(walkAnimation);
+
 		enemyState = EnemyState.Neutral;
 	}
 
 	// override for custom effect when the enemy finds the player
 	protected virtual void PlayerSeenEffect()
 	{
-		if (enemyState == EnemyState.Chasing)
-			return;
-
-		enemyState = EnemyState.Chasing;
 	}
 
 	// override for custom effect when the enemy runs away from the player
@@ -234,11 +252,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (enemyState == EnemyState.Frightened)
 			return;
-		
-		iTween.Stop(gameObject);
-		transform.localScale = originalScale;
-		
-		
+
+		characterAnimator.PlayAnimation(characterAnimator.runScared);
+
 		enemyState = EnemyState.Frightened;
 	}
 
@@ -248,9 +264,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Defeated)
 			return;
 
-		enemyState = EnemyState.Defeated;
-
 		StartCoroutine(DefeatAnim());
+
+		enemyState = EnemyState.Defeated;
 	}
 	
 	private IEnumerator DefeatAnim()
@@ -291,7 +307,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public override void ChangeSpriteFacing (CharacterDirections direction)
 	{
 		// enemies probably only ever have one animation
-		characterAnimator.PlayAnimation(walkAnimation);
+		//characterAnimator.PlayAnimation(walkAnimation);
 
 		if ( direction == CharacterDirections.Right )
 		{
