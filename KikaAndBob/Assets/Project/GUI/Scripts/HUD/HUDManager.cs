@@ -32,6 +32,8 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 	public LevelEndScreen LevelEndScreen = null;
 	public FailScreen FailScreen = null;
 
+	public CountdownScreen CountdownScreen = null;
+
 
 	public List<IHUDElement> elements = new List<IHUDElement>();
 
@@ -154,6 +156,11 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		{
 			FailScreen = transform.FindChild("FailScreen").GetComponent<FailScreen>();
 		}
+
+		if( CountdownScreen == null )
+		{
+			CountdownScreen = transform.FindChild("CountdownScreen").GetComponent<CountdownScreen>();
+		}
 	}
 
 	public void RepositionPauseButton(KikaAndBob.ScreenAnchor mainAnchor, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.NONE)
@@ -181,6 +188,9 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 
 		FailScreen.gameObject.SetActive (true);
 		FailScreen.Hide();
+
+		CountdownScreen.gameObject.SetActive(true);
+		CountdownScreen.Hide ();
 	}
 	
 	protected void Awake()
@@ -198,6 +208,16 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		if( PauseButton.pressed )
 		{
 			this.PausePopup.Show();
+		}
+
+		if( LugusInput.use.KeyDown( KeyCode.F ) )
+		{
+			FailScreen.Show();
+		}
+		
+		if( LugusInput.use.KeyDown( KeyCode.L ) )
+		{
+			LevelEndScreen.Show(false);
 		}
 	}
 }

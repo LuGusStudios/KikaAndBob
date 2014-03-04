@@ -321,18 +321,72 @@ public class RunnerManagerDefault : IGameManager
 
 	public override void StartGame()
 	{
-		_gameRunning = true;
+		LugusCoroutines.use.StartRoutine( StartGameRoutine() );
+	}
+
+	protected IEnumerator StartGameRoutine()
+	{
 		Debug.Log ("Starting Runner game");
 
-		startTime = Time.time;
+		RunnerCameraPuller puller = null;
+		if( RunnerCameraPuller.Exists() )
+			puller = RunnerCameraPuller.use;
+		
+		RunnerInteractionManager.use.Deactivate();
+		RunnerCharacterController.useBehaviour.enabled = false;
 
+		if( puller != null )
+		{
+			puller.rigidbody2D.isKinematic = true;
+			puller.enabled = false;
+		}
+
+		yield return new WaitForSeconds(0.01f); // give other SetupGlobal()s the time to do their work (especially HUDManager)
+		
+		if( Application.loadedLevelName == "e09_Brazil" )
+		{
+			RunnerCharacterAnimatorFasterSlower fs = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorFasterSlower>();
+			fs.PlayAnimation(fs.stillAnimation);
+		}
+
+		yield return new WaitForSeconds(0.5f); // give fade-out time to finish
+
+		//HUDManager.use.CountdownScreen.gameObject.SetActive(true); // make sure this is active. Is done in SetupGlobal 
+
+		if( Application.loadedLevelName == "e10_Swiss" ||
+		    Application.loadedLevelName == "e13_pacific" )
+		{
+			HUDManager.use.CountdownScreen.countText.textMesh.color = Color.black;
+			HUDManager.use.CountdownScreen.countTextShadow.textMesh.color = Color.white;
+		}
+
+		#if !UNITY_EDITOR
+		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
+
+		yield return new WaitForSeconds(3.0f);
+		#endif
+
+		_gameRunning = true;
 		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 
+
+		RunnerCharacterController.useBehaviour.enabled = true;
+		
+		if( puller != null )
+		{
+			puller.rigidbody2D.isKinematic = false;
+			puller.enabled = true;
+		}
+
+		startTime = Time.time;
+		
+		RunnerInteractionManager.use.Activate();
+		RunnerInteractionManager.use.SpawnForFirstSection ();
 		RunnerInteractionManager.use.StartTimer();
-	
+		
 		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
 		LugusCoroutines.use.StartRoutine( DistanceRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
-
+		
 		if( this.gameType == KikaAndBob.RunnerGameType.NONE )
 		{
 			Debug.LogError(transform.Path () + " : No RunnerGameType set! Config should do this!!!");
@@ -343,12 +397,91 @@ public class RunnerManagerDefault : IGameManager
 	{
 		_gameRunning = false;
 
+		// endless runners can only stop when the character dies
+		// so: start death animation and stop camera
 
+		// distance-based runners: just stop camera and let the character move out of the screen
 
+		float endscreenDelay = 1.0f;
+
+		if( this.gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+
+			if( RunnerCameraPuller.Exists() )
+			{
+				// climber: also disable the controller and animation, cam stops automatically
+				RunnerCharacterController.useBehaviour.enabled = false;
+				
+				RunnerCharacterAnimatorFasterSlower fs = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorFasterSlower>();
+				fs.PlayAnimation(fs.stillAnimation);
+
+				//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
+				//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+			}
+			else
+			{
+				FollowCameraContinuous cam = LugusCamera.game.GetComponent<FollowCameraContinuous>();
+				if( cam != null )
+				{
+					cam.DisableParallax();
+					cam.enabled = false;
+
+					RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+					//RunnerCharacterController.useBehaviour.rigidbody2D.velocity = Vector3.zero;
+					RunnerCharacterController.useBehaviour.Disable( 10.0f ); 
+				}
+				else
+				{
+					Debug.LogError(transform.Path () + " : No FollowCameraContinuous found!");
+				}
+			}
+		}
+		else
+		{
+			FollowCameraContinuous cam = LugusCamera.game.GetComponent<FollowCameraContinuous>();
+			if( cam != null )
+			{
+				cam.DisableParallax();
+				cam.enabled = false;
+			}
+			else
+			{
+				Debug.LogError(transform.Path () + " : No FollowCameraContinuous found!");
+			}
+
+			RunnerCharacterAnimatorJumpSlide animator = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorJumpSlide>();
+
+			if( animator != null )
+			{
+				//RunnerCharacterController.useBehaviour.rigidbody2D.velocity = Vector3.zero;
+				//RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+				
+				( (RunnerCharacterControllerJumpSlide) RunnerCharacterController.jumpSlide).EnlargeShadow();
+				RunnerCharacterController.useBehaviour.enabled = false;
+				animator.characterDead = true;
+				animator.dust.enableEmission = false;
+				animator.PlayAnimation( animator.deathAnimation );
+
+				endscreenDelay = 2.0f;
+			}
+			else
+			{
+				Debug.LogError(transform.Path () + " : No RunnerCharacterAnimatorJumpSlide found!");
+			}
+
+			//RunnerCharacterController.useBehaviour.enabled = false;
+			//RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+			//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
+			//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+		}
+
+		/*
 		RunnerCharacterController.useBehaviour.enabled = false;
 		RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+		*/
 
 		RunnerInteractionManager.use.Deactivate();
 
@@ -359,7 +492,7 @@ public class RunnerManagerDefault : IGameManager
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 	
 
-		LugusCoroutines.use.StartRoutine( ScoreAnimationRoutine() );
+		LugusCoroutines.use.StartRoutine( ScoreAnimationRoutine(endscreenDelay) );
 		
 		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
 		bool success = true;
@@ -381,8 +514,10 @@ public class RunnerManagerDefault : IGameManager
 
 	//public int pickupsPerSecondConversion = 1; // how many pickups a user should score before he gets 1 second added or subtracted from his timescore
 
-	protected IEnumerator ScoreAnimationRoutine()
+	protected IEnumerator ScoreAnimationRoutine(float delay)
 	{
+		yield return new WaitForSeconds( delay );
+
 		// 1. let time and pickups count up individually
 		// 2. move time over to score (in 1 time)
 		// 3. move pickups over to score (in groups of x, where x = number of pickups to warrant 1 second extra score)

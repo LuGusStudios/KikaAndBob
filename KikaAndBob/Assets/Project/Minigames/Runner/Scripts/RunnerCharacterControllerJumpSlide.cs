@@ -198,6 +198,12 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		}
 	}
 
+	public void EnlargeShadow()
+	{		
+		shadow.originalScale = originalShadowScale.xMul (2.5f);
+		shadow.xOffset = -0.35f;
+	}
+
 	protected void CheckSlide(bool checkKeyHold = false)
 	{
 		bool extra = false;
@@ -214,8 +220,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 			sliding = true;
 			slideStartTime = Time.time;
 			
-			shadow.originalScale = originalShadowScale.xMul (2.5f);
-			shadow.xOffset = -0.35f;
+			EnlargeShadow();
 
 			BoxCollider2D topCollider = GetComponent<BoxCollider2D>();
 			if( topCollider != null )

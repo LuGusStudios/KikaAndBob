@@ -270,10 +270,12 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity"); 
 
 		// 1.0
-		levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity"); 
-		levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
-		levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
-
+		//levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity"); 
+		//levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
+		//levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
+		
+		// 0.5.3
+		levels.Add("Assets/Scenes/Minigames/e09_Brazil/e09_Brazil.unity"); 
 
 		string levelListOutput = "";
 		foreach( string levelName in levels ) 
