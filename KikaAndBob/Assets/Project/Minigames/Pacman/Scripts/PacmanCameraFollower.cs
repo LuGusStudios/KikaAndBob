@@ -43,12 +43,17 @@ public class PacmanCameraFollower : LugusSingletonExisting<PacmanCameraFollower>
 
 	protected void Update () 
 	{
-		FollowCamera();
-	}
+		//FollowCamera();	// we're not having this called automatically anymore - an unpredictable order of Update calls between this and the characters can cause jitter	
+	}						// instead, it's called from the character scripts
 
-	protected void FollowCamera()
+	public void FollowCamera()
 	{
-		if (PacmanGameManager.use.gameRunning && track)
-			transform.position = PacmanGameManager.use.GetActivePlayer().transform.position + playerOffset;
+		if (!track)
+			return;
+
+		if (PacmanGameManager.use.gameRunning && track) 
+		{
+			transform.position = Vector3.Lerp ( this.transform.position, PacmanGameManager.use.GetActivePlayer().transform.position + playerOffset, 100.0f *Time.deltaTime);
+		}
 	}
 }

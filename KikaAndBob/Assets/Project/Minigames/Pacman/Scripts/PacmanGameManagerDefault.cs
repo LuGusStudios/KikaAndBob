@@ -233,7 +233,13 @@ public class PacmanGameManagerDefault : IGameManager {
 			PacmanGUIManager.use.PauseTimer(true);
 			HUDManager.use.FailScreen.Show(2.5f);
 
-			yield return new WaitForSeconds(2.5f);
+			yield return new WaitForSeconds(2.0f);
+
+			ScreenFader.use.FadeOut(0.5f);
+
+			yield return new WaitForSeconds(0.5f);
+
+			ScreenFader.use.FadeIn(0.5f);
 
 			PacmanGUIManager.use.PauseTimer(false);
 			StartNewRound();
