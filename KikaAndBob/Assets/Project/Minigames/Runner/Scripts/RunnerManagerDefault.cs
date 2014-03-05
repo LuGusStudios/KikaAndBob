@@ -301,7 +301,7 @@ public class RunnerManagerDefault : IGameManager
 			cc.gameObject.SetActive(false);
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
-		else
+		else 
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 			

@@ -12,6 +12,12 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	public float timeToMaxSpeed = 60.0f;
 	public float jumpForce = 30.0f; 
 
+	public string jumpSound = "Jump01";
+	protected AudioClip jumpClip = null;
+
+	public string runningSound = "WalkLoop01"; 
+	protected ILugusAudioTrack runningTrack = null;
+
 	protected RunnerCharacterShadow shadow = null;
 	protected Vector3 originalShadowScale = Vector3.one;
 
@@ -81,7 +87,27 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		}
 		else
 		{
-			originalShadowScale = shadow.originalScale;
+			originalShadowScale = shadow.originalScale; 
+		}
+		
+		jumpClip = LugusResources.use.Shared.GetAudio( jumpSound );
+		runningTrack = LugusAudio.use.SFX ().GetTrack();
+		runningTrack.Play( LugusResources.use.Shared.GetAudio( runningSound ), new LugusAudioTrackSettings().Loop(true) );
+	}
+
+	public void OnDisable()
+	{
+		if( runningTrack != null )
+		{
+			runningTrack.Pause();
+		}
+	}
+
+	public void OnEnable()
+	{
+		if( runningTrack != null )
+		{
+			runningTrack.Play();
 		}
 	}
 	
@@ -183,9 +209,15 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 			triggerJump = true;
 			jumping = true;
 			jumpFrame = Time.frameCount;
-			
+
 			if( onJump != null )
 				onJump(true);
+
+			if( jumpClip != null )
+				LugusAudio.use.SFX().Play( jumpClip );
+
+			if( runningTrack != null )
+				runningTrack.Pause();
 		}
 		else if( jumping && this.Grounded && (jumpFrame + 5 < Time.frameCount) ) // at least 5 frames after starting jump
 		{
@@ -195,6 +227,9 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 				onJump(false); 
 			
 			CheckSlide(true);
+
+			if( runningTrack != null )
+				runningTrack.Play();
 		}
 	}
 

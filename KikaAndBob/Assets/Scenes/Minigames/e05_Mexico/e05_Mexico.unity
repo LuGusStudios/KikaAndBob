@@ -371,7 +371,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1710580173}
-  - {fileID: 134281559}
   - {fileID: 967972838}
   - {fileID: 1994281205}
   - {fileID: 854286931}
@@ -716,6 +715,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &56065151
 BoxCollider2D:
@@ -945,6 +946,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &68801039
 BoxCollider2D:
@@ -1575,12 +1578,12 @@ GameObject:
   - 4: {fileID: 134281559}
   - 114: {fileID: 134281560}
   m_Layer: 0
-  m_Name: Enemy2
+  m_Name: Enemy2OLD_notUsed
   m_TagString: Untagged
   m_Icon: {fileID: -2065832391, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &134281559
 Transform:
   m_ObjectHideFlags: 0
@@ -1588,12 +1591,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 134281558}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.47389221, y: 35.8544235, z: 0}
+  m_LocalPosition: {x: -92.0453796, y: 30.6117668, z: -1.04760742}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1959913474}
   - {fileID: 1608928256}
-  m_Father: {fileID: 22430978}
+  m_Father: {fileID: 1635775957}
 --- !u!114 &134281560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1860,6 +1863,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &154744859
 BoxCollider2D:
@@ -2480,6 +2485,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &179209725
 BoxCollider2D:
@@ -2774,6 +2781,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &214704542
 BoxCollider2D:
@@ -3014,6 +3023,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!1 &236446462
 GameObject:
@@ -3061,6 +3072,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &236446465
 BoxCollider2D:
@@ -3546,6 +3559,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &277908593
 BoxCollider2D:
@@ -3962,6 +3977,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: Swallows01
   deadly: 0
 --- !u!114 &314976558
 MonoBehaviour:
@@ -4913,6 +4930,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &379022160
 BoxCollider2D:
@@ -5356,6 +5375,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: Swallows01
   deadly: 0
 --- !u!114 &428931185
 MonoBehaviour:
@@ -6414,6 +6435,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 100000, guid: 88923a59048e049cba126ecfcbeedf7b, type: 2}
+  hitSound: Eagle02
   deadly: 0
 --- !u!1 &499925752
 GameObject:
@@ -6776,6 +6799,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &537526198
 BoxCollider2D:
@@ -7076,6 +7101,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &559619545
 BoxCollider2D:
@@ -7410,6 +7437,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &580298268
 BoxCollider2D:
@@ -23720,6 +23749,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &649660356
 BoxCollider2D:
@@ -24976,6 +25007,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &759047099
 BoxCollider2D:
@@ -25076,6 +25109,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &786721733
 BoxCollider2D:
@@ -25429,6 +25464,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &807858637
 BoxCollider2D:
@@ -26082,6 +26119,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &860990243
 BoxCollider2D:
@@ -27531,6 +27570,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!114 &870452360
 MonoBehaviour:
@@ -27794,6 +27835,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &883714579
 BoxCollider2D:
@@ -27945,6 +27988,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &890326651
 BoxCollider2D:
@@ -28265,6 +28310,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &895154216
 BoxCollider2D:
@@ -28554,6 +28601,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &918229339
 BoxCollider2D:
@@ -28996,6 +29045,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!1 &998190057
 GameObject:
@@ -29648,6 +29699,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1062888646
 BoxCollider2D:
@@ -29748,6 +29801,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1065996107
 BoxCollider2D:
@@ -29995,6 +30050,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!114 &1086002281
 MonoBehaviour:
@@ -30717,6 +30774,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1141014535
 BoxCollider2D:
@@ -30868,6 +30927,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1167766654
 BoxCollider2D:
@@ -31288,6 +31349,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!114 &1189657149
 MonoBehaviour:
@@ -32841,6 +32904,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1348017490
 BoxCollider2D:
@@ -33404,6 +33469,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1380769968
 BoxCollider2D:
@@ -33480,6 +33547,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1393593264
 BoxCollider2D:
@@ -33898,6 +33967,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!1 &1414444592
 GameObject:
@@ -34691,6 +34762,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1480354242
 BoxCollider2D:
@@ -34941,6 +35014,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1504229984
 BoxCollider2D:
@@ -35157,6 +35232,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1510030315
 BoxCollider2D:
@@ -35430,6 +35507,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1538485152
 BoxCollider2D:
@@ -35547,6 +35626,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1544026895
 BoxCollider2D:
@@ -36127,6 +36208,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: Swallows01
   deadly: 0
 --- !u!114 &1608928259
 MonoBehaviour:
@@ -36455,7 +36538,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -51.6481171, y: 38.0394325, z: 1.04760742}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 134281559}
   m_Father: {fileID: 0}
 --- !u!1001 &1641669542
 Prefab:
@@ -36657,6 +36741,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1647300657
 BoxCollider2D:
@@ -36757,6 +36843,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1653335141
 BoxCollider2D:
@@ -36968,6 +37056,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1655749909
 BoxCollider2D:
@@ -40842,6 +40932,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1804910301
 BoxCollider2D:
@@ -41123,6 +41215,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!212 &1811573392
 SpriteRenderer:
@@ -41699,6 +41793,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!1 &1852417447
 GameObject:
@@ -42903,6 +42999,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1948495566
 BoxCollider2D:
@@ -43199,6 +43297,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: Swallows01
   deadly: 0
 --- !u!114 &1958020824
 MonoBehaviour:
@@ -43587,6 +43687,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &1978818248
 BoxCollider2D:
@@ -44070,6 +44172,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!114 &2026255485
 MonoBehaviour:
@@ -44401,6 +44505,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &2048621685
 BoxCollider2D:
@@ -44587,6 +44693,8 @@ MonoBehaviour:
   positive: 0
   scoreAmount: 10
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!1 &2050883363
 GameObject:
@@ -45361,6 +45469,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &2101981165
 BoxCollider2D:
@@ -45683,6 +45793,8 @@ MonoBehaviour:
   positive: 1
   scoreAmount: 1
   commodityType: -1
+  spawnObject: {fileID: 0}
+  hitSound: 
   deadly: 0
 --- !u!61 &2123607841
 BoxCollider2D:

@@ -13,6 +13,9 @@ public class RunnerPickup : MonoBehaviour
 	public float scoreAmount = 10;
 	public KikaAndBob.CommodityType commodityType = KikaAndBob.CommodityType.NONE;
 
+	public GameObject spawnObject = null; // object to spawn on hit. Usually interesting for particle-effects
+	public string hitSound = "";
+
 	public bool negative
 	{
 		get{ return !positive; } 
@@ -64,6 +67,26 @@ public class RunnerPickup : MonoBehaviour
 		{
 			if( canDisableCollider )
 				this.collider2D.enabled = false;
+		}
+
+		
+		
+		if( spawnObject != null )
+		{
+			GameObject spawn = (GameObject) GameObject.Instantiate( spawnObject );
+			spawn.transform.position = this.transform.position;
+			
+			GameObject.Destroy( spawn, 10.0f );
+		}
+
+		if( string.IsNullOrEmpty(hitSound) && !positive )
+		{
+			hitSound = "Collide01";
+		}
+
+		if( !string.IsNullOrEmpty(hitSound) )
+		{
+			LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(hitSound) );
 		}
 	}
 

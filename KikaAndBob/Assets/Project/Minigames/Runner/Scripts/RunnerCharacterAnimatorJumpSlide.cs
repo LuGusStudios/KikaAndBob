@@ -123,7 +123,7 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 
 	protected IEnumerator HitRoutine(RunnerPickup pickup)
 	{
-		Debug.LogError("HIT ANIMATION PLAYING NOW");
+		//Debug.LogError("HIT ANIMATION PLAYING NOW");
 
 		if( !characterDead )
 		{
