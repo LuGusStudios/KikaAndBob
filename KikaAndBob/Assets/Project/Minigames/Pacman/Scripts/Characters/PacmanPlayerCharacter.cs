@@ -96,9 +96,12 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		UpdateMovement();
+		UpdateMovement();	
 
 		UpdateWalkSound();
+
+		PacmanCameraFollower.use.FollowCamera();	// the camera does not update automatically anymore - an unpredictable order of Update calls between this and the characters can cause jitter	
+													// instead, it's called from the character scripts
 	}
 
 	protected void UpdateWalkSound()
