@@ -410,32 +410,61 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 
 	protected override void DoCurrentTileBehavior()
 	{
-		if (currentTile.tileType == PacmanTile.TileType.Teleport )
-		{
-			LugusCoroutines.use.StartRoutine(TeleportRoutine());
-		}
+		// TO DO: Enemy teleport is highly unpredictable.
+		// if we just teleported and hit the next non-teleport tile, we're done teleporting
+//		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
+//		{
+//			alreadyTeleported = false;
+//		}
+//
+//		if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
+//		{
+//			LugusCoroutines.use.StartRoutine(TeleportRoutine());
+//		}
 	}
 
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
 	{
+		// TO DO: Too unpredictable to test in the short term.
+
+
+		/*
 		if (targetTile == null)
 			return;
 
-		// detect if it is more efficient to use a teleport than to find target tile directly
-		// if target is more than half a level away
-		if ( Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float) PacmanLevelManager.use.width * 0.5f ) // if targetTile is (more than) half a level away in x distance
+		float distanceFromMeToClosestTeleport = Mathf.Infinity;
+		PacmanTile tileClosestToMe = null;
+
+		float distanceFromTargetToClosestTeleport  = Mathf.Infinity;
+		PacmanTile tileClosestToTarget = null;
+		
+		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 		{
-			// and we're a quarter level or less way from a teleport
-			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+			if (Vector2.Distance(currentTile.location, tile.location) <= distanceFromMeToClosestTeleport)
 			{
-				if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width * 0.25f)
-				{
-					targetTile = tile;
-					break;
-				}
+				distanceFromMeToClosestTeleport = Vector2.Distance(currentTile.location, tile.location);
+				tileClosestToMe = tile;
 			}
-		}	
+
+			if (Vector2.Distance(targetTile.location, tile.location) <= distanceFromTargetToClosestTeleport)
+			{
+				distanceFromTargetToClosestTeleport = Vector2.Distance(targetTile.location, tile.location);
+				tileClosestToTarget = tile;
+			}
+		}
+
+		if (tileClosestToMe == null || tileClosestToTarget == null || tileClosestToMe == tileClosestToTarget)
+			return;
+
+		if (distanceFromMeToClosestTeleport + distanceFromTargetToClosestTeleport < Vector2.Distance(currentTile.location, targetTile.location))
+		{
+			print (distanceFromMeToClosestTeleport + distanceFromTargetToClosestTeleport);
+			print (Vector2.Distance(currentTile.location, targetTile.location));
+
+			targetTile = tileClosestToMe;
+		}
+		*/
 	}
 
 	// Returns a tile that is the best bet for getting from the tile where the enemy is now to the target tile.
@@ -530,8 +559,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		   	inspectedTile.tileType == PacmanTile.TileType.Locked ||
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
 		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
-		  	inspectedTile.tileType == PacmanTile.TileType.Lethal
-			)
+		  	inspectedTile.tileType == PacmanTile.TileType.Lethal ||
+		   inspectedTile.tileType == PacmanTile.TileType.Teleport
+		   )
 			return false;
 		
 		return true;

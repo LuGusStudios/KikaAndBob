@@ -244,7 +244,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 			spawnedParticles.Play();
 			Destroy(spawnedParticles.gameObject, 2.0f);
 		}
-		
+
+		DetectCurrentTile();
 		DestinationReached();
 	}
 
