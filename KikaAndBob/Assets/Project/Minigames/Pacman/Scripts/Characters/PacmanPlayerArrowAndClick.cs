@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter 
 {
-	protected PacmanTile clickedTile = null;
+	public bool allowClickControl = false;
+
+	protected PacmanTile clickedTile = null; 
 	protected bool movingwithArrows = true;
 
 	private void Update () 
@@ -33,6 +35,11 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 
 	private void CheckClick()
 	{
+		if (!allowClickControl)
+			return;
+
+
+
 		if (LugusInput.use.down)
 		{
 			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)

@@ -87,6 +87,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	{		
 		if (moveTargetTile != null)
 		{
+			if (movementDuration <= 0)
+				return;
+
 			if (movementTimer >= movementDuration)
 			{
 				ResetMovement();
@@ -122,6 +125,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		}
 		
 		movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1/speed;
+
+//		if (movementDuration <= movementTimer)
+//			return;
 		
 		UpdateMovement();	// needs to be called again, or character will pause for one frame
 	}
@@ -253,7 +259,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	public virtual void ResetMovement()
 	{
 		movementTimer = 0;
-	 	movementDuration = 0;
+		movementDuration = 0;
 	}
 	
 	// override for custom behavior upon having reached a tile (e.g. picking the next tile to move to)
