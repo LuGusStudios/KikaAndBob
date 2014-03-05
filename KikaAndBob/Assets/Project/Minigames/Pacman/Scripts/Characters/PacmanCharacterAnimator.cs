@@ -24,6 +24,8 @@ public class PacmanCharacterAnimator : MonoBehaviour
 
 	public string hitAnimation;
 
+	public string runScared;
+
 	
 	public void SetupLocal()
 	{
@@ -66,7 +68,11 @@ public class PacmanCharacterAnimator : MonoBehaviour
 		if (string.IsNullOrEmpty(animationPath))
 		{
 			Debug.LogError("Animation path was empty!");
+			return;
 		}
+
+		if (currentAnimationPath == animationPath)
+			return;
 
 		string[] parts = animationPath.Split('/');
 		string containerName = "";

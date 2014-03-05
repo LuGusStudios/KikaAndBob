@@ -35,7 +35,7 @@ public class ScoreVisualizerDebugger : LugusSingletonRuntime<ScoreVisualizerDebu
 			started = true;
 			Setup();
 		}
-
+		/*
 		if( Input.GetKeyDown(KeyCode.A) )
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Time, 20).Color (Color.red).Execute();
@@ -61,6 +61,7 @@ public class ScoreVisualizerDebugger : LugusSingletonRuntime<ScoreVisualizerDebu
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Distance, 200).Title ("Distance++!").Time (2.0f).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
 		}
+		*/
 	}
 
 	public void Setup()

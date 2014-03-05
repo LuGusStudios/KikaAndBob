@@ -9,6 +9,41 @@ public class DoorUpdater : PacmanLevelUpdater {
 	public int minimumDoorsOpen = 1;
 
 	protected List<PacmanTile> doors = new List<PacmanTile>();
+	protected ParticleSystem doorParticles = null;
+
+	public void SetupLocal()
+	{
+
+	}
+	
+	public void SetupGlobal()
+	{
+		if (doorParticles == null)
+		{
+			GameObject doorParticlesObject = PacmanLevelManager.use.GetPrefab("DoorParticles");
+			
+			if (doorParticlesObject != null)
+			{
+				doorParticles = doorParticlesObject.GetComponent<ParticleSystem>();
+			}
+
+			if (doorParticles == null)
+			{
+				Debug.LogError("PacmanCharacter: Missing door particles!");
+			}
+		}
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
+
 
 	public override void Activate()
 	{
@@ -67,20 +102,31 @@ public class DoorUpdater : PacmanLevelUpdater {
 		
 		int closedDoors = 0;
 
-		// first, open all doors
-		foreach(PacmanTile door in doors)
-		{
-			door.tileType = PacmanTile.TileType.Open;
-		}
-		
+//		// first, open all doors
+//		foreach(PacmanTile door in doors)
+//		{
+//			door.tileType = PacmanTile.TileType.Open;
+//		}
+
+		List<PacmanTile> newClosedDoors = new List<PacmanTile>();
+
 		// keep a minimum of doors open and a minimum of doors closed
 		while(closedDoors + minimumDoorsOpen < doors.Count)
 		{
 			// close random door
 			int randomIndex = Random.Range(0, doors.Count);
 			PacmanTile doorTile = doors[randomIndex];
-			doorTile.tileType = PacmanTile.TileType.Collide;
 			closedDoors++;
+			newClosedDoors.Add(doorTile);
+
+			if (doorTile.tileType != PacmanTile.TileType.Collide && doorParticles != null)
+			{
+				ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(doorParticles);
+				spawnedParticles.transform.position = doorTile.GetWorldLocation().v3().zAdd(-5.0f);
+				
+				spawnedParticles.Play();
+				Destroy(spawnedParticles.gameObject, 2.0f);
+			}
 
 			// update exit count for tiles around the door tile
 			//GameTile updatedTile;
@@ -115,17 +161,29 @@ public class DoorUpdater : PacmanLevelUpdater {
 		
 		foreach(PacmanTile door in doors)
 		{
-			if (door.tileType == PacmanTile.TileType.Open)
+			if (newClosedDoors.Contains(door))
 			{
-				// update exit count for tiles left and right of other doors - these may still have their exit counts lowered from having been closed before
-				PacmanTile updatedTile;
-
-				updatedTile = PacmanLevelManager.use.GetTile(door.gridIndices + new Vector2(-1,0));
-				if(updatedTile != null)
-					updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
+				door.tileType = PacmanTile.TileType.Collide;
+			}
+			else
+			{
+				door.tileType = PacmanTile.TileType.Open;
 				
-				updatedTile = PacmanLevelManager.use.GetTile(door.gridIndices + new Vector2(1,0));
-				if(updatedTile != null)
+				// update exit count for tiles left and right of other doors - these may still have their exit counts lowered from having been closed before
+//				PacmanTile updatedTile;
+//
+//				updatedTile = PacmanLevelManager.use.GetTile(door.gridIndices + new Vector2(-1,0));
+//				if(updatedTile != null)
+//					updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
+//				
+//				updatedTile = PacmanLevelManager.use.GetTile(door.gridIndices + new Vector2(1,0));
+//				if(updatedTile != null)
+//					updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
+			}
+
+			foreach (PacmanTile updatedTile in PacmanLevelManager.use.GetTilesAroundStraight(door))
+			{
+				if ( updatedTile != null )
 					updatedTile.exitCount = PacmanLevelManager.use.GetNumberOfExits(updatedTile);
 			}
 		}
