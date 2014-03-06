@@ -5,6 +5,13 @@ using SmoothMoves;
 
 public class SmoothMovesUtil 
 {
+	// handy to reset color if the coroutine below was terminated before finishing
+	public static void SetColor(BoneAnimation[] animationContainers, Color color)
+	{
+		foreach( BoneAnimation container in animationContainers )
+			container.SetMeshColor( color );
+	}
+
 	public static IEnumerator Blink(BoneAnimation[] animationContainers, Color color, float duration, int blinkCount)
 	{
 		Color originalColor = Color.white;

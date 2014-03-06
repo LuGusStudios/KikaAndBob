@@ -53,9 +53,12 @@ public class DartsBull : IDartsHitable
 		offScreen = true;
 		hitStreak = 0;
 
+		boxCollider2D.enabled = true;
+
+		// pick facing direction
 		if (secondMove.x < 0)
 		{
-			transform.localScale = transform.localScale.x(-Mathf.Abs(transform.localScale.x));
+			transform.localScale = transform.localScale.x(-Mathf.Abs(transform.localScale.x)); 
 		}
 		else
 		{
@@ -73,21 +76,15 @@ public class DartsBull : IDartsHitable
 
 	protected IEnumerator WalkInRoutine()
 	{	
-		Debug.LogWarning("Bull moving in.");
-
 		characterBoneAnimation[runAnimation].speed = 1.0f;
 		characterBoneAnimation.Play(runAnimation);
 	
 		dust.Stop();
 		dust.Clear();
-		boxCollider2D.enabled = false;
 
 		gameObject.MoveTo(originalPosition + firstMove).Time(moveTime).Execute();
 
 		yield return new WaitForSeconds(moveTime);
-
-
-		Debug.LogWarning("Bull moving out.");
 		
 		boxCollider2D.enabled = true;
 		characterBoneAnimation.CrossFade(idleAnimation, 1.0f, PlayMode.StopSameLayer);
@@ -136,6 +133,8 @@ public class DartsBull : IDartsHitable
 		{
 			iTween.Stop(gameObject);
 
+			boxCollider2D.enabled = false;
+
 			if (moveRoutine != null && moveRoutine.Running)
 				moveRoutine.StopRoutine();
 
@@ -148,6 +147,7 @@ public class DartsBull : IDartsHitable
 			}
 			else
 			{
+
 				transform.position = originalPosition;
 				this.Shown = false;
 			}
@@ -156,7 +156,7 @@ public class DartsBull : IDartsHitable
 
 	public override int GetScore ()
 	{
-		return score * hitStreak;
+		return group.score * hitStreak;
 	}
 	
 	public void SetupLocal()

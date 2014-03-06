@@ -21,7 +21,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 		//else
 			position = ( (MonoBehaviour) RunnerCharacterController.use).transform.position;
 
-		float scoreAmount = 10.0f;
+		float scoreAmount = 5.0f; 
 		if( pickup != null )
 			scoreAmount = pickup.scoreAmount;
 

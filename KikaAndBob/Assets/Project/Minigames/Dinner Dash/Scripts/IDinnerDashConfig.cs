@@ -57,6 +57,24 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		HUDManager.use.CounterLargeRight1.SetValue(0);
 	}
 
+	
+	protected void DisableObjects(GameObject[] objects)
+	{
+		foreach( GameObject obj in objects )
+		{
+			if( obj == null )
+			{
+				Debug.LogError(name + " : DisableObjects : one of the objects was null!");
+			}
+			else
+			{
+				//Debug.LogError(name + " : De-activating " + obj.name);
+				obj.SetActive(false);
+			}
+		}
+	}
+
+
 	public List<ConsumableDefinition> CreateOrder(ConsumableDefinition one)
 	{
 		List<ConsumableDefinition> output = new List<ConsumableDefinition>();
