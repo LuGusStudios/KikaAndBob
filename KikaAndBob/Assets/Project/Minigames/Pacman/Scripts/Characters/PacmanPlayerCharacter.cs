@@ -4,9 +4,9 @@ using SmoothMoves;
 
 public class PacmanPlayerCharacter : PacmanCharacter {
 
-	public bool poweredUp = false;
+	public bool poweredUp = false; 
 	public float powerupDuration = 10;
-
+     
 	protected bool allowControl = true;
 	protected bool cutScene = false;
 	protected PacmanCharacter.CharacterDirections nextDirection = CharacterDirections.Undefined;
@@ -117,7 +117,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		if (poweredUp)
+		if (poweredUp )
 		{
 			if ( direction == CharacterDirections.Right || direction == CharacterDirections.Left)
 			{
@@ -162,11 +162,11 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			return;
 
 		DoCurrentTileBehavior();
-		
+ 
 		moving = false;
-
 		// if we can move in the next selected direction, go there
 		PacmanTile nextTile = FindOpenTileInDirection(nextDirection);
+
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
@@ -200,17 +200,19 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected virtual void DoCurrentTileBehavior()
 	{
 		// if we just teleported and hit the next non-teleport tile, we're done teleporting
-		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
-		{
-			alreadyTeleported = false;
-		}
+
+        //Important! this need to be uncommented for egypt. Testing purposes for england!!!
+        //if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
+        //{
+        //    alreadyTeleported = false;
+        //}
 
 		// check all sorts things placed on this tile
 		foreach(GameObject go in currentTile.tileItems)
 		{
 			if (go.GetComponent<PacmanTileItem>() != null)
 			{
-				go.GetComponent<PacmanTileItem>().OnEnter();
+				go.GetComponent<PacmanTileItem>().OnEnter(this);     
 			}
 		}
 
@@ -240,6 +242,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		else if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
 		{
 			LugusCoroutines.use.StartRoutine(TeleportRoutine());
+            
 		}
 	}
 
@@ -282,6 +285,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 		transform.localPosition = targetTile.location.v3();
 
+	    currentTile = targetTile;
+
 		DestinationReached();
 	}
 
@@ -316,7 +321,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			{
 				if (go.GetComponent<PacmanTileItem>() != null)
 				{
-					go.GetComponent<PacmanTileItem>().OnTryEnter();
+					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
 				}
 			}
 

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class PacmanTileItem : MonoBehaviour 
 {
 	public PacmanTile parentTile;
-
+    public string uniqueId;
+    public string linkedId;
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -36,12 +37,12 @@ public class PacmanTileItem : MonoBehaviour
 
 	}
 
-	public virtual void OnTryEnter()
+	public virtual void OnTryEnter(PacmanCharacter character)
 	{
 
 	}
 
-	public virtual void OnEnter()
+	public virtual void OnEnter(PacmanCharacter character)
 	{
 		
 	}

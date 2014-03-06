@@ -117,7 +117,8 @@ public class LevelLoaderDefault
 		{
 			return FroggerCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican")
+		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican" 
+		         || Application.loadedLevelName == "e23_england")
 		{
 			return PacmanCrossSceneInfo.use;
 		}

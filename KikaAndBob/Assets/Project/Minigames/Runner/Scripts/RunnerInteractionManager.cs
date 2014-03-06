@@ -76,7 +76,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		float progressionPercentage = 1.0f;
 		if ((Time.time - startTime) > (timeToHold + timeToHoldRatio) + (timeToMax + timeToMaxRatio))
 		{
-			Debug.Log("Relax");
+			//Debug.Log("Relax");
 			StartTimer();
 		}
 		else if( (Time.time - startTime) < (timeToMax + timeToMaxRatio) )

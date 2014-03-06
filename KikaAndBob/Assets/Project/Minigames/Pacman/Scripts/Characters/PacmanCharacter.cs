@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PacmanCharacterAnimator))]
 public abstract class PacmanCharacter : MonoBehaviour {
 
+    public string id;
 	public float speed = 200f;		// TO DO: Convert this to tiles/second, instead of the world units it uses now.
 	public string walkSoundKey = "";
 	public float spawnDelay = 0;
@@ -15,9 +16,9 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected Vector2 spawnLocation = Vector2.zero;
 	protected float movementTimer = 0;
 	protected float movementDuration = 0;
-	protected bool moving = false;
+	public bool moving = false;
 	protected bool horizontalMovement = false;
-	protected bool alreadyTeleported = false;
+	public bool alreadyTeleported = false;
 
 	public PacmanTile currentTile = null;
 	protected PacmanTile startTile;
