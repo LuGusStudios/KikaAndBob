@@ -416,12 +416,16 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			    {
                     tileItemScript.linkedId = definition.linkedId;
 			    }
-				tileItemScript.Initialize();
                 tileItemScripts.Add(tileItemScript);
 			}
             
 			targetTile.tileItems.Add(tileItem);
 		}
+
+        foreach (PacmanTileItem tileItemScript in tileItemScripts)
+	    {
+            tileItemScript.Initialize();
+	    }
 	}
 
 	protected void ApplyUpdaters(string[] ids)

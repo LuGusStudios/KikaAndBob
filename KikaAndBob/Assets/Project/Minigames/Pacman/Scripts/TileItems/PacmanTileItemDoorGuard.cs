@@ -19,12 +19,10 @@ public class PacmanTileItemDoorGuard : PacmanTileItem
 	
 	}
 
-    public override void OnTryEnter(PacmanCharacter character)
+    public override void OnTryEnter(PacmanCharacter character) 
     {
-        if (!opened && character.name == linkedId)// && PacmanPickups.use.GetPickupAmount(keyID) >= 1)
+        if (!opened && character.id == linkedId)// && PacmanPickups.use.GetPickupAmount(keyID) >= 1)
         {
-            if(character is PacmanEnemyPatrolGuardChase)
-                
             opened = true;
             //PacmanPickups.use.ModifyPickupAmount(keyID, -1);
             parentTile.tileType = PacmanTile.TileType.Open;

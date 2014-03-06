@@ -4,9 +4,9 @@ using SmoothMoves;
 
 public class PacmanPlayerCharacter : PacmanCharacter {
 
-	public bool poweredUp = false;
+	public bool poweredUp = false; 
 	public float powerupDuration = 10;
-
+     
 	protected bool allowControl = true;
 	protected bool cutScene = false;
 	protected PacmanCharacter.CharacterDirections nextDirection = CharacterDirections.Undefined;
@@ -117,7 +117,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			adjustedDirection = CharacterDirections.Left;
 		}
 
-		if (poweredUp)
+		if (poweredUp )
 		{
 			if ( direction == CharacterDirections.Right || direction == CharacterDirections.Left)
 			{
