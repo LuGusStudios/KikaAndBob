@@ -269,7 +269,7 @@ public class RunnerManagerDefault : IGameManager
 
 
 		// NORTH // THIS DOES NOT YET SEEM TO WORK... (in Brazil only?) WEIRD
-		if( LugusCamera.game.transform.position.y > shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+		if( LugusCamera.game.transform.position.y > shiftYTreshold /*|| LugusInput.use.KeyDown(KeyCode.R)*/ )
 		{ 
 			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
 		}
@@ -290,8 +290,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-			RunnerCrossSceneInfo.use.levelToLoad = 667;
+		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		
@@ -693,7 +693,7 @@ public class RunnerManagerDefault : IGameManager
 	
 	protected void Update () 
 	{
-
+		/*
 		if( LugusInput.use.Key( KeyCode.S) )
 		{
 			timeSpent = Random.Range(50, 100);
@@ -703,6 +703,7 @@ public class RunnerManagerDefault : IGameManager
 
 			StopGame();
 		}  
+		*/
 
 	}
 

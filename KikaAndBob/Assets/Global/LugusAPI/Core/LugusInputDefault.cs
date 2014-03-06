@@ -294,11 +294,13 @@ public class LugusInputDefault : MonoBehaviour
 	void Update () 
 	{
 		ProcessMouse();
-		
+
+		/*
 		if( Input.GetKeyDown(KeyCode.Tab) )
 		{
 			LugusDebug.debug = !LugusDebug.debug;
 		}
+		*/
 	}
 	
 	public bool KeyDown(KeyCode key)

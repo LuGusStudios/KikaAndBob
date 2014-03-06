@@ -210,6 +210,7 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 			this.PausePopup.Show();
 		}
 
+		/*
 		if( LugusInput.use.KeyDown( KeyCode.F ) )
 		{
 			FailScreen.Show();
@@ -219,5 +220,6 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		{
 			LevelEndScreen.Show(false);
 		}
+		*/
 	}
 }

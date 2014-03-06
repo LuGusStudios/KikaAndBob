@@ -35,10 +35,10 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 
 		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 
-		character.speedRange = new DataRange(13,13);
+		character.speedRange = new DataRange(13,15);
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 1.0f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 
 	}
@@ -51,7 +51,7 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 		character.speedRange = new DataRange(13,20);
 		character.timeToMaxSpeed = 120;
 		RunnerInteractionManager.use.timeToMax = 120; 
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.9f );    
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 	}
 	
@@ -60,10 +60,10 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 
 		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 		
-		character.speedRange = new DataRange(16,20);
+		character.speedRange = new DataRange(14,20); 
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 0.8f, 0.8f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
