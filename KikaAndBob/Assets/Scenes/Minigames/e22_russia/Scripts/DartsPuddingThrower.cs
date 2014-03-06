@@ -27,7 +27,7 @@ public class DartsPuddingThrower : MonoBehaviour
 		
 		if (bulletHitParticles == null)
 		{
-			bulletHitParticles = transform.FindChild("HitParticles").gameObject;
+			bulletHitParticles = GameObject.Find("HitParticles");
 		}
 		if (bulletHitParticles == null)
 		{
@@ -133,5 +133,7 @@ public class DartsPuddingThrower : MonoBehaviour
 		}
 		
 		shooting = false; // the shooter can be used again for another bullet
+
+		Destroy(bullet);
 	}
 }

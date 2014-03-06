@@ -34,7 +34,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	{
 		foreach( IDartsHitable hitable in hitables )
 		{
-			hitable.Hide();
+			hitable.Disable();
 		}
 	}
 
@@ -54,13 +54,13 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		if( shownCount < 0 )
 			shownCount = 0;
 
-		Debug.Log (name + " : HitableHidden" + shownCount);
+		//Debug.Log (name + " : HitableHidden" + shownCount);
 	}
 
 	public void HitableShown(IDartsHitable hitable)
 	{
 		shownCount++;
-		Debug.Log (name + " : HitableShown " + shownCount);
+		//Debug.Log (name + " : HitableShown " + shownCount);
 	}
 
 	protected IDartsHitable NextHitable()
