@@ -12,6 +12,7 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 	public ConsumableDefinition macaroni = null;
 	public ConsumableDefinition macaroniCheese = null;
 	public ConsumableDefinition wine = null;
+	public ConsumableDefinition pizza = null;
 
 	// processors
 	public GameObject Blender = null;
@@ -26,6 +27,7 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 	public GameObject TomatoProducer = null;
 	public GameObject MacaroniProducer = null;
 	public GameObject WineProducer = null;
+	public GameObject PizzaProducer = null;
 
 	protected void Awake()
 	{
@@ -59,16 +61,23 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		
 		if( WineProducer == null )
 			WineProducer = GameObject.Find ("Producers/Wine");
+		
+		if( PizzaProducer == null )
+			PizzaProducer = GameObject.Find ("Producers/Pizza");
 	}
 
 	// Use this for initialization
 	protected void Start () 
 	{
-		LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		LugusResources.use.ChangeLanguage("nl");
 	}
 
-	public void LoadLevel(int index)
+	public override void LoadLevel(int index)
 	{
+		index = index - 1; // index passed by menu is 1-based. Here we want 0-based
+		
+		Debug.LogError("LOAD LEVEL diner dash " + index + " // " + DinnerDashCrossSceneInfo.use.levelToLoad);
+		
 		if( index == 0 )
 			Level0 ();
 		else if( index == 1 )
@@ -81,28 +90,18 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 			Level4();
 	}
 
-	protected void DisableObjects(GameObject[] objects)
-	{
-		foreach( GameObject obj in objects )
-		{
-			if( obj == null )
-			{
-				Debug.LogError(name + " : DisableObjects : one of the objects was null!");
-			}
-			else
-			{
-				//Debug.LogError(name + " : De-activating " + obj.name);
-				obj.SetActive(false);
-			}
-		}
-	}
-
 	public void Level0()
 	{
+		DinnerDashManager.use.targetMoneyScore = 190;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial(); 
+
+
 		// level 0 : only bob with the pastabox and bread
-		DisableObjects( new GameObject[]{ MacaroniPot, WineProducer, MacaroniCheesePot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, MacaroniProducer } );
+		DisableObjects( new GameObject[]{ MacaroniPot, PizzaProducer, WineProducer, MacaroniCheesePot, Blender, IceCreamMachine, OrangeProducer, TomatoProducer, MacaroniProducer } );
 
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 
 
 
@@ -116,17 +115,27 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
-		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 6.0f);
+
+		
+		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		tutorials.currentTutorial = 0;
+		tutorials.NextStep();
 	}
 
 	public void Level1()
 	{
+		DinnerDashManager.use.targetMoneyScore = 250;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial(); 
+
 		// level 1 : introduce macaroni and wine
-		DisableObjects( new GameObject[]{ Blender, MacaroniCheesePot, IceCreamMachine, OrangeProducer, TomatoProducer } );
+		DisableObjects( new GameObject[]{ Blender, PizzaProducer, MacaroniCheesePot, IceCreamMachine, OrangeProducer, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 		
 		
 		
@@ -134,30 +143,40 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
 		orders.Add( CreateOrder(macaroni) );
-		orders.Add( CreateOrder(pastaBox, wine) );
 		orders.Add( CreateOrder(macaroni, bread) );
+		orders.Add( CreateOrder(pastaBox, wine) );
 		orders.Add( CreateOrder(macaroni, wine) );
 		
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+
+		
+		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		tutorials.currentTutorial = 1;
+		tutorials.NextStep();
 	}
 	public void Level2()
 	{
+		DinnerDashManager.use.targetMoneyScore = 350;
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial();
+
 		// level 2 : introduce blender and macaroniCheese
-		DisableObjects( new GameObject[]{ IceCreamMachine, TomatoProducer } );
+		DisableObjects( new GameObject[]{ IceCreamMachine, PizzaProducer, TomatoProducer } );
 		
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(9999,9999);
 		
-		
-		
+
+
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 		
-		orders.Add( CreateOrder(macaroniCheese) );
+		orders.Add( CreateOrder(orange) );
 		orders.Add( CreateOrder(orange, pastaBox) );
 		orders.Add( CreateOrder(macaroniCheese, wine) );
 		orders.Add( CreateOrder(macaroni, orange) );
@@ -166,15 +185,25 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 3;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 1;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
+		
+		
+		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		tutorials.currentTutorial = 2;
+		tutorials.NextStep();
 	}
 
 	public void Level3()
 	{
+		DinnerDashManager.use.targetMoneyScore = 380;  
+		DinnerDashManager.use.timeout = -1.0f;
+		SetupHUDForTutorial();
+
 		// level 3 : everything
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(10.0f, 20.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
@@ -182,31 +211,43 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		orders.Add( CreateOrder(macaroni, wine, iceCream) );
 		orders.Add( CreateOrder(macaroniCheese) );
 		orders.Add( CreateOrder(pastaBox, tomato) );
-		orders.Add( CreateOrder(iceCream) );
+		orders.Add( CreateOrder(pizza) );
 		orders.Add( CreateOrder(orange, macaroni, iceCream) );
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = true;
 		DinnerDashManager.use.consumerManager.orders = orders;
-		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 4;
+		DinnerDashManager.use.consumerManager.maxConcurrentConsumers = 2;
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 10.0f);
+		
+		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>();
+		tutorials.currentTutorial = 3;
+		tutorials.NextStep();
+
+
 	}
 
 	public void Level4()
 	{
+		DinnerDashManager.use.targetMoneyScore = -1.0f;
+		DinnerDashManager.use.timeout = 300.0f; 
+
+		SetupHUDForGame();
+
 		// level 4 : everything endless random
 		DinnerDashManager.use.consumerManager = this.gameObject.AddComponent<ConsumableConsumerManager>();
+		DinnerDashManager.use.consumerManager.consumerWaitTimeBeforeAngry = new DataRange(6.0f, 8.0f);
 		
 		// generate orders to be use by the customers in this game
 		List< List<ConsumableDefinition> > orders = new List<List<ConsumableDefinition>>();
 
-		ConsumableDefinition[] poolArray = new ConsumableDefinition[]{ pastaBox, bread, orange, tomato, iceCream, macaroni, macaroniCheese, wine };
+		ConsumableDefinition[] poolArray = new ConsumableDefinition[]{ pastaBox, pizza, bread, orange, tomato, iceCream, macaroni, macaroniCheese, wine };
 		List<ConsumableDefinition> pool = new List<ConsumableDefinition>();
 		pool.AddRange( poolArray );
 
 		for( int i = 0; i < 100; ++i )
 		{
-			orders.Add ( RandomOrder (pool, Random.Range(1,4)) );
+			orders.Add ( RandomOrder (pool, Random.Range(1,4)) ); 
 		}
 		
 		DinnerDashManager.use.consumerManager.RandomOrders = false; // orders are already random
@@ -215,31 +256,18 @@ public class DinnerDashConfig_12NewYork : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 5.0f);
 	}
-
-	public bool started = false;
-
-	// Update is called once per frame
-	void Update () 
-	{
-		if( !started )
-		{
-			started = true;
-			DinnerDashManager.use.StartGame();
-		}
-	}
-
 	
 	void OnGUI()
 	{
 		if (!LugusDebug.debug)
 			return;
-
+		
 		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
 		for (int i = 0; i < 5; i++) 
 		{
 			if (GUILayout.Button("Start Level " + i))
 			{
-				DinnerDashCrossSceneInfo.use.levelToLoad = i;
+				DinnerDashCrossSceneInfo.use.levelToLoad = (i + 1);
 				LugusCoroutines.use.StopAllRoutines();
 				Application.LoadLevel( Application.loadedLevelName );
 			}

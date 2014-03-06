@@ -131,7 +131,7 @@ public class LevelLoaderDefault
 		{
 			return DartsCrossSceneInfo.use;
 		}		
-		else if( Application.loadedLevelName == "e02_argentina" )
+		else if( Application.loadedLevelName == "e02_argentina" || Application.loadedLevelName == "e12_newyork" )
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}

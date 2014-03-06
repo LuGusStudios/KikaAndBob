@@ -4,7 +4,7 @@ using System.Collections;
 
 public class PacmanLevelBuildEditor : EditorWindow 
 {
-	protected int levelIndex = 0; 
+	protected int levelIndex = 0;
 
 	int width = 13;
 	int height = 13;
@@ -14,10 +14,10 @@ public class PacmanLevelBuildEditor : EditorWindow
 	Transform levelParent = null;
 
 	[MenuItem ("KikaAndBob/Pacman/LevelVisualizer")]
-	protected static void Init () 
+	static void Init () 
 	{
 		PacmanLevelBuildEditor window = (PacmanLevelBuildEditor)EditorWindow.GetWindow (typeof (PacmanLevelBuildEditor));
-        window.Show();
+		window.Show();
 	}
 	
 	protected void Update () 

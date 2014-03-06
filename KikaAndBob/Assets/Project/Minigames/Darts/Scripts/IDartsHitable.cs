@@ -9,7 +9,7 @@ public abstract class IDartsHitable : MonoBehaviour
 	
 	public DartsFunctionalityGroup group = null;
 
-	public int score = 100;
+//	public int score = 100;
 
 	protected int _hitCount = 0;
 	public int HitCount
@@ -79,7 +79,7 @@ public abstract class IDartsHitable : MonoBehaviour
 	public abstract void Show();
 	public abstract void Hide();
 
-	// standard the same as Hide() - can be used to define a "fast" hide method, e.g. not animated
+	// standard the same as Hide() - can be used to define a "fast" hide method, e.g. not animated 
 	public virtual void Disable()
 	{
 		Hide();
@@ -95,6 +95,6 @@ public abstract class IDartsHitable : MonoBehaviour
 
 	public virtual int GetScore()
 	{
-		return score;
+		return group.score;
 	}
 }

@@ -12,6 +12,8 @@ public class PacmanEnemyChaseTrail : PacmanEnemyCharacter {
 	{
 		if (runBehavior == true)
 		{
+			DoCurrentTileBehavior();
+
 			if (enemyState == EnemyState.Frightened)
 			{
 				PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
