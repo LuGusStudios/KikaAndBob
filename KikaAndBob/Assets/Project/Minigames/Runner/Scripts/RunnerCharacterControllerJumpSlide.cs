@@ -18,6 +18,9 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	public string runningSound = "WalkLoop01"; 
 	protected ILugusAudioTrack runningTrack = null;
 
+	public string slideSound = "Skid01";
+	protected ILugusAudioTrack slidingTrack = null;
+
 	protected RunnerCharacterShadow shadow = null;
 	protected Vector3 originalShadowScale = Vector3.one;
 
@@ -93,6 +96,11 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		jumpClip = LugusResources.use.Shared.GetAudio( jumpSound );
 		runningTrack = LugusAudio.use.SFX ().GetTrack();
 		runningTrack.Play( LugusResources.use.Shared.GetAudio( runningSound ), new LugusAudioTrackSettings().Loop(true) );
+
+
+		slidingTrack = LugusAudio.use.SFX ().GetTrack();
+		slidingTrack.Play( LugusResources.use.Shared.GetAudio( slideSound ), new LugusAudioTrackSettings().Loop(true) );
+		slidingTrack.Pause();
 	}
 
 	public void OnDisable()
@@ -226,10 +234,10 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 			if( onJump != null )
 				onJump(false); 
 			
-			CheckSlide(true);
-
 			if( runningTrack != null )
 				runningTrack.Play();
+
+			CheckSlide(true);
 		}
 	}
 
@@ -267,6 +275,13 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 				Debug.LogError(name + " : Could not disable boxCollider while sliding...");
 			}
 
+			
+			if( runningTrack != null )
+				runningTrack.Pause();
+			
+			if( slidingTrack != null )
+				slidingTrack.Play();
+
 			if( onSlide != null )
 				onSlide(true);
 		}
@@ -284,7 +299,15 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 			{
 				topCollider.enabled = true;
 			}
+
 			
+			if( runningTrack != null )
+				runningTrack.Play();
+			
+			if( slidingTrack != null )
+				slidingTrack.Pause();
+
+
 			if( onSlide != null )
 				onSlide(false);
 		}
