@@ -12,6 +12,15 @@ public class ChandelierSwing : MonoBehaviour
 	
 	public void SetupGlobal()
 	{
+		transform.localEulerAngles = transform.localEulerAngles.z(-5.0f);
+		
+		//iTween.RotateTo(gameObject, transform.localEulerAngles.z(5.0f), 1.0f);
+		iTween.RotateTo(gameObject, iTween.Hash(
+			"z", 5,
+			"time", 1.0f,
+			"easetype", iTween.EaseType.easeInOutSine,
+			"looptype", iTween.LoopType.pingPong));
+
 	}
 	
 	protected void Awake()
@@ -26,6 +35,5 @@ public class ChandelierSwing : MonoBehaviour
 	
 	protected void Update () 
 	{
-	
 	}
 }

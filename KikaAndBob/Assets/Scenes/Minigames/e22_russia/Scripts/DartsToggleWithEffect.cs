@@ -4,12 +4,18 @@ using System.Collections.Generic;
 
 public class DartsToggleWithEffect : DartsToggle 
 {
+	public string hitSoundKey = "Poof01";
 	protected ParticleSystem appearParticles = null;
 	
 
 	public override void Show ()
 	{
 		base.Show();
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 
 		if (appearParticles != null)
 		{
@@ -20,6 +26,11 @@ public class DartsToggleWithEffect : DartsToggle
 	public override void Hide ()
 	{
 		this.Shown = false;
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 
 		// we can just disable everything, because we want the particles to stay visible
 
