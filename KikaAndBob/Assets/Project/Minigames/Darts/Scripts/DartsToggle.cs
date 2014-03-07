@@ -31,11 +31,11 @@ public class DartsToggle : IDartsHitable
 		}
 	}
 	
-	public void SetupLocal()
+	public virtual void SetupLocal()
 	{
 	}
 	
-	public void SetupGlobal()
+	public virtual void SetupGlobal()
 	{
 	}
 	
@@ -49,7 +49,7 @@ public class DartsToggle : IDartsHitable
 		SetupGlobal();
 	}
 	
-	protected void Update () 
+	private void Update () 
 	{
 	}
 }
