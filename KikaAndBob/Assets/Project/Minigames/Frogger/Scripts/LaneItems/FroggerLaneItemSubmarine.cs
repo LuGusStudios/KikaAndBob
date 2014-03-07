@@ -11,8 +11,6 @@ public class FroggerLaneItemSubmarine : FroggerLaneItemLethal
 	public SpriteRenderer submarine = null;
 	public Animator splash = null;
 
-	protected FroggerCharacter character = null;
-
 	public enum State
 	{
 		NONE = -1,
@@ -31,6 +29,8 @@ public class FroggerLaneItemSubmarine : FroggerLaneItemLethal
 
 	public void SetupLocal()
 	{
+		base.SetUpLocal();
+
 		state = State.UNDER;
 	}
 	
