@@ -5,6 +5,14 @@ using System.Collections.Generic;
 [RequireComponent(typeof(BoxCollider2D))]
 public abstract class FroggerSurface : MonoBehaviour {
 
+	public bool OnSurface
+	{
+		get
+		{
+			return onSurface;
+		}
+	}
+
 	public List<string> enterSoundKeys = new List<string>();
 	protected bool onSurface = false;
 	protected BoxCollider2D surfaceCollider = null;
