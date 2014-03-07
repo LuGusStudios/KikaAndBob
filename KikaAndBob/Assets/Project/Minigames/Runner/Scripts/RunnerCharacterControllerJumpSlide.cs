@@ -109,6 +109,10 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		{
 			runningTrack.Pause();
 		}
+		if( slidingTrack != null )
+		{
+			slidingTrack.Pause();
+		}
 	}
 
 	public void OnEnable()

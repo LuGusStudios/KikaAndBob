@@ -358,11 +358,19 @@ public class RunnerManagerDefault : IGameManager
 			HUDManager.use.CountdownScreen.countTextShadow.textMesh.color = Color.white;
 		}
 
-		#if UNITY_EDITOR
+		if( Application.loadedLevelName == "e10_Swiss" )
+		{
+			// there are trail renderers on the skies in switserland
+			// everytime we shift, the renderers fill the screen for a second, which looks buggy
+			// so try to delay the shift as long as possible.  
+			shiftYTreshold = 1800.0f;
+		}
+
+		//#if !UNITY_EDITOR
 		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
 
 		yield return new WaitForSeconds(3.0f);
-		#endif
+		//#endif
 
 		_gameRunning = true;
 		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
