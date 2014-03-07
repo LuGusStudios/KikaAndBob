@@ -10,6 +10,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
 	public bool avoidRepeat = false;
 	public int score = 100;
+	public bool negativeScore = false;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected IDartsHitable lastHitable = null;
@@ -34,7 +35,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	{
 		foreach( IDartsHitable hitable in hitables )
 		{
-			hitable.Hide();
+			hitable.Disable();
 		}
 	}
 
@@ -42,8 +43,13 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	public void HitableHit(IDartsHitable hitable)
 	{
-		Debug.Log ("HIT POSITION " + hitable.transform.position);
-		DartsScoreManager.use.AddScore(hitable.GetScore(), hitable.transform.position);
+		Debug.Log ("HIT POSITION " + hitable.transform.position); 
+
+		if (negativeScore)
+			DartsScoreManager.use.AddScore( -hitable.GetScore(), hitable.transform.position );
+		else
+			DartsScoreManager.use.AddScore( hitable.GetScore(), hitable.transform.position );
+
 		DartsScoreManager.use.AddToStreak(hitable);
 	}
 
@@ -54,13 +60,13 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		if( shownCount < 0 )
 			shownCount = 0;
 
-		Debug.Log (name + " : HitableHidden" + shownCount);
+		//Debug.Log (name + " : HitableHidden" + shownCount);
 	}
 
 	public void HitableShown(IDartsHitable hitable)
 	{
 		shownCount++;
-		Debug.Log (name + " : HitableShown " + shownCount);
+		//Debug.Log (name + " : HitableShown " + shownCount);
 	}
 
 	protected IDartsHitable NextHitable()
