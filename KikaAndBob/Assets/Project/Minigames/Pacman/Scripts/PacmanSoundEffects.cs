@@ -9,7 +9,7 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 	protected Dictionary<string, AudioClip> enemyAudioClips = new Dictionary<string, AudioClip>();	// load enemy sounds by LugusResources just once
 	protected List<PacmanEnemyCharacter> enemies = new List<PacmanEnemyCharacter>();
 	protected PacmanEnemyCharacter closestEnemy = null;
-	protected LugusAudioTrackSettings enemyTrackSettings;
+	protected LugusAudioTrackSettings enemyTrackSettings = null;
 	protected ILugusAudioTrack enemiesTrack = null;
 
 	public void SetupLocal()

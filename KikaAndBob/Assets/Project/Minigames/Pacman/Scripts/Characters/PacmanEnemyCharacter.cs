@@ -7,6 +7,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public bool allowUTurns = true;
 	public int forwardDetectDistance = 5;
 	public string walkAnimation = "";
+	public string scaredWalkAnimation = "";
 	public string defeatSoundKey = "";
 	public string attackSoundKey = "";
 
@@ -20,6 +21,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	protected PacmanPlayerCharacter player = null;
 	protected iTweener playerDetectedItweener = null;
 	protected iTweener frightenedItweener = null;
+	protected ParticleSystem defeatParticles = null;
+	protected ParticleSystem frightenedParticles = null;
+
 	private bool debugPathFinding = false;		// set true to mark targetTile in game (Debugging)
 
 	protected Transform targetMarker = null;
@@ -43,6 +47,34 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		if (player == null)
 			Debug.Log("Could not find player.");
+
+		if (defeatParticles == null)
+		{
+			Transform child = transform.FindChild("DefeatParticles");
+			if (child != null)
+			{
+				defeatParticles = child.GetComponent<ParticleSystem>();
+				
+				if (defeatParticles == null)
+				{
+					Debug.LogError("PacmanEnemyCharacter: Missing defeat particles!");
+				}
+			}
+		}
+
+		if (frightenedParticles == null)
+		{
+			Transform child = transform.FindChild("FrightenedParticles");
+			if (child != null)
+			{
+				frightenedParticles = child.GetComponent<ParticleSystem>();
+				
+				if (frightenedParticles == null)
+				{
+					Debug.LogError("PacmanEnemyCharacter: Missing frightened particles!");
+				}
+			}
+		}
 
 		#if UNITY_EDITOR	// handy for debugging - not to be included in build
 		// used for visualizing enemy target tile
@@ -68,14 +100,15 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		player = PacmanGameManager.use.GetActivePlayer();	
 
 		// the player is in neutral state unless something else is happening
-		NeutralEffect();
+
+		EnemyState nextState = EnemyState.Neutral;
 
 		// iterate over players to see if we're on the same tile as any of them
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{
-			if (p.poweredUp)
+			if (p.poweredUp) 
 			{
-				FrightenedEffect();
+				nextState = EnemyState.Frightened;
 			}
 
 			// if we're on the same tile as a player, determine behavior
@@ -84,7 +117,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				// if player is powered up, defeat this enemy
 				if (p.poweredUp)
 				{
-					DefeatedEffect();
+					nextState = EnemyState.Defeated;
 				}
 				// else, player loses life
 				else
@@ -97,6 +130,24 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 				}
 			}
 		}
+
+		if (nextState == EnemyState.Neutral)
+		{
+			NeutralEffect();
+		}
+		else if (nextState == EnemyState.Frightened)
+		{
+			FrightenedEffect();
+		}
+		else if (nextState == EnemyState.Defeated)
+		{
+			DefeatedEffect();
+		}
+		else if (nextState == EnemyState.Chasing)
+		{
+			PlayerSeenEffect();
+		}
+
 
 		// what tile is character currently on?
 		DetectCurrentTile();
@@ -217,16 +268,14 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Neutral)
 			return;
 
+		characterAnimator.PlayAnimation(walkAnimation);
+
 		enemyState = EnemyState.Neutral;
 	}
 
 	// override for custom effect when the enemy finds the player
 	protected virtual void PlayerSeenEffect()
 	{
-		if (enemyState == EnemyState.Chasing)
-			return;
-
-		enemyState = EnemyState.Chasing;
 	}
 
 	// override for custom effect when the enemy runs away from the player
@@ -234,11 +283,14 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (enemyState == EnemyState.Frightened)
 			return;
-		
-		iTween.Stop(gameObject);
-		transform.localScale = originalScale;
-		
-		
+
+		// flip their direction to make the scorpions run in fear
+		currentDirection = PacmanLevelManager.use.GetOppositeDirection(currentDirection);
+
+		frightenedParticles.Play();
+
+		characterAnimator.PlayAnimation(characterAnimator.runScared);
+
 		enemyState = EnemyState.Frightened;
 	}
 
@@ -248,9 +300,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if (enemyState == EnemyState.Defeated)
 			return;
 
-		enemyState = EnemyState.Defeated;
-
 		StartCoroutine(DefeatAnim());
+
+		enemyState = EnemyState.Defeated;
 	}
 	
 	private IEnumerator DefeatAnim()
@@ -264,7 +316,6 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 
 		// instatiate the particles, because we don't want them to scale or be affected by anything similar taking place on the enemy proper
-		ParticleSystem defeatParticles = GetComponentInChildren<ParticleSystem>();
 		if (defeatParticles != null)
 		{
 			ParticleSystem particlesSpawn = (ParticleSystem)Instantiate(defeatParticles);
@@ -291,7 +342,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	public override void ChangeSpriteFacing (CharacterDirections direction)
 	{
 		// enemies probably only ever have one animation
-		characterAnimator.PlayAnimation(walkAnimation);
+		//characterAnimator.PlayAnimation(walkAnimation);
 
 		if ( direction == CharacterDirections.Right )
 		{
@@ -317,8 +368,11 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	{
 		if (runBehavior == true)
 		{
+			DoCurrentTileBehavior();
+
 			if (enemyState == EnemyState.Frightened)
 			{
+				// run away to faraway tile
 				PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
 					PacmanLevelManager.use.GetOppositeQuadrant(
 					PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile)));
@@ -327,8 +381,12 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			}
 			else
 			{
+				// head for player
 				targetTile = player.currentTile;
 			}
+
+			// before finding the next tile to move to, check if target tile cannot be reached more easily through a teleport
+			CheckTeleportProximity(); 
 
 			MoveTo(FindTileClosestTo(targetTile));
 				
@@ -350,27 +408,63 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		}
 	}
 
+	protected override void DoCurrentTileBehavior()
+	{
+		// TO DO: Enemy teleport is highly unpredictable.
+		// if we just teleported and hit the next non-teleport tile, we're done teleporting
+//		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
+//		{
+//			alreadyTeleported = false;
+//		}
+//
+//		if (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)
+//		{
+//			LugusCoroutines.use.StartRoutine(TeleportRoutine());
+//		}
+	}
 
 	// Override for custom behavior
 	protected virtual void CheckTeleportProximity()
 	{
+		// TO DO: Too unpredictable to test in the short term.
+
+
+		/*
 		if (targetTile == null)
 			return;
 
-		// detect if it is more efficient to use a teleport than to find target tile directly
-		// if target is more than half a level away
-		if (Mathf.Abs(targetTile.gridIndices.x - currentTile.gridIndices.x) > (float)PacmanLevelManager.use.width *0.5f) // if targetTile is (more than) half a level away in x distance
+		float distanceFromMeToClosestTeleport = Mathf.Infinity;
+		PacmanTile tileClosestToMe = null;
+
+		float distanceFromTargetToClosestTeleport  = Mathf.Infinity;
+		PacmanTile tileClosestToTarget = null;
+		
+		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
 		{
-			// and we're a quarter level or less way from a teleport
-			foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+			if (Vector2.Distance(currentTile.location, tile.location) <= distanceFromMeToClosestTeleport)
 			{
-				if (Vector2.Distance(currentTile.location, tile.location) <= PacmanLevelManager.use.width * 0.25f)
-				{
-					targetTile = tile;
-					break;
-				}
+				distanceFromMeToClosestTeleport = Vector2.Distance(currentTile.location, tile.location);
+				tileClosestToMe = tile;
 			}
-		}	
+
+			if (Vector2.Distance(targetTile.location, tile.location) <= distanceFromTargetToClosestTeleport)
+			{
+				distanceFromTargetToClosestTeleport = Vector2.Distance(targetTile.location, tile.location);
+				tileClosestToTarget = tile;
+			}
+		}
+
+		if (tileClosestToMe == null || tileClosestToTarget == null || tileClosestToMe == tileClosestToTarget)
+			return;
+
+		if (distanceFromMeToClosestTeleport + distanceFromTargetToClosestTeleport < Vector2.Distance(currentTile.location, targetTile.location))
+		{
+			print (distanceFromMeToClosestTeleport + distanceFromTargetToClosestTeleport);
+			print (Vector2.Distance(currentTile.location, targetTile.location));
+
+			targetTile = tileClosestToMe;
+		}
+		*/
 	}
 
 	// Returns a tile that is the best bet for getting from the tile where the enemy is now to the target tile.
@@ -465,8 +559,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		   	inspectedTile.tileType == PacmanTile.TileType.Locked ||
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
 		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
-		  	inspectedTile.tileType == PacmanTile.TileType.Lethal
-			)
+		  	inspectedTile.tileType == PacmanTile.TileType.Lethal ||
+		   inspectedTile.tileType == PacmanTile.TileType.Teleport
+		   )
 			return false;
 		
 		return true;
