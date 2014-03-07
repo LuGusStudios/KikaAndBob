@@ -107,40 +107,31 @@ public class LevelLoaderDefault
 	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
 	public static IMinigameCrossSceneInfo GetCrossSceneInfo()	
 	{
-		if (Application.loadedLevelName == "e04_tasmania"
-			|| Application.loadedLevelName == "e05_Mexico" 
-		    || Application.loadedLevelName == "e09_Brazil"
-			|| Application.loadedLevelName == "e10_Swiss"
+		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
+		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
 		    || Application.loadedLevelName == "e13_pacific")
 		{
 			return RunnerCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e01_kenia"
-			|| Application.loadedLevelName == "e17_greenland"
-			|| Application.loadedLevelName == "e18_amsterdam"
-			|| Application.loadedLevelName == "e21_cuba")
+		else if (Application.loadedLevelName == "e01_kenia" || Application.loadedLevelName == "e17_greenland" || Application.loadedLevelName == "e18_amsterdam")
 		{
 			return FroggerCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e06_egypt"
-			|| Application.loadedLevelName == "e11_vatican")
+		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican")
 		{
 			return PacmanCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e03_china"
-			|| Application.loadedLevelName == "e20_morocco"
-		    || Application.loadedLevelName == "e15_india"
-			|| Application.loadedLevelName == "e24_japan" )
+		else if (Application.loadedLevelName == "e03_china" || Application.loadedLevelName == "e20_morocco"
+		         || Application.loadedLevelName == "e15_india" || Application.loadedLevelName == "e24_japan" )
 		{
 			return DanceHeroCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e14_buthan"
-			|| Application.loadedLevelName == "e08_texas")
+		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas"
+		         || Application.loadedLevelName == "e22_russia")
 		{
 			return DartsCrossSceneInfo.use;
 		}		
-		else if( Application.loadedLevelName == "e02_argentina"
-			|| Application.loadedLevelName == "e12_newyork" )
+		else if( Application.loadedLevelName == "e02_argentina" || Application.loadedLevelName == "e12_newyork" )
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}

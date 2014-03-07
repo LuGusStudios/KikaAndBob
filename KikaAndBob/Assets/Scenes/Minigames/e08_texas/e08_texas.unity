@@ -909,7 +909,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 19728624}
   m_Layer: 20
-  m_Name: HairR
+  m_Name: EyeTearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -921,12 +921,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400196, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 19728623}
-  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
-  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 373991063}
-  m_Father: {fileID: 88037164}
+  - {fileID: 772517604}
+  m_Father: {fileID: 738267540}
 --- !u!1 &23795115
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,7 +1509,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 88037164}
   m_Layer: 20
-  m_Name: Head
+  m_Name: HairR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1522,17 +1522,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 88037163}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1960123336}
-  - {fileID: 851945196}
-  - {fileID: 656213529}
-  - {fileID: 19728624}
-  - {fileID: 1596045251}
-  - {fileID: 1947586542}
-  - {fileID: 1895872705}
-  m_Father: {fileID: 666019164}
+  m_Children: []
+  m_Father: {fileID: 1895872705}
 --- !u!1 &89951506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,7 +1535,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 89951507}
   m_Layer: 20
-  m_Name: Arm
+  m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1555,12 +1548,14 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 89951506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1134637650}
+  - {fileID: 1693880424}
+  - {fileID: 986022846}
   - {fileID: 1294648507}
-  - {fileID: 364963937}
-  m_Father: {fileID: 666019164}
+  m_Father: {fileID: 1159446258}
 --- !u!1 &94879363
 GameObject:
   m_ObjectHideFlags: 0
@@ -7689,7 +7684,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 266481594}
   m_Layer: 20
-  m_Name: EyeTearL_Sprite
+  m_Name: TearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7702,10 +7697,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 266481593}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1960123336}
+  m_Children:
+  - {fileID: 1054854554}
+  m_Father: {fileID: 738267540}
 --- !u!1 &269929784
 GameObject:
   m_ObjectHideFlags: 0
@@ -10947,7 +10943,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 364963937}
   m_Layer: 20
-  m_Name: Hand
+  m_Name: LegR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10960,11 +10956,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 364963936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 789328027}
-  m_Father: {fileID: 89951507}
+  m_Children: []
+  m_Father: {fileID: 986022846}
 --- !u!1 &365743356
 GameObject:
   m_ObjectHideFlags: 0
@@ -16075,7 +16070,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 373991063}
   m_Layer: 20
-  m_Name: HairR_Sprite
+  m_Name: LegL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16091,7 +16086,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 19728624}
+  m_Father: {fileID: 1693880424}
 --- !u!1 &376680051
 GameObject:
   m_ObjectHideFlags: 0
@@ -16171,6 +16166,58 @@ Transform:
   - {fileID: 1450358193}
   - {fileID: 929604162}
   m_Father: {fileID: 294499047}
+--- !u!1 &387012216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100138, guid: 7660359396c9c4552a649f739da6eb8b, type: 2}
+  m_PrefabInternal: {fileID: 1827154202}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 387012217}
+  - 212: {fileID: 387012218}
+  m_Layer: 20
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387012217
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400138, guid: 7660359396c9c4552a649f739da6eb8b, type: 2}
+  m_PrefabInternal: {fileID: 1827154202}
+  m_GameObject: {fileID: 387012216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.23618317, y: 6.42806244, z: 9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1128836831}
+  m_Father: {fileID: 2080232773}
+--- !u!212 &387012218
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 21200078, guid: 7660359396c9c4552a649f739da6eb8b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1827154202}
+  m_GameObject: {fileID: 387012216}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: 4999c41f525ec87479cdc997fb34d832, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &399642951
 GameObject:
   m_ObjectHideFlags: 0
@@ -24742,7 +24789,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 656213529}
   m_Layer: 20
-  m_Name: HairL
+  m_Name: TearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24754,12 +24801,11 @@ Transform:
   m_PrefabParentObject: {fileID: 400186, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 656213528}
-  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
-  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1730930775}
-  m_Father: {fileID: 88037164}
+  m_Children: []
+  m_Father: {fileID: 1705244612}
 --- !u!1 &657534203
 GameObject:
   m_ObjectHideFlags: 0
@@ -25053,7 +25099,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 666019164}
   m_Layer: 20
-  m_Name: Body
+  m_Name: HairL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25065,14 +25111,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400204, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 666019163}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
+  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 89951507}
-  - {fileID: 986022846}
-  - {fileID: 88037164}
-  m_Father: {fileID: 1693880424}
+  - {fileID: 1730930775}
+  m_Father: {fileID: 738267540}
 --- !u!1 &674796501
 GameObject:
   m_ObjectHideFlags: 0
@@ -26405,7 +26449,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 738267540}
   m_Layer: 20
-  m_Name: Root_Sprite
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26418,10 +26462,17 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 738267539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1693880424}
+  m_Children:
+  - {fileID: 1947586542}
+  - {fileID: 19728624}
+  - {fileID: 666019164}
+  - {fileID: 1895872705}
+  - {fileID: 1884158615}
+  - {fileID: 266481594}
+  - {fileID: 1705244612}
+  m_Father: {fileID: 1134637650}
 --- !u!1 &746256850
 GameObject:
   m_ObjectHideFlags: 0
@@ -27799,7 +27850,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 772517604}
   m_Layer: 20
-  m_Name: TearR_Sprite
+  m_Name: EyeTearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27815,7 +27866,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1895872705}
+  m_Father: {fileID: 19728624}
 --- !u!1 &780123298
 GameObject:
   m_ObjectHideFlags: 0
@@ -28037,7 +28088,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 789328027}
   m_Layer: 20
-  m_Name: Hand_Sprite
+  m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28050,10 +28101,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 789328026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 364963937}
+  m_Children:
+  - {fileID: 1136918709}
+  m_Father: {fileID: 885551228}
 --- !u!1 &792545621
 GameObject:
   m_ObjectHideFlags: 0
@@ -30009,7 +30061,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 851945196}
   m_Layer: 20
-  m_Name: EyeTearR
+  m_Name: Body_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30022,11 +30074,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 851945195}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1705244612}
-  m_Father: {fileID: 88037164}
+  m_Children: []
+  m_Father: {fileID: 1134637650}
 --- !u!1 &853296932
 GameObject:
   m_ObjectHideFlags: 0
@@ -30289,7 +30340,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 885551228}
   m_Layer: 20
-  m_Name: LegL_Sprite
+  m_Name: Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30302,10 +30353,12 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 885551227}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1136918709}
+  m_Children:
+  - {fileID: 1596045251}
+  - {fileID: 789328027}
+  m_Father: {fileID: 1134637650}
 --- !u!1 &885899925
 GameObject:
   m_ObjectHideFlags: 0
@@ -31620,7 +31673,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 986022846}
   m_Layer: 20
-  m_Name: Body_Sprite
+  m_Name: LegR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31633,10 +31686,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 986022845}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 666019164}
+  m_Children:
+  - {fileID: 364963937}
+  m_Father: {fileID: 89951507}
 --- !u!1 &987564138
 GameObject:
   m_ObjectHideFlags: 0
@@ -36626,7 +36680,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1054854554}
   m_Layer: 20
-  m_Name: LegR_Sprite
+  m_Name: TearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36642,7 +36696,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1884158615}
+  m_Father: {fileID: 266481594}
 --- !u!1 &1055388022
 GameObject:
   m_ObjectHideFlags: 0
@@ -38206,7 +38260,7 @@ GameObject:
   - 4: {fileID: 1128836831}
   - 212: {fileID: 1128836832}
   m_Layer: 20
-  m_Name: Image
+  m_Name: ImageBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38219,10 +38273,10 @@ Transform:
   m_PrefabInternal: {fileID: 1827154202}
   m_GameObject: {fileID: 1128836830}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.17198944, y: 5.76322985, z: 9}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2080232773}
+  m_Father: {fileID: 387012217}
 --- !u!212 &1128836832
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -38245,7 +38299,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 4999c41f525ec87479cdc997fb34d832, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c1c59912dc3a794dba8fdd60e23c996, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1128873797
 GameObject:
@@ -38326,7 +38380,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1134637650}
   m_Layer: 20
-  m_Name: TearL_Sprite
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38339,10 +38393,13 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1134637649}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1947586542}
+  m_Children:
+  - {fileID: 885551228}
+  - {fileID: 851945196}
+  - {fileID: 738267540}
+  m_Father: {fileID: 89951507}
 --- !u!1 &1136918708
 GameObject:
   m_ObjectHideFlags: 0
@@ -38352,7 +38409,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1136918709}
   m_Layer: 20
-  m_Name: LegL
+  m_Name: Hand_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38365,11 +38422,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1136918708}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 885551228}
-  m_Father: {fileID: 1693880424}
+  m_Children: []
+  m_Father: {fileID: 789328027}
 --- !u!1 &1144795474
 GameObject:
   m_ObjectHideFlags: 0
@@ -39538,7 +39594,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: .00505345315, y: .00505345315, z: .00505345315}
   m_Children:
-  - {fileID: 1693880424}
+  - {fileID: 89951507}
   m_Father: {fileID: 829367973}
 --- !u!137 &1159446259
 SkinnedMeshRenderer:
@@ -39553,7 +39609,7 @@ SkinnedMeshRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -39567,36 +39623,36 @@ SkinnedMeshRenderer:
   m_UpdateWhenOffscreen: 0
   m_Mesh: {fileID: 0}
   m_Bones:
-  - {fileID: 1693880424}
-  - {fileID: 738267540}
-  - {fileID: 666019164}
-  - {fileID: 986022846}
-  - {fileID: 88037164}
-  - {fileID: 1596045251}
-  - {fileID: 656213529}
-  - {fileID: 1730930775}
-  - {fileID: 19728624}
-  - {fileID: 373991063}
-  - {fileID: 1960123336}
-  - {fileID: 266481594}
-  - {fileID: 851945196}
-  - {fileID: 1705244612}
-  - {fileID: 1947586542}
-  - {fileID: 1134637650}
-  - {fileID: 1895872705}
-  - {fileID: 772517604}
   - {fileID: 89951507}
   - {fileID: 1294648507}
-  - {fileID: 364963937}
+  - {fileID: 1134637650}
+  - {fileID: 851945196}
+  - {fileID: 738267540}
+  - {fileID: 1884158615}
+  - {fileID: 666019164}
+  - {fileID: 1730930775}
+  - {fileID: 1895872705}
+  - {fileID: 88037164}
+  - {fileID: 1947586542}
+  - {fileID: 1960123336}
+  - {fileID: 19728624}
+  - {fileID: 772517604}
+  - {fileID: 266481594}
+  - {fileID: 1054854554}
+  - {fileID: 1705244612}
+  - {fileID: 656213529}
+  - {fileID: 885551228}
+  - {fileID: 1596045251}
   - {fileID: 789328027}
   - {fileID: 1136918709}
-  - {fileID: 885551228}
-  - {fileID: 1884158615}
-  - {fileID: 1054854554}
+  - {fileID: 1693880424}
+  - {fileID: 373991063}
+  - {fileID: 986022846}
+  - {fileID: 364963937}
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: -36.0447693, y: 632.968994, z: 0}
+    m_Center: {x: -36.0310974, y: 632.96875, z: 0}
     m_Extent: {x: 551.614258, y: 669.699341, z: 0}
   m_DirtyAABB: 0
 --- !u!111 &1159446260
@@ -39792,7 +39848,7 @@ MonoBehaviour:
   animationData: {fileID: 0}
   animationDataGUID: 69c6ac1eb1c22804d94fa9adb4d27cc0
   mMaterialSource:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
   mBoneSource:
   - boneNodeIndex: 0
     boneDataIndex: 0
@@ -39800,9 +39856,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 0
       vertexIndices: 000000000300000001000000030000000200000001000000
-    gameObject: {fileID: 1693880423}
-    boneTransform: {fileID: 1693880424}
-    spriteTransform: {fileID: 738267540}
+    gameObject: {fileID: 89951506}
+    boneTransform: {fileID: 89951507}
+    spriteTransform: {fileID: 1294648507}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39818,9 +39874,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 1
       vertexIndices: 040000000700000005000000070000000600000005000000
-    gameObject: {fileID: 666019163}
-    boneTransform: {fileID: 666019164}
-    spriteTransform: {fileID: 986022846}
+    gameObject: {fileID: 1134637649}
+    boneTransform: {fileID: 1134637650}
+    spriteTransform: {fileID: 851945196}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39836,9 +39892,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 2
       vertexIndices: 080000000b000000090000000b0000000a00000009000000
-    gameObject: {fileID: 88037163}
-    boneTransform: {fileID: 88037164}
-    spriteTransform: {fileID: 1596045251}
+    gameObject: {fileID: 738267539}
+    boneTransform: {fileID: 738267540}
+    spriteTransform: {fileID: 1884158615}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39854,8 +39910,8 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 3
       vertexIndices: 0c0000000f0000000d0000000f0000000e0000000d000000
-    gameObject: {fileID: 656213528}
-    boneTransform: {fileID: 656213529}
+    gameObject: {fileID: 666019163}
+    boneTransform: {fileID: 666019164}
     spriteTransform: {fileID: 1730930775}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
@@ -39872,9 +39928,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 4
       vertexIndices: 100000001300000011000000130000001200000011000000
-    gameObject: {fileID: 19728623}
-    boneTransform: {fileID: 19728624}
-    spriteTransform: {fileID: 373991063}
+    gameObject: {fileID: 1895872704}
+    boneTransform: {fileID: 1895872705}
+    spriteTransform: {fileID: 88037164}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39890,9 +39946,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 5
       vertexIndices: 140000001700000015000000170000001600000015000000
-    gameObject: {fileID: 1960123335}
-    boneTransform: {fileID: 1960123336}
-    spriteTransform: {fileID: 266481594}
+    gameObject: {fileID: 1947586541}
+    boneTransform: {fileID: 1947586542}
+    spriteTransform: {fileID: 1960123336}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39908,9 +39964,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 6
       vertexIndices: 180000001b000000190000001b0000001a00000019000000
-    gameObject: {fileID: 851945195}
-    boneTransform: {fileID: 851945196}
-    spriteTransform: {fileID: 1705244612}
+    gameObject: {fileID: 19728623}
+    boneTransform: {fileID: 19728624}
+    spriteTransform: {fileID: 772517604}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39926,9 +39982,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 7
       vertexIndices: 1c0000001f0000001d0000001f0000001e0000001d000000
-    gameObject: {fileID: 1947586541}
-    boneTransform: {fileID: 1947586542}
-    spriteTransform: {fileID: 1134637650}
+    gameObject: {fileID: 266481593}
+    boneTransform: {fileID: 266481594}
+    spriteTransform: {fileID: 1054854554}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39944,9 +40000,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 8
       vertexIndices: 200000002300000021000000230000002200000021000000
-    gameObject: {fileID: 1895872704}
-    boneTransform: {fileID: 1895872705}
-    spriteTransform: {fileID: 772517604}
+    gameObject: {fileID: 1705244611}
+    boneTransform: {fileID: 1705244612}
+    spriteTransform: {fileID: 656213529}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39962,9 +40018,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 9
       vertexIndices: 240000002700000025000000270000002600000025000000
-    gameObject: {fileID: 89951506}
-    boneTransform: {fileID: 89951507}
-    spriteTransform: {fileID: 1294648507}
+    gameObject: {fileID: 885551227}
+    boneTransform: {fileID: 885551228}
+    spriteTransform: {fileID: 1596045251}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39980,9 +40036,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 10
       vertexIndices: 280000002b000000290000002b0000002a00000029000000
-    gameObject: {fileID: 364963936}
-    boneTransform: {fileID: 364963937}
-    spriteTransform: {fileID: 789328027}
+    gameObject: {fileID: 789328026}
+    boneTransform: {fileID: 789328027}
+    spriteTransform: {fileID: 1136918709}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -39998,9 +40054,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 11
       vertexIndices: 2c0000002f0000002d0000002f0000002e0000002d000000
-    gameObject: {fileID: 1136918708}
-    boneTransform: {fileID: 1136918709}
-    spriteTransform: {fileID: 885551228}
+    gameObject: {fileID: 1693880423}
+    boneTransform: {fileID: 1693880424}
+    spriteTransform: {fileID: 373991063}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -40016,9 +40072,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 12
       vertexIndices: 300000003300000031000000330000003200000031000000
-    gameObject: {fileID: 1884158614}
-    boneTransform: {fileID: 1884158615}
-    spriteTransform: {fileID: 1054854554}
+    gameObject: {fileID: 986022845}
+    boneTransform: {fileID: 986022846}
+    spriteTransform: {fileID: 364963937}
     boneAnimation: {fileID: 1159446261}
     boneCollider: {fileID: 0}
     boneColor:
@@ -40029,34 +40085,34 @@ MonoBehaviour:
     materialIndex: 0
     depth: 13
   mBoneTransforms:
-  - {fileID: 1693880424}
-  - {fileID: 738267540}
-  - {fileID: 666019164}
-  - {fileID: 986022846}
-  - {fileID: 88037164}
-  - {fileID: 1596045251}
-  - {fileID: 656213529}
-  - {fileID: 1730930775}
-  - {fileID: 19728624}
-  - {fileID: 373991063}
-  - {fileID: 1960123336}
-  - {fileID: 266481594}
-  - {fileID: 851945196}
-  - {fileID: 1705244612}
-  - {fileID: 1947586542}
-  - {fileID: 1134637650}
-  - {fileID: 1895872705}
-  - {fileID: 772517604}
   - {fileID: 89951507}
   - {fileID: 1294648507}
-  - {fileID: 364963937}
+  - {fileID: 1134637650}
+  - {fileID: 851945196}
+  - {fileID: 738267540}
+  - {fileID: 1884158615}
+  - {fileID: 666019164}
+  - {fileID: 1730930775}
+  - {fileID: 1895872705}
+  - {fileID: 88037164}
+  - {fileID: 1947586542}
+  - {fileID: 1960123336}
+  - {fileID: 19728624}
+  - {fileID: 772517604}
+  - {fileID: 266481594}
+  - {fileID: 1054854554}
+  - {fileID: 1705244612}
+  - {fileID: 656213529}
+  - {fileID: 885551228}
+  - {fileID: 1596045251}
   - {fileID: 789328027}
   - {fileID: 1136918709}
-  - {fileID: 885551228}
-  - {fileID: 1884158615}
-  - {fileID: 1054854554}
+  - {fileID: 1693880424}
+  - {fileID: 373991063}
+  - {fileID: 986022846}
+  - {fileID: 364963937}
   mMaterials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
   buildID: 201402121438208612
   mFinalImportScale: 1
   mDefaultAnimationName: KikaSad
@@ -42965,7 +43021,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1294648507}
   m_Layer: 20
-  m_Name: Arm_Sprite
+  m_Name: Root_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47028,9 +47084,9 @@ Animation:
   m_GameObject: {fileID: 1424770642}
   m_Enabled: 0
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
+  m_Animation: {fileID: 0}
   m_Animations:
-  - {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
+  - {fileID: 0}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -50878,7 +50934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1500971766
 Transform:
   m_ObjectHideFlags: 0
@@ -50912,7 +50968,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: d7309734874d1a64a801bcdedfb2ab69, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d788be8496a0961488a2b1584bdf5129, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1501050614
 GameObject:
@@ -57192,7 +57248,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1596045251}
   m_Layer: 20
-  m_Name: Head_Sprite
+  m_Name: Arm_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57208,7 +57264,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 88037164}
+  m_Father: {fileID: 885551228}
 --- !u!1 &1603396954
 GameObject:
   m_ObjectHideFlags: 0
@@ -58272,7 +58328,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1693880424}
   m_Layer: 20
-  m_Name: Root
+  m_Name: LegL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58285,14 +58341,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1693880423}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 666019164}
-  - {fileID: 1136918709}
-  - {fileID: 1884158615}
-  - {fileID: 738267540}
-  m_Father: {fileID: 1159446258}
+  - {fileID: 373991063}
+  m_Father: {fileID: 89951507}
 --- !u!1 &1700540264
 GameObject:
   m_ObjectHideFlags: 0
@@ -59395,7 +59448,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1705244612}
   m_Layer: 20
-  m_Name: EyeTearR_Sprite
+  m_Name: TearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59408,10 +59461,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1705244611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 851945196}
+  m_Children:
+  - {fileID: 656213529}
+  m_Father: {fileID: 738267540}
 --- !u!1 &1708508890
 GameObject:
   m_ObjectHideFlags: 0
@@ -59542,7 +59596,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 656213529}
+  m_Father: {fileID: 666019164}
 --- !u!1 &1736162771
 GameObject:
   m_ObjectHideFlags: 0
@@ -59692,7 +59746,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1768875215
 Transform:
   m_ObjectHideFlags: 0
@@ -60631,7 +60685,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1884158615}
   m_Layer: 20
-  m_Name: LegR
+  m_Name: Head_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60644,11 +60698,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1884158614}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1054854554}
-  m_Father: {fileID: 1693880424}
+  m_Children: []
+  m_Father: {fileID: 738267540}
 --- !u!1 &1889068243
 GameObject:
   m_ObjectHideFlags: 0
@@ -60664,7 +60717,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1889068244
 Transform:
   m_ObjectHideFlags: 0
@@ -61820,7 +61873,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1895872705}
   m_Layer: 20
-  m_Name: TearR
+  m_Name: HairR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61832,12 +61885,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400210, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1895872704}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
+  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 772517604}
-  m_Father: {fileID: 88037164}
+  - {fileID: 88037164}
+  m_Father: {fileID: 738267540}
 --- !u!1 &1897424016
 GameObject:
   m_ObjectHideFlags: 0
@@ -62217,7 +62270,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1947586542}
   m_Layer: 20
-  m_Name: TearL
+  m_Name: EyeTearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62230,11 +62283,11 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1947586541}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
+  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1134637650}
-  m_Father: {fileID: 88037164}
+  - {fileID: 1960123336}
+  m_Father: {fileID: 738267540}
 --- !u!1 &1953462443
 GameObject:
   m_ObjectHideFlags: 0
@@ -62295,7 +62348,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1960123336}
   m_Layer: 20
-  m_Name: EyeTearL
+  m_Name: EyeTearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62308,11 +62361,10 @@ Transform:
   m_PrefabInternal: {fileID: 1308204965}
   m_GameObject: {fileID: 1960123335}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 266481594}
-  m_Father: {fileID: 88037164}
+  m_Children: []
+  m_Father: {fileID: 1947586542}
 --- !u!1 &1967681379
 GameObject:
   m_ObjectHideFlags: 0
@@ -67821,7 +67873,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2080232773
 Transform:
   m_ObjectHideFlags: 0
@@ -67833,7 +67885,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 442989606}
-  - {fileID: 1128836831}
+  - {fileID: 387012217}
   - {fileID: 1622061731}
   - {fileID: 319625539}
   - {fileID: 548317102}

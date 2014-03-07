@@ -84,7 +84,12 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 		//position += new Vector3( Random.Range(-2, 2), Random.Range(-2,2), 0);
 
 
-		ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, score).Color(Color.white).MinValue(0).Time(0.4f).EaseType(iTween.EaseType.linear).Position(position).Execute();
+		Color scoreColor = Color.white;
+
+		if (score < 0)
+			scoreColor = Color.red;
+
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, score).Color(scoreColor).MinValue(0).Time(0.4f).EaseType(iTween.EaseType.linear).Position(position).Execute();
 
 //		GameObject scoreText = (GameObject) GameObject.Instantiate( scoreTextPrefab );
 //		scoreText.transform.position = position.z( 0.0f );
