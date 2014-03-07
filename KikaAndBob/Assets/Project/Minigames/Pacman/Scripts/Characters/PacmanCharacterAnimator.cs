@@ -26,7 +26,6 @@ public class PacmanCharacterAnimator : MonoBehaviour
 
 	public string runScared;
 
-	
 	public void SetupLocal()
 	{
 		if(animationContainers == null || animationContainers.Length == 0 )
@@ -42,6 +41,7 @@ public class PacmanCharacterAnimator : MonoBehaviour
 		{
 			currentAnimationContainer = animationContainers[0];
 		}
+
 	}
 	
 	public void SetupGlobal()

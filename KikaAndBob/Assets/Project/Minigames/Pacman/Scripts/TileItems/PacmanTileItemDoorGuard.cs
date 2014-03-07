@@ -26,7 +26,8 @@ public class PacmanTileItemDoorGuard : PacmanTileItem
             opened = true;
             //PacmanPickups.use.ModifyPickupAmount(keyID, -1);
             parentTile.tileType = PacmanTile.TileType.Open;
-            this.gameObject.SetActive(false);
+            transform.GetComponent<SpriteRenderer>().enabled = false;
+            //this.gameObject.SetActive(false);
         }
     }
 }

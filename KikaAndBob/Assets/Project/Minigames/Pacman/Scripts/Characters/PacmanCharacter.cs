@@ -19,6 +19,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	public bool moving = false;
 	protected bool horizontalMovement = false;
 	public bool alreadyTeleported = false;
+    public bool teleportUsed = false;
 
 	public PacmanTile currentTile = null;
 	protected PacmanTile startTile;
@@ -28,7 +29,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected ParticleSystem teleportParticles = null;	// TO DO: Remove from here.
 
 	protected PacmanCharacterAnimator characterAnimator = null;
-		
+    protected SpriteRenderer[] characterSpriteRenderers;
+    protected SkinnedMeshRenderer[] characterSkinnedMeshRenderers;
 	public enum CharacterDirections
 	{
 		Undefined = 0,
@@ -63,6 +65,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		{
 			Debug.LogError("Missing character animator on: " + gameObject.name);
 		}
+	    characterSpriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+	    characterSkinnedMeshRenderers = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
 	}
 
 	public virtual void SetUpGlobal()
@@ -131,6 +135,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 //			return;
 		
 		UpdateMovement();	// needs to be called again, or character will pause for one frame
+
 	}
 
 	// intermediary for changing sprite and its animation - i.e. transforms CharacterDirections.Right into Left, which is just the same one flipped, or limits choices to an object that actually exists
@@ -285,34 +290,41 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
 	public void EnableCharacter()
 	{
-		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
-		{
-			spriteRenderer.enabled = true;
-		}
-		
-		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-		{
-			skinnedmeshRenderer.enabled = true;
-		}
-		
+	    ShowCharacter();
 		this.enabled = true;
 	}
 
 	public void DisableCharacter()
 	{
-		foreach (SpriteRenderer spriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
-		{
-			spriteRenderer.enabled = false;
-		}
-		
-		foreach (SkinnedMeshRenderer skinnedmeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-		{
-			skinnedmeshRenderer.enabled = false;
-		}
-		
+	    HideCharacter();
 		this.enabled = false;
 	}
 
+    public void ShowCharacter()
+    {
+        foreach (SpriteRenderer spriteRenderer in characterSpriteRenderers)
+        {
+            spriteRenderer.enabled = true;
+        }
+
+        foreach (SkinnedMeshRenderer skinnedmeshRenderer in characterSkinnedMeshRenderers)
+        {
+            skinnedmeshRenderer.enabled = true;
+        }
+    }
+
+    public void HideCharacter()
+    {
+        foreach (SpriteRenderer spriteRenderer in characterSpriteRenderers)
+        {
+            spriteRenderer.enabled = false;
+        }
+
+        foreach (SkinnedMeshRenderer skinnedmeshRenderer in characterSkinnedMeshRenderers)
+        {
+            skinnedmeshRenderer.enabled = false;
+        }
+    }
 	public void SetSpawnLocation(Vector2 location)
 	{
 		spawnLocation = location;

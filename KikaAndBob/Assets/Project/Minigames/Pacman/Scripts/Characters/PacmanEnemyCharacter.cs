@@ -239,7 +239,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			if (tile != null)
 			{
 				// if the tile is not open, line of sight is broken
-				if (tile.tileType == PacmanTile.TileType.Collide)
+				if (tile.tileType == PacmanTile.TileType.Collide || tile.tileType == PacmanTile.TileType.Hide)
 				{
 					playerFound = false;
 					return;
@@ -560,7 +560,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
 		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
 		  	inspectedTile.tileType == PacmanTile.TileType.Lethal ||
-		   inspectedTile.tileType == PacmanTile.TileType.Teleport
+		    inspectedTile.tileType == PacmanTile.TileType.Teleport ||
+            inspectedTile.tileType == PacmanTile.TileType.Hide
 		   )
 			return false;
 		

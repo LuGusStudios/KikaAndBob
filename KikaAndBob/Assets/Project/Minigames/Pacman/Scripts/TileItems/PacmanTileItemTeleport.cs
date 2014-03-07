@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PacmanTileItemTeleport : PacmanTileItem
+public class PacmanTileItemTeleport : PacmanTileItem 
 {
-    public PacmanTileItem linkedTile;
+    public PacmanTileItem linkedTile; 
     public override void Initialize()
     {
         //parentTile.tileType = PacmanTile.TileType.Open;
@@ -37,20 +37,18 @@ public class PacmanTileItemTeleport : PacmanTileItem
 	
 	}
 
-    public override void OnTryEnter(PacmanCharacter character)
-    {
-        base.OnTryEnter(character);
-        character.alreadyTeleported = false;
-    }
-
     public override void OnEnter(PacmanCharacter character)
     {
-        if (!character.alreadyTeleported)
+        if (!character.teleportUsed)
         {
             character.transform.localPosition = linkedTile.parentTile.location.v3();
             character.currentTile = linkedTile.parentTile;
-            character.alreadyTeleported = true;
-        }
-       
+            character.teleportUsed = true;
+        }  
+    }
+
+    public override void OnLeave(PacmanCharacter character)
+    {
+        character.teleportUsed = false;
     }
 }

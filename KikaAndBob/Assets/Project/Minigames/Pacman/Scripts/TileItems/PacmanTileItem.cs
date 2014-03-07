@@ -46,4 +46,9 @@ public class PacmanTileItem : MonoBehaviour
 	{
 		
 	}
+
+    public virtual void OnLeave(PacmanCharacter character)
+    {
+        
+    }
 }
