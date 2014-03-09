@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
-public class FroggerLaneItemSubmarine : FroggerLaneItemLethal
+public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 {
 	public FroggerLaneItemIceHole iceHolePrefab = null;
 	public SpriteRenderer periscope = null;

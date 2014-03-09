@@ -100,6 +100,9 @@ public class FroggerExplosion : MonoBehaviour
 		animator.enabled = true;
 		renderer.enabled = true;
 
+		// Place the explosion just before the camera, because it should appear over everything else
+		transform.position = transform.position.z(Camera.main.transform.position.z + 1f);
+
 		// Check whether the player is within the blast radius
 		FroggerCharacter player = GameObject.Find("Player").GetComponent<FroggerCharacter>();
 		if (player != null)
@@ -107,7 +110,7 @@ public class FroggerExplosion : MonoBehaviour
 			Vector2 centerWorld = BlastCenterWorld;
 			Vector2 sizeWorld = BlastSizeWorld;
 			Bounds bounds = new Bounds(new Vector3(centerWorld.x, centerWorld.y, transform.position.z),
-				new Vector3(sizeWorld.x, sizeWorld.y, 1000f));
+				new Vector3(sizeWorld.x, sizeWorld.y, float.PositiveInfinity));
 			
 			if (bounds.Contains(new Vector3(player.transform.position.x, player.transform.position.y, 0f))
 				&& FroggerGameManager.use.gameRunning)

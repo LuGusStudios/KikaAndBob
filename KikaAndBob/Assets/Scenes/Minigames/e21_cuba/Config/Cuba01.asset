@@ -14,7 +14,27 @@ MonoBehaviour:
   backgroundMusicName: 
   levelPostFix: 1
   lanes:
-  - laneID: LaneSand01
+  - laneID: LaneSidewalk
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []
+  - laneID: LaneStreet
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Cigar01
+      positioning: .200000003
+    - spawnID: Cigar02
+      positioning: .800000012
+  - laneID: LaneGrass
     goRight: 1
     speed: 4
     minGapDistance: 4
@@ -29,13 +49,7 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: Car02
-      positioning: .200000003
-    - spawnID: Landmine
-      positioning: .400000006
-    - spawnID: Car03
-      positioning: .600000024
+    spawnItems: []
   - laneID: LaneSand02
     goRight: 1
     speed: 4
@@ -43,9 +57,31 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: Bomber
-      positioning: 0
+    spawnItems: []
+  - laneID: LaneWater
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 1
+    spawnItems: []
+  - laneID: LaneWater
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: -1
+    spawnItems: []
+  - laneID: LaneWaterTop
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 1
+    spawnItems: []
   - laneID: LaneSand01
     goRight: 1
     speed: 4
@@ -53,38 +89,8 @@ MonoBehaviour:
     maxGapDistance: 6
     repeatAllowFactor: .200000003
     backgroundScrollingSpeed: 0
-    spawnItems:
-    - spawnID: Propaganda01
-      positioning: .800000012
-    - spawnID: Landmine
-      positioning: .600000024
-    - spawnID: Rock02
-      positioning: .400000006
-  - laneID: LaneWater01
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
     spawnItems: []
-  - laneID: LaneWater01
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
-    spawnItems: []
-  - laneID: LaneWaterTop01
-    goRight: 1
-    speed: 4
-    minGapDistance: 4
-    maxGapDistance: 6
-    repeatAllowFactor: .200000003
-    backgroundScrollingSpeed: 0
-    spawnItems: []
-  - laneID: LaneStreet01
+  - laneID: LaneStreet
     goRight: 1
     speed: 4
     minGapDistance: 4

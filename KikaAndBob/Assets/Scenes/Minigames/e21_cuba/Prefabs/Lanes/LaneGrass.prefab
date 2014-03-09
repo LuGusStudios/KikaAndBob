@@ -9,10 +9,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 212: {fileID: 21200000}
-  - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
+  - 61: {fileID: 6100000}
   m_Layer: 0
-  m_Name: Explosion
+  m_Name: LaneGrass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,24 +25,21 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.5884247, y: -1.34340048, z: .561279297}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalPosition: {x: -36.8468399, y: .521304786, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!95 &9500000
-Animator:
-  serializedVersion: 2
+--- !u!61 &6100000
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: eefb66ff7412eda488a8f7ca736d1bb5, type: 2}
-  m_CullingMode: 0
-  m_ApplyRootMotion: 1
-  m_AnimatePhysics: 0
-  m_HasTransformHierarchy: 1
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Size: {x: 20.4799995, y: 1.68083239}
+  m_Center: {x: 0, y: -.0804162025}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -51,19 +48,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de8566b9b04f4e34aa150c2c0548391f, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c0525d397e4e534fbc4eee04cff3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animatonLength: .400000006
-  blastCenter: {x: 0, y: 0}
-  blastSize: {x: 1.5, y: 1}
+  enterSoundKeys: []
+  goRight: 0
+  speed: 0
+  minGapDistance: 0
+  maxGapDistance: 0
+  repeatAllowFactor: 0
+  scrollingSpeed: 0
+  dynamicSpawnItems: []
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_LightmapIndex: 255
@@ -78,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 7701f8d330f24194589d9f0506bcc37d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1f860b7821236bd4ea18784fce4b92f6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

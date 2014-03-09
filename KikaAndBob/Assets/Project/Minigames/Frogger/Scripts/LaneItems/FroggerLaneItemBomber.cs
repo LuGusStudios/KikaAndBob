@@ -72,6 +72,14 @@ public class FroggerLaneItemBomber : FroggerCollider
 
 	private IEnumerator DropBombRoutine(Vector2 charPos)
 	{
+		// This routine drops a bomb at the current location of the player
+		// It spawns a bomb off-screen and initializes a drop shadow that gets smaller
+		// as the bomb closes in on its target position.
+		// When the bomb reaches its target position, the bomb and its shadow
+		// are no longer needed and are destroyed. Afterwards, an explosion
+		// is created that will search for the player and other destroyable objects
+		// in its area.
+
 		// Find a position off screen to spawn the bomb
 		Vector3 spawnPos = Camera.main.ScreenToWorldPoint(new Vector3(0f, Camera.main.pixelHeight, 0f));
 		spawnPos.x = charPos.x;
@@ -95,12 +103,9 @@ public class FroggerLaneItemBomber : FroggerCollider
 		Vector3 targetPos = new Vector3(charPos.x, transform.position.y, spawnPos.z);
 		float time = Mathf.Abs(targetPos.y - spawnPos.y) / bombDropSpeed;
 
-		// Animate the bomb by letting it fall down
-		bombCopy.gameObject.MoveTo(targetPos).Time(time).Execute();
-
-		// Animate the shadow by letting it get bigger
-		bombShadowCopy.gameObject.ScaleTo(bombDropShadow.transform.localScale).Time(time).Execute();
-
+		// Animate the bomb by letting it fall down and the shadow by making it bigger over time
+		bombCopy.MoveTo(targetPos).Time(time).Execute();
+		bombShadowCopy.ScaleTo(bombDropShadow.transform.localScale).Time(time).Execute();
 		yield return new WaitForSeconds(time);
 
 		// Destroy the bomb and its shadow

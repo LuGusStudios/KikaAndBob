@@ -6,7 +6,7 @@ public class FroggerLaneSubmarine : FroggerLane
 {
 	public float submarineMoveSpeed = 5f;
 
-	protected List<FroggerLaneItemSubmarine> submarines = new List<FroggerLaneItemSubmarine>();
+	protected List<FroggerLaneItemIceBreakingSubmarine> submarines = new List<FroggerLaneItemIceBreakingSubmarine>();
 	protected FroggerCharacter character = null;
 
 	private bool createdIceHole = false;
@@ -58,10 +58,10 @@ public class FroggerLaneSubmarine : FroggerLane
 
 		// Only control one submarine at a time, so that not all submarines in a lane
 		// are closing in on the character at once.
-		FroggerLaneItemSubmarine sub = submarines[0];
+		FroggerLaneItemIceBreakingSubmarine sub = submarines[0];
 
 		// If the submarine is under water, let it close in on the character
-		if (sub.state == FroggerLaneItemSubmarine.State.UNDER)
+		if (sub.state == FroggerLaneItemIceBreakingSubmarine.State.UNDER)
 		{
 			float factor = 1f;
 			if (sub.transform.position.x > character.transform.position.x)
@@ -78,7 +78,7 @@ public class FroggerLaneSubmarine : FroggerLane
 				sub.Surface();
 			}
 		}
-		else if ((sub.state == FroggerLaneItemSubmarine.State.SUBMARINE) && (!createdIceHole))
+		else if ((sub.state == FroggerLaneItemIceBreakingSubmarine.State.SUBMARINE) && (!createdIceHole))
 		{
 			// Create a ice hole where the submarine was
 			if (sub.iceHolePrefab != null)
@@ -90,7 +90,7 @@ public class FroggerLaneSubmarine : FroggerLane
 
 			createdIceHole = true;
 		}
-		else if (sub.state == FroggerLaneItemSubmarine.State.DONE)
+		else if (sub.state == FroggerLaneItemIceBreakingSubmarine.State.DONE)
 		{
 			
 			// Destroy the submarine
@@ -128,7 +128,7 @@ public class FroggerLaneSubmarine : FroggerLane
 		FroggerLaneItem laneItemScript = spawned.GetComponent<FroggerLaneItem>();
 		staticSpawnedItems.Add(laneItemScript);
 
-		FroggerLaneItemSubmarine submarine = spawned.GetComponent<FroggerLaneItemSubmarine>();
+		FroggerLaneItemIceBreakingSubmarine submarine = spawned.GetComponent<FroggerLaneItemIceBreakingSubmarine>();
 
 		if (submarine != null)
 		{
