@@ -7,6 +7,7 @@ public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault
 
 public class PacmanGameManagerDefault : IGameManager {
 
+	public bool allowPickupWin =  true;	// if true, just picking up all pickups wins the game - if false, the win condition will need to be triggered in a different way
 	public bool gameRunning = false;
 	protected float timer = 0.0f;
 	protected int lives = 3;

@@ -1003,6 +1003,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public void CheckPickedUpItems()
 	{
+		if (!PacmanGameManager.use.allowPickupWin)
+			return;
+
 		if (AllItemsPickedUp())
 		{
 			PacmanGameManager.use.WinGame();
