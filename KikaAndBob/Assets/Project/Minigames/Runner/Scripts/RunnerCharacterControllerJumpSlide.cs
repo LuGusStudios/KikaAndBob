@@ -18,7 +18,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	public string runningSound = "WalkLoop01"; 
 	protected ILugusAudioTrack runningTrack = null;
 
-	public string slideSound = "Skid01";
+	public string slideSound = "Slide01";
 	protected ILugusAudioTrack slidingTrack = null;
 
 	protected RunnerCharacterShadow shadow = null;
@@ -99,7 +99,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 
 
 		slidingTrack = LugusAudio.use.SFX ().GetTrack();
-		slidingTrack.Play( LugusResources.use.Shared.GetAudio( slideSound ), new LugusAudioTrackSettings().Loop(true) );
+		slidingTrack.Play( LugusResources.use.Shared.GetAudio( slideSound ), new LugusAudioTrackSettings().Loop(true).Volume(0.05f) );
 		slidingTrack.Pause();
 	}
 

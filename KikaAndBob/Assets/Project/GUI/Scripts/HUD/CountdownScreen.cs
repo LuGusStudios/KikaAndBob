@@ -78,14 +78,15 @@ public class CountdownScreen : MonoBehaviour
 			// extra -0.1f, otherwhise iTween sometimes fucked and ignored the next count... very weird
 			countText.transform.parent.gameObject.ScaleTo( Vector3.zero ).Time ( frameTime - 0.1f ).Execute();
 
-			string sound = "CountThree01";
+			// note: soundfile names aren't correct for the order we're using them in :)
+			string sound = "CountOne01";
 			if( count == 2 )
 			{
 				sound = "CountTwo01";
 			}
 			else if( count == 1 )
 			{
-				sound = "CountOne01";
+				sound = "CountThree01";
 			}
 
 			LugusAudio.use.SFX().Play( LugusResources.use.Shared.GetAudio(sound) );
