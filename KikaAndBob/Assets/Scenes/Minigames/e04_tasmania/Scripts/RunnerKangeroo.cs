@@ -29,7 +29,7 @@ public class RunnerKangeroo : MonoBehaviour
 		{
 			handle.StopRoutine();
 		}
-	}
+	} 
 
 	protected IEnumerator JumpRoutine()
 	{
@@ -46,7 +46,7 @@ public class RunnerKangeroo : MonoBehaviour
 			
 			yield return new WaitForSeconds( halfLength / 2.0f );
 			
-			gameObject.MoveTo( transform.localPosition.yAdd( -5.0f ) ).IsLocal(true).Time (halfLength).Execute();
+			gameObject.MoveTo( transform.localPosition.yAdd( -5.0f ) ).IsLocal(true).Time (halfLength).Execute(); 
 			
 			yield return new WaitForSeconds( halfLength * 0.8f );
 			

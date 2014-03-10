@@ -62,7 +62,7 @@ public class RunnerCharacterAnimator : MonoBehaviour
 		
 		if( !hitRoutineBusy )
 		{
-			Debug.LogError("PLAY ANIMATION " + currentAnimationContainer.name + "/" + clipName);
+			//Debug.LogError("PLAY ANIMATION " + currentAnimationContainer.name + "/" + clipName);
 			currentAnimationContainer.Stop();
 			//Debug.Log ("PLAYING ANIMATION " + currentAnimation.animation.clip.name + " ON " + currentAnimation.name );
 			currentAnimationContainer.Play(clipName);//CrossFade( clipName, 0.5f );
