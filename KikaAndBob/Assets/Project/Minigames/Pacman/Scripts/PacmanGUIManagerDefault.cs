@@ -11,6 +11,8 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	protected Transform guiParent = null;
 	protected Transform keysParent = null;
 	protected List<Transform> guiKeyItems = new List<Transform>();
+	public delegate void OnWinLevel(float timer);
+	public OnWinLevel onWinLevel = null;
 
 	public void SetupLocal()
 	{
@@ -108,6 +110,13 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void ShowWinMessage(float timer)
 	{
+		// if we have a custon win screen handler, it will do the screen, if not, the default one below will be shown
+		if (onWinLevel != null)
+		{
+			onWinLevel(timer);
+			return;
+		}
+
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
 		HUDManager.use.StopAll();
@@ -117,7 +126,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer);
-
 	}
 
 	// this will get called each time a new key index has been added
