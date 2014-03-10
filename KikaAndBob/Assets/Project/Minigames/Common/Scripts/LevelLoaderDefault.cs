@@ -126,7 +126,8 @@ public class LevelLoaderDefault
 		{
 			return DanceHeroCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas")
+		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas"
+		         || Application.loadedLevelName == "e22_russia")
 		{
 			return DartsCrossSceneInfo.use;
 		}		
