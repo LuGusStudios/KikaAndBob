@@ -125,7 +125,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.5884247, y: -1.34340048, z: -.438720703}
+  m_LocalPosition: {x: -26.0458355, y: -11.8595276, z: -.438720703}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400012}
@@ -139,7 +139,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .00885772705, y: 2.47027731, z: .438720703}
-  m_LocalScale: {x: .800000012, y: .800000012, z: 1}
+  m_LocalScale: {x: .699999988, y: .699999988, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!4 &400004
@@ -148,9 +148,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
-  m_LocalRotation: {x: 0, y: 0, z: -1, w: -4.37113883e-08}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 4, y: -4, z: 4}
   m_Children: []
   m_Father: {fileID: 400012}
 --- !u!4 &400006
@@ -192,12 +192,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100012}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: -4.37113883e-08}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: -1, z: 1}
   m_Children:
-  - {fileID: 400010}
   - {fileID: 400004}
+  - {fileID: 400010}
   - {fileID: 400006}
   - {fileID: 400008}
   m_Father: {fileID: 400000}
@@ -210,8 +210,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 1, y: 1}
-  m_Center: {x: 0, y: 0}
+  m_Size: {x: 11.9138794, y: 1}
+  m_Center: {x: -.0868492126, y: 0}
 --- !u!95 &9500000
 Animator:
   serializedVersion: 2
@@ -234,13 +234,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e922b818653314d498a0ce0269a8af78, type: 3}
+  m_Script: {fileID: 11500000, guid: 354f3615594b9e246a296ca4eb6eca46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enterSoundKeys: []
-  behindPlayer: 0
+  behindPlayer: 1
   goRight: 0
-  lanePresenceSoundKey: 
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -252,8 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a190acc213ce843bec685bdad2bbff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dobbingOffset: 1
-  dobbingSpeed: 1
+  dobbingOffset: .300000012
+  dobbingSpeed: 2
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -267,7 +266,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatonLength: .400000006
   blastCenter: {x: 0, y: 0}
-  blastSize: {x: 1.5, y: 1}
+  blastSize: {x: 5.5, y: 5.5}
+  explosionSFXName: Explosion01
+  explosionVolume: .5
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,6 +284,9 @@ MonoBehaviour:
   missileSmoke: {fileID: 0}
   missileShadow: {fileID: 0}
   explosion: {fileID: 0}
+  missileFallingSFXName: FallSound01
+  missileFallingVolume: .5
+  enforceLaneOnly: 1
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f669fd721021c60438ca13036d76df5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missileFrequency: 10
+  missileFrequency: 12
   missileSpeed: 10
   missile: {fileID: 0}
 --- !u!198 &19800000
@@ -1402,7 +1406,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: ed2672bc35f68154a8d795cd948ad5ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5003888db5c44764998d6c3910ea620a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

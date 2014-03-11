@@ -74,7 +74,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -20}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -85,7 +85,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.3979893, y: 1.38573873, z: 0}
+  m_LocalPosition: {x: -39.6716194, y: -6.94239664, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .699999988, y: .699999988, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
 --- !u!4 &400006
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .699999988, y: .699999988, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
 --- !u!61 &6100000
@@ -152,7 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatonLength: .400000006
   blastCenter: {x: 0, y: 0}
-  blastSize: {x: 1.5, y: 1}
+  blastSize: {x: 5.5, y: 5.5}
+  explosionSFXName: Explosion01
+  explosionVolume: .5
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,7 +169,6 @@ MonoBehaviour:
   enterSoundKeys: []
   behindPlayer: 1
   goRight: 0
-  lanePresenceSoundKey: 
   colliderType: 0
   destructionParticles: {fileID: 0}
   detonationTimer: 1
@@ -175,6 +176,7 @@ MonoBehaviour:
     from: .100000001
     to: 1
   destroyByOther: 1
+  enforceLaneOnly: 1
   mineLightOff: {fileID: 0}
   mineLightOn: {fileID: 0}
   explosion: {fileID: 0}

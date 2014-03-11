@@ -9,14 +9,18 @@ public class FroggerLaneItemBomber : FroggerCollider
 	public SpriteRenderer bombDropShadow = null;
 	public FroggerExplosion explosion = null;
 	public float bombDropSpeed = 5f;
+	public string bomberPresenceSound = "";
+	public float bomberPresenceVolume = 1f;
 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
 	}
 	
-	public void SetupGlobal()
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		if (bomb == null)
 		{
 			bomb = transform.FindChild("Bomb").GetComponent<SpriteRenderer>();
@@ -51,14 +55,41 @@ public class FroggerLaneItemBomber : FroggerCollider
 				Debug.LogError("Could not find the explosion!");
 			}
 		}
+
+		if (FroggerGameManager.use.GameRunning)
+		{
+			// Play the bomber fly-over sound when the bomber spawns
+			AudioClip flyOverSFX = LugusResources.use.Shared.GetAudio(bomberPresenceSound);
+			if (flyOverSFX != LugusResources.use.errorAudio)
+			{
+				// First check if its not playing already, because we don't want to clutter the sound buffer
+				bool isAlreadyPlaying = false;
+				List<ILugusAudioTrack> tracks = LugusAudio.use.SFX().Tracks;
+				foreach (ILugusAudioTrack track in tracks)
+				{
+					if (track.Source.isPlaying && (track.Source.clip.name == bomberPresenceSound))
+					{
+						isAlreadyPlaying = true;
+						break;
+					}
+				}
+
+
+				if (!isAlreadyPlaying)
+				{
+					ILugusAudioTrack track = LugusAudio.use.SFX().Play(flyOverSFX);
+					track.Volume = bomberPresenceVolume;
+				}
+			}
+		}
 	}
 	
-	protected void Awake()
+	private void Awake()
 	{
 		SetupLocal();
 	}
 
-	protected void Start () 
+	private void Start () 
 	{
 		SetupGlobal();
 	}

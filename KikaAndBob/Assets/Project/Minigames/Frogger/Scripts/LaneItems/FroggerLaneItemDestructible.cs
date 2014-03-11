@@ -7,34 +7,25 @@ public class FroggerLaneItemDestructible : FroggerCollider
 {
 
 	public ParticleSystem destructionParticles = null;
-
-	public void SetupLocal()
-	{
-		// assign variables that have to do with this class only
-	}
 	
-	public void SetupGlobal()
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		if (destructionParticles == null)
 		{
-			destructionParticles = transform.FindChild("DestructionDust").GetComponent<ParticleSystem>();
-			destructionParticles.Stop();
+			Transform dustObj = transform.FindChild("DestructionDust");
+			if (dustObj != null)
+			{
+				destructionParticles = dustObj.GetComponent<ParticleSystem>();
+				destructionParticles.Stop();
+			}
 		}
 	}
-	
-	protected void Awake()
-	{
-		SetupLocal();
-	}
 
-	protected void Start () 
+	private void Start () 
 	{
 		SetupGlobal();
-	}
-	
-	protected void Update () 
-	{
-	
 	}
 
 	public virtual void Destruct()

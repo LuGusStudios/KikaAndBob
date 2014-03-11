@@ -29,7 +29,7 @@ public class FroggerLaneItemMissileLauncher : MonoBehaviour
 		}
 
 		// Start launching missiles at the player
-		StartCoroutine(LaunchMissileRoutine());
+		StartCoroutine(LaunchMissileRoutine(Random.Range(0f, missileFrequency)));
 	}
 
 	protected void Awake()
@@ -42,23 +42,30 @@ public class FroggerLaneItemMissileLauncher : MonoBehaviour
 		SetupGlobal();
 	}
 
-	private IEnumerator LaunchMissileRoutine()
+	private IEnumerator LaunchMissileRoutine(float initialDelay)
 	{
+		yield return new WaitForSeconds(initialDelay);
+
 		// Periodically launches a missile, targeted at the player
-
-		while (true)
+		while (FroggerGameManager.use.GameRunning)
 		{
-			yield return new WaitForSeconds(missileFrequency);
-
 			// Spawn and launch missile
-			Transform player = GameObject.Find("Player").transform;
+			GameObject playerObj = GameObject.Find("Player");
+			if (playerObj != null)
+			{
+				FroggerCharacter player = playerObj.GetComponent<FroggerCharacter>();
 
-			GameObject missileCopy = (GameObject)GameObject.Instantiate(missile.gameObject);
-			missileCopy.transform.position = transform.position;
-			missileCopy.transform.parent = transform.parent;
-			missileCopy.gameObject.SetActive(true);
-			missileCopy.GetComponent<FroggerLaneItemMissile>().Launch(player.position, missileSpeed);
-			
+				if (player != null)
+				{
+					GameObject missileCopy = (GameObject)GameObject.Instantiate(missile.gameObject);
+					missileCopy.transform.position = transform.position;
+					missileCopy.transform.parent = transform.parent;
+					missileCopy.gameObject.SetActive(true);
+					missileCopy.GetComponent<FroggerLaneItemMissile>().Launch(player, missileSpeed);
+				}
+			}
+
+			yield return new WaitForSeconds(missileFrequency);
 		}
 	}
 }

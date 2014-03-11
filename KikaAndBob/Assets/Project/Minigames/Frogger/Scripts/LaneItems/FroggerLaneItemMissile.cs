@@ -8,6 +8,9 @@ public class FroggerLaneItemMissile : MonoBehaviour
 	public ParticleSystem missileSmoke = null;
 	public SpriteRenderer missileShadow = null;
 	public FroggerExplosion explosion = null;
+	public string missileFallingSFXName = "";
+	public float missileFallingVolume = 1f;
+	public bool enforceLaneOnly = false;
 	
 	public void SetupGlobal()
 	{
@@ -65,12 +68,12 @@ public class FroggerLaneItemMissile : MonoBehaviour
 		SetupGlobal();
 	}
 
-	public void Launch(Vector3 targetPosition, float velocity)
+	public void Launch(FroggerCharacter target, float velocity)
 	{
-		StartCoroutine(LaunchRoutine(targetPosition, velocity));
+		StartCoroutine(LaunchRoutine(target, velocity));
 	}
 
-	private IEnumerator LaunchRoutine(Vector3 targetPosition, float velocity)
+	private IEnumerator LaunchRoutine(FroggerCharacter target, float velocity)
 	{
 		// This routine makes the missile fly towards the targetPosition of
 		// where the player stood. The missile is launched upward, and flies
@@ -78,8 +81,23 @@ public class FroggerLaneItemMissile : MonoBehaviour
 		// around and flies towards the targetPosition. This will also spawn
 		// a drop shadow of the missile at the targetPosition. When the missile
 		// reaches its destination, the missile, its shadow and smoke particles
-		// aren't needed anymore. Afterwards, an explosion happens that will search
-		// for the player and other destroyable objects in its area.
+		// aren't needed anymore. Afterwards, we check if it hits on a water lane
+		// or not, so that maybe the missile just splashes in the water. Else, it
+		// just explode.
+
+		SetupGlobal();
+
+		Vector3 targetPosition = target.transform.position;
+		FroggerLane targetLane = target.CurrentLane;
+
+		if (enforceLaneOnly)
+		{
+			BoxCollider2D coll2D = targetLane.GetComponent<BoxCollider2D>();
+			if (coll2D != null)
+			{
+				explosion.EnforceBlastRangeHeight(coll2D);
+			}
+		}
 
 		// Enable the necessary sprite renderers and particle systems
 		missileSprite.enabled = true;
@@ -111,7 +129,7 @@ public class FroggerLaneItemMissile : MonoBehaviour
 		missileShadowCopy.GetComponent<SpriteRenderer>().enabled = true;
 
 		// Let the missile turn around and fall down on the targetPosition
-		transform.Rotate(0f, 0f, 180f);
+		transform.localScale = transform.localScale.y(-transform.localScale.y);
 		transform.position = new Vector3(targetPosition.x, offScreenPos.y, targetPosition.z);
 
 		time = Mathf.Abs(transform.position.y - targetPosition.y) / velocity;
@@ -119,6 +137,15 @@ public class FroggerLaneItemMissile : MonoBehaviour
 		// Animate the missile by letting it fall down and the shadow by making it bigger over time
 		gameObject.MoveTo(targetPosition).Time(time).Execute();
 		missileShadowCopy.ScaleTo(missileShadow.transform.localScale).Time(time).Execute();
+
+		// Play the falling SFX of the missile
+		AudioClip fallingSFX = LugusResources.use.Shared.GetAudio(missileFallingSFXName);
+		if (fallingSFX != LugusResources.use.errorAudio)
+		{
+			ILugusAudioTrack track = LugusAudio.use.SFX().Play(fallingSFX);
+			track.Volume = missileFallingVolume;
+		}
+
 		yield return new WaitForSeconds(time);
 
 		// Destroy the shadow copy, and disable the missile sprite and particle emission
@@ -126,6 +153,41 @@ public class FroggerLaneItemMissile : MonoBehaviour
 		missileSprite.enabled = false;
 		missileSmoke.enableEmission = false;
 
+		// See if the missile falls down on a water lane
+		if (targetLane != null)
+		{
+			FroggerLaneWater waterLane = targetLane.GetComponent<FroggerLaneWater>();
+			if (waterLane != null)
+			{
+				RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector3(targetPosition.x, targetPosition.y, float.NegativeInfinity), Vector3.forward);
+				bool laneItemFound = false;
+				foreach (RaycastHit2D hit in hits)
+				{
+					if (hit.transform.GetComponent<FroggerLaneItem>() != null)
+					{
+						laneItemFound = true;
+						break;
+					}
+				}
+
+				// If we're in a water lane, and didn't fell on a lane item, then let is splash
+				if (!laneItemFound)
+				{
+					waterLane.DoSplashAnimation(targetPosition);
+					waterLane.PlaySplashSFX();
+					GameObject.Destroy(gameObject);
+					yield break;
+				}
+			}
+		}
+
+		// If we come here, then EXPLOSION!
+		StartCoroutine(ExplosionRoutine());
+
+	}
+
+	private IEnumerator ExplosionRoutine()
+	{
 		// Display the explosion and destroy this missile object once the explosion is done
 		explosion.Explode();
 		while (true)

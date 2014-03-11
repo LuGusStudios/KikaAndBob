@@ -1,30 +1,70 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SmoothMoves;
 
 public class FroggerLaneItemConditionalWin : FroggerLaneItem 
 {
-	public Sprite pickupIcon = null;
+	public UnityEngine.Sprite pickupIcon = null;
 
+	public BoneAnimation boneAnimation = null;
+	public string idleAnimationName = "";
+	public string acceptAnimationName = "";
+	public string deniedAnimationName = "";
+
+	public enum AnimationState
+	{
+		NONE = -1,
+		IDLE = 1,
+		ACCEPTING = 2,
+		DENYING = 4
+	};
+
+	protected AnimationState state = AnimationState.NONE;
 	protected List<FroggerRequiredPickup> requiredPickups = null;
 
-	public void SetupLocal()
+	public override void SetUpLocal()
 	{
-		// assign variables that have to do with this class only
+		base.SetUpLocal();
+
+		state = AnimationState.IDLE;
 	}
 	
-	public void SetupGlobal()
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		// Find all of the required pickups in the scene
 		requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+
+		// Find the bone animation, and start the idle animation
+		if (boneAnimation == null)
+		{
+			boneAnimation = transform.FindChild("Bone Animation").GetComponent<BoneAnimation>();
+			if (boneAnimation == null)
+			{
+				Debug.LogError("Could not find the bone animation!");
+			}
+			else
+			{
+				if (boneAnimation.AnimationClipExists(idleAnimationName))
+				{
+					boneAnimation.Play(idleAnimationName, PlayMode.StopAll);
+				}
+			}
+		}
 	}
 
-	protected void Start () 
+	private void Awake()
+	{
+		SetUpLocal();
+	}
+
+	private void Start () 
 	{
 		SetupGlobal();
 	}
 
-	// TODO: Some form of animation?
 	protected override void EnterSurfaceEffect(FroggerCharacter character)
 	{
 		bool gameWon = true;
@@ -41,7 +81,71 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		{
 			character.characterAnimator.PlayAnimation(character.characterAnimator.idleUp);
 
+			StartCoroutine(AcceptAnimationRoutine());
+
 			FroggerGameManager.use.WinGame();
+		}
+		else
+		{
+			StartCoroutine(DeniedAnimationRoutine());
+		}
+	}
+
+	private IEnumerator AcceptAnimationRoutine()
+	{
+		if (!((state != AnimationState.IDLE) || (state != AnimationState.NONE)))
+		{
+			yield break;
+		}
+
+		if ((boneAnimation != null) && boneAnimation.AnimationClipExists(acceptAnimationName))
+		{
+			state = AnimationState.ACCEPTING;
+
+			float length = boneAnimation.animation.GetClip(acceptAnimationName).length * 0.1f;
+			boneAnimation.Play(acceptAnimationName, PlayMode.StopAll);
+
+			yield return new WaitForSeconds(length);
+
+			if (boneAnimation.AnimationClipExists(idleAnimationName))
+			{
+				boneAnimation.Play(idleAnimationName, PlayMode.StopAll);
+			}
+			else
+			{
+				boneAnimation.Stop();
+			}
+
+			state = AnimationState.IDLE;
+		}
+	}
+
+	private IEnumerator DeniedAnimationRoutine()
+	{
+		if (!((state != AnimationState.IDLE) || (state != AnimationState.NONE)))
+		{
+			yield break;
+		}
+
+		if ((boneAnimation != null) && boneAnimation.AnimationClipExists(deniedAnimationName))
+		{
+			state = AnimationState.DENYING;
+
+			float length = boneAnimation.animation.GetClip(deniedAnimationName).length * 0.1f;
+			boneAnimation.Play(deniedAnimationName, PlayMode.StopAll);
+
+			yield return new WaitForSeconds(length);
+
+			if (boneAnimation.AnimationClipExists(idleAnimationName))
+			{
+				boneAnimation.Play(idleAnimationName, PlayMode.StopAll);
+			}
+			else
+			{
+				boneAnimation.Stop();
+			}
+
+			state = AnimationState.IDLE;
 		}
 	}
 }

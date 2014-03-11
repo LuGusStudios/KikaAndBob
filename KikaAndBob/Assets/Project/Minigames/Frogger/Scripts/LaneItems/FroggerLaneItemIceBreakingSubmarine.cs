@@ -27,15 +27,17 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 		StartCoroutine(SubmarineAnimationRoutine());
 	}
 
-	public void SetupLocal()
+	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
 
 		state = State.UNDER;
 	}
 	
-	public void SetupGlobal()
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		if (periscope == null)
 		{
 			periscope = transform.FindChild("Periscope").GetComponent<SpriteRenderer>();
@@ -93,7 +95,7 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 
 	protected void Awake()
 	{
-		SetupLocal();
+		SetUpLocal();
 	}
 
 	protected void Start () 

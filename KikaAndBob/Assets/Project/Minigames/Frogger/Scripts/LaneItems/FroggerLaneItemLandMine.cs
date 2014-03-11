@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class FroggerLaneItemLandMine : FroggerLaneItemDestructible 
+public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 {
 	public float detonationTimer = 1f;
 	public DataRange blinkingSpeed = new DataRange(0.1f, 0.5f);
 	public bool destroyByOther = true;
+	public bool enforceLaneOnly = false;	// True: enforce the blast range of the explosion to the height of the lane
+	// False: no restrictions on lane item destruction from other lanes
 
 	public SpriteRenderer mineLightOff = null;
 	public SpriteRenderer mineLightOn = null;
@@ -21,17 +23,18 @@ public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 
 	private MineState mineState = MineState.NONE;
 	private float nextBlinkTime = 1f;
-	private FroggerCharacter player = null;
 
-	public void SetupLocal()
+	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
 		mineState = MineState.ACTIVE;
 		nextBlinkTime = blinkingSpeed.to;
 	}
-	
-	public void SetupGlobal()
+
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		if (mineLightOff == null)
 		{
 			mineLightOff = transform.FindChild("MineLightOff").GetComponent<SpriteRenderer>();
@@ -72,18 +75,18 @@ public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 		// Arm mine
 		StartCoroutine(ActiveMineRoutine());
 	}
-	
-	protected void Awake()
+
+	private void Awake()
 	{
-		SetupLocal();
+		SetUpLocal();
 	}
 
-	protected void Start () 
+	private void Start()
 	{
 		SetupGlobal();
 	}
-	
-	protected void Update ()
+
+	protected void Update()
 	{
 		// Update current blink time
 		nextBlinkTime -= Time.deltaTime;
@@ -121,12 +124,10 @@ public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 	protected override void EnterSurfaceEffect(FroggerCharacter character)
 	{
 		mineState = MineState.EXPLODING;
-		player = character;
 	}
 
 	protected override void LeaveSurfaceEffect(FroggerCharacter character)
 	{
-		player = null;
 	}
 
 	public override void Destruct()
@@ -157,6 +158,16 @@ public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 	{
 		mineLightOff.enabled = false;
 		mineLightOn.enabled = false;
+
+		// Set the blast radius to the width of the current lane
+		if (enforceLaneOnly)
+		{
+			BoxCollider2D coll2D = GetComponent<BoxCollider2D>();
+			if (coll2D != null)
+			{
+				explosion.EnforceBlastRangeHeight(coll2D);	
+			}
+		}
 
 		explosion.Explode();
 

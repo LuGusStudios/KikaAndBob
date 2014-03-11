@@ -112,7 +112,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -28.5850544, y: 1.03362143, z: 0}
+  m_LocalPosition: {x: -39.7901077, y: -12.6889238, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -128,7 +128,7 @@ Transform:
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -2}
-  m_LocalScale: {x: .5, y: .5, z: .5}
+  m_LocalScale: {x: .800000012, y: .800000012, z: 1}
   m_Children: []
   m_Father: {fileID: 400004}
 --- !u!4 &400008
@@ -151,8 +151,8 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Size: {x: 2.28999996, y: 1}
-  m_Center: {x: .0353717804, y: 0}
+  m_Size: {x: 2.96090221, y: 1}
+  m_Center: {x: -.0858325958, y: 0}
 --- !u!95 &9500000
 Animator:
   serializedVersion: 2
@@ -181,12 +181,13 @@ MonoBehaviour:
   enterSoundKeys: []
   behindPlayer: 0
   goRight: 0
-  lanePresenceSoundKey: 
   colliderType: 0
   bomb: {fileID: 0}
   bombDropShadow: {fileID: 0}
   explosion: {fileID: 0}
   bombDropSpeed: 25
+  bomberPresenceSound: Bomber02
+  bomberPresenceVolume: .400000006
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -200,7 +201,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatonLength: .400000006
   blastCenter: {x: 0, y: 0}
-  blastSize: {x: 1.5, y: 1}
+  blastSize: {x: 5.5, y: 5.5}
+  explosionSFXName: Explosion01
+  explosionVolume: .5
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
