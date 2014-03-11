@@ -14,7 +14,9 @@ namespace KikaAndBob
 		Life = 4,
 		Score = 5,
 		Distance = 6,
-		Custom = 7
+		Custom = 7,
+		Key01 = 8,
+		Key02 = 9
 	}
 }
 
