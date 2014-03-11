@@ -9,19 +9,9 @@ public class PacmanTileItemDoorGuard : PacmanTileItem
         parentTile.tileType = PacmanTile.TileType.Collide;
     }
 
-    // Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    public override void OnTryEnter(PacmanCharacter character) 
+    public override void OnTryEnter(PacmanCharacter character)
     {
-        if (!opened && character.id == linkedId)// && PacmanPickups.use.GetPickupAmount(keyID) >= 1)
+        if (!opened && !string.IsNullOrEmpty(linkedId) && character.id == linkedId)// && PacmanPickups.use.GetPickupAmount(keyID) >= 1)
         {
             opened = true;
             //PacmanPickups.use.ModifyPickupAmount(keyID, -1);

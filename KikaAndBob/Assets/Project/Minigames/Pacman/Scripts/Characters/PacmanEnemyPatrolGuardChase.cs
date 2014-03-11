@@ -192,23 +192,34 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                     else if (patrolPath.Count > 0)
                     {
                         //Debug.Log("Player not detected! Continuing patrol.");
-                        foreach (PacmanTile patrolTile in patrolPath)
+                        //foreach (PacmanTile patrolTile in patrolPath)
+                        //{
+                        //    // if patrol waypoint was reached, find next
+                        //    if (currentTile == patrolTile)
+                        //    {
+                        //        //Debug.Log("Patrol point reached: " + patrolTile);
+                        //        patrolIndex++;
+                        //        lockedSteps = 0;
+                        //        if (patrolIndex >= patrolPath.Count)
+                        //        {
+                        //            patrolIndex = 0;
+                        //        }
+                        //    }
+                        //}
+                        if (currentTile == patrolPath[patrolIndex])
                         {
-                            // if patrol waypoint was reached, find next
-                            if (currentTile == patrolTile)
+                            patrolIndex++;
+                            lockedSteps = 0;
+                            if (patrolIndex >= patrolPath.Count)
                             {
-                                //Debug.Log("Patrol point reached: " + patrolTile);
-                                patrolIndex++;
-                                lockedSteps = 0;
-                                if (patrolIndex >= patrolPath.Count)
-                                {
-                                    patrolIndex = 0;
-                                }
+                                patrolIndex = 0;
                             }
                         }
                         //if the target tile hasn't reached its position add lockstep
-                        if (targetTile == patrolPath[patrolIndex])
+                        else
+                        {
                             lockedSteps++;
+                        }
                         targetTile = patrolPath[patrolIndex];
                     }
                 }
@@ -318,7 +329,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
         UpdateMovement();	// needs to be called again, or character will pause for one frame
     }
-    protected virtual void DoCurrentTileBehavior()
+    protected override void DoCurrentTileBehavior()
     {
         foreach (GameObject go in currentTile.tileItems)
         {
