@@ -189,7 +189,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		if (!string.IsNullOrEmpty(level.backgroundMusicName))
 		{
 			AudioClip music = LugusResources.use.Shared.GetAudio(level.backgroundMusicName);
-			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
+			LugusAudio.use.Music().Play(music, true, new LugusAudioTrackSettings().Loop(true));
 		}
 
 		PacmanGUIManager.use.SetupPickupCounter(itemsPickedUp, itemsToBePickedUp);

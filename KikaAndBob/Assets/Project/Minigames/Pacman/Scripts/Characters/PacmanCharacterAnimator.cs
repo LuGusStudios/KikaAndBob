@@ -8,6 +8,7 @@ public class PacmanCharacterAnimator : MonoBehaviour
 	protected List<BoneAnimation> boneAnimations = new List<BoneAnimation>();
 	protected List<Animator> spriteAnimators = new List<Animator>();
 	public BoneAnimation currentBoneAnimation = null;
+	public Animator currentSpriteAnimation = null;
 	public Transform currentAnimationTransform = null;
 	public string currentAnimationClip = "";
 	public string currentAnimationPath = "";
@@ -27,6 +28,8 @@ public class PacmanCharacterAnimator : MonoBehaviour
 	public string hitAnimation;
 
 	public string runScared;
+
+	public string victory;
 
 	
 	public void SetupLocal()
@@ -113,7 +116,7 @@ public class PacmanCharacterAnimator : MonoBehaviour
 		}
 
 
-		Animator currentSpriteAnimation = null;
+		currentSpriteAnimation = null;
 		foreach( Animator spriteAnimation in spriteAnimators )
 		{
 			if( spriteAnimation.name == containerName )

@@ -28,7 +28,21 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 	protected override void Update() 
 	{
 		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
+		{
+			// this just pauses the animation if the game is paused
+			if (characterAnimator.currentSpriteAnimation != null && characterAnimator.currentSpriteAnimation.speed > 0)
+			{
+				characterAnimator.currentSpriteAnimation.speed = 0;
+			}
+
 			return;
+		}
+
+		// unpause the animation if the game is not paused
+		if (characterAnimator.currentSpriteAnimation != null && characterAnimator.currentSpriteAnimation.speed <= 0)
+		{
+			characterAnimator.currentSpriteAnimation.speed = 1;
+		}
 		
 		foreach (PacmanPlayerCharacter p in PacmanGameManager.use.GetPlayerChars())
 		{

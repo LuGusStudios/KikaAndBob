@@ -26,7 +26,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected BoneAnimation currentAnimation = null;
 	protected ParticleSystem teleportParticles = null;	// TO DO: Remove from here.
 
-	protected PacmanCharacterAnimator characterAnimator = null;
+	[HideInInspector]
+	public PacmanCharacterAnimator characterAnimator = null;
 		
 	public enum CharacterDirections
 	{

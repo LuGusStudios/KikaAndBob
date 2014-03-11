@@ -259,6 +259,9 @@ public class PacmanGameManagerDefault : IGameManager {
 		Debug.Log("You win!");
 		gameRunning = false;
 
+		PacmanPlayerCharacter activePlayer = GetActivePlayer();
+		activePlayer.characterAnimator.PlayAnimation(activePlayer.characterAnimator.victory);
+
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
 		{
 			updater.Deactivate();
@@ -289,6 +292,11 @@ public class PacmanGameManagerDefault : IGameManager {
 				levelLoader.LoadLevel(index);
 			}
 		}	
+		if (GUILayout.Button("Win"))
+		{
+			StopGame();
+		}
+	
 	}
 }
 

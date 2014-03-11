@@ -65,11 +65,15 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterSmallRight1.transform.position = HUDManager.use.CounterSmallRight2.transform.position;
 		HUDManager.use.CounterSmallRight2.transform.position += new Vector3(0, -1.1f, 0);
 
-		HUDManager.use.CounterSmallRight1.SetupLocal();		// IMPORTANT: If this HUDCounter is inactive at loadtime, its Awake will not be be called until it is set to active.
-															// If SetupLocal hasn't run yet, the script may or may not have a reference to its icon renderer depending on execution order.
-															// If it does not have a reference to it, the icon cannot be set properly. Hence, manually call SetupLocal.
-															// Ideally, a more robust solution is in order, but this will do for now.
-		HUDManager.use.CounterSmallRight1.SetupGlobal();	
+		// IMPORTANT: If this HUDCounter is inactive at loadtime, its Awake will not be be called until it is set to active.
+		// If SetupLocal hasn't run yet, the script may or may not have a reference to its icon renderer depending on execution order.
+		// If it does not have a reference to it, the icon cannot be set properly. Hence, manually call SetupLocal.
+		// Ideally, a more robust solution is in order, but this will do for now.
+		
+		HUDManager.use.CounterSmallRight1.gameObject.SetActive(true);
+		HUDManager.use.CounterSmallRight2.gameObject.SetActive(true);
+
+
 		HUDManager.use.CounterSmallRight1.commodity = KikaAndBob.CommodityType.Key01;
 		HUDManager.use.CounterSmallRight1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterSmallRight1.SetValue(0, false);
@@ -79,6 +83,9 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterSmallRight2.commodity = KikaAndBob.CommodityType.Key02;
 		HUDManager.use.CounterSmallRight2.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterSmallRight2.SetValue(0, false);
+
+		HUDManager.use.CounterSmallRight1.gameObject.SetActive(false);
+		HUDManager.use.CounterSmallRight2.gameObject.SetActive(false);
 
 	}
 
