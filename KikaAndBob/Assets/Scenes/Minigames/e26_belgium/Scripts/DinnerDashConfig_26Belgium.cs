@@ -132,7 +132,7 @@ public class DinnerDashConfig_26Belgium : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 6.0f);
 
 		
-		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		DinnerDashTutorials_26Belgium tutorials = gameObject.AddComponent<DinnerDashTutorials_26Belgium>(); 
 		tutorials.currentTutorial = 0;
 		tutorials.NextStep();
 	}
@@ -167,7 +167,7 @@ public class DinnerDashConfig_26Belgium : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
 
 		
-		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		DinnerDashTutorials_26Belgium tutorials = gameObject.AddComponent<DinnerDashTutorials_26Belgium>(); 
 		tutorials.currentTutorial = 1;
 		tutorials.NextStep();
 	}
@@ -202,7 +202,7 @@ public class DinnerDashConfig_26Belgium : IDinnerDashConfig
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(2.0f, 3.0f);
 		
 		
-		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>(); 
+		DinnerDashTutorials_26Belgium tutorials = gameObject.AddComponent<DinnerDashTutorials_26Belgium>(); 
 		tutorials.currentTutorial = 2;
 		tutorials.NextStep();
 	}
@@ -232,7 +232,7 @@ public class DinnerDashConfig_26Belgium : IDinnerDashConfig
 		
 		DinnerDashManager.use.consumerManager.timeBetweenConsumers = new DataRange(4.0f, 10.0f);
 		
-		DinnerDashTutorials_12NewYork tutorials = gameObject.AddComponent<DinnerDashTutorials_12NewYork>();
+		DinnerDashTutorials_26Belgium tutorials = gameObject.AddComponent<DinnerDashTutorials_26Belgium>();
 		tutorials.currentTutorial = 3;
 		tutorials.NextStep();
 
