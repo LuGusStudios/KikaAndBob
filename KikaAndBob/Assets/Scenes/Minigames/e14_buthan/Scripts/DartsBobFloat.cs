@@ -125,6 +125,10 @@ public class DartsBobFloat : DartsToggle
 
 	
 			yield return new WaitForSeconds(duration);
+
+			iTween.Stop(gameObject);	// this just makes sure there isn't any itweens still running
+
+			yield return null;
 		}
 	}
 }

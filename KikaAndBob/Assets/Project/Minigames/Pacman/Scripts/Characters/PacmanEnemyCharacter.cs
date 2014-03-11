@@ -233,6 +233,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 	// Override to get a custom player detection method (e.g. only in front of player, in a circle around the player, etc.)
 	protected virtual void DetectPlayer()
 	{
+		if (currentTile == null)
+			return;
+
 		// this default implementation looks forwardDetectDistance tiles in the current direction and checks for a player there
 		foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesInDirection(currentTile, forwardDetectDistance, currentDirection))
 		{
@@ -347,17 +350,17 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			if( characterAnimator.currentBoneAnimation.transform.localScale.x > 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			if( characterAnimator.currentBoneAnimation.transform.localScale.x < 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
 			}
 		}
 	}

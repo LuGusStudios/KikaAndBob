@@ -6,11 +6,17 @@ public class DartsHider : IDartsHitable
 {
 	public Vector3 hiddenPosition = Vector3.zero;
 	public Vector3 shownPosition = Vector3.zero;
+	public string hitSoundKey = "";	// not setting a default value here so other instances of this script won't suddenly behave differently
 
 	public override void OnHit()
 	{
 		HitCount++;
 		Hide();
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 
 		//LugusCoroutines.use.StartRoutine( HitRoutine() );
 	}
