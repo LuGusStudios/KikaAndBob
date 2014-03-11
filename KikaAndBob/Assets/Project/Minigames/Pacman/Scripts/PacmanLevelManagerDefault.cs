@@ -192,6 +192,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
 		}
 
+		PacmanGUIManager.use.SetupPickupCounter(itemsPickedUp, itemsToBePickedUp);
+
 		if (onLevelBuilt != null)
 			onLevelBuilt();
 	}

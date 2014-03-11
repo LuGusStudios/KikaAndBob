@@ -5,8 +5,10 @@ using SmoothMoves;
 
 public class PacmanCharacterAnimator : MonoBehaviour 
 {
-	protected BoneAnimation[] animationContainers;
-	public BoneAnimation currentAnimationContainer = null;
+	protected List<BoneAnimation> boneAnimations = new List<BoneAnimation>();
+	protected List<Animator> spriteAnimators = new List<Animator>();
+	public BoneAnimation currentBoneAnimation = null;
+	public Transform currentAnimationTransform = null;
 	public string currentAnimationClip = "";
 	public string currentAnimationPath = "";
 
@@ -29,19 +31,20 @@ public class PacmanCharacterAnimator : MonoBehaviour
 	
 	public void SetupLocal()
 	{
-		if(animationContainers == null || animationContainers.Length == 0 )
+		if(boneAnimations == null || boneAnimations.Count == 0 )
 		{
-			animationContainers = transform.GetComponentsInChildren<BoneAnimation>(true);
+			boneAnimations.AddRange(transform.GetComponentsInChildren<BoneAnimation>(true));
+		}
+
+		// no need to check if count of boneAnimations <= 0; it's perfectly valid for it to be empty
+
+
+		if(spriteAnimators == null || spriteAnimators.Count == 0 )
+		{
+			spriteAnimators.AddRange(transform.GetComponentsInChildren<Animator>(true));
 		}
 		
-		if( animationContainers.Length == 0 )
-		{
-			Debug.LogError(name + " : no BoneAnimations found for this animator!");
-		}
-		else
-		{
-			currentAnimationContainer = animationContainers[0];
-		}
+		// no need to check if count of spriteAnimators <= 0; it's perfectly valid for it to be empty
 	}
 	
 	public void SetupGlobal()
@@ -71,6 +74,7 @@ public class PacmanCharacterAnimator : MonoBehaviour
 			return;
 		}
 
+		// don't update if we're not changing anything
 		if (currentAnimationPath == animationPath)
 			return;
 
@@ -89,33 +93,65 @@ public class PacmanCharacterAnimator : MonoBehaviour
 			clipName = parts[1];
 		}
 
-		currentAnimationContainer = null;
-		foreach( BoneAnimation container in animationContainers )
+		// this will contain either a bone animation or a sprite animation
+		currentBoneAnimation = null;
+
+
+		currentAnimationTransform = null;
+		foreach( BoneAnimation boneAnimation in boneAnimations )
 		{
-			if( container.name == containerName )
+			if( boneAnimation.name == containerName )
 			{
-				currentAnimationContainer = container;
-				currentAnimationContainer.gameObject.SetActive(true);
+				currentAnimationTransform = boneAnimation.transform;
+				currentBoneAnimation = boneAnimation;
+				currentBoneAnimation.gameObject.SetActive(true);
 			}
 			else
 			{
-				container.gameObject.SetActive(false);
+				boneAnimation.gameObject.SetActive(false);
+			}
+		}
+
+
+		Animator currentSpriteAnimation = null;
+		foreach( Animator spriteAnimation in spriteAnimators )
+		{
+			if( spriteAnimation.name == containerName )
+			{
+				if (currentAnimationTransform != null)
+				{
+					Debug.LogError("PacmanCharacterAnimator: GameObject: " + this.name + " Contains both a sprite animator and a bone animation with the same name: " + containerName);
+				}
+
+				currentAnimationTransform = spriteAnimation.transform;
+				currentSpriteAnimation = spriteAnimation;
+				spriteAnimation.gameObject.SetActive(true);
+			}
+			else
+			{
+				spriteAnimation.gameObject.SetActive(false);
 			}
 		}
 		
-		if( currentAnimationContainer == null )
+		if( currentAnimationTransform == null )
 		{
-			Debug.LogError(name + " : No animationContainer found for name: " + containerName);
-			currentAnimationContainer = animationContainers[0];
+			Debug.LogError(name + " : No bone or sprite animation found for name: " + containerName);
+		//	currentAnimationContainer = animationContainers[0];
+			return;
 		}
+
+		// if a sprite animation was found, no more work has to be done
+		if (currentSpriteAnimation != null)
+			return;
+
 
 		currentAnimationPath = animationPath;
 	
 		if ( parts.Length == 2 )
 		{
 			currentAnimationClip = clipName;
-			currentAnimationContainer.Stop();
-			currentAnimationContainer.Play(clipName);
+			currentBoneAnimation.Stop();
+			currentBoneAnimation.Play(clipName);
 		}
 	}
 }

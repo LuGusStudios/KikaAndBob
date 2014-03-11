@@ -149,17 +149,17 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			if( characterAnimator.currentBoneAnimation.transform.localScale.x > 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			if( characterAnimator.currentBoneAnimation.transform.localScale.x < 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
 			}
 		}
 		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);

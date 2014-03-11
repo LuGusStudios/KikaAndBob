@@ -6,6 +6,24 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 {
 	public string discoveredSound = "Discovered01";
 	protected bool detectedRoutineRunning = false;
+	protected ParticleSystem angryParticles = null;
+
+	public override void SetUpGlobal()
+	{
+		base.SetUpGlobal();
+
+		if (angryParticles == null)
+		{
+			angryParticles = GetComponentInChildren<ParticleSystem>();
+		}
+		
+		if (angryParticles == null)
+		{
+			Debug.LogError("PacmanEnemyRotatingGuard: Missing angry particles!");
+		}
+
+		ChangeSpriteFacing(startDirection);
+	}
 
 	protected override void Update() 
 	{
@@ -47,7 +65,9 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 	protected IEnumerator PlayerSeenRoutine()
 	{
 		detectedRoutineRunning = true;
-		
+
+		angryParticles.Play();
+
 		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(discoveredSound));
 		
 		iTween.PunchScale(this.gameObject, Vector3.one, 0.5f);
@@ -111,26 +131,24 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 
 		characterAnimator.PlayAnimation(adjustedDirection.ToString());
 
-		if (characterAnimator.GetComponent<FlippedIncorrectly>() == null)
+		if (characterAnimator.currentAnimationTransform.GetComponent<FlippedIncorrectly>() == null)
 		{
 			if ( direction == CharacterDirections.Right )
 			{
-				// if going left, the scale.x needs to be negative
-				if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+				// if going right, the scale.x needs to be negative
+				if( characterAnimator.currentAnimationTransform.localScale.x > 0 )
 				{
-					characterAnimator.currentAnimationContainer.transform.localScale = 
-						characterAnimator.currentAnimationContainer.transform.localScale.x( 
-						                                                                   characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+					characterAnimator.currentAnimationTransform.localScale = 
+						characterAnimator.currentAnimationTransform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationTransform.localScale.x) * -1.0f );
 				}
 			}
 			else if ( direction == CharacterDirections.Left )
 			{
-				// if going right, the scale.x needs to be positive 
-				if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+				// if going left, the scale.x needs to be positive 
+				if( characterAnimator.currentAnimationTransform.localScale.x < 0 )
 				{
-					characterAnimator.currentAnimationContainer.transform.localScale = 
-						characterAnimator.currentAnimationContainer.transform.localScale.x( 
-						                                                                   Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x)); 
+					characterAnimator.currentAnimationTransform.localScale = 
+						characterAnimator.currentAnimationTransform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationTransform.localScale.x) ); 
 				}
 			}
 		}
@@ -139,21 +157,21 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 			if ( direction == CharacterDirections.Left )
 			{
 				// if going left, the scale.x needs to be negative
-				if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+				if( characterAnimator.currentAnimationTransform.localScale.x > 0 )
 				{
-					characterAnimator.currentAnimationContainer.transform.localScale = 
-						characterAnimator.currentAnimationContainer.transform.localScale.x( 
-						                                                                   characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+					characterAnimator.currentAnimationTransform.localScale = 
+						characterAnimator.currentAnimationTransform.localScale.x( 
+						                                                                   characterAnimator.currentAnimationTransform.localScale.x * -1.0f );
 				}
 			}
 			else if ( direction == CharacterDirections.Right )
 			{
 				// if going right, the scale.x needs to be positive 
-				if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+				if( characterAnimator.currentAnimationTransform.localScale.x < 0 )
 				{
-					characterAnimator.currentAnimationContainer.transform.localScale = 
-						characterAnimator.currentAnimationContainer.transform.localScale.x( 
-						                                                                   Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x)); 
+					characterAnimator.currentAnimationTransform.localScale = 
+						characterAnimator.currentAnimationTransform.localScale.x( 
+						                                                                   Mathf.Abs(characterAnimator.currentAnimationTransform.localScale.x)); 
 				}
 			}
 		}
