@@ -7,6 +7,7 @@ public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault
 
 public class PacmanGameManagerDefault : IGameManager {
 
+	public bool allowPickupWin =  true;	// if true, just picking up all pickups wins the game - if false, the win condition will need to be triggered in a different way
 	public bool gameRunning = false;
 	protected float timer = 0.0f;
 	protected int lives = 3;
@@ -20,12 +21,25 @@ public class PacmanGameManagerDefault : IGameManager {
 
 	public override void StartGame()
 	{
-
+		string levelData = levelLoader.GetLevelData(PacmanCrossSceneInfo.use.GetLevelIndex());
+		
+		if (!string.IsNullOrEmpty(levelData))
+		{
+			PacmanLevelDefinition newLevel = PacmanLevelDefinition.FromXML(levelData);
+			PacmanLevelManager.use.levels = new PacmanLevelDefinition[]{newLevel};
+		}
+		else
+		{
+			Debug.LogError("FroggerGameManager: Invalid level data!");
+		}
+		
+		// if a level wasn't found above, we can still load a default level
+		StartNewLevel();
 	}
-
+	
 	public override void StopGame()
 	{
-		
+		WinGame();	// TO DO: this is used elsewhere, so lest we do a lot of refactoring, linking to the WinGame method is faster
 	}
 
 	public override bool GameRunning
@@ -56,21 +70,7 @@ public class PacmanGameManagerDefault : IGameManager {
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
-			
-			string levelData = levelLoader.GetLevelData(PacmanCrossSceneInfo.use.GetLevelIndex());
-			
-			if (!string.IsNullOrEmpty(levelData))
-			{
-				PacmanLevelDefinition newLevel = PacmanLevelDefinition.FromXML(levelData);
-				PacmanLevelManager.use.levels = new PacmanLevelDefinition[]{newLevel};
-			}
-			else
-			{
-				Debug.LogError("FroggerGameManager: Invalid level data!");
-			}
-			
-			// if a level wasn't found above, we can still load a default level
-			StartNewLevel();
+			StartGame();
 		}
 	}
 
@@ -97,8 +97,13 @@ public class PacmanGameManagerDefault : IGameManager {
 	// starts a completely new level
 	public void StartNewLevel(int levelIndex)
 	{
-		PacmanPickups.use.ClearPickups();
 		PacmanCameraFollower.use.ResetCamera();
+	
+		PacmanPickups.use.ClearPickups();
+		PacmanGUIManager.use.SetupLocal();
+		PacmanGUIManager.use.SetupGlobal();
+		PacmanGUIManager.use.ResetGUI();	// make sure to set the pickup counter prefix later! We don't yet know how many pickups are in the level, but we 
+											// do want to initialize the GUI already so that it is available for things like keys
 
 		PacmanLevelManager.use.BuildLevel(levelIndex);
 		
@@ -133,15 +138,14 @@ public class PacmanGameManagerDefault : IGameManager {
 		{
 			updater.Activate();
 		}
-
-		// reset sound effects
-		PacmanSoundEffects.use.Reset(enemies);
+	
 
 		// reset lives
 		lives = 3;
-
-		PacmanGUIManager.use.ResetGUI();
 		PacmanGUIManager.use.UpdateLives(lives);
+
+		// reset sound effects
+		PacmanSoundEffects.use.Reset(enemies);
 
 		gameRunning = true;
 
@@ -214,8 +218,6 @@ public class PacmanGameManagerDefault : IGameManager {
 	
 	public void LoseLife()
 	{
-		Debug.Log ("Lost one life!");
-
 		LugusCoroutines.use.StartRoutine(LoseLifeRoutine());
 	}
 
@@ -257,6 +259,9 @@ public class PacmanGameManagerDefault : IGameManager {
 		Debug.Log("You win!");
 		gameRunning = false;
 
+		PacmanPlayerCharacter activePlayer = GetActivePlayer();
+		activePlayer.characterAnimator.PlayAnimation(activePlayer.characterAnimator.victory);
+
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
 		{
 			updater.Deactivate();
@@ -287,6 +292,11 @@ public class PacmanGameManagerDefault : IGameManager {
 				levelLoader.LoadLevel(index);
 			}
 		}	
+		if (GUILayout.Button("Win"))
+		{
+			StopGame();
+		}
+	
 	}
 }
 

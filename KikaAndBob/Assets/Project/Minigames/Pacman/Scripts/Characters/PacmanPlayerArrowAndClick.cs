@@ -38,8 +38,6 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		if (!allowClickControl)
 			return;
 
-
-
 		if (LugusInput.use.down)
 		{
 			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
