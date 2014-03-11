@@ -8,7 +8,6 @@ public class PacmanGUIManager : LugusSingletonExisting<PacmanGUIManagerDefault>
 
 public class PacmanGUIManagerDefault : MonoBehaviour
 {
-	protected Transform guiParent = null;
 	protected Transform keysParent = null;
 	protected Dictionary<string, HUDCounter> guiKeyItems = new Dictionary<string, HUDCounter>();
 	public delegate void OnWinLevel(float timer);
@@ -16,24 +15,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void SetupLocal()
 	{
-		if (guiParent == null)
-		{
-			guiParent = GameObject.Find("GUI_Debug").transform;
-		}
-		if (guiParent == null)
-		{
-			Debug.LogError("Could not find GUI parent object."); 
-		}
-
-		if (keysParent == null)
-		{
-			keysParent = guiParent.FindChild("Keys");
-		}
-		if (keysParent == null)
-		{
-			Debug.LogError("Could not find Keys parent object.");
-		}
-
 //		foreach(Transform t in keysParent)
 //		{
 //			guiKeyItems.Add(t);
@@ -115,7 +96,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdateLives(int lives)
 	{
-		print ("UPDATING");
 		HUDManager.use.CounterSmallLeft2.SetValue(lives, false);
 	}
 
