@@ -13,7 +13,10 @@ namespace KikaAndBob
 		Time = 3,
 		Life = 4,
 		Score = 5,
-		Distance = 6
+		Distance = 6,
+		Custom = 7,
+		Key01 = 8,
+		Key02 = 9
 	}
 }
 
@@ -247,7 +250,7 @@ public class ScoreVisualizer : LugusSingletonRuntime<ScoreVisualizer>
 		viewportCoords = Vector2.Scale( viewportCoords, new Vector2(LugusUtil.UIWidth, LugusUtil.UIHeight) );
 
 		scoreText.transform.localPosition = (viewportCoords.v3 () );// / 100.0f);
-		scoreText.transform.position = scoreText.transform.position.z( score.GetHUDElement().transform.position.z );
+		scoreText.transform.position = scoreText.transform.position.z( score.GetHUDElement().transform.position.z - 5.0f );
 
 		float moveDuration = score._duration;
 		float moveOverDelay = 0.0f;

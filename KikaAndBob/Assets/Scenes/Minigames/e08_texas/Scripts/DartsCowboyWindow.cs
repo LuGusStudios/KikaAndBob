@@ -5,6 +5,7 @@ using SmoothMoves;
 
 public class DartsCowboyWindow : IDartsHitable 
 {
+	public string hitSoundKey;
 	public string idleAnimation;
 	public string hitAnimation;
 
@@ -19,6 +20,11 @@ public class DartsCowboyWindow : IDartsHitable
 	{
 		HitCount++;
 		LugusCoroutines.use.StartRoutine(HideRoutine());
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 	}
 
 	protected IEnumerator HideRoutine()

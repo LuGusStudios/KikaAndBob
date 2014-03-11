@@ -5,7 +5,7 @@ using SmoothMoves;
 public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public bool poweredUp = false;
-	public float powerupDuration = 10;
+	public float powerupDuration = 10.0f;
 
 	protected bool allowControl = true;
 	protected bool cutScene = false;
@@ -14,6 +14,10 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected LugusAudioTrackSettings walkTrackSettings = null;
 	protected AudioClip walkSoundClip = null;
 	protected BoneAnimation[] boneAnimations = null;
+	protected ParticleSystem powerUpParticles = null;
+	protected ILugusCoroutineHandle powerUpRoutine = null;
+	protected ILugusCoroutineHandle powerUpBlinkRoutine = null;
+	protected float powerUpDurationLeft = 0.0f;
 
 
 	public override void SetUpLocal()
@@ -33,6 +37,21 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			walkSoundClip = LugusResources.use.Shared.GetAudio(walkSoundKey);
 
 		boneAnimations = (BoneAnimation[])GetComponentsInChildren<BoneAnimation>(true);
+
+		if (powerUpParticles == null)
+		{
+			GameObject powerUpParticlesObject = PacmanLevelManager.use.GetPrefab("PowerUpParticles");
+
+			if (powerUpParticlesObject != null)
+			{
+				powerUpParticles = powerUpParticlesObject.GetComponent<ParticleSystem>();
+
+				if (powerUpParticles == null)
+				{
+					Debug.LogError("PacmanCharacter: Missing power up particles!");
+				}
+			}
+		}
 	}
 
 	private void Update () 
@@ -77,9 +96,12 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			}
 		}
 
-		UpdateMovement();
+		UpdateMovement();	
 
 		UpdateWalkSound();
+
+		PacmanCameraFollower.use.FollowCamera();	// the camera does not update automatically anymore - an unpredictable order of Update calls between this and the characters can cause jitter	
+													// instead, it's called from the character scripts
 	}
 
 	protected void UpdateWalkSound()
@@ -104,6 +126,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		//PlayAnimationObject("Idle", PacmanCharacter.CharacterDirections.Undefined);
 		DetectCurrentTile();
 		ResetMovement();
+		moveTargetTile = null;
 		PlaceAtSpawnLocation();
 	}
 
@@ -139,18 +162,18 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		
 		if ( direction == CharacterDirections.Right )
 		{
-			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			// if going right, the scale.x needs to be negative
+			if( characterAnimator.currentAnimationTransform.localScale.x > 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationTransform.localScale = characterAnimator.currentAnimationTransform.localScale.x( characterAnimator.currentAnimationTransform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
-			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			// if going left, the scale.x needs to be positive 
+			if( characterAnimator.currentAnimationTransform.localScale.x < 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+				characterAnimator.currentAnimationTransform.localScale = characterAnimator.currentAnimationTransform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationTransform.localScale.x) ); 
 			}
 		}
 		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);
@@ -197,7 +220,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	// Effects per tile
 	// Override for custom behavior
-	protected virtual void DoCurrentTileBehavior()
+	protected override void DoCurrentTileBehavior()
 	{
 		// if we just teleported and hit the next non-teleport tile, we're done teleporting
 		if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
@@ -225,7 +248,20 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			currentTile.tileType = PacmanTile.TileType.Open;
 			if (currentTile.rendered != null)
 				currentTile.rendered.SetActive(false);
-			LugusCoroutines.use.StartRoutine(PowerupRoutine());
+
+			powerUpDurationLeft += powerupDuration;
+
+			if (powerUpRoutine == null || !powerUpRoutine.Running)
+			{
+				powerUpRoutine = LugusCoroutines.use.StartRoutine(PowerupRoutine());
+			}
+
+			// if this character is still blinking, stop
+			if (powerUpBlinkRoutine != null && powerUpBlinkRoutine.Running)
+			{
+				powerUpBlinkRoutine.StopRoutine();
+				SmoothMovesUtil.SetColor(boneAnimations, Color.white);
+			}
 		}
 		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
 		{
@@ -244,46 +280,68 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	}
 
 	// TO DO: This doesn't really need to be a coroutine anymore
-	protected override IEnumerator TeleportRoutine()
-	{				
-		alreadyTeleported = true;
-
-		PacmanTile targetTile = null;
-
-		if (PacmanLevelManager.use.teleportTiles.Count <= 1)
-		{
-			Debug.LogError("There's only one teleport tile in this level!");
-			yield break;
-		}
-
-		// this idea is not what we want, because it links teleports in a circle (always to the next), but not in two directions (i.e. also to the previous one)
-//		int indexCurrentTeleport = PacmanLevelManager.use.teleportTiles.IndexOf(currentTile);
-//		int	indexCounterpart = indexCurrentTeleport  + 1;
+//	protected override IEnumerator TeleportRoutine()
+//	{				
+//		alreadyTeleported = true;
 //
-//		if (indexCounterpart >= PacmanLevelManager.use.teleportTiles.Count)
+//
+//
+//		if (PacmanLevelManager.use.teleportTiles.Count <= 1)
 //		{
-//			indexCounterpart = 0;
+//			Debug.LogError("There's only one teleport tile in this level!");
+//			yield break;
 //		}
-
-		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
-		{
-			if (currentTile != tile)
-			{
-				targetTile = tile;
-				break;
-			}
-		}
-		
-		if (targetTile == null)
-		{
-			Debug.LogError("No other teleport tile found!");
-			yield break;
-		}
-
-		transform.localPosition = targetTile.location.v3();
-
-		DestinationReached();
-	}
+//
+//		if (teleportParticles != null)
+//		{
+//			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+//			spawnedParticles.transform.position = this.transform.position;
+//			
+//			spawnedParticles.Play();
+//			Destroy(spawnedParticles.gameObject, 2.0f);
+//		}
+//
+//
+//
+//		// this idea is not what we want, because it links teleports in a circle (always to the next), but not in two directions (i.e. also to the previous one)
+////		int indexCurrentTeleport = PacmanLevelManager.use.teleportTiles.IndexOf(currentTile);
+////		int	indexCounterpart = indexCurrentTeleport  + 1;
+////
+////		if (indexCounterpart >= PacmanLevelManager.use.teleportTiles.Count)
+////		{
+////			indexCounterpart = 0;
+////		}
+//
+//		PacmanTile targetTile = null;
+//
+//		foreach(PacmanTile tile in PacmanLevelManager.use.teleportTiles)
+//		{
+//			if (currentTile != tile)
+//			{
+//				targetTile = tile;
+//				break;
+//			}
+//		}
+//		
+//		if (targetTile == null)
+//		{
+//			Debug.LogError("No other teleport tile found!");
+//			yield break;
+//		}
+//		
+//		transform.localPosition = targetTile.location.v3();
+//
+//		if (teleportParticles != null)
+//		{
+//			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(teleportParticles);
+//			spawnedParticles.transform.position = this.transform.position;
+//			
+//			spawnedParticles.Play();
+//			Destroy(spawnedParticles.gameObject, 2.0f);
+//		}
+//		
+//		DestinationReached();
+//	}
 
 	
 	protected PacmanTile FindOpenTileInDirection(CharacterDirections direction)
@@ -343,7 +401,39 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	{
 		poweredUp = true;
 
-		yield return new WaitForSeconds(powerupDuration);
+		if (powerUpParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(powerUpParticles);
+			spawnedParticles.transform.position = this.transform.position;
+
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
+
+		// this way, we can add on to powerUpDurationLeft at will to keep it going
+		while (powerUpDurationLeft > 0.0f)
+		{
+			yield return new WaitForEndOfFrame();
+
+			powerUpDurationLeft -= Time.deltaTime;
+
+			if (powerUpDurationLeft <= 3.0f)
+			{
+				if (powerUpBlinkRoutine == null || !powerUpBlinkRoutine.Running)
+				{
+					powerUpBlinkRoutine = LugusCoroutines.use.StartRoutine(SmoothMovesUtil.Blink(boneAnimations, Color.blue, 3.0f, 5));
+				}
+			}
+		}
+
+		if (powerUpParticles != null)
+		{
+			ParticleSystem spawnedParticles = (ParticleSystem)Instantiate(powerUpParticles);
+			spawnedParticles.transform.position = this.transform.position;
+			
+			spawnedParticles.Play();
+			Destroy(spawnedParticles.gameObject, 2.0f);
+		}
 
 		poweredUp = false;
 	}

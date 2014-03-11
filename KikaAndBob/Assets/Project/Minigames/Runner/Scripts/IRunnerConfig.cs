@@ -9,6 +9,11 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
+	public virtual void OnGameStopped()
+	{
+
+	}
+
 	public void SetupHUDForGame()
 	{
 		HUDManager.use.DisableAll();
@@ -200,7 +205,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		GUILayout.BeginArea( new Rect(0, 50, 190, Screen.height / 1.5f ) );
 		GUILayout.BeginVertical(GUI.skin.box);
 
-		GUILayout.Label("Speed (1 to 30) Current: " + speed);
+		GUILayout.Label("Speed (1 to 30)\nCurrent: " + speed);
 		GUILayout.BeginHorizontal();
 
 		GUILayout.Label("From");

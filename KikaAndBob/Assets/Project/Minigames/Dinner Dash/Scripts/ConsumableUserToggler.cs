@@ -13,6 +13,8 @@ public class ConsumableUserToggler : MonoBehaviour
 
 	protected int busyCount = 0;
 
+	public ParticleSystem busyParticles = null;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -31,6 +33,15 @@ public class ConsumableUserToggler : MonoBehaviour
 		if( idleAnimation == "" || busyAnimation == "" )
 		{
 			Debug.LogError(name + " : No idleAnimation and/or no busyAnimation set!");
+		}
+
+		if( busyParticles == null )
+		{
+			busyParticles = transform.GetComponentInChildren<ParticleSystem>();
+		}
+		else
+		{
+			Debug.LogError(transform.Path() + " : no busy particles found!");
 		}
 		
 		GetComponent<BoneAnimation>().Play( idleAnimation );
@@ -54,8 +65,17 @@ public class ConsumableUserToggler : MonoBehaviour
 			//GetComponent<BoneAnimation>().Blend( idleAnimation, 0.0f );
 		}
 
+		float toggleTimeChosen = toggleTime.Random();
 
-		yield return new WaitForSeconds( toggleTime.Random() );
+		if( busyParticles != null )
+		{
+			busyParticles.Play();
+			busyParticles.enableEmission = true;
+			busyParticles.startLifetime = toggleTimeChosen + 1.0f;
+		}
+
+
+		yield return new WaitForSeconds( toggleTimeChosen );
 
 		target.gameObject.SetActive(true);
 
@@ -68,6 +88,11 @@ public class ConsumableUserToggler : MonoBehaviour
 			
 			//GetComponent<BoneAnimation>().Blend( busyAnimation, 0.0f );
 			GetComponent<BoneAnimation>().CrossFade( idleAnimation, 1.0f );
+		}
+		
+		if( busyParticles != null )
+		{
+			busyParticles.enableEmission = false;
 		}
 	}
 

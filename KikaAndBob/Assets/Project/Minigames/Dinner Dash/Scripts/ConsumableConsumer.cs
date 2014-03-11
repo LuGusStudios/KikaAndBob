@@ -494,7 +494,7 @@ public class ConsumableConsumer : IConsumableUser
 	// Update is called once per frame 
 	void Update () 
 	{
-		// TODO: just for testing, remove this!
+		/*
 		if( LugusInput.use.KeyDown( KeyCode.P ) && this.place != null )
 		{
 			this.happiness = Random.Range(0, 11);
@@ -502,6 +502,7 @@ public class ConsumableConsumer : IConsumableUser
 			this.state = State.Paying;
 			Use ();
 		}
+		*/
 
 	}
 

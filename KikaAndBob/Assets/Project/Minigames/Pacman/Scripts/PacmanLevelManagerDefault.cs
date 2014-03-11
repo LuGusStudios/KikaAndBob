@@ -189,8 +189,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		if (!string.IsNullOrEmpty(level.backgroundMusicName))
 		{
 			AudioClip music = LugusResources.use.Shared.GetAudio(level.backgroundMusicName);
-			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
+			LugusAudio.use.Music().Play(music, true, new LugusAudioTrackSettings().Loop(true));
 		}
+
+		PacmanGUIManager.use.SetupPickupCounter(itemsPickedUp, itemsToBePickedUp);
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
@@ -398,7 +400,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			GameObject tileItem = (GameObject)Instantiate(tileItemPrefab);
 
 			tileItem.transform.parent = pickupParent;
-			tileItem.transform.localPosition = targetTile.location.v3().z(1);
+			tileItem.transform.localPosition = targetTile.location.v3().z(-1);
 
 			PacmanTileItem tileItemScript = tileItem.GetComponent<PacmanTileItem>();
 
@@ -761,6 +763,20 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 		return result.ToArray();
 	}
+
+	public PacmanCharacter.CharacterDirections GetOppositeDirection(PacmanCharacter.CharacterDirections direction)
+	{
+		if (direction == PacmanCharacter.CharacterDirections.Up)
+			return PacmanCharacter.CharacterDirections.Down;
+		else if (direction == PacmanCharacter.CharacterDirections.Down)
+			return PacmanCharacter.CharacterDirections.Up;
+		else if (direction == PacmanCharacter.CharacterDirections.Right)
+			return PacmanCharacter.CharacterDirections.Left;
+		else if (direction == PacmanCharacter.CharacterDirections.Left)
+			return PacmanCharacter.CharacterDirections.Right;
+
+		return PacmanCharacter.CharacterDirections.Undefined;
+	}
 	
 	public LevelQuadrant GetOppositeQuadrant(LevelQuadrant quadrant)
 	{
@@ -925,35 +941,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		return new Vector2(Mathf.Abs(tile1.gridIndices.x - tile2.gridIndices.x),  Mathf.Abs(tile1.gridIndices.y - tile2.gridIndices.y));
 	}
 
-	public void IncreasePickUpCount()
-	{
-		itemsPickedUp++;
-		PacmanGUIManager.use.UpdatePickupCounter(itemsToBePickedUp - itemsPickedUp);
-		CheckPickedUpItems();
-	}
-	
-	public bool AllItemsPickedUp()
-	{
-		return itemsPickedUp >= itemsToBePickedUp;
-	}
-	
-	public void CheckPickedUpItems()
-	{
-		if (AllItemsPickedUp())
-		{
-			PacmanGameManager.use.WinGame();
-		}
-	}
-	
-	public void UnlockCenter()
-	{
-		foreach(PacmanTile tile in levelTiles)
-		{
-			if (tile.tileType == PacmanTile.TileType.Locked)
-				tile.tileType = PacmanTile.TileType.EnemyAvoid;
-		}
-	}
-
 	public int GetNumberOfExits(PacmanTile tile)
 	{
 		if (tile == null)
@@ -961,12 +948,12 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			Debug.LogError("Tile was null!");
 			return 0;
 		}
-
+		
 		int exitCounter = 0;
 		int x = (int)tile.gridIndices.x;
 		int y = (int)tile.gridIndices.y;
 		PacmanTile inspectedTile;
-	
+		
 		// TO DO: Optimize. We're currently doing excess work for neighboring tiles that share an exit.
 		
 		// check above
@@ -1002,6 +989,38 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 		
 		return exitCounter;	
+	}
+
+	public void IncreasePickUpCount()
+	{
+		itemsPickedUp++;
+		PacmanGUIManager.use.UpdatePickupCounter(itemsToBePickedUp - itemsPickedUp);
+		CheckPickedUpItems();
+	}
+	
+	public bool AllItemsPickedUp()
+	{
+		return itemsPickedUp >= itemsToBePickedUp;
+	}
+	
+	public void CheckPickedUpItems()
+	{
+		if (!PacmanGameManager.use.allowPickupWin)
+			return;
+
+		if (AllItemsPickedUp())
+		{
+			PacmanGameManager.use.WinGame();
+		}
+	}
+	
+	public void UnlockCenter()
+	{
+		foreach(PacmanTile tile in levelTiles)
+		{
+			if (tile.tileType == PacmanTile.TileType.Locked)
+				tile.tileType = PacmanTile.TileType.EnemyAvoid;
+		}
 	}
 
 	public float GetLevelWidthInPixels()
