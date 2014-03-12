@@ -166,7 +166,16 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		HUDManager.use.CounterSmallLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterSmallLeft1.prefix = "X";
 		HUDManager.use.CounterSmallLeft1.SetValue(1);
+
+		// we move this counter around a bit so we don't have to create another GUI element
 		HUDManager.use.CounterSmallLeft1.transform.position += new Vector3(0, -12.4f, 0);
+
+
+		HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+		HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+		// we move this progress bar around a bit so we don't have to create another GUI element: align it with the score counter
+		HUDManager.use.ProgressBarCenter.transform.position = HUDManager.use.ProgressBarCenter.transform.position.y(HUDManager.use.CounterLargeBottomLeft1.transform.position.y);
 
 		sculptureIndex = 0;
 			
@@ -277,7 +286,10 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.repeat")); 
 
 		yield return new WaitForSeconds(1.0f);
-		
+
+		// reset timer
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+
 		Debug.Log("DanceHeroFeedbackHandlerMorocco: Ended break.");
 		DanceHeroLevel.use.SetGameRunning(true);
 	}
