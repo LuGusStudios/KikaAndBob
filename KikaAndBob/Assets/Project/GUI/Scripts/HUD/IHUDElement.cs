@@ -27,8 +27,12 @@ public abstract class IHUDElement : MonoBehaviour
 
 	public void UpdateIconForCommodityType()
 	{
+
 		if( icon == null )
+		{
+			Debug.LogError("Missing icon!");
 			return;
+		}
 
 		icon.enabled = true;
 
@@ -45,6 +49,10 @@ public abstract class IHUDElement : MonoBehaviour
 			iconKey = "IconScore01";
 		else if( _commodity == KikaAndBob.CommodityType.Distance )
 			iconKey = "IconSpeed01";
+		else if( _commodity == KikaAndBob.CommodityType.Key01 )
+			iconKey = "IconKey01";
+		else if( _commodity == KikaAndBob.CommodityType.Key02 )
+			iconKey = "IconKey02";
 		else if( _commodity == KikaAndBob.CommodityType.Custom )
 		{
 			icon.enabled = false;

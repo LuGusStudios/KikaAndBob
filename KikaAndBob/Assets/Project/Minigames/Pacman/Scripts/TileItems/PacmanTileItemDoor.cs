@@ -19,6 +19,7 @@ public class PacmanTileItemDoor : PacmanTileItem
 			opened = true;
 			PacmanPickups.use.ModifyPickupAmount(keyID, -1);
 			parentTile.tileType = PacmanTile.TileType.Open;
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("DoorCreak01"));
 			this.gameObject.SetActive(false);
 		}
 	}
