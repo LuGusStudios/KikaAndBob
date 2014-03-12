@@ -17,7 +17,7 @@ public abstract class FroggerSurface : MonoBehaviour {
 	protected bool onSurface = false;
 	protected BoxCollider2D surfaceCollider = null;
 
-	protected void Awake()
+	private void Awake()
 	{
 		SetUpLocal();
 	}

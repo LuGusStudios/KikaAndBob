@@ -14,7 +14,7 @@ public class FroggerExplosionGUI : Editor
 
 		// Display range box in world coordinates
 		Vector2 blastCenter = explosion.BlastCenterWorld;
-		Vector2 blastSize = explosion.BlastSizeWorld * 0.5f;
+		Vector2 blastSize = explosion.blastSize * 0.5f;
 		float z = explosion.transform.position.z;
 
 		Vector3[] points = new Vector3[4];
@@ -28,24 +28,6 @@ public class FroggerExplosionGUI : Editor
 		Handles.DrawLine(points[1], points[2]);
 		Handles.DrawLine(points[2], points[3]);
 		Handles.DrawLine(points[3], points[0]);
-
-/*
-		// Display range box in local coordinates
-		blastCenter = explosion.BlastCenterLocal;
-		blastSize = explosion.BlastSizeLocal * 0.5f;
-
-		points = new Vector3[4];
-		points[0] = new Vector3(blastCenter.x - blastSize.x, blastCenter.y - blastSize.y, 0) + explosion.transform.position;
-		points[1] = new Vector3(blastCenter.x - blastSize.x, blastCenter.y + blastSize.y, 0) + explosion.transform.position;
-		points[2] = new Vector3(blastCenter.x + blastSize.x, blastCenter.y + blastSize.y, 0) + explosion.transform.position;
-		points[3] = new Vector3(blastCenter.x + blastSize.x, blastCenter.y - blastSize.y, 0) + explosion.transform.position;
-
-		Handles.color = Color.yellow;
-		Handles.DrawLine(points[0], points[1]);
-		Handles.DrawLine(points[1], points[2]);
-		Handles.DrawLine(points[2], points[3]);
-		Handles.DrawLine(points[3], points[0]);
- */
 	}
 
 }

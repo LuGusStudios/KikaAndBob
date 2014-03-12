@@ -3,15 +3,9 @@ using System.Collections;
 
 public class FroggerLog : FroggerLaneItem 
 {
-	public Vector3 maxMovement = new Vector3(0, 0.1f, 0);
-	protected float originalY = 0;
-	protected float speedY = 2f;
-	protected float yMovement = 0.2f;
-
 	public override void SetUpLocal ()
 	{
 		base.SetUpLocal ();
-		originalY = transform.localPosition.y;
 	}
 
 	protected Transform originalParent = null;
@@ -29,7 +23,6 @@ public class FroggerLog : FroggerLaneItem
 		character.transform.parent = originalParent;
 	}
 
-	private bool rising = true;
 	protected override void AfterMovedEffect ()
 	{
 //		if (rising)

@@ -8,15 +8,20 @@ public class FroggerLaneItemBomber : FroggerCollider
 	public SpriteRenderer bomb = null;
 	public SpriteRenderer bombDropShadow = null;
 	public FroggerExplosion explosion = null;
+	public bool enforceLaneOnly = false;
 	public float bombDropSpeed = 5f;
+	public string bomberPresenceSound = "";
+	public float bomberPresenceVolume = 1f;
 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
 	}
 	
-	public void SetupGlobal()
+	public override void SetupGlobal()
 	{
+		base.SetupGlobal();
+
 		if (bomb == null)
 		{
 			bomb = transform.FindChild("Bomb").GetComponent<SpriteRenderer>();
@@ -51,14 +56,41 @@ public class FroggerLaneItemBomber : FroggerCollider
 				Debug.LogError("Could not find the explosion!");
 			}
 		}
+
+		if (FroggerGameManager.use.GameRunning)
+		{
+			// Play the bomber fly-over sound when the bomber spawns
+			AudioClip flyOverSFX = LugusResources.use.Shared.GetAudio(bomberPresenceSound);
+			if (flyOverSFX != LugusResources.use.errorAudio)
+			{
+				// First check if its not playing already, because we don't want to clutter the sound buffer
+				bool isAlreadyPlaying = false;
+				List<ILugusAudioTrack> tracks = LugusAudio.use.SFX().Tracks;
+				foreach (ILugusAudioTrack track in tracks)
+				{
+					if (track.Source.isPlaying && (track.Source.clip.name == bomberPresenceSound))
+					{
+						isAlreadyPlaying = true;
+						break;
+					}
+				}
+
+
+				if (!isAlreadyPlaying)
+				{
+					ILugusAudioTrack track = LugusAudio.use.SFX().Play(flyOverSFX);
+					track.Volume = bomberPresenceVolume;
+				}
+			}
+		}
 	}
 	
-	protected void Awake()
+	private void Awake()
 	{
 		SetupLocal();
 	}
 
-	protected void Start () 
+	private void Start () 
 	{
 		SetupGlobal();
 	}
@@ -72,6 +104,14 @@ public class FroggerLaneItemBomber : FroggerCollider
 
 	private IEnumerator DropBombRoutine(Vector2 charPos)
 	{
+		// This routine drops a bomb at the current location of the player
+		// It spawns a bomb off-screen and initializes a drop shadow that gets smaller
+		// as the bomb closes in on its target position.
+		// When the bomb reaches its target position, the bomb and its shadow
+		// are no longer needed and are destroyed. Afterwards, an explosion
+		// is created that will search for the player and other destroyable objects
+		// in its area.
+
 		// Find a position off screen to spawn the bomb
 		Vector3 spawnPos = Camera.main.ScreenToWorldPoint(new Vector3(0f, Camera.main.pixelHeight, 0f));
 		spawnPos.x = charPos.x;
@@ -95,12 +135,9 @@ public class FroggerLaneItemBomber : FroggerCollider
 		Vector3 targetPos = new Vector3(charPos.x, transform.position.y, spawnPos.z);
 		float time = Mathf.Abs(targetPos.y - spawnPos.y) / bombDropSpeed;
 
-		// Animate the bomb by letting it fall down
-		bombCopy.gameObject.MoveTo(targetPos).Time(time).Execute();
-
-		// Animate the shadow by letting it get bigger
-		bombShadowCopy.gameObject.ScaleTo(bombDropShadow.transform.localScale).Time(time).Execute();
-
+		// Animate the bomb by letting it fall down and the shadow by making it bigger over time
+		bombCopy.MoveTo(targetPos).Time(time).Execute();
+		bombShadowCopy.ScaleTo(bombDropShadow.transform.localScale).Time(time).Execute();
 		yield return new WaitForSeconds(time);
 
 		// Destroy the bomb and its shadow
@@ -111,6 +148,13 @@ public class FroggerLaneItemBomber : FroggerCollider
 		GameObject explosionCopy = (GameObject)GameObject.Instantiate(explosion.gameObject);
 		explosionCopy.transform.position = new Vector3(spawnPos.x, explosion.transform.position.y, explosion.transform.position.z);
 		explosionCopy.transform.parent = transform.parent;
+
+		BoxCollider2D coll2D = GetComponent<BoxCollider2D>();
+		if (coll2D != null)
+		{
+			explosionCopy.GetComponent<FroggerExplosion>().EnforceBlastRangeHeight(coll2D);
+		}
+
 		explosionCopy.GetComponent<FroggerExplosion>().Explode();
 
 		// Wait until the explosion is done, and destroy the explosion copy
