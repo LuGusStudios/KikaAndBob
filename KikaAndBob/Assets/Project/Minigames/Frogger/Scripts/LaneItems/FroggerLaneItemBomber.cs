@@ -8,6 +8,7 @@ public class FroggerLaneItemBomber : FroggerCollider
 	public SpriteRenderer bomb = null;
 	public SpriteRenderer bombDropShadow = null;
 	public FroggerExplosion explosion = null;
+	public bool enforceLaneOnly = false;
 	public float bombDropSpeed = 5f;
 	public string bomberPresenceSound = "";
 	public float bomberPresenceVolume = 1f;
@@ -147,6 +148,13 @@ public class FroggerLaneItemBomber : FroggerCollider
 		GameObject explosionCopy = (GameObject)GameObject.Instantiate(explosion.gameObject);
 		explosionCopy.transform.position = new Vector3(spawnPos.x, explosion.transform.position.y, explosion.transform.position.z);
 		explosionCopy.transform.parent = transform.parent;
+
+		BoxCollider2D coll2D = GetComponent<BoxCollider2D>();
+		if (coll2D != null)
+		{
+			explosionCopy.GetComponent<FroggerExplosion>().EnforceBlastRangeHeight(coll2D);
+		}
+
 		explosionCopy.GetComponent<FroggerExplosion>().Explode();
 
 		// Wait until the explosion is done, and destroy the explosion copy

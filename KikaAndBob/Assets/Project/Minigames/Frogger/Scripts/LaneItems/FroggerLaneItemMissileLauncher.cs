@@ -44,11 +44,11 @@ public class FroggerLaneItemMissileLauncher : MonoBehaviour
 
 	private IEnumerator LaunchMissileRoutine(float initialDelay)
 	{
-		yield return new WaitForSeconds(initialDelay);
-
 		// Periodically launches a missile, targeted at the player
 		while (FroggerGameManager.use.GameRunning)
 		{
+			yield return new WaitForSeconds(missileFrequency);
+
 			// Spawn and launch missile
 			GameObject playerObj = GameObject.Find("Player");
 			if (playerObj != null)
@@ -64,8 +64,6 @@ public class FroggerLaneItemMissileLauncher : MonoBehaviour
 					missileCopy.GetComponent<FroggerLaneItemMissile>().Launch(player, missileSpeed);
 				}
 			}
-
-			yield return new WaitForSeconds(missileFrequency);
 		}
 	}
 }

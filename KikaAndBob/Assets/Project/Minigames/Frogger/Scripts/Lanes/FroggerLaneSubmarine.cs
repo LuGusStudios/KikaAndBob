@@ -6,6 +6,8 @@ public class FroggerLaneSubmarine : FroggerLane
 {
 	public float submarineMoveSpeed = 5f;
 
+	public string submarinePrecenseSFXName = "";
+
 	protected List<FroggerLaneItemIceBreakingSubmarine> submarines = new List<FroggerLaneItemIceBreakingSubmarine>();
 	protected FroggerCharacter character = null;
 

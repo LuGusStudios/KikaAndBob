@@ -11,6 +11,9 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 	public SpriteRenderer submarine = null;
 	public Animator splash = null;
 
+	public string icebreakingSFXName = "";
+
+
 	public enum State
 	{
 		NONE = -1,
