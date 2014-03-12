@@ -6,11 +6,18 @@ public class DartsFlipper : IDartsHitable
 {
 	public Vector3 hiddenPosition = Vector3.zero;
 	public Vector3 shownPosition = Vector3.zero;
+
+	public string hitSoundKey = "Poof01";
 	
 	public override void OnHit()
 	{
 		HitCount++;
 		Hide();
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 		
 		//LugusCoroutines.use.StartRoutine( HitRoutine() );
 	}

@@ -189,8 +189,10 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		if (!string.IsNullOrEmpty(level.backgroundMusicName))
 		{
 			AudioClip music = LugusResources.use.Shared.GetAudio(level.backgroundMusicName);
-			LugusAudio.use.Ambient().Play(music, true, new LugusAudioTrackSettings().Loop(true));
+			LugusAudio.use.Music().Play(music, true, new LugusAudioTrackSettings().Loop(true));
 		}
+
+		PacmanGUIManager.use.SetupPickupCounter(itemsPickedUp, itemsToBePickedUp);
 
 		if (onLevelBuilt != null)
 			onLevelBuilt();
@@ -398,7 +400,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			GameObject tileItem = (GameObject)Instantiate(tileItemPrefab);
 
 			tileItem.transform.parent = pickupParent;
-			tileItem.transform.localPosition = targetTile.location.v3().z(1);
+			tileItem.transform.localPosition = targetTile.location.v3().z(-1);
 
 			PacmanTileItem tileItemScript = tileItem.GetComponent<PacmanTileItem>();
 
@@ -1003,6 +1005,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public void CheckPickedUpItems()
 	{
+		if (!PacmanGameManager.use.allowPickupWin)
+			return;
+
 		if (AllItemsPickedUp())
 		{
 			PacmanGameManager.use.WinGame();
