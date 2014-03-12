@@ -10,6 +10,8 @@ public class BelgianFryman : MonoBehaviour
 
 	public ILugusCoroutineHandle fryingHandle = null;
 
+	public ParticleSystem fryParticles = null;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -39,6 +41,20 @@ public class BelgianFryman : MonoBehaviour
 			fryingHandle = LugusCoroutines.use.GetHandle();
 			fryingHandle.Claim();
 		}
+
+		if( fryParticles == null )
+		{
+			fryParticles = GetComponentInChildren<ParticleSystem>();
+		}
+		
+		if( fryParticles == null )
+		{
+			Debug.LogError(this.transform.Path() + " : No fry particle system found!");
+		}
+		else
+		{
+			fryParticles.Stop();
+		}
 	}
 	
 	
@@ -46,12 +62,18 @@ public class BelgianFryman : MonoBehaviour
 	{
 		GetComponent<SmoothMoves.BoneAnimation>().CrossFade("FryMan_ShakeUp");
 
+		if( fryParticles != null )
+			fryParticles.Play();
+
 		while( activeCounter > 0 )
 		{
 			yield return null;
 		}
 
 		GetComponent<SmoothMoves.BoneAnimation>().CrossFade("FryMan_Idle");
+		
+		if( fryParticles != null )
+			fryParticles.Stop();
 	}
 	
 	public void OnProcessorStart(Consumable consumable) 
