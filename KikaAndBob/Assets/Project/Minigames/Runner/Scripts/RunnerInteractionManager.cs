@@ -32,7 +32,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public DataRange sectionSpanMultiplierRange = null;
 	public DataRange difficultyRange = null;
 	public float timeToMax = 60.0f;
-	protected float startTime = -1.0f;
+	public float startTime = -1.0f;
 
 	// READ_ONLY for external classes: constantly adjusted. Use the Range-vars above to adjust these values over time
 	public float sectionSpanMultiplier = 1.0f;

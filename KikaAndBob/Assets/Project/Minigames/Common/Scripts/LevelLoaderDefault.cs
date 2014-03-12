@@ -109,7 +109,7 @@ public class LevelLoaderDefault
 	{
 		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
 		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
-		    || Application.loadedLevelName == "e13_pacific")
+		    || Application.loadedLevelName == "e13_pacific" || Application.loadedLevelName == "e19_illinois")
 		{
 			return RunnerCrossSceneInfo.use;
 		}

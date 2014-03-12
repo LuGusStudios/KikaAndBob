@@ -284,14 +284,18 @@ public class RunnerManagerDefault : IGameManager
 	
 	public void SetupGlobal()
 	{
+		// TODO: remove me! jsut for debugging!
+		LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
+
+
 		// lookup references to objects / scripts outside of this script
 		
 		levelLoader.FindLevels(); 
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
+		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+			RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		
@@ -366,11 +370,11 @@ public class RunnerManagerDefault : IGameManager
 			shiftYTreshold = 1800.0f;
 		}
 
-		//#if !UNITY_EDITOR
+		#if !UNITY_EDITOR
 		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
 
 		yield return new WaitForSeconds(3.0f);
-		//#endif
+		#endif
 
 		_gameRunning = true;
 		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
@@ -436,6 +440,13 @@ public class RunnerManagerDefault : IGameManager
 					RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
 					//RunnerCharacterController.useBehaviour.rigidbody2D.velocity = Vector3.zero;
 					RunnerCharacterController.useBehaviour.Disable( 10.0f ); 
+
+					if( Application.loadedLevelName == "e19_illinois" )
+					{
+						// make kika run out of screen a little more slowly please
+						RunnerCharacterControllerJumpSlide c = RunnerCharacterControllerJumpSlide.use;
+						c.speedRange.to = c.speedRange.to / 2.0f;
+					}
 				}
 				else
 				{
