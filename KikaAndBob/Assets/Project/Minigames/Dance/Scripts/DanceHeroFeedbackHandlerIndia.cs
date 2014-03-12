@@ -337,6 +337,13 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	
 	protected void OnLevelFinished()
 	{
+		LugusCoroutines.use.StartRoutine(FinishRoutine());
+	}
+
+	protected IEnumerator FinishRoutine()
+	{
+		yield return new WaitForSeconds(1.0f);
+
 		HUDManager.use.DisableAll();
 		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
