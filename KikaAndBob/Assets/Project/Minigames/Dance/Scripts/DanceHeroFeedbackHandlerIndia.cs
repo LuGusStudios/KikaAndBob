@@ -24,6 +24,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected List<Transform> coinPrefabs = new List<Transform>();
 	protected List<Transform> coinsDropped = new List<Transform>();
 	protected List<BoneAnimation> legs = new List<BoneAnimation>();
+	protected List<AudioClip> moneySounds = new List<AudioClip>();
 
 	
 	protected void Awake()
@@ -52,6 +53,7 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		feedback.onScoreLowered += OnScoreLowered;
 		DanceHeroLevel.use.onLevelStarted += OnLevelStarted;
 		DanceHeroLevel.use.onLevelFinished += OnLevelFinished;
+		DanceHeroLevel.use.onLevelRestart += OnLevelRestart;
 		
 		Transform guiParent = GameObject.Find("GUI_Debug").transform;
 		
@@ -102,6 +104,9 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	
 	public void SetupGlobal()
 	{
+		moneySounds.Add(LugusResources.use.Shared.GetAudio("Money01"));
+		moneySounds.Add(LugusResources.use.Shared.GetAudio("Money02"));
+		moneySounds.Add(LugusResources.use.Shared.GetAudio("Money03"));
 	}
 
 	public void OnDisplayModifier()
@@ -109,6 +114,8 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
 
 		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
+		HUDManager.use.CounterSmallLeft2.SetValue(Mathf.FloorToInt(feedback.GetScoreModifier()), false);
+
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = flute.transform.position + new Vector3(0, 17.0f, 1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 4.0f, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(1f).Execute();
@@ -196,32 +203,57 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	protected void DropMoney()
 	{
 		int modifier = Mathf.FloorToInt(DanceHeroFeedback.use.GetScoreModifier());
+		float firstDelay = -1.0f;	// will contain the delay of the first thrown coin - this can be used to delay 
+									// the first coin hit sound (we don't want each coin to make a sound, it would be an auditory mess)
+
 
 		for (int i = 0; i < modifier; i++) 
 		{
 			GameObject droppedCoin = (GameObject)Instantiate(coinPrefabs[Random.Range(0, coinPrefabs.Count)].gameObject);
 			
-			droppedCoin.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), 0, 0)); // horizontally vary the starting point of the coin
+			droppedCoin.transform.Translate(new Vector3(Random.Range(-4.0f, 4.0f), 0, 0)); // horizontally vary the starting point of the coin
 			
 			Vector3 destination = 	droppedCoin.transform.position + 
-				new Vector3(0, Random.Range(-8, -11), 0);
-			
-			droppedCoin.MoveTo(destination).EaseType(iTween.EaseType.easeOutBounce).Time(1).Delay(Random.Range(0.0f, 1.5f)).Execute();	// random delay so coins don't drop simultaneously
+				new Vector3(0, Random.Range(-8, -11.5f), 0);
+
+			float delay = Random.Range(0.0f, 1.5f);
+
+			if (firstDelay < 0)
+			{
+				firstDelay = delay;
+			}
+
+			droppedCoin.MoveTo(destination).EaseType(iTween.EaseType.easeOutBounce).Time(1).Delay(delay).Execute();	// random delay so coins don't drop simultaneously
 			
 			coinsDropped.Add(droppedCoin.transform);
 		}
+
+		LugusCoroutines.use.StartRoutine(MoneySoundDelay(firstDelay));
 	}
 
+	protected IEnumerator MoneySoundDelay(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		if (moneySounds.Count > 0)
+		{
+			LugusAudio.use.SFX().Play(moneySounds[Random.Range(0, moneySounds.Count)]);
+		}
+	}
+	
 	protected IEnumerator RemoveCoinsRoutine()
 	{
 		while(true)
 		{
 			if (coinsDropped.Count >= 10)
 			{
+				float delay = 10.0f / coinsDropped.Count;	// if many coins, they wil disappear faster
+
 				Transform oldestCoin = coinsDropped[0];
 				coinsDropped.Remove(oldestCoin);
 				GameObject.Destroy(oldestCoin.gameObject);
-				yield return new WaitForSeconds(1.0f);
+
+				yield return new WaitForSeconds(delay);
 			}
 			else
 				yield return new WaitForEndOfFrame();
@@ -283,6 +315,16 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		HUDManager.use.CounterLargeLeft1.SetValue(0);
 
 
+		HUDManager.use.CounterSmallLeft2.gameObject.SetActive(true);
+		HUDManager.use.CounterSmallLeft2.commodity = KikaAndBob.CommodityType.Custom;
+		HUDManager.use.CounterSmallLeft2.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterSmallLeft2.prefix = "X";
+		HUDManager.use.CounterSmallLeft2.SetValue(1);
+
+		HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+		HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+
 		snake.Play(snakeStage1);
 
 		foreach (BoneAnimation item in legs) 
@@ -304,5 +346,10 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DanceHeroFeedback.use.GetScore());
+	}
+
+	protected void OnLevelRestart()
+	{
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
 	}
 }
