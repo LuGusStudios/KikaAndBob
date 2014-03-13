@@ -13,6 +13,13 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 
 	public string icebreakingSFXName = "";
 
+	public State SubmarineState
+	{
+		get
+		{
+			return state;
+		}
+	}
 
 	public enum State
 	{
@@ -23,7 +30,7 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 		DONE = 4
 	}
 
-	public State state = State.UNDER;
+	protected State state = State.UNDER;
 
 	public void Surface()
 	{
