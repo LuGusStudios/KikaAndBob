@@ -285,7 +285,7 @@ public class RunnerManagerDefault : IGameManager
 	public void SetupGlobal()
 	{
 		// TODO: remove me! jsut for debugging!
-		LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
+		//LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
 
 
 		// lookup references to objects / scripts outside of this script
@@ -294,8 +294,8 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-			RunnerCrossSceneInfo.use.levelToLoad = 667;
+		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
 
 		
@@ -370,11 +370,25 @@ public class RunnerManagerDefault : IGameManager
 			shiftYTreshold = 1800.0f;
 		}
 
-		#if !UNITY_EDITOR
+		//#if !UNITY_EDITOR
 		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
 
 		yield return new WaitForSeconds(3.0f);
-		#endif
+		//#endif
+
+		if( Application.loadedLevelName == "e09_Brazil" )
+		{
+			// in brazil, there's a bug if you press one of the arrow keys before the countdown is finished
+			// the animtion won't play correctly untill you release the button
+			// hard force this directly after the countdown
+			RunnerCharacterControllerClimbing cl = RunnerCharacterControllerClimbing.use;
+			cl.up = false;
+			cl.left = false;
+			cl.down = false;
+			cl.right = false;
+
+			cl.currentSpeedType = KikaAndBob.Runner.SpeedType.STILL;
+		}
 
 		_gameRunning = true;
 		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
@@ -713,7 +727,7 @@ public class RunnerManagerDefault : IGameManager
 	protected void Update () 
 	{
 		/*
-		if( LugusInput.use.Key( KeyCode.S) )
+		//if( LugusInput.use.Key( KeyCode.S) )
 		{
 			timeSpent = Random.Range(50, 100);
 			startTime = Time.time - Random.Range(50, 100);

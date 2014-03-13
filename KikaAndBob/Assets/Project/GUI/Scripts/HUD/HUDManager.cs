@@ -211,12 +211,12 @@ public class HUDManager : LugusSingletonRuntime<HUDManager>
 		}
 
 		/*
-		if( LugusInput.use.KeyDown( KeyCode.F ) )
+		//if( LugusInput.use.KeyDown( KeyCode.F ) )
 		{
 			FailScreen.Show();
 		}
 		
-		if( LugusInput.use.KeyDown( KeyCode.L ) )
+		//if( LugusInput.use.KeyDown( KeyCode.L ) )
 		{
 			LevelEndScreen.Show(false);
 		}

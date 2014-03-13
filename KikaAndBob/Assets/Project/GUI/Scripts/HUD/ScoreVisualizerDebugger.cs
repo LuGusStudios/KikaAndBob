@@ -36,28 +36,28 @@ public class ScoreVisualizerDebugger : LugusSingletonRuntime<ScoreVisualizerDebu
 			Setup();
 		}
 		/*
-		if( Input.GetKeyDown(KeyCode.A) )
+		//if( Input.GetKeyDown(KeyCode.A) )
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Time, 20).Color (Color.red).Execute();
 		}
-		if( Input.GetKeyDown(KeyCode.S) )
+		//if( Input.GetKeyDown(KeyCode.S) )
 		{
 			for( int i = 0; i < 10; ++i )
 			{
 				ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Time (i * 0.1f).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute();
 			}
 		}
-		if( Input.GetKeyDown(KeyCode.D) )
+		//if( Input.GetKeyDown(KeyCode.D) )
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Money, 200).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
 		}
 		
-		if( Input.GetKeyDown(KeyCode.F) ) 
+		//if( Input.GetKeyDown(KeyCode.F) ) 
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Life, -1).Color (Color.red).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
 		}
 		
-		if( Input.GetKeyDown(KeyCode.G) )
+		//if( Input.GetKeyDown(KeyCode.G) )
 		{
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Distance, 200).Title ("Distance++!").Time (2.0f).Position(new Vector3(Random.value * Screen.width, 0, 0) ).Execute(); 
 		}
