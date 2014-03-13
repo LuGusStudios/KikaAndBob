@@ -7,6 +7,8 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 	public RunnerPickup pickup = null;
 	public GameObject character = null;
 
+	public bool allowCenterOfScreen = true;
+
 	public void SetupLocal()
 	{
 		pickup = GetComponent<RunnerPickup>();
@@ -38,14 +40,17 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 		handle = LugusCoroutines.use.StartRoutine( AnnoyerRoutine() );
 	}
 
-	protected void OnHit(RunnerPickup pickup) 
+	public void OnHit(RunnerPickup pickup) 
 	{
 		// player hit us: de-activate and go out of the screen
 		
-		
-		handle.StopRoutine();
+		if( handle != null )
+		{
+			handle.StopRoutine();
+			handle = null;
 
-		LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+			LugusCoroutines.use.StartRoutine( MoveOffscreenRoutine() );
+		}
 	}
 
 	protected Vector3 currentOffscreen = Vector3.zero;
@@ -134,6 +139,22 @@ public class RunnerPlayerAnnoyer : MonoBehaviour
 
 		// target should be somewhere in the area of the character, so player is more or less forced to move 
 		float targetX = characterScreenPos.x + Random.Range( -1.0f * Screen.width / 4.0f, Screen.width / 4.0f );
+
+		if( !allowCenterOfScreen )
+		{
+			// start at 1/8th of the sides and add a quart
+			// this way, there is always a quart "safe zone|" in the center of the screen
+			float quart = Screen.width / 4.0f;
+			if( left )
+			{
+				targetX = (quart * 0.5f) + Random.Range(0, quart);
+			}
+			else
+			{
+				targetX = ((quart * 3.0f) + (quart * 0.5f)) - Random.Range(0, quart);
+			}
+		}
+
 		Vector3 target1 = new Vector3( targetX, offscreen.y, LugusCamera.game.nearClipPlane);
 
 		DataRange yInterval2 = new DataRange( Screen.height / 1.125f, Screen.height - (this.renderer.bounds.extents.x * 100) ); // top 15% of the screen

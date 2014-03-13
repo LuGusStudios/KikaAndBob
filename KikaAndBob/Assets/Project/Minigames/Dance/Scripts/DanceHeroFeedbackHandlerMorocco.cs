@@ -89,7 +89,10 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	
 	public void OnDisplayModifier()
 	{
+		HUDManager.use.CounterSmallLeft1.SetValue(Mathf.FloorToInt(feedback.GetScoreModifier()), false);
+
 		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
+
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
 		modifierDisplay.MoveTo(modifierDisplay.transform.position + new Vector3(0, 3, 0)).EaseType(iTween.EaseType.easeOutQuad).Time(0.5f).Execute();
@@ -98,7 +101,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 	protected void OnButtonPress(DanceHeroLane lane)
 	{
-		LugusAudio.use.SFX().Play(LugusResources.use.GetAudio("Blob01"));
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));
 		
 		if (currentLane == lane)
 			return;
@@ -157,6 +160,22 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		HUDManager.use.CounterLargeBottomLeft1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.CounterLargeBottomLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterLargeBottomLeft1.SetValue(0);
+
+		HUDManager.use.CounterSmallLeft1.gameObject.SetActive(true);
+		HUDManager.use.CounterSmallLeft1.commodity = KikaAndBob.CommodityType.Custom;
+		HUDManager.use.CounterSmallLeft1.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterSmallLeft1.prefix = "X";
+		HUDManager.use.CounterSmallLeft1.SetValue(1);
+
+		// we move this counter around a bit so we don't have to create another GUI element
+		HUDManager.use.CounterSmallLeft1.transform.position += new Vector3(0, -12.4f, 0);
+
+
+		HUDManager.use.ProgressBarCenter.gameObject.SetActive(true);
+		HUDManager.use.ProgressBarCenter.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+		// we move this progress bar around a bit so we don't have to create another GUI element: align it with the score counter
+		HUDManager.use.ProgressBarCenter.transform.position = HUDManager.use.ProgressBarCenter.transform.position.y(HUDManager.use.CounterLargeBottomLeft1.transform.position.y);
 
 		sculptureIndex = 0;
 			
@@ -238,14 +257,14 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				bobAnim.Play("BobSculpting_IdleHappy");
 			}
 
-			DanceHeroFeedback.use.DisplayMessage("Great job!"); // TO DO: Replace with translateable text
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.positive"));
 		}
 		else
 		{
 //			if (sculptureIndex > 0)
 //				sculptureIndex--;
 			
-			DanceHeroFeedback.use.DisplayMessage("Try again!"); // TO DO: Replace with translateable text
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.negative"));
 
 			bobAnim.Play("BobSculpting_IdleSad");
 		}
@@ -264,10 +283,13 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		yield return new WaitForSeconds(3.0f);
 
-		DanceHeroFeedback.use.DisplayMessage("Here we go again!"); // TO DO: Replace with translateable text
+		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.repeat")); 
 
 		yield return new WaitForSeconds(1.0f);
-		
+
+		// reset timer
+		HUDManager.use.ProgressBarCenter.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+
 		Debug.Log("DanceHeroFeedbackHandlerMorocco: Ended break.");
 		DanceHeroLevel.use.SetGameRunning(true);
 	}
@@ -281,7 +303,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	{
 		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
 		
-		DanceHeroFeedback.use.DisplayMessage("And now... the result!");		// TO DO: Replace with translateable text
+		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.result"));	
 		
 		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
 		{
@@ -308,7 +330,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 			}
 		}
 
-		if (sculptureIndex == 4)	// if we finished sculptures, show the Tilly sculpture
+		if (sculptureIndex == 4)	// if we finished sculptures, show the Tilly sculpture and show Bob is happy
 		{
 			bobAnim.Play("BobSculpting_IdleHappy");
 		}
@@ -327,12 +349,13 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		if (sculptureIndex == 4)	// if we finished any sculptures, show the Tilly sculpture in the center of the screen
 		{
+			success = true;
+
 			Vector3 startPosition = tillySculpture.transform.position;
 
 			tillySculpture.gameObject.MoveTo(LugusUtil.ScreenCenter(tillySculpture.position) + new Vector3(0, 1, 0)).Time(1.0f).Execute();
 			tillySculpture.gameObject.ScaleTo(tillySculpture.localScale * 3.0f).Time(1.0f).Execute();
-			success = true;
-
+	
 			yield return new WaitForSeconds(1.0f);
 
 			AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
@@ -356,7 +379,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 		
-		HUDManager.use.LevelEndScreen.Show(success);
+		HUDManager.use.LevelEndScreen.Show(success);	// "success" depends on whether Bob made any finished sculptures (i.e. reached sculpture index 4). This shouldn't be very hard.
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;

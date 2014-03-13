@@ -126,11 +126,12 @@ public class LevelLoaderDefault
 		{
 			return DanceHeroCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas")
+		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas"
+		         || Application.loadedLevelName == "e22_russia")
 		{
 			return DartsCrossSceneInfo.use;
 		}		
-		else if( Application.loadedLevelName == "e02_argentina" )
+		else if( Application.loadedLevelName == "e02_argentina" || Application.loadedLevelName == "e12_newyork" )
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}

@@ -182,7 +182,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		}
 
 
-		Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
+	//	Debug.Log("Updating score to : Failcount: " + failCount + " . Succes count: " + succesCount + ".");
 
 	
 

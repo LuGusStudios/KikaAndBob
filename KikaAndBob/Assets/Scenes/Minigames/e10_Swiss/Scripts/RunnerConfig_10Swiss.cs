@@ -8,6 +8,18 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		// assign variables that have to do with this class only
 	}
+
+	public override void OnGameStopped()
+	{
+		RunnerPlayerAnnoyerSkier[] annoyers = GameObject.FindObjectsOfType<RunnerPlayerAnnoyerSkier>();
+		foreach( RunnerPlayerAnnoyerSkier annoyer in annoyers )
+		{
+			if( !annoyer.gameObject.activeSelf )
+				continue;
+
+			annoyer.OnHit(null);
+		}
+	}
 	
 	public override void LoadLevel(int index)
 	{

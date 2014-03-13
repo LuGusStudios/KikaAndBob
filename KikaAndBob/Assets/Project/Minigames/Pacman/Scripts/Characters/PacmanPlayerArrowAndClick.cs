@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter 
 {
-	protected PacmanTile clickedTile = null;
+	public bool allowClickControl = false;
+
+	protected PacmanTile clickedTile = null; 
 	protected bool movingwithArrows = true;
 
 	private void Update () 
@@ -26,10 +28,16 @@ public class PacmanPlayerArrowAndClick : PacmanPlayerCharacter
 		UpdateMovement();
 
 		UpdateWalkSound();
+
+		PacmanCameraFollower.use.FollowCamera();	// the camera does not update automatically anymore - an unpredictable order of Update calls between this and the characters can cause jitter	
+													// instead, it's called from the character scripts
 	}
 
 	private void CheckClick()
 	{
+		if (!allowClickControl)
+			return;
+
 		if (LugusInput.use.down)
 		{
 			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)

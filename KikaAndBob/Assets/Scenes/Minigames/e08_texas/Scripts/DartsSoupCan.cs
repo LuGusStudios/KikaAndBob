@@ -101,7 +101,8 @@ public class DartsSoupCan : IDartsHitable
 
 	public override int GetScore ()
 	{
-		return score * hitStreak;
+		return group.score * hitStreak;
+		//return score * hitStreak;
 	}
 	
 	public void SetupGlobal()

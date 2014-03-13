@@ -5,16 +5,6 @@ using System.Collections.Generic;
 public class PacmanTileItem : MonoBehaviour 
 {
 	public PacmanTile parentTile;
-
-	public void SetupLocal()
-	{
-		// assign variables that have to do with this class only
-	}
-	
-	public void SetupGlobal()
-	{
-		// lookup references to objects / scripts outside of this script
-	}
 	
 	protected void Awake()
 	{
@@ -25,7 +15,15 @@ public class PacmanTileItem : MonoBehaviour
 	{
 		SetupGlobal();
 	}
-	
+
+	public virtual void SetupLocal()
+	{
+	}
+
+	public virtual void SetupGlobal()
+	{
+	}
+
 	protected void Update () 
 	{
 	

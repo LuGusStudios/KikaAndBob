@@ -17,24 +17,27 @@ public class ScreenFader : LugusSingletonExisting<ScreenFader>
 	
 	public void SetupGlobal()
 	{
-		GameObject fadeImageObject = new GameObject("Fader");
-		fadeRenderer = fadeImageObject.AddComponent<SpriteRenderer>();
-		fadeRenderer.sprite = fadeImage;
-		fadeImageObject.transform.parent = LugusCamera.ui.transform;
-		fadeImageObject.transform.localPosition = Vector3.zero.z(1);
-		fadeImageObject.layer = LayerMask.NameToLayer("GUI");
+		if (fadeRenderer == null)
+		{
+			GameObject fadeImageObject = new GameObject("Fader");
+			fadeRenderer = fadeImageObject.AddComponent<SpriteRenderer>();
+			fadeRenderer.sprite = fadeImage;
+			fadeImageObject.transform.parent = LugusCamera.ui.transform;
+			fadeImageObject.transform.localPosition = Vector3.zero.z(1);
+			fadeImageObject.layer = LayerMask.NameToLayer("GUI");
+		}
 
-		if (cameraFade == null)
-		{
-			cameraFade = iTween.CameraFadeAdd(iTween.CameraTexture(Color.white));
-			cameraFade.layer = LayerMask.NameToLayer("GUI"); 
-			fadeGUITexture = cameraFade.GetComponent<GUITexture>();
-		}
-	
-		if (LugusCamera.ui.GetComponent<GUILayer>() == null)
-		{
-			LugusCamera.ui.gameObject.AddComponent<GUILayer>();		// GUICamera needs a GUILayer to render the Itween fade
-		}
+//		if (cameraFade == null)
+//		{
+//			cameraFade = iTween.CameraFadeAdd(iTween.CameraTexture(Color.white));
+//			cameraFade.layer = LayerMask.NameToLayer("GUI"); 
+//			fadeGUITexture = cameraFade.GetComponent<GUITexture>();
+//		}
+//	
+//		if (LugusCamera.ui.GetComponent<GUILayer>() == null)
+//		{
+//			LugusCamera.ui.gameObject.AddComponent<GUILayer>();		// GUICamera needs a GUILayer to render the Itween fade
+//		}
 
 		FadeIn(0.5f);
 	}

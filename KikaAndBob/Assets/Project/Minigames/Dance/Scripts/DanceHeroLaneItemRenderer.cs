@@ -129,35 +129,42 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	{
 		if(Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
 		{
-			if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
+			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)
 			{
-				// TODO: raycast! both down and up
-				if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-					DetectSingle(true, actionPoint);
-				else
-					DetectStreak(true, actionPoint);
-			}
-			else
-			{
-				if( LugusInput.use.KeyDown( item.KeyCode ) )
+				if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
 				{
+					// TODO: raycast! both down and up
 					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
 						DetectSingle(true, actionPoint);
 					else
 						DetectStreak(true, actionPoint);
-
-					RegisterLaneChange();
 				}
-
-				// TODO: for streak, up also needs to be detected if it happens in between: need to keep it going untill the end!
-				if( LugusInput.use.KeyUp( item.KeyCode ) )
+				else
 				{
-					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-						DetectSingle(false, actionPoint);
-					else
-						DetectStreak(false, actionPoint);
+					if( LugusInput.use.KeyDown( item.KeyCode ) )
+					{
+						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+							DetectSingle(true, actionPoint);
+						else
+							DetectStreak(true, actionPoint);
 
-					RegisterLaneChange();
+						RegisterLaneChange();
+					}
+
+					if( LugusInput.use.KeyUp( item.KeyCode ) )
+					{
+						if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+							DetectStreak(false, actionPoint);
+
+						// No point to hitting single points on key up
+
+//						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//							DetectSingle(false, actionPoint);
+//						else
+//							DetectStreak(false, actionPoint);
+
+						RegisterLaneChange();
+					}
 				}
 			}
 		}
@@ -216,6 +223,8 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	{
 		if (missed)
 			return;
+
+		this.item.lane.StopHighlight();
 
 		missed = true;
 		this.item.lane.IncreaseLeadingLaneItem();

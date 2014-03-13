@@ -5,6 +5,7 @@ using SmoothMoves;
 
 public class DartsCowboyHider : DartsHider 
 {
+	public string hitSoundKey;
 	public string idleAnimation;
 	public string hitAnimation;
 
@@ -14,6 +15,11 @@ public class DartsCowboyHider : DartsHider
 	public override void OnHit()
 	{
 		HitCount++;
+
+		if (!string.IsNullOrEmpty(hitSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(hitSoundKey));
+		}
 
 		LugusCoroutines.use.StartRoutine(HideRoutine());
 	}

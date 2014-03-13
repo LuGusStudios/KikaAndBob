@@ -110,6 +110,10 @@ public class StepGameMenu : IMenuStep
 		{
 			imageSprite = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + "image"));
 		}
+		else
+		{
+			imageSprite = LugusResources.use.Shared.GetSprite( Application.loadedLevelName + "_Main_Image");
+		}
 
 		if (imageSprite == null || imageSprite == LugusResources.use.errorSprite)
 		{

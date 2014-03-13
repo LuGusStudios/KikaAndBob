@@ -141,7 +141,6 @@ public class DanceHeroLevelDefault : IGameManager
 
 		return null;
 	}
-
 		
 	public void CreateLevel(string levelData)
 	{
@@ -228,7 +227,7 @@ public class DanceHeroLevelDefault : IGameManager
 			
 			if (i < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
 			{
-				Debug.Log("DanceHeroLevel: Level stage ended. ------------------------------------------------------");
+				Debug.Log("DanceHeroLevel: Level stage ended.");
 
 				if (onLevelRestart != null)
 				{
@@ -262,7 +261,7 @@ public class DanceHeroLevelDefault : IGameManager
 		return targetBatchScore;
 	}
 
-	protected float GetTotalLevelDuration()
+	public float GetTotalLevelDuration()
 	{
 		// total level length consists of a number of things:
 		// the amount of time it takes the first point of a lane to reach the input point

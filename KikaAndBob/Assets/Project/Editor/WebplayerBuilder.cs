@@ -258,10 +258,22 @@ public class WebplayerBuilder : MonoBehaviour
 		// 0.5
 		//levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity");
 		//levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
-		levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
+		//levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
 		//levels.Add("Assets/Scenes/Minigames/e04_tasmania/e04_tasmania.unity");
 		//levels.Add("Assets/Scenes/Minigames/e05_Mexico/e05_Mexico.unity");
 		//levels.Add("Assets/Scenes/Minigames/e06_egypt/e06_egypt.unity");
+
+		// 0.5.1
+		//levels.Add("Assets/Scenes/Minigames/e09_Brazil/e09_Brazil.unity");
+		
+		// 0.5.2
+		//levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity"); 
+
+		// 1.0
+		levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity"); 
+		levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
+		levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
+
 
 		string levelListOutput = "";
 		foreach( string levelName in levels ) 
@@ -276,6 +288,11 @@ public class WebplayerBuilder : MonoBehaviour
 		
 		// Application.datapath is /Assets in the editor
 		File.Copy(Application.dataPath + "/Project/Editor/index.php", path + "/index.php");
+
+		Directory.CreateDirectory( path + "/images" );
+		File.Copy(Application.dataPath + "/Project/Editor/images/LoadBar01.png", path + "/images/LoadBar01.png");
+		File.Copy(Application.dataPath + "/Project/Editor/images/LogoKB02.png",  path + "/images/LogoKB02.png");
+
 
 		foreach( string currentLevel in levels ) 
 		{
