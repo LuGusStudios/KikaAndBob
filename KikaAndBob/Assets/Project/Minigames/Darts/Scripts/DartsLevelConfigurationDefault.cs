@@ -97,8 +97,6 @@ public class DartsLevelConfigurationDefault :  IGameManager
 
 				if (backgroundMusic != null || backgroundMusic != LugusResources.use.errorAudio)
 					LugusAudio.use.Music().Play(backgroundMusic, true, new LugusAudioTrackSettings().Loop(true));
-
-				LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("TrainRide01"), false, new LugusAudioTrackSettings().Loop(true).Volume(1.0f));
 			}
 		
 			Debug.Log("Started new Darts level. Time: " + levelDuration + ". Target score: " + minScore +".");

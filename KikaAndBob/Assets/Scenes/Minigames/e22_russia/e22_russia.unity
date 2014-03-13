@@ -610,6 +610,7 @@ MonoBehaviour:
   hiddenPosition: {x: 9.18282509, y: -1.87524557, z: 492.97229}
   shownPosition: {x: 6.9319067, y: -1.87524557, z: 492.97229}
   hitSoundKey: Grunt01
+  hitSoundKey: Grunt01
   idleAnimation: MobsterCreep_Idle
   hitAnimation: MobsterCreep_Hit
 --- !u!137 &55216559
@@ -3046,6 +3047,7 @@ MonoBehaviour:
   group: {fileID: 0}
   hiddenPosition: {x: -1.78984368, y: -3.89968681, z: 385}
   shownPosition: {x: .895301223, y: -1.64573145, z: 385}
+  hitSoundKey: GirlScream01
   hitSoundKey: GirlScream01
   idleAnimation: MobsterGirl_Idle
   hitAnimation: MobsterGirl_Hit
@@ -10759,6 +10761,7 @@ MonoBehaviour:
   hiddenPosition: {x: .621726036, y: -2.17663813, z: 407.419312}
   shownPosition: {x: 2.7071085, y: -2.36059093, z: 407.419312}
   hitSoundKey: Grunt04
+  hitSoundKey: Grunt04
   idleAnimation: MobsterGuard_Idle
   hitAnimation: MobsterGuard_Hit
 --- !u!114 &299662968
@@ -18114,6 +18117,7 @@ MonoBehaviour:
   group: {fileID: 0}
   hiddenPosition: {x: 0, y: 0, z: 0}
   shownPosition: {x: 0, y: 0, z: 0}
+  hitSoundKey: 
 --- !u!1 &517993924
 GameObject:
   m_ObjectHideFlags: 0
@@ -18498,6 +18502,7 @@ GameObject:
   - 114: {fileID: 553862389}
   - 114: {fileID: 553862390}
   - 114: {fileID: 553862391}
+  - 114: {fileID: 553862392}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -18572,6 +18577,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreTextPrefab: {fileID: 0}
   totalScore: 0
+--- !u!114 &553862392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 553862386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4a9e82840d69945a2b7c0eb94e4e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &561691733
 GameObject:
   m_ObjectHideFlags: 0
@@ -26548,6 +26564,7 @@ MonoBehaviour:
   group: {fileID: 0}
   hiddenPosition: {x: -8.31030083, y: -6.18702221, z: 440}
   shownPosition: {x: -8.31030083, y: -2.95619559, z: 440}
+  hitSoundKey: Grunt03
   hitSoundKey: Grunt03
   idleAnimation: MagicianUp
   hitAnimation: MagicianDown
@@ -37962,7 +37979,7 @@ SkinnedMeshRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38201,7 +38218,7 @@ MonoBehaviour:
   animationData: {fileID: 0}
   animationDataGUID: 69c6ac1eb1c22804d94fa9adb4d27cc0
   mMaterialSource:
-  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
+  - {fileID: 0}
   mBoneSource:
   - boneNodeIndex: 0
     boneDataIndex: 0
@@ -38465,7 +38482,7 @@ MonoBehaviour:
   - {fileID: 986022846}
   - {fileID: 364963937}
   mMaterials:
-  - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
+  - {fileID: 0}
   buildID: 201402121438208612
   mFinalImportScale: 1
   mDefaultAnimationName: KikaSad
@@ -44812,9 +44829,9 @@ Animation:
   m_GameObject: {fileID: 1424770642}
   m_Enabled: 0
   serializedVersion: 3
-  m_Animation: {fileID: 0}
+  m_Animation: {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
   m_Animations:
-  - {fileID: 0}
+  - {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -47445,6 +47462,7 @@ MonoBehaviour:
   group: {fileID: 0}
   hiddenPosition: {x: -7.01358032, y: -4.10278416, z: 502.466095}
   shownPosition: {x: -7.01358032, y: -2.35025787, z: 470}
+  hitSoundKey: Grunt01
   hitSoundKey: Grunt01
   idleAnimation: MobsterCreep_Idle
   hitAnimation: MobsterCreep_Hit
@@ -51278,6 +51296,7 @@ MonoBehaviour:
   hiddenPosition: {x: 8.97045231, y: -4.55773354, z: 407.419312}
   shownPosition: {x: 8.46956825, y: -2.23451567, z: 407.419312}
   hitSoundKey: Grunt02
+  hitSoundKey: Grunt02
   idleAnimation: MobsterBoss_Idle
   hitAnimation: MobsterBoss_Hit
 --- !u!114 &1538935443
@@ -53802,9 +53821,9 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
-  - {fileID: 7400000, guid: 09b94d4f462654740b6ce31c9109ac24, type: 2}
   - {fileID: 7400000, guid: db763ad1fadaba74298b3b6e487319ec, type: 2}
+  - {fileID: 7400000, guid: 09b94d4f462654740b6ce31c9109ac24, type: 2}
+  - {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
