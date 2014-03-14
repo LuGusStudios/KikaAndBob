@@ -4,11 +4,33 @@ using System.Collections.Generic;
 
 public class PacmanLavaTile : PacmanTileItem 
 {
-	protected float updateCheckSpeed = 0.25f;
+	public GameObject lavaTrailPrefab = null;	
+	protected float updateCheckSpeed = 2.0f;
+	public List<PacmanTile> surroundingLavaTiles = new List<PacmanTile>();
 
 	public override void Initialize ()
 	{
 		//parentTile.tileType = PacmanTile.TileType.Lethal;
+
+		surroundingLavaTiles.Clear();
+
+		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
+		{
+			foreach (GameObject tileItem in tile.tileItems)
+			{
+				if (tileItem.GetComponent<PacmanLavaTile>() != null)
+				{
+					surroundingLavaTiles.Add(tile);
+					break;
+				}
+
+				if (tileItem.GetComponent<PacmanLavaTileStart>() != null)
+				{
+					surroundingLavaTiles.Add(tile);
+					break;
+				}
+			}
+		}
 
 		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
 	}
@@ -17,24 +39,34 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 		while (true)
 		{
+			yield return new WaitForSeconds(updateCheckSpeed);
+
+			if (surroundingLavaTiles.Count >= 4)
+				yield break;
+
 			foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 			{
-				if (tile == null)
+				if (tile == null || surroundingLavaTiles.Contains(tile))
 					continue;
 
 				if (tile.tileType != PacmanTile.TileType.Collide)
 				{
-					GameObject newLavaTile = (GameObject) Instantiate(this.gameObject);
-					newLavaTile.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
-					newLavaTile.name = "LavaTile" + tile.ToString();	// might as well assign a name to prevent "Name(Clone)(Clone)(Clone)(Clone)(Clone)" ...
+					GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
+					newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
+					newLavaTileObject.name = "LavaTrail" + tile.ToString();
+				//	newLavaTileObject.transform.parent = this.transform.parent;
+					
+					surroundingLavaTiles.Add(tile);
+					tile.tileItems.Add(newLavaTileObject);
+					
+					PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
+					newLavaTile.parentTile = tile;
+					newLavaTile.originLavaTile = this;
+					newLavaTile.Initialize();
 
 				}
 			}
-
-
-			yield return new WaitForSeconds(updateCheckSpeed);
 		}
-
 	}
 
 	public override void OnTryEnter ()
