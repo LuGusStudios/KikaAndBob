@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class PacmanTileItem : MonoBehaviour 
 {
 	public PacmanTile parentTile;
+    public string uniqueId;
+    public string linkedId;
 	
 	protected void Awake()
 	{
@@ -34,13 +36,18 @@ public class PacmanTileItem : MonoBehaviour
 
 	}
 
-	public virtual void OnTryEnter()
+	public virtual void OnTryEnter(PacmanCharacter character)
 	{
 
 	}
 
-	public virtual void OnEnter()
+	public virtual void OnEnter(PacmanCharacter character)
 	{
 		
 	}
+
+    public virtual void OnLeave(PacmanCharacter character)
+    {
+        
+    }
 }

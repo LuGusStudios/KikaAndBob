@@ -10,7 +10,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 	protected bool done = false;
 
-	public override void OnEnter ()
+    public override void OnEnter(PacmanCharacter character)
 	{
 		if (done)
 			return;

@@ -11,6 +11,7 @@ public class FroggerConfigWindow : EditorWindow {
 	static void Init () 
 	{
 		FroggerConfigWindow window = (FroggerConfigWindow)EditorWindow.GetWindow (typeof (FroggerConfigWindow));
+		window.Show();
 	}
 	
 	

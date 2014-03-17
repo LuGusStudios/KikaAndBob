@@ -19,29 +19,45 @@ public class FroggerLaneWater : FroggerLane
 	protected override void EnterSurfaceEffect (FroggerCharacter character)
 	{
 		FroggerGameManager.use.LoseGame();
-		LugusCoroutines.use.StartRoutine(SplashRoutine(character));
-	}
-
-	protected IEnumerator SplashRoutine(FroggerCharacter character)
-	{
-		if (splash == null)
-			yield break;
-
-//		if (enterSoundKeys.Count > 0)
-//		{
-//			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(enterSoundKeys[Random.Range(0, enterSoundKeys.Count)]));
-//		}
 
 		character.ShowCharacter(false);
+		StartCoroutine(SplashRoutine(character.transform.position + new Vector3(0f, 0f, -10f)));
+	}
 
-		GameObject splashCopy = (GameObject) Instantiate(splash.gameObject);
-		splashCopy.transform.position = character.transform.position + new Vector3(0, 0, -10);
+	public void DoSplashAnimation(Vector3 position)
+	{
+		StartCoroutine(SplashRoutine(position));
+	}
+
+	public void PlaySplashSFX()
+	{
+		if (enterSoundKeys.Count == 0)
+		{
+			return;
+		}
+
+		AudioClip splashSFX = LugusResources.use.Shared.GetAudio(enterSoundKeys[0]);
+		if (splashSFX != LugusResources.use.errorAudio)
+		{
+			LugusAudio.use.SFX().Play(splashSFX);
+		}
+	}
+
+	protected IEnumerator SplashRoutine(Vector3 position)
+	{
+		if (splash == null)
+		{
+			yield break;
+		}
+
+		GameObject splashCopy = (GameObject)GameObject.Instantiate(splash.gameObject);
+		splashCopy.transform.position = position;
 
 		yield return new WaitForSeconds(0.8f);
 
-		if (splashCopy != null)	// handy to check in case level was rebuilt
+		if (splashCopy != null)
 		{
-			GameObject.Destroy(splashCopy);
+			GameObject.Destroy(splashCopy.gameObject);
 		}
 	}
 }
