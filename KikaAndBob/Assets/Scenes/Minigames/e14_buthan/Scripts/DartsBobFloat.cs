@@ -16,10 +16,14 @@ public class DartsBobFloat : DartsToggle
 	protected Vector3 shadowScale = Vector3.zero;
 	protected float maxShadowDistance = 5.0f;
 	protected float shadowDistanceOffset = 0.0f;
+	protected string hitSoundKey = "Collide01";
 
 	public override void OnHit ()
 	{
 		base.OnHit ();
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Collide01"));
+
 		if (blinkRoutine != null && blinkRoutine.Running)
 		{
 			blinkRoutine.StopRoutine();

@@ -317,6 +317,12 @@ public class PacmanTileItemDefinition
 					case "ID":
 						tileitem.id = parser.content;
 						break;
+                    case "UniqueID":
+				        tileitem.uniqueId = parser.content;
+                        break;
+                    case "LinkedID":
+                        tileitem.linkedId = parser.content;
+                        break;
 					case "TileCoordinates":
 						Vector2 coordinates = Vector2.zero;
 						while (parser.Read("TileCoordinates"))
@@ -361,6 +367,15 @@ public class PacmanTileItemDefinition
 
 		rawdata += tabs + "<TileItem>\r\n";
 		rawdata += tabs + "\t<ID>" + tileitem.id + "</ID>\r\n";
+        //only serialize uniqueId and linkedId with teleport tiles
+        if (!string.IsNullOrEmpty(tileitem.uniqueId) )
+	    {
+            rawdata += tabs + "\t<UniqueID>" + tileitem.uniqueId + "</UniqueID>\r\n";
+	    }
+	    if (!string.IsNullOrEmpty(tileitem.linkedId))
+	    {
+	        rawdata += tabs + "\t<LinkedID>" + tileitem.linkedId + "</LinkedID>\r\n";
+	    }
 		rawdata += tabs + "\t<TileCoordinates>\r\n";
 		rawdata += tabs + "\t\t<X>" + tileitem.tileCoordinates.x.ToString() + "</X>\r\n";
 		rawdata += tabs + "\t\t<Y>" + tileitem.tileCoordinates.y.ToString() + "</Y>\r\n";
@@ -372,5 +387,7 @@ public class PacmanTileItemDefinition
 
 
 	public string id;
+    public string uniqueId;
+    public string linkedId;
 	public Vector2 tileCoordinates;
 }
