@@ -29,7 +29,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 	protected ParticleSystem teleportParticles = null;	// TO DO: Remove from here.
 
 	[HideInInspector]
-	protected PacmanCharacterAnimator characterAnimator = null;
+	public PacmanCharacterAnimator characterAnimator = null;
     protected SpriteRenderer[] characterSpriteRenderers;
     protected SkinnedMeshRenderer[] characterSkinnedMeshRenderers;
 	
