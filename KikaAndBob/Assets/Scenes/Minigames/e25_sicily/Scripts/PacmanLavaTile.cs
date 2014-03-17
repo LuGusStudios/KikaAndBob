@@ -16,6 +16,8 @@ public class PacmanLavaTile : PacmanTileItem
 	public Sprite lava3Way = null;
 	public Sprite lava4Way = null;
 
+	protected bool done = false;
+	
 	protected enum LavaTileType
 	{
 		None = -1,
@@ -31,6 +33,8 @@ public class PacmanLavaTile : PacmanTileItem
 
 	public override void Initialize ()
 	{
+		print ("afhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
 		RegisterSurroundingTiles();
 
 		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
@@ -44,28 +48,76 @@ public class PacmanLavaTile : PacmanTileItem
 		
 		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 		{
-			bool isLavaTile = false;
+			bool isOpenTile = true;
 			
 			foreach (GameObject tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
 					surroundingLavaTiles.Add(tile);
-					isLavaTile = true;
+					isOpenTile = false;
+					break;
+				}
+				else if (tileItem.GetComponent<PacmanLavaStop>() != null)
+				{
+					print ("afdsdjfkj");
+					isOpenTile = false;
 					break;
 				}
 			}
 			
-			if (!isLavaTile && tile.tileType != PacmanTile.TileType.Collide)
+			if (isOpenTile && tile.tileType != PacmanTile.TileType.Collide)
 			{
 				surroundingOpenTiles.Add(tile);
 			}
 		}
-		
+
+		// surroundingValidTiles = lavaTiles + open tiles - this is useful because sometimes we want to distinguish the two and sometimes not
 		surroundingValidTiles = new List<PacmanTile>(surroundingLavaTiles);
 		surroundingValidTiles.AddRange(surroundingOpenTiles);
 	}
 
+	protected void Update()
+	{
+		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
+			OnEnter();
+	}
+	
+	public override void OnEnter ()
+	{
+		if (done)
+			return;
+		
+		
+		LugusCoroutines.use.StartRoutine(BurnUp());
+	}
+
+	protected IEnumerator BurnUp()
+	{
+		PacmanGameManager.use.gameRunning = false;
+		
+		done = true;
+		
+		GameObject particleObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("FireParticles"));
+		ParticleSystem ps = particleObject.GetComponent<ParticleSystem>();
+		Vector3 playerPos = PacmanGameManager.use.GetActivePlayer().transform.position.zAdd(-1f);
+		particleObject.transform.position = playerPos;
+		ps.Play();
+		
+		yield return new WaitForSeconds(1.0f);
+		
+		GameObject ashObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("AshPile"));
+		ashObject.transform.position = playerPos;
+		PacmanGameManager.use.GetActivePlayer().gameObject.SetActive(false);
+		
+		
+		yield return new WaitForSeconds(1.0f);
+		
+		Destroy(ashObject, 1.0f);
+		PacmanGameManager.use.LoseLife();
+		
+		yield break;
+	}
 
 	protected IEnumerator UpdateRoutine()
 	{
@@ -97,7 +149,7 @@ public class PacmanLavaTile : PacmanTileItem
 					GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
 					newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
 					newLavaTileObject.name = "LavaTrail" + tile.ToString();
-					//	newLavaTileObject.transform.parent = this.transform.parent;
+					newLavaTileObject.transform.parent = this.transform.parent;
 					
 					surroundingLavaTiles.Add(tile);
 					tile.tileItems.Add(newLavaTileObject);
@@ -108,7 +160,7 @@ public class PacmanLavaTile : PacmanTileItem
 					newLavaTile.Initialize();
 			}
 
-				yield return new WaitForSeconds(updateCheckSpeed);
+			yield return new WaitForSeconds(updateCheckSpeed);
 		}
 	}
 
@@ -116,11 +168,7 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 	}
 
-	public override void OnEnter ()
-	{
-	}
-
-
+	
 	public void InitializeSprite()
 	{
 		SpriteRenderer thisSpriteRenderer = GetComponent<SpriteRenderer>();

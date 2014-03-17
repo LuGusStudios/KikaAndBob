@@ -407,10 +407,20 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemScript != null)
 			{
 				tileItemScript.parentTile = targetTile;
-				tileItemScript.Initialize();
+				//tileItemScript.Initialize();
 			}
 
 			targetTile.tileItems.Add(tileItem);
+		}
+
+		foreach(GameObject tileItem in tileItems)
+		{
+			PacmanTileItem tileItemScript = tileItem.GetComponent<PacmanTileItem>();
+
+			if (tileItemScript != null)
+			{
+				tileItemScript.Initialize();
+			}
 		}
 	}
 
@@ -442,6 +452,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (id == "DoorUpdater" && updaterContainer.GetComponent<DoorUpdater>() == null)
 			{
 				updaterContainer.AddComponent<DoorUpdater>();
+			}
+
+			if (id == "BomberUpdater" && updaterContainer.GetComponent<PacmanBomberUpdater>() == null)
+			{
+				updaterContainer.AddComponent<PacmanBomberUpdater>();
 			}
 		}
 	}

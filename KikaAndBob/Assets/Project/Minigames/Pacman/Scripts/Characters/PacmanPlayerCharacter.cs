@@ -120,6 +120,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public override void Reset()
 	{
+		gameObject.SetActive(true);
 		moving = false;
 		poweredUp = false;
 		characterAnimator.PlayAnimation("Idle");

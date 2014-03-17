@@ -16,7 +16,8 @@ namespace KikaAndBob
 		Distance = 6,
 		Custom = 7,
 		Key01 = 8,
-		Key02 = 9
+		Key02 = 9,
+		Dynamite = 10
 	}
 }
 
