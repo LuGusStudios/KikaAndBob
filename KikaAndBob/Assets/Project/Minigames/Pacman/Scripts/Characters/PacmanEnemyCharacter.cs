@@ -347,6 +347,9 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		// enemies probably only ever have one animation
 		//characterAnimator.PlayAnimation(walkAnimation);
 
+		if (characterAnimator.currentAnimationTransform == null)
+			return;
+
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative

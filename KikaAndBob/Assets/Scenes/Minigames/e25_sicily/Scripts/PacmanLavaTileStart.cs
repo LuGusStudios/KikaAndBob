@@ -19,7 +19,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 	protected void Update()
 	{
 		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
-			OnEnter();
+			LugusCoroutines.use.StartRoutine(BurnUp());
 	}
 
     public override void OnEnter(PacmanCharacter character)
