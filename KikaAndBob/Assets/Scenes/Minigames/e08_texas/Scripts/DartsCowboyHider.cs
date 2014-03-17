@@ -5,7 +5,7 @@ using SmoothMoves;
 
 public class DartsCowboyHider : DartsHider 
 {
-	public string hitSoundKey;
+	//public string hitSoundKey;
 	public string idleAnimation;
 	public string hitAnimation;
 
