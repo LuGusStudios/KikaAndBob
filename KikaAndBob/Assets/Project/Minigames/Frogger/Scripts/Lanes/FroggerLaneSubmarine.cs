@@ -63,7 +63,7 @@ public class FroggerLaneSubmarine : FroggerLane
 		FroggerLaneItemIceBreakingSubmarine sub = submarines[0];
 
 		// If the submarine is under water, let it close in on the character
-		if (sub.state == FroggerLaneItemIceBreakingSubmarine.State.UNDER)
+		if (sub.SubmarineState == FroggerLaneItemIceBreakingSubmarine.State.UNDER)
 		{
 			float factor = 1f;
 			if (sub.transform.position.x > character.transform.position.x)
@@ -80,7 +80,7 @@ public class FroggerLaneSubmarine : FroggerLane
 				sub.Surface();
 			}
 		}
-		else if ((sub.state == FroggerLaneItemIceBreakingSubmarine.State.SUBMARINE) && (!createdIceHole))
+		else if ((sub.SubmarineState == FroggerLaneItemIceBreakingSubmarine.State.SUBMARINE) && (!createdIceHole))
 		{
 			// Create a ice hole where the submarine was
 			if (sub.iceHolePrefab != null)
@@ -92,7 +92,7 @@ public class FroggerLaneSubmarine : FroggerLane
 
 			createdIceHole = true;
 		}
-		else if (sub.state == FroggerLaneItemIceBreakingSubmarine.State.DONE)
+		else if (sub.SubmarineState == FroggerLaneItemIceBreakingSubmarine.State.DONE)
 		{
 			
 			// Destroy the submarine

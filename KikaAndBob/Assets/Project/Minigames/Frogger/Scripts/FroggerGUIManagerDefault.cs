@@ -52,6 +52,7 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		{
 			HUDManager.use.CounterLargeRight2.gameObject.SetActive(true);
 			HUDManager.use.CounterLargeRight2.commodity = KikaAndBob.CommodityType.Custom;
+			HUDManager.use.CounterLargeRight2.suffix = "/" + cWin.RequiredPickups.Count;
 			HUDManager.use.CounterLargeRight2.SetValue(0);
 
 			// Custom icon

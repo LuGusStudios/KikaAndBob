@@ -20,6 +20,19 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		DENYING = 4
 	};
 
+	public List<FroggerRequiredPickup> RequiredPickups
+	{
+		get
+		{
+			if (requiredPickups == null)
+			{
+				requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+			}
+
+			return requiredPickups;
+		}
+	}
+
 	protected AnimationState state = AnimationState.NONE;
 	protected List<FroggerRequiredPickup> requiredPickups = null;
 
@@ -35,7 +48,10 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		base.SetupGlobal();
 
 		// Find all of the required pickups in the scene
-		requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+		if (requiredPickups == null)
+		{ 
+			requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+		}
 
 		// Find the bone animation, and start the idle animation
 		if (boneAnimation == null)
