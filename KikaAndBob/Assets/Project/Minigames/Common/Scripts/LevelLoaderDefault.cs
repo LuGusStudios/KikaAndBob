@@ -117,8 +117,9 @@ public class LevelLoaderDefault
 		{
 			return FroggerCrossSceneInfo.use;
 		}
+		
 		else if (Application.loadedLevelName == "e06_egypt" || Application.loadedLevelName == "e11_vatican" 
-		         || Application.loadedLevelName == "e23_england")
+		         || Application.loadedLevelName == "e23_england" || Application.loadedLevelName == "e25_sicily")
 		{
 			return PacmanCrossSceneInfo.use;
 		}
@@ -127,7 +128,8 @@ public class LevelLoaderDefault
 		{
 			return DanceHeroCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas")
+		else if (Application.loadedLevelName == "e14_buthan" || Application.loadedLevelName == "e08_texas"
+		         || Application.loadedLevelName == "e22_russia")
 		{
 			return DartsCrossSceneInfo.use;
 		}		

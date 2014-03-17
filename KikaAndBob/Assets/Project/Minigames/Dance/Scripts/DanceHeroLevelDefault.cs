@@ -227,7 +227,7 @@ public class DanceHeroLevelDefault : IGameManager
 			
 			if (i < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
 			{
-				Debug.Log("DanceHeroLevel: Level stage ended. ------------------------------------------------------");
+				Debug.Log("DanceHeroLevel: Level stage ended.");
 
 				if (onLevelRestart != null)
 				{

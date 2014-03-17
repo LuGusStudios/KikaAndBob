@@ -96,7 +96,24 @@ public class DartsShooter : MonoBehaviour
 
 		IDartsHitable hitable = null;
 		if( hit != null )
+		{
 			hitable = hit.GetComponent<IDartsHitable>();
+
+			if (hitable == null && hit.GetComponent<DartsLookHigher>() != null)
+			{
+				Transform newParent = hit.transform.parent;
+
+				while (newParent != null && newParent.GetComponent<IDartsHitable>() == null)
+				{
+					newParent = newParent.parent;
+				}
+
+				if (newParent != null)
+				{
+					hitable = newParent.GetComponent<IDartsHitable>();
+				}
+			}
+		}
 
 
 		if( hit == null || hitable == null || !hitable.Shown )

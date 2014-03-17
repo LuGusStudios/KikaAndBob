@@ -31,6 +31,11 @@ public class HUDCounter : IHUDElement
 			icon = transform.FindChild("Icon").GetComponent<SpriteRenderer>();
 		}
 
+		if (icon == null)
+		{
+			Debug.LogError("HUDCounter: Missing icon!");
+		}
+
 		if( text == null )
 		{
 			text = transform.FindChild("Text").GetComponent<TextMeshWrapper>();
@@ -66,7 +71,7 @@ public class HUDCounter : IHUDElement
 	public override void SetValue(float value, bool animate = true)
 	{
 		//Debug.LogError (transform.Path () + " : SetValue "+ value ); 
-		
+
 		float oldValue = currentValue;
 
 		if( !timerMode )

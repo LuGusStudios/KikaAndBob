@@ -57,12 +57,11 @@ public class DartsLevelConfigurationDefault :  IGameManager
 
 	public override void StartGame ()
 	{
+		gameRunning = false;	// turn this off until the level is fully configured
 		string levelData = levelLoader.GetLevelData(DartsCrossSceneInfo.use.GetLevelIndex());
 		
 		if (!string.IsNullOrEmpty(levelData))
-		{
-			gameRunning = true;
-		
+		{	
 			DartsLevelDefinition newLevel = DartsLevelDefinition.FromXML(levelData);
 			ConfigureLevel(newLevel);
 
@@ -96,8 +95,10 @@ public class DartsLevelConfigurationDefault :  IGameManager
 				AudioClip backgroundMusic = LugusResources.use.Shared.GetAudio(newLevel.backgroundMusicName);
 
 				if (backgroundMusic != null || backgroundMusic != LugusResources.use.errorAudio)
-					LugusAudio.use.Music().Play(backgroundMusic);
+					LugusAudio.use.Music().Play(backgroundMusic, true, new LugusAudioTrackSettings().Loop(true));
 			}
+
+			gameRunning = true;
 		
 			Debug.Log("Started new Darts level. Time: " + levelDuration + ". Target score: " + minScore +".");
 		}
@@ -209,6 +210,7 @@ public class DartsLevelConfigurationDefault :  IGameManager
 			foundGroup.minTimeBetweenShows = groupDefinition.minTimeBetweenShows;
 			foundGroup.autoHideTimes = groupDefinition.autoHideTimes;
 			foundGroup.avoidRepeat = groupDefinition.avoidRepeat;
+			foundGroup.score = groupDefinition.score;
 		}
 	}
 

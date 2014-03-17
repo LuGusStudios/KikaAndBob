@@ -163,18 +163,18 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		
 		if ( direction == CharacterDirections.Right )
 		{
-			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x > 0 )
+			// if going right, the scale.x needs to be negative
+			if( characterAnimator.currentAnimationTransform.localScale.x > 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( characterAnimator.currentAnimationContainer.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationTransform.localScale = characterAnimator.currentAnimationTransform.localScale.x( characterAnimator.currentAnimationTransform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
-			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentAnimationContainer.transform.localScale.x < 0 )
+			// if going left, the scale.x needs to be positive 
+			if( characterAnimator.currentAnimationTransform.localScale.x < 0 )
 			{
-				characterAnimator.currentAnimationContainer.transform.localScale = characterAnimator.currentAnimationContainer.transform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationContainer.transform.localScale.x) ); 
+				characterAnimator.currentAnimationTransform.localScale = characterAnimator.currentAnimationTransform.localScale.x( Mathf.Abs(characterAnimator.currentAnimationTransform.localScale.x) ); 
 			}
 		}
 		//PlayAnimationObject("" + adjustedDirection.ToString(), direction);

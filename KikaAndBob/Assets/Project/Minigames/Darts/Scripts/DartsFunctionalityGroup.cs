@@ -10,9 +10,11 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	public DataRange autoHideTimes = new DataRange(2.0f, 4.0f);
 	public bool avoidRepeat = false;
 	public int score = 100;
+	public bool negativeScore = false;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected IDartsHitable lastHitable = null;
+	protected float enableTime = 0.0f;
 
 	public void SetupLocal()
 	{
@@ -34,7 +36,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 	{
 		foreach( IDartsHitable hitable in hitables )
 		{
-			hitable.Hide();
+			hitable.Disable();
 		}
 	}
 
@@ -42,8 +44,13 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	public void HitableHit(IDartsHitable hitable)
 	{
-		Debug.Log ("HIT POSITION " + hitable.transform.position);
-		DartsScoreManager.use.AddScore(hitable.GetScore(), hitable.transform.position);
+		Debug.Log ("HIT POSITION " + hitable.transform.position); 
+
+		if (negativeScore)
+			DartsScoreManager.use.AddScore( -hitable.GetScore(), hitable.transform.position );
+		else
+			DartsScoreManager.use.AddScore( hitable.GetScore(), hitable.transform.position );
+
 		DartsScoreManager.use.AddToStreak(hitable);
 	}
 
@@ -54,13 +61,13 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		if( shownCount < 0 )
 			shownCount = 0;
 
-		Debug.Log (name + " : HitableHidden" + shownCount);
+		//Debug.Log (name + " : HitableHidden" + shownCount);
 	}
 
 	public void HitableShown(IDartsHitable hitable)
 	{
 		shownCount++;
-		Debug.Log (name + " : HitableShown " + shownCount);
+		//Debug.Log (name + " : HitableShown " + shownCount);
 	}
 
 	protected IDartsHitable NextHitable()
@@ -79,8 +86,19 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 		int tryCounter = 0;
 
-		// cycle randomly through list to find next item with fixed iteration limit
-		do
+//		// at game start, immediately allow one to be shown
+//		if (Time.time < minTimeBetweenShows && hitables.Count > 0 )
+//		{
+//			output = hitables[Random.Range(0, hitables.Count)];
+//		}
+
+		if (!DartsLevelConfiguration.use.GameRunning || Time.time - enableTime < minTimeBetweenShows)	// no point to doing the loop below before this time.
+		{
+			return null;
+		}
+
+		// cycle randomly through list to find next item, with fixed iteration limit
+		while(output == null && tryCounter < 50)
 		{
 			tryCounter++;
 
@@ -88,16 +106,16 @@ public class DartsFunctionalityGroup : MonoBehaviour
 			IDartsHitable hitable = hitables[randomIndex];
 
 			if (avoidRepeat && hitable == lastHitable)
+			{
 				continue;
+			}
 
 			if (!hitable.Shown && (Time.time - hitable.lastHideTime) >= minTimeBetweenShows)
 			{
 				output = hitable;
 				lastHitable = hitable;
 			}
-
 		}
-		while(output == null && tryCounter < 50);
 
 		// fallback in case iteration limit was reached - find first available hitable
 		if (output == null)
@@ -204,5 +222,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		}
 
 		this.enabled = enabled;
+
+		enableTime = Time.time;
 	}
 }
