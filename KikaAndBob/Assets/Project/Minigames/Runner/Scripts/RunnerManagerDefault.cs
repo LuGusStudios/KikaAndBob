@@ -276,7 +276,7 @@ public class RunnerManagerDefault : IGameManager
 
 
 	}
-
+	 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -284,9 +284,8 @@ public class RunnerManagerDefault : IGameManager
 	
 	public void SetupGlobal()
 	{
-		// TODO: remove me! jsut for debugging!
-		//LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
-
+		// TODO: remove me! jsut for debugging! 
+		LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
 
 		// lookup references to objects / scripts outside of this script
 		
@@ -312,8 +311,15 @@ public class RunnerManagerDefault : IGameManager
 			AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
 			if( background != LugusResources.use.errorAudio ) 
 			{
-				LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
+				
+				// TODO: remove me! jsut for debugging! 
+#if !UNITY_EDITOR
+				LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f)); 
+#endif
+
 			}
+
+
 
 			StartGame();
 		}
@@ -370,11 +376,11 @@ public class RunnerManagerDefault : IGameManager
 			shiftYTreshold = 1800.0f;
 		}
 
-		//#if !UNITY_EDITOR
+		#if !UNITY_EDITOR
 		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
 
 		yield return new WaitForSeconds(3.0f);
-		//#endif
+		#endif
 
 		if( Application.loadedLevelName == "e09_Brazil" )
 		{
@@ -459,9 +465,25 @@ public class RunnerManagerDefault : IGameManager
 					{
 						// make kika run out of screen a little more slowly please
 						RunnerCharacterControllerJumpSlide c = RunnerCharacterControllerJumpSlide.use;
-						c.speedRange.to = c.speedRange.to / 2.0f;
+						c.speedRange.to = 6;//c.speedRange.to / 2.0f;
+
+						// if we're kinematic we will "float" if we were jumping when reaching the red button
+						RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = false;
+
+						Vector2 vel = RunnerCharacterController.useBehaviour.rigidbody2D.velocity;
+						vel.x = 0.7f;
+
+						RunnerCharacterController.useBehaviour.rigidbody2D.velocity = vel;
+
+						// since we're not kinematic here, disable pickups because otherwhise we would still get collisions
+						RunnerPickup[] pickups = GameObject.FindObjectsOfType<RunnerPickup>();
+						foreach( RunnerPickup pickup in pickups )
+						{
+							//Debug.LogError("Disabling pickup " + pickup.transform.Path() );
+							pickup.activated = false;
+						}
 					}
-				}
+				} 
 				else
 				{
 					Debug.LogError(transform.Path () + " : No FollowCameraContinuous found!");

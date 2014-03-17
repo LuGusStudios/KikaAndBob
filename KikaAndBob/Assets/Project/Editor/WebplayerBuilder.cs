@@ -288,14 +288,19 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e06_egypt/e06_egypt.unity");
 
 		// 0.7
-		levels.Add("Assets/Scenes/Minigames/e12_newyork/e12_newyork.unity");
-		levels.Add("Assets/Scenes/Minigames/e11_vatican/e11_vatican.unity");
-		levels.Add("Assets/Scenes/Minigames/e10_Swiss/e10_Swiss.unity"); 
+		//levels.Add("Assets/Scenes/Minigames/e12_newyork/e12_newyork.unity");
+		//levels.Add("Assets/Scenes/Minigames/e11_vatican/e11_vatican.unity");
+		//levels.Add("Assets/Scenes/Minigames/e10_Swiss/e10_Swiss.unity"); 
+
+		// 1.2
+		levels.Add("Assets/Scenes/Minigames/e13_pacific/e13_pacific.unity");
+		levels.Add("Assets/Scenes/Minigames/e09_Brazil/e09_Brazil.unity");
+		levels.Add("Assets/Scenes/Minigames/e08_texas/e08_texas.unity");
 
 		string levelListOutput = "";
 		foreach( string levelName in levels ) 
 		{
-			levelListOutput += "" + levelName + "\n";
+			levelListOutput += "" + levelName + "\n"; 
 		}
 		
 		EditorUtility.DisplayDialog("Scene list", levelListOutput, "ok");

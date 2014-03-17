@@ -35,10 +35,10 @@ public class RunnerConfig_19Illinois : IRunnerConfig
 
 		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 
-		character.speedRange = new DataRange(7,10);
+		character.speedRange = new DataRange(10,14);
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 1.0f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 0.9f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		
 		RunnerManager.use.targetDistance = 600.0f;
@@ -50,7 +50,7 @@ public class RunnerConfig_19Illinois : IRunnerConfig
 
 		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 		
-		character.speedRange = new DataRange(9,12);
+		character.speedRange = new DataRange(12,14); 
 		character.timeToMaxSpeed = 120;
 		RunnerInteractionManager.use.timeToMax = 120; 
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.9f );    
@@ -64,7 +64,7 @@ public class RunnerConfig_19Illinois : IRunnerConfig
 
 		RunnerCharacterControllerJumpSlide character = RunnerCharacterControllerJumpSlide.use;
 		
-		character.speedRange = new DataRange(11,15); 
+		character.speedRange = new DataRange(12,16); 
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  

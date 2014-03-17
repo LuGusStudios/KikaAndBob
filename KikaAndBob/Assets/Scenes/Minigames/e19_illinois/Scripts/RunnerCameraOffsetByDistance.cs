@@ -44,7 +44,7 @@ public class RunnerCameraOffsetByDistance : MonoBehaviour
 
 		float offset = xOffsetRange.ValueFromPercentage( distancePercentage );
 
-		Debug.Log("DISTANCE percent : " + distancePercentage + ", so offset : " + offset );
+		//Debug.Log("DISTANCE percent : " + distancePercentage + ", so offset : " + offset );
 
 		followCamera.xOffset = offset;
 
