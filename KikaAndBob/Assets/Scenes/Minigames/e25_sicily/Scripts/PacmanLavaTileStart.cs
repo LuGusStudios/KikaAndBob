@@ -15,12 +15,47 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 	protected bool done = false;
 
+	// OnEnter alone won't do - we also want this to take effect if the player is hit by the lava without running into it themselves
+	protected void Update()
+	{
+		if (!done && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
+			OnEnter();
+	}
+
 	public override void OnEnter ()
 	{
-		if (done)
+		if (done)	// serves both to only call this once AND to make sure it doesn't run anymore once the proper lava tile is present
 			return;
 
-		// TO DO: Lose life
+
+		LugusCoroutines.use.StartRoutine(BurnUp());
+	}
+
+	protected IEnumerator BurnUp()
+	{
+		PacmanGameManager.use.gameRunning = false;
+
+		done = true;
+
+		GameObject particleObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("FireParticles"));
+		ParticleSystem ps = particleObject.GetComponent<ParticleSystem>();
+		Vector3 playerPos = PacmanGameManager.use.GetActivePlayer().transform.position.zAdd(-1f);
+		particleObject.transform.position = playerPos;
+		ps.Play();
+
+		yield return new WaitForSeconds(1.0f);
+
+		GameObject ashObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("AshPile"));
+		ashObject.transform.position = playerPos;
+		PacmanGameManager.use.GetActivePlayer().gameObject.SetActive(false);
+
+
+		yield return new WaitForSeconds(1.0f);
+
+		Destroy(ashObject, 1.0f);
+		PacmanGameManager.use.LoseLife();
+		
+		yield break;
 	}
 
 	public override void Initialize ()
@@ -99,7 +134,6 @@ public class PacmanLavaTileStart : PacmanTileItem
 		TrailRenderer trailRenderer = this.GetComponent<TrailRenderer>();
 		trailRenderer.time = 13.0f;
 
-	
 
 		transform.position = path[0];
 		gameObject.MoveTo(path).Time(1.0f).MoveToPath(false).Execute();
@@ -124,6 +158,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 		PacmanLavaTile newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTile>();
 		newLavaTile.parentTile = parentTile;
 		parentTile.tileItems.Add(newLavaTile.gameObject);
+		done = true;
 
 		newLavaTile.RegisterSurroundingTiles();
 		newLavaTile.InitializeSprite();
@@ -134,6 +169,8 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 		timer = 0.0f; 
 		float fadeDuration = 1.0f;
+
+
 
 		Vector3 originalScale = newSprite.transform.localScale;
 		while (timer < fadeDuration)
@@ -149,7 +186,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 		parentTile.tileItems.Remove(this.gameObject);
 		newLavaTile.Initialize();
-		
+
 		timer = 0.0f;
 		while (timer < fadeDuration)
 		{

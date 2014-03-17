@@ -443,6 +443,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			{
 				updaterContainer.AddComponent<DoorUpdater>();
 			}
+
+			if (id == "BomberUpdater" && updaterContainer.GetComponent<PacmanBomberUpdater>() == null)
+			{
+				updaterContainer.AddComponent<PacmanBomberUpdater>();
+			}
 		}
 	}
 
