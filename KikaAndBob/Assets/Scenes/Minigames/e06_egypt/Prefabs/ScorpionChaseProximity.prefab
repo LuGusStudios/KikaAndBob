@@ -12739,9 +12739,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8770d4241dbbef94cbbac9eae91aa333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   speed: 120
   walkSoundKey: ScorpionWalk01
   spawnDelay: 0
+  moving: 0
+  alreadyTeleported: 0
+  teleportUsed: 0
   allowUTurns: 0
   forwardDetectDistance: 5
   walkAnimation: Left/ScorpionA_Walk
@@ -12774,6 +12778,7 @@ MonoBehaviour:
   poweredSide: 
   hitAnimation: 
   runScared: Left/ScorpionA_WalkScared
+  hide: 
 --- !u!137 &13700000
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -27135,11 +27135,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 709d5fee80d005149a2ce0ce14f7b8af, type: 3}
   - {fileID: 21300000, guid: bb731da728d9cac47b6941c590e41abc, type: 3}
   - {fileID: 21300000, guid: 25af1143d8cf82b47903ae61b1794b8e, type: 3}
+  OpenDecorations: []
+  openDecorationScale: 1.5
   pickupSprite: {fileID: 21300000, guid: 7a0fed73bf9a74a28b1dcd2d2f30c6ff, type: 3}
   powerUpSprite: {fileID: 21300000, guid: b8eefff2a10fbe441b21b5b53bfdc051, type: 3}
   doorSprite: {fileID: 21300000, guid: 5f6725e2915801e41a5f48744528dcf8, type: 3}
   teleportSprite: {fileID: 21300000, guid: fa3ce349ef4d86b4e8dac5f16341d57e, type: 3}
   effectsParent: {fileID: 1114714943}
+  tileItemScripts: []
   itemsToBePickedUp: 62
   itemsPickedUp: 0
 --- !u!114 &739109683
@@ -55757,10 +55760,11 @@ MonoBehaviour:
   side: Left
   poweredUpIdle: MummyFront/KikaMummyFront
   poweredUp: MummyFront/KikaMummyBack
-  poweredDown: MummyFront/KikaMummyFront
+  poweredDown: ccc
   poweredSide: MummySide/KikaMummySide
   hitAnimation: Hit/KikaSide_Death
   runScared: 
+  hide: 
 --- !u!114 &1345310260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55773,9 +55777,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ca68feebf01974682053d9360a5170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   speed: 200
   walkSoundKey: WalkLoop01
   spawnDelay: 0
+  moving: 0
+  alreadyTeleported: 0
+  teleportUsed: 0
   poweredUp: 0
   powerupDuration: 10
   allowClickControl: 0
@@ -70907,6 +70915,7 @@ MonoBehaviour:
   poweredSide: MummySide/KikaMummySide
   hitAnimation: Hit/KikaBack_Hit
   runScared: 
+  hide: 
 --- !u!114 &1680176696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70918,9 +70927,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ca68feebf01974682053d9360a5170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   speed: 2
   walkSoundKey: WalkLoop01
   spawnDelay: 0
+  moving: 0
+  alreadyTeleported: 0
+  teleportUsed: 0
   poweredUp: 0
   powerupDuration: 10
   allowClickControl: 0

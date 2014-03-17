@@ -10691,11 +10691,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ca68feebf01974682053d9360a5170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   speed: 200
   walkSoundKey: WalkLoop01
   spawnDelay: 0
+  moving: 0
+  alreadyTeleported: 0
+  teleportUsed: 0
   poweredUp: 0
   powerupDuration: 10
+  allowClickControl: 0
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12844,10 +12849,11 @@ MonoBehaviour:
   side: Left
   poweredUpIdle: MummyFront/KikaMummyFront
   poweredUp: MummyFront/KikaMummyBack
-  poweredDown: MummyFront/KikaMummyFront
+  poweredDown: ccc
   poweredSide: MummySide/KikaMummySide
   hitAnimation: Hit/KikaSide_Death
   runScared: 
+  hide: 
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
