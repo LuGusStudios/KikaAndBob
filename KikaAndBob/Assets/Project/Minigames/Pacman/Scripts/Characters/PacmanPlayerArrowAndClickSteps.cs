@@ -9,7 +9,6 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 	protected PacmanTile clickedTile = null;
 	protected bool movingwithArrows = true;
 
-
 	private void Update () 
 	{
 		if (!PacmanGameManager.use.gameRunning || PacmanGameManager.use.Paused)
@@ -157,7 +156,12 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 	{
         if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)// || alreadyTeleported)
             return;
-        
+
+	    if (currentTile.tileType == PacmanTile.TileType.Hide)
+	    {
+	        HideCharacter();
+	    }
+
 		if (moving)
 			return;
 		
@@ -211,7 +215,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
         // if there is no tile that was clicked, don't move any more
         if (clickedTile == null)
         {
-            CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
             return;
         }
 		// if clicked tile was reached, success
@@ -221,7 +225,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-            CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		// if x coords are the same, close enough
@@ -230,7 +234,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-            CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		// if y coords are the same, close enough
@@ -239,7 +243,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-            CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		
@@ -248,6 +252,9 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
+
+            DoCurrentTileLeaveBehavior();
+
 			MoveTo(nextTile);
 		}
 		else // else continue in the current direction
@@ -255,11 +262,12 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			nextTile = FindOpenTileInDirection(currentDirection);
 			if (nextTile != null)
 			{
+			    DoCurrentTileLeaveBehavior();
 				MoveTo(nextTile);
 			}
 			else
 			{
-			    CheckTileForAnimationHide();
+                characterAnimator.PlayAnimation(characterAnimator.idle);
 			}
 		}
         
@@ -280,7 +288,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		// if arrows weren't being held down, stop
         if (nextDirection == CharacterDirections.Undefined )
         {
-            CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 		    moveTargetTile = null;
 			return;
 		}
@@ -291,12 +299,13 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		{
 			currentDirection = nextDirection;
 			nextDirection = CharacterDirections.Undefined;
+            DoCurrentTileLeaveBehavior();
 			MoveTo(nextTile);
 			ChangeSpriteFacing(currentDirection);
 		}
 		else
 		{
-		    CheckTileForAnimationHide();
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 		}
 //		else // else continue in the current direction
 //		{
@@ -319,34 +328,16 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	}
 
-    protected void CheckTileForAnimationHide()
+ 
+   protected override void MoveTo(PacmanTile target)
     {
-        if (currentTile.tileType == PacmanTile.TileType.Hide)
-        {
-            characterAnimator.PlayAnimation(characterAnimator.poweredUpIdle);
-        }
-        else
-        {
-            characterAnimator.PlayAnimation(characterAnimator.idle);
-        }
-    }
-    protected override void MoveTo(PacmanTile target)
-    {
-       
-        //if (currentTile.tileType == PacmanTile.TileType.Teleport)
-        //{
-        //    clickedTile = currentTile;
-        //    ResetMovement();
-        //    DestinationReached();
-        //}
-        
         base.MoveTo(target);
         PacmanTile teleportTile = null;
         //check targettile linked tile so destination has been reached when entering the teleport
         foreach (GameObject go in target.tileItems)
         {
             if (go.GetComponent<PacmanTileItemTeleport>() != null)
-            {
+            { 
                 teleportTile = go.GetComponent<PacmanTileItemTeleport>().linkedTile.parentTile;
             }
         }
@@ -356,4 +347,19 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
         }
     }
 
+    public void DoCurrentTileLeaveBehavior()
+    {
+        foreach (GameObject go in currentTile.tileItems)
+        {
+            if (go.GetComponent<PacmanTileItem>() != null)
+            {
+                go.GetComponent<PacmanTileItem>().OnLeave(this);
+                //only if it's a hide tile turn on character again
+                if (go.GetComponent<PacmanTileItemHide>() != null)
+                {
+                    ShowCharacter();
+                }
+            }
+        }
+    }
 }

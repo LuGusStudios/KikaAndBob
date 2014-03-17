@@ -5,20 +5,50 @@ using System.Collections;
 using Random = UnityEngine.Random;
 
 public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
-{
+{ 
     protected List<PacmanTile> FollowTiles = new List<PacmanTile>(); 
     protected bool useTeleport = false;
+    protected bool canRecieveTeleportTile = false;
     protected int fallbackAfterSteps = 10;
     protected int lockedSteps = 0;
-    public float chaseSpeed = 2f;
-
+    protected float chaseSpeedMultiplier = 0.5f;
+    protected float maxChaseSpeedInPercentage = 0.90f;
     public override void SetUpLocal()
     {
         base.SetUpLocal();
         //when the no player has been found on awake it won't do the chase tiles
         playerChaseCounter = int.MaxValue;
-
+        canRecieveTeleportTile = false;
+        useTeleport = false;
         //allowUTurns = false;
+    }
+
+    protected void OnEnable()
+    {
+        if (player != null)
+        {
+            player.OnTeleported += OnPlayerTeleported;
+        }
+    }
+
+    protected void OnDisable()
+    {
+        if (player != null)
+        {
+            player.OnTeleported -= OnPlayerTeleported;
+        }
+    }
+    private void OnPlayerTeleported(PacmanTile teleportTile)
+    {
+        //when the player send its event out that it has teleported go to the teleport tile
+        if (canRecieveTeleportTile)
+        {
+            useTeleport = true;
+            targetTile = teleportTile;
+
+            lockedSteps = 0;
+            canRecieveTeleportTile = false;
+        }
     }
 
     protected override void Update()
@@ -28,7 +58,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
         // update player in case we've changed players (two character game etc.)
         player = PacmanGameManager.use.GetActivePlayer();
-
+        
         // the player is in neutral state unless something else is happening
         NeutralEffect();
 
@@ -72,14 +102,12 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         //when player is found and not disguised and hasn't been already seen
         if (playerFound && !player.poweredUp && !detectedRoutineRunning)
         {
-            Debug.Log("PLAYER FOUND");
             PlayerSeenEffect();
-            //targetTile = currentTile;
-            MoveTo(FindTileClosestTo(targetTile));
+            DestinationReached();
             
             //UpdateMovement();
             //ResetMovement();
-            DestinationReached();
+            
 
         } 
     }
@@ -89,6 +117,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         base.Reset();
         FollowTiles.Clear();
         playerChaseCounter = int.MaxValue;
+        patrolIndex = 0;
         lockedSteps = 0;
     }
 
@@ -105,7 +134,6 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                 PlayerSeenEffect();
                 playerChaseCounter = 0;
                 targetTile = player.currentTile;
-                FollowTiles.Add(targetTile);
                 //Debug.Log("Player detected! Giving chase.");
             }
             else	// if player isn't close
@@ -114,22 +142,21 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                 if (playerChaseCounter < playerChaseCount && !player.poweredUp)
                 {
                     Debug.Log("Player lost! Trying to find them back. playerCounter " + playerChaseCounter);
-
+                    PlayerSeenEffect();
                     //if player is hiding, randomize search
                     if (player.currentTile.tileType == PacmanTile.TileType.Hide)
                     {
                         PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
                                              PacmanLevelManager.use.GetQuadrantOfTile(player.currentTile));
                         targetTile = tiles[Random.Range(0, tiles.Length - 1)];
+
                     }
                     else //chase the player
                     {
-                        PlayerSeenEffect();
                         targetTile = player.currentTile;
-
                     }
-                    //FollowTiles.Add(FindTileClosestTo(targetTile));
                     playerChaseCounter++;
+                    lockedSteps = 0;
 
                 }
                 else // if enemy has lost sight of the player for a while, resume patrol
@@ -138,6 +165,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                     detectedRoutineRunning = false;
                     // turn off player sighted effect TO DO: Remove
                     transform.localScale = originalScale;
+                    canRecieveTeleportTile = false;
 
                     //check if patrol Path is in sight, if it is clear follow tiles list
                     DetectPatrolPath();
@@ -145,9 +173,9 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                     //Follow the player followed path back
                     if (FollowTiles.Count > 0)
                     {
-                        if (currentTile == FollowTiles[FollowTiles.Count - 1])
+                        Debug.Log("following back path " + FollowTiles.Count + FollowTiles[FollowTiles.Count - 1].gridIndices );
+                        if (moveTargetTile == FollowTiles[FollowTiles.Count - 1])
                         {
-                            Debug.Log("Following back path " + FollowTiles.Count + targetTile.gridIndices);
                             FollowTiles.RemoveAt(FollowTiles.Count - 1);
                             if (FollowTiles.Count>0)
                             {
@@ -164,23 +192,34 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                     else if (patrolPath.Count > 0)
                     {
                         //Debug.Log("Player not detected! Continuing patrol.");
-                        foreach (PacmanTile patrolTile in patrolPath)
+                        //foreach (PacmanTile patrolTile in patrolPath)
+                        //{
+                        //    // if patrol waypoint was reached, find next
+                        //    if (currentTile == patrolTile)
+                        //    {
+                        //        //Debug.Log("Patrol point reached: " + patrolTile);
+                        //        patrolIndex++;
+                        //        lockedSteps = 0;
+                        //        if (patrolIndex >= patrolPath.Count)
+                        //        {
+                        //            patrolIndex = 0;
+                        //        }
+                        //    }
+                        //}
+                        if (currentTile == patrolPath[patrolIndex])
                         {
-                            // if patrol waypoint was reached, find next
-                            if (currentTile == patrolTile)
+                            patrolIndex++;
+                            lockedSteps = 0;
+                            if (patrolIndex >= patrolPath.Count)
                             {
-                                //Debug.Log("Patrol point reached: " + patrolTile);
-                                patrolIndex++;
-                                lockedSteps = 0;
-                                if (patrolIndex >= patrolPath.Count)
-                                {
-                                    patrolIndex = 0;
-                                }
+                                patrolIndex = 0;
                             }
                         }
                         //if the target tile hasn't reached its position add lockstep
-                        if (targetTile == patrolPath[patrolIndex])
+                        else
+                        {
                             lockedSteps++;
+                        }
                         targetTile = patrolPath[patrolIndex];
                     }
                 }
@@ -193,17 +232,18 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             //FollowTiles.Add(targetTile);
             lockedSteps++;
         }
-        if(FollowTiles.Count>0)
-            Debug.Log(FollowTiles.Count + " " +  FollowTiles[FollowTiles.Count - 1]);
+        //if(FollowTiles.Count>0)
+        //    Debug.Log(FollowTiles.Count + " " +  FollowTiles[FollowTiles.Count - 1]);
 
         //if guard hasn't found his way to the teleport/patrolpath fall back to random tile in quadrant
         if (lockedSteps >= fallbackAfterSteps)
         {
             lockedSteps++;
-
+            
             Debug.Log(this.name + " got stuck, fall back to random direction");
             useTeleport = false;
-            
+            canRecieveTeleportTile = false;
+
             PacmanTile[] tiles = PacmanLevelManager.use.GetTilesForQuadrant(
                 PacmanLevelManager.use.GetQuadrantOfTile(currentTile));
             targetTile = tiles[Random.Range(0, tiles.Length - 1)];
@@ -223,20 +263,16 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             }  
         }
 
-        if (enemyState == EnemyState.Chasing)
-        {
-            if (FollowTiles.Count > 0 && currentTile.location != FollowTiles[FollowTiles.Count - 1].location)
-            {
-                FollowTiles.Add(currentTile);
-            }
-        }
-
 		MoveTo(FindTileClosestTo(targetTile));
 
 		if(moveTargetTile == null)
 		{
 			Debug.LogError("EnemyCharacterMover: Target tile was null!");
 			return;
+		}
+		else
+		{
+		    DoCurrentTileLeaveBehavior();
 		}
 
 		// figure out if target tile is to the right or to the left of the current position
@@ -279,16 +315,21 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
         if (enemyState == EnemyState.Chasing)
         {
-            movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1 / chaseSpeed;
+            //will chase the player faster by chaseSpeedMultiplier amount from base speed
+            //but clamp is at maxChaseSpeed of player so it never runs faster/equaly as the player 
+            movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1 / Mathf.Min(speed + (speed * chaseSpeedMultiplier), player.speed * maxChaseSpeedInPercentage);
+           
+            FollowTiles.Add(moveTargetTile); 
+            Debug.Log("Adding Follow Tile " + FollowTiles.Count + " with 2DVector " + FollowTiles[FollowTiles.Count-1]);
+            
         }
         else
         {
             movementDuration = Vector3.Distance(moveStartPosition, new Vector3(moveTargetTile.location.x, moveTargetTile.location.y, 0)) * 1 / speed;
         }
-   
         UpdateMovement();	// needs to be called again, or character will pause for one frame
     }
-    protected virtual void DoCurrentTileBehavior()
+    protected override void DoCurrentTileBehavior()
     {
         foreach (GameObject go in currentTile.tileItems)
         {
@@ -296,6 +337,10 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             if (go.GetComponent<PacmanTileItemTeleport>() != null)
             {
                 go.GetComponent<PacmanTileItemTeleport>().OnEnter(this);
+                if (useTeleport)
+                {
+                    FollowTiles.Add(currentTile);
+                }
                 useTeleport = false;
                 lockedSteps = 0;
             }
@@ -355,7 +400,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                         if (tile == playerChar.currentTile && playerChar.moving && tile.tileType != PacmanTile.TileType.Hide )
                         {
                             playerFound = true;
-                            useTeleport = false;
+                            //useTeleport = false;
                             return;
                         }
                     }
@@ -410,7 +455,7 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
 
         enemyState = EnemyState.Chasing;
         lockedSteps = 0;
-
+        canRecieveTeleportTile = true;
         if (!detectedRoutineRunning)
         {
             LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(discoveredSound));
@@ -418,27 +463,14 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         }
         detectedRoutineRunning = true;
     }
-    protected override void CheckTeleportProximity()
+    public void DoCurrentTileLeaveBehavior()
     {
-        PacmanTileItem teleportTargetTile = null;
-        
-        if (enemyState == EnemyState.Chasing && player.alreadyTeleported && !playerFound)
+        foreach (GameObject go in currentTile.tileItems)
         {
-            List<GameObject> playerTileItems = new List<GameObject>(player.currentTile.tileItems);
-            foreach (GameObject go in playerTileItems)
+            if (go.GetComponent<PacmanTileItem>() != null)
             {
-                if (go.GetComponent<PacmanTileItemTeleport>() != null)
-                {
-                    teleportTargetTile = go.GetComponent<PacmanTileItemTeleport>().linkedTile;
-                }
+                go.GetComponent<PacmanTileItem>().OnLeave(this);
             }
         }
-        if (teleportTargetTile != null)
-        {
-            targetTile = teleportTargetTile.parentTile;
-            useTeleport = true;
-        }
-
-      
     }
 }

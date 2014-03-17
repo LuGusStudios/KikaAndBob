@@ -19,7 +19,8 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 	protected ILugusCoroutineHandle powerUpBlinkRoutine = null;
 	protected float powerUpDurationLeft = 0.0f;
 
-
+    public delegate void TeleportEventHandler(PacmanTile teleportTile);
+    public event TeleportEventHandler OnTeleported;
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
@@ -218,7 +219,27 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 	}
 
-	// Effects per tile
+    protected override void MoveTo(PacmanTile target)
+    {
+        base.MoveTo(target);
+
+        //Send teleport event out
+        foreach (GameObject go in target.tileItems)
+        {
+            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+            {
+                if (OnTeleported != null)
+                {
+                    OnTeleported(target);
+                    Debug.Log("TELEPORT on " + target.location); 
+                }
+
+                
+            }
+        }
+    }
+
+    // Effects per tile
 	// Override for custom behavior
 	protected override void DoCurrentTileBehavior()
 	{
@@ -263,6 +284,10 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 				SmoothMovesUtil.SetColor(boneAnimations, Color.white);
 			}
 		}
+        else if (currentTile.tileType == PacmanTile.TileType.Hide)
+        {
+            HideCharacter();
+        }
 		else if (currentTile.tileType == PacmanTile.TileType.Lethal)
 		{
 			PacmanGameManager.use.LoseLife();
