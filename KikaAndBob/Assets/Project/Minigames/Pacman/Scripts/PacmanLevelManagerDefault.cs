@@ -22,7 +22,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public int height = 13;
 	public float scale = 64;
 	public float wallTileScaleFactor = 0.6f;
-	public float pickupScaleFactor = 0.15f;
+	public float pickupScaleFactor = 0.15f; 
 	
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
