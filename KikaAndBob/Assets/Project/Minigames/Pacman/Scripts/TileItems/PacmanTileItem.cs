@@ -26,7 +26,15 @@ public class PacmanTileItem : MonoBehaviour
 	{
 		SetupGlobal();
 	}
-	
+
+	public virtual void SetupLocal()
+	{
+	}
+
+	public virtual void SetupGlobal()
+	{
+	}
+
 	protected void Update () 
 	{
 	

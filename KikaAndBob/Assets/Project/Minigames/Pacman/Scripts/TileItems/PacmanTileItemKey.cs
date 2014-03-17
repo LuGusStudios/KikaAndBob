@@ -18,6 +18,8 @@ public class PacmanTileItemKey : PacmanTileItem
 		if (pickedUp)
 			return;
 
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Key01"));
+
 		pickedUp = true;
 
 		this.gameObject.SetActive(false);
