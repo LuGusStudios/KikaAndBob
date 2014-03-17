@@ -16,12 +16,6 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public List<RunnerInteractionZone> zones = new List<RunnerInteractionZone>();
 	public LayerSpawner groundLayer = null;
-	
-	public List<RunnerInteractionZone> zonesOrdered ;
-	protected int overlap = 1;
-	public LugusRandomGeneratorDistribution zoneRandomGeneratorTriangular;
-	public LugusRandomGeneratorDistribution zoneRandomGeneratorGaussian;
-	public int randomSeed;
 
 	public enum Direction
 	{
@@ -34,15 +28,11 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	}
 
 	public Direction direction = Direction.EAST;
-	
+
 	public DataRange sectionSpanMultiplierRange = null;
 	public DataRange difficultyRange = null;
 	public float timeToMax = 60.0f;
-	protected float timeToMaxRatio = 0;
-	public float timeToHold = 10.0f;
-	protected float timeToHoldRatio = 0;
-	protected float startTime = -1.0f;
-	protected float timeRatio = 0.1f;
+	public float startTime = -1.0f;
 
 	// READ_ONLY for external classes: constantly adjusted. Use the Range-vars above to adjust these values over time
 	public float sectionSpanMultiplier = 1.0f;
@@ -56,8 +46,6 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	{
 		// needed to correctly interpolate between the sectionspans and difficulty ranges
 		startTime = Time.time;
-		timeToMaxRatio = timeToMax * zoneRandomGeneratorGaussian.Next();
-		timeToHoldRatio = timeToHold * zoneRandomGeneratorGaussian.Next();
 	}
 
 	protected int zonesSinceLongZone = 0; // specific for e13_pacific
@@ -74,14 +62,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		//return;
 
 		float progressionPercentage = 1.0f;
-		if ((Time.time - startTime) > (timeToHold + timeToHoldRatio) + (timeToMax + timeToMaxRatio))
+		if( (Time.time - startTime) < timeToMax )
 		{
-			//Debug.Log("Relax");
-			StartTimer();
-		}
-		else if( (Time.time - startTime) < (timeToMax + timeToMaxRatio) )
-		{
-			DataRange timeRange = new DataRange( startTime, startTime + timeToMax + timeToMaxRatio );
+			DataRange timeRange = new DataRange( startTime, startTime + timeToMax );
 			progressionPercentage = timeRange.PercentageInInterval( Time.time );
 		}
 
@@ -107,10 +90,8 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 			do
 			{
-				int nextZone = Mathf.Clamp( Mathf.RoundToInt( zoneRandomGeneratorTriangular.Next() ), 0, zonesOrdered.Count-1);
-				zonePrefab = zonesOrdered[nextZone];
-				//zonePrefab = zones[ Random.Range(0, zones.Count) ];
-				//zoneOK = (zonePrefab.sectionSpan != lastSpawned.sectionSpan);
+				zonePrefab = zones[ Random.Range(0, zones.Count) ];
+				zoneOK = (zonePrefab != lastSpawned);
 
 				if( zoneOK ) // if equal to the previous, we're probably not going to spawn it anyway, so avoid these next checks
 				{
@@ -152,7 +133,8 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 					if( Application.loadedLevelName == "e13_pacific" )
 					{
-						Debug.LogError("InteractionManager: checking pacific : " + zonePrefab.sectionSpan + " from " + zonesSinceLongZone);
+						//Debug.LogError("InteractionManager: checking pacific : " + zonePrefab.sectionSpan + " from " + zonesSinceLongZone);
+
 						// in pacific, we have water-zones that are quite long and sometimes difficult
 						// we want to prevent them from spawning back-to-back
 						// so: keep tabs and only spawn a new water zone after 3 other zones have spawned
@@ -184,7 +166,6 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			}
 			while( !zoneOK ); 
 
-//			Debug.Log("Zone Prefab " + zonePrefab + " diff : " + zonePrefab.difficulty + " delta int: " + (int)zoneRandomGeneratorTriangular.Delta);
 
 			float newSectionSpan = zonePrefab.sectionSpan * sectionSpanMultiplier;
 			if( newSectionSpan < zonePrefab.minimumSectionSpan )
@@ -257,14 +238,10 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		sectionSpanOverflow = Mathf.Max ( sectionSpanOverflow, -0.4f ); // make sure we don't spawn too far in the "previous" section or we might see some popping there
 
 		//Debug.LogError("sectionSpanOverflow = " + sectionSpanOverflow);
-
-		zoneRandomGeneratorTriangular.Delta = zoneRandomGeneratorTriangular.Range.ValueFromPercentage(progressionPercentage+0.2f);
 	}
 
 	public void SetupLocal()
 	{
-		//This needs to be uncommented, else always same seed
-		//randomSeed = System.DateTime.Now.Millisecond;
 		if( groundLayer == null )
 		{
 			groundLayer = GameObject.Find ("LayerGround").GetComponent<LayerSpawner>();
@@ -288,46 +265,30 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 		{
 			Debug.LogError(name + " : no InteractionZones found!");
 		}
-
 	}
 
 	public void CacheInteractionZones()
 	{
-
 		if( zones.Count > 0 )
 			zones.Clear();
-		if(zonesOrdered.Count >0)
-			zonesOrdered.Clear();
 
 		GameObject zoneContainer = GameObject.Find ("Zones");
 		
 		zones.AddRange( zoneContainer.GetComponentsInChildren<RunnerInteractionZone>(true) );
-
-		zonesOrdered = new List<RunnerInteractionZone>();
-
+		
 		foreach( RunnerInteractionZone zone in zones )
 		{
 			zone.gameObject.SetActive(false);
 		}
-
-		for (int i = 0; i < maximumDifficulty; i++) 
-		{
-			foreach( RunnerInteractionZone zone in zones )
-			{
-				if(zone.difficulty == i)
-				{
-					zonesOrdered.Add(zone);
-				}
-			}
-		}
-
-		ResetSeed();
 	}
 
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
 
+	}
+
+	public void SpawnForFirstSection()
+	{
 		if( groundLayer != null )
 		{
 			// normally, we have 2 sections of the same layer already setup at the scen estart
@@ -335,9 +296,6 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			// so: counter that by forcing a spawn on the nextSection at the beginning of the level
 			OnSectionSwitch( groundLayer.currentSection, groundLayer.nextSection );
 		}
-		Debug.Log("seed : " + randomSeed);
-		zoneRandomGeneratorTriangular.SetSeed(randomSeed);
-		zoneRandomGeneratorGaussian.SetSeed(randomSeed);
 	}
 	
 	protected void Awake()
@@ -349,18 +307,11 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	{
 		SetupGlobal();
 	}
-	
+
+
+
 	protected void Update () 
 	{
 	
-	}
-
-	public void ResetSeed()
-	{
-
-		zoneRandomGeneratorTriangular = new LugusRandomGeneratorDistribution(Distribution.Triangular,-overlap,zonesOrdered.Count+overlap-1,9999,randomSeed);
-		zoneRandomGeneratorGaussian = new LugusRandomGeneratorDistribution(Distribution.Gaussian,-timeRatio,timeRatio,9999,randomSeed);
-		zoneRandomGeneratorTriangular.Delta = 0;
-		sectionSpanOverflow = 0.0f;
 	}
 }

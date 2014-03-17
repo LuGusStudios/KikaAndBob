@@ -195,12 +195,15 @@ public class TinyXmlReader
 			// Useful data is found at depth level 1
 			if ((depth == 1) && (xmlreader.tagType == TinyXmlReader.TagType.OPENING))
 			{
-				if (data.ContainsKey(xmlreader.tagName))
-				{ 
-					Debug.LogError("DOUBLE TAG " + xmlreader.tagName ); 
+				if( !data.ContainsKey(xmlreader.tagName) )
+				{
+					data.Add(xmlreader.tagName, xmlreader.content);
 				}
-
-				data.Add(xmlreader.tagName, xmlreader.content);
+				else
+				{
+					Debug.LogWarning("Data already contained key " + xmlreader.tagName + " with value "+ data[ xmlreader.tagName ] +". Replacing value " + xmlreader.content);
+					data[ xmlreader.tagName ] = xmlreader.content;
+				}
 			}
 		}
 

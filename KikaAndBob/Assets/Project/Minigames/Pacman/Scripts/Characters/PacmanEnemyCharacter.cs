@@ -350,17 +350,17 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentBoneAnimation.transform.localScale.x > 0 )
+			if( characterAnimator.currentAnimationTransform.transform.localScale.x > 0 )
 			{
-				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationTransform.transform.localScale = characterAnimator.currentAnimationTransform.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentBoneAnimation.transform.localScale.x < 0 )
+			if( characterAnimator.currentAnimationTransform.transform.localScale.x < 0 )
 			{
-				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
+				characterAnimator.currentAnimationTransform.transform.localScale = characterAnimator.currentAnimationTransform.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
 			}
 		}
 	}

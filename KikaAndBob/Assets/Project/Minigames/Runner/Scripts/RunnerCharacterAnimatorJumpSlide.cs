@@ -12,8 +12,11 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 	public string jumpAnimation = "OTHER/KikaSide_JumpShort";
 	public string hitAnimation = "OTHER/KikaSide_Hit";
 	public string slideAnimation = "OTHER/KikaSide_Slide";
+	public string deathAnimation = "DEATH/KikaSide_Death";
 
 	public ParticleSystem dust = null;
+
+	public bool characterDead = false;
 
 	public override void StopAll()
 	{
@@ -110,14 +113,22 @@ public class RunnerCharacterAnimatorJumpSlide : RunnerCharacterAnimator
 		yield return new WaitForSeconds(delay);
 
 		hitRoutineBusy = false;
-		
-		dust.enableEmission = true;
-		PlayAnimation( runningAnimation );  
+
+		if( !characterDead )
+		{
+			dust.enableEmission = true; 
+			PlayAnimation( runningAnimation );  
+		}
 	}
 
 	protected IEnumerator HitRoutine(RunnerPickup pickup)
 	{
-		PlayAnimation( hitAnimation );
+		//Debug.LogError("HIT ANIMATION PLAYING NOW");
+
+		if( !characterDead )
+		{
+			PlayAnimation( hitAnimation );
+		}
 
 		hitRoutineBusy = true;
 
