@@ -8,6 +8,11 @@ public class PacmanLavaTileStart : PacmanTileItem
 	public List<PacmanTile> surroundingLavaTiles = new List<PacmanTile>();
 	public List<PacmanTile> surroundingOpenTiles = new List<PacmanTile>();
 
+	public Sprite lava1Way = null;
+	public Sprite lava2WayStraight = null;
+	public Sprite lava2WayCorner = null;
+	public Sprite lava3Way = null;
+
 	protected bool done = false;
 
 	public override void OnEnter ()
@@ -66,48 +71,93 @@ public class PacmanLavaTileStart : PacmanTileItem
 		path[0] = Vector3.Lerp(originLavaTile.transform.position, parentTile.GetWorldLocation().v3(), 0.5f).z(zLocation);
 		path[1] = parentTile.GetWorldLocation().v3().z(zLocation);
 
-		if (surroundingOpenTiles.Count <= 0)
-		{
-			path[2] = path[1];
-		}
-		else if (surroundingOpenTiles.Count >= 1)
+		Vector3 fromStartToMiddle = path[1] - path[0];
+		
+		path[2] = path[1] + fromStartToMiddle;	// extend vector edge-middle - this is standard choice
+
+
+		if (surroundingOpenTiles.Count == 1  &&														// if c
+		    (originLavaTile.parentTile.gridIndices.x != surroundingOpenTiles[0].gridIndices.x &&
+			 originLavaTile.parentTile.gridIndices.y != surroundingOpenTiles[0].gridIndices.y))
 		{
 			path[2] = Vector3.Lerp(parentTile.GetWorldLocation().v3(), surroundingOpenTiles[0].GetWorldLocation().v3(), 0.5f).z(zLocation);
 		}
+//		else if (surroundingOpenTiles.Count == 0 && surroundingLavaTiles.Count >= 2)	// this is an edge corner
+//		{
+//			PacmanTile targetTile = null;
+//
+//			while (targetTile == null || targetTile == originLavaTile)		// if this is the case, pick a random other lava tile (not origin tile) to turn towards
+//			{
+//				targetTile = surroundingLavaTiles[Random.Range(0, surroundingLavaTiles.Count)];
+//			}
+//
+//
+//			path[2] = Vector3.Lerp(parentTile.GetWorldLocation().v3(), targetTile.GetWorldLocation().v3(), 0.5f).z(zLocation);
+//		}
 
+
+		TrailRenderer trailRenderer = this.GetComponent<TrailRenderer>();
+		trailRenderer.time = 13.0f;
+
+	
 
 		transform.position = path[0];
 		gameObject.MoveTo(path).Time(1.0f).MoveToPath(false).Execute();
 
-		yield return new WaitForSeconds(1.0f);
+		float timer = 0.0f;
+
+		while(timer < 1.0f)
+		{
+			trailRenderer.startWidth = Mathf.Lerp(0, 0.9f, timer/0.9f);
+			timer += Time.deltaTime;
+			yield return null;
+		}
 
 
 		GameObject newLavaTileObject = (GameObject) Instantiate(originLavaTile.gameObject);
 		newLavaTileObject.transform.position = parentTile.GetWorldLocation().v3().z(this.transform.position.z);
+		newLavaTileObject.transform.position += new Vector3(0, 0, -0.2f);
+
 		newLavaTileObject.name = "LavaTile" + parentTile.ToString();	// might as well assign a name to prevent "Name(Clone)(Clone)(Clone)(Clone)(Clone)" ...
 		newLavaTileObject.transform.parent = this.transform.parent;
 
 		PacmanLavaTile newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTile>();
 		newLavaTile.parentTile = parentTile;
 		parentTile.tileItems.Add(newLavaTile.gameObject);
-		newLavaTile.Initialize();
 
-		Material oldMaterial = this.GetComponent<TrailRenderer>().material;
+		newLavaTile.RegisterSurroundingTiles();
+		newLavaTile.InitializeSprite();
+
+
+		Material oldMaterial = trailRenderer.material;
 		SpriteRenderer newSprite = newLavaTile.GetComponent<SpriteRenderer>();
 
-		float timer = 0.0f;
+		timer = 0.0f; 
 		float fadeDuration = 1.0f;
 
+		Vector3 originalScale = newSprite.transform.localScale;
 		while (timer < fadeDuration)
 		{
-			oldMaterial.SetColor("_Tint", oldMaterial.GetColor("_Tint").a(Mathf.Lerp(1.0f, 0.0f, timer/fadeDuration))); 
+			//oldMaterial.color = oldMaterial.color.a(Mathf.Lerp(1.0f, 0.0f, timer/fadeDuration)); 
 			newSprite.color = newSprite.color.a(Mathf.Lerp(0.0f, 1.0f, timer/fadeDuration));
-			timer += Time.deltaTime;
+
+//			newSprite.transform.localScale = Vector3.Lerp(Vector3.zero, originalScale, timer/fadeDuration);
+
+			timer += Time.deltaTime; 
 			yield return null;
 		}
 
 		parentTile.tileItems.Remove(this.gameObject);
+		newLavaTile.Initialize();
+		
+		timer = 0.0f;
+		while (timer < fadeDuration)
+		{
+			oldMaterial.color = oldMaterial.color.a(Mathf.Lerp(1.0f, 0.0f, timer/fadeDuration)); 
+			timer += Time.deltaTime;
+			yield return null;
+		}
+
 		Destroy(this.gameObject);
 	}
-
 }
