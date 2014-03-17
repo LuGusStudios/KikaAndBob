@@ -69,11 +69,11 @@ public class PacmanLavaTile : PacmanTileItem
 		}
 	}
 
-	public override void OnTryEnter ()
+    public override void OnTryEnter(PacmanCharacter character)
 	{
 	}
 
-	public override void OnEnter ()
+    public override void OnEnter(PacmanCharacter character)
 	{
 	}
 }

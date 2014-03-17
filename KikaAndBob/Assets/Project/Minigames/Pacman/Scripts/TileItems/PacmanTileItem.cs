@@ -7,15 +7,6 @@ public class PacmanTileItem : MonoBehaviour
 	public PacmanTile parentTile;
     public string uniqueId;
     public string linkedId;
-	public void SetupLocal()
-	{
-		// assign variables that have to do with this class only
-	}
-	
-	public void SetupGlobal()
-	{
-		// lookup references to objects / scripts outside of this script
-	}
 	
 	protected void Awake()
 	{

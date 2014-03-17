@@ -233,7 +233,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		{
 			if (go.GetComponent<PacmanTileItem>() != null)
 			{
-				go.GetComponent<PacmanTileItem>().OnEnter();
+				go.GetComponent<PacmanTileItem>().OnEnter(this);
 			}
 		}
 
@@ -374,7 +374,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 			{
 				if (go.GetComponent<PacmanTileItem>() != null)
 				{
-					go.GetComponent<PacmanTileItem>().OnTryEnter();
+					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
 				}
 			}
 
