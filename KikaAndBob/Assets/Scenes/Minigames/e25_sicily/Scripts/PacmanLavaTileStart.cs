@@ -18,7 +18,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 	// OnEnter alone won't do - we also want this to take effect if the player is hit by the lava without running into it themselves
 	protected void Update()
 	{
-		if (!done && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
+		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
 			OnEnter();
 	}
 
@@ -52,10 +52,8 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 		yield return new WaitForSeconds(1.0f);
 
-		Destroy(ashObject, 1.0f);
+		Destroy(ashObject, 1.0f);	// we need to destroy this some time!
 		PacmanGameManager.use.LoseLife();
-		
-		yield break;
 	}
 
 	public override void Initialize ()
@@ -69,26 +67,30 @@ public class PacmanLavaTileStart : PacmanTileItem
 
 		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 		{
-			bool isLavaTile = false;
-
+			bool isOpenTile = true;
+			
 			foreach (GameObject tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
 					surroundingLavaTiles.Add(tile);
-					isLavaTile = true;
+					isOpenTile = false;
+					break;
+				}
+				else if (tileItem.GetComponent<PacmanLavaStop>() != null)
+				{
+					isOpenTile = false;
 					break;
 				}
 			}
-
-			if (!isLavaTile && tile.tileType != PacmanTile.TileType.Collide)
+			
+			if (isOpenTile && tile.tileType != PacmanTile.TileType.Collide)
 			{
 				surroundingOpenTiles.Add(tile);
 			}
 		}
 
 		StartCoroutine(ShowLavaFlow());
-
 	}
 
 	protected IEnumerator ShowLavaFlow()
@@ -155,10 +157,12 @@ public class PacmanLavaTileStart : PacmanTileItem
 		newLavaTileObject.name = "LavaTile" + parentTile.ToString();	// might as well assign a name to prevent "Name(Clone)(Clone)(Clone)(Clone)(Clone)" ...
 		newLavaTileObject.transform.parent = this.transform.parent;
 
+		done = true;	// set this true so the lava tile created below will be the one the player can 'die' on
 		PacmanLavaTile newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTile>();
 		newLavaTile.parentTile = parentTile;
 		parentTile.tileItems.Add(newLavaTile.gameObject);
-		done = true;
+		parentTile.tileItems.Remove(this.gameObject);
+
 
 		newLavaTile.RegisterSurroundingTiles();
 		newLavaTile.InitializeSprite();
@@ -184,7 +188,6 @@ public class PacmanLavaTileStart : PacmanTileItem
 			yield return null;
 		}
 
-		parentTile.tileItems.Remove(this.gameObject);
 		newLavaTile.Initialize();
 
 		timer = 0.0f;

@@ -33,6 +33,8 @@ public class PacmanLavaTile : PacmanTileItem
 
 	public override void Initialize ()
 	{
+		print ("afhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
 		RegisterSurroundingTiles();
 
 		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
@@ -46,31 +48,38 @@ public class PacmanLavaTile : PacmanTileItem
 		
 		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 		{
-			bool isLavaTile = false;
+			bool isOpenTile = true;
 			
 			foreach (GameObject tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
 					surroundingLavaTiles.Add(tile);
-					isLavaTile = true;
+					isOpenTile = false;
+					break;
+				}
+				else if (tileItem.GetComponent<PacmanLavaStop>() != null)
+				{
+					print ("afdsdjfkj");
+					isOpenTile = false;
 					break;
 				}
 			}
 			
-			if (!isLavaTile && tile.tileType != PacmanTile.TileType.Collide)
+			if (isOpenTile && tile.tileType != PacmanTile.TileType.Collide)
 			{
 				surroundingOpenTiles.Add(tile);
 			}
 		}
-		
+
+		// surroundingValidTiles = lavaTiles + open tiles - this is useful because sometimes we want to distinguish the two and sometimes not
 		surroundingValidTiles = new List<PacmanTile>(surroundingLavaTiles);
 		surroundingValidTiles.AddRange(surroundingOpenTiles);
 	}
 
 	protected void Update()
 	{
-		if (!done && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
+		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
 			OnEnter();
 	}
 	

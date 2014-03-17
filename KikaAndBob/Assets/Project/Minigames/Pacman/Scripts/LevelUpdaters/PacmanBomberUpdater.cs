@@ -33,7 +33,7 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 			}
 		}
 
-		public bool GetDone()
+		public bool TimerDone()
 		{
 			return timer >= duration;
 		}
@@ -58,8 +58,11 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 			return;
 
 		// place bombs
-		if (PacmanInput.use.GetAction1())
+		if (PacmanInput.use.GetAction1() && PacmanPickups.use.GetPickupAmount("Dynamite") >= 1)
 		{
+
+			PacmanPickups.use.ModifyPickupAmount("Dynamite", -1);
+
 			bool currentTileAlreadyCharged = false;
 			foreach(ChargedTile ctile in chargedTiles)
 			{
@@ -87,7 +90,7 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 
 			ctile.UpdateCharge();
 
-			if (ctile.GetDone())
+			if (ctile.TimerDone())
 			{
 				// remove bomb icon
 				Destroy(ctile.bombItem);

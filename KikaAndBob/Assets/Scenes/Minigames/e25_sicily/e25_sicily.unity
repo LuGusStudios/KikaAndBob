@@ -15244,6 +15244,45 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 28b82441be4e59840b55880b3076df1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &430725188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+  m_PrefabInternal: {fileID: 1024806816}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 430725190}
+  - 114: {fileID: 430725189}
+  m_Layer: 0
+  m_Name: LavaStop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &430725189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 3a3adeae9f390494aacb03f0791e7480,
+    type: 2}
+  m_PrefabInternal: {fileID: 1024806816}
+  m_GameObject: {fileID: 430725188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9992879c2fd14d342a08c1d3f35af5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &430725190
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+  m_PrefabInternal: {fileID: 1024806816}
+  m_GameObject: {fileID: 430725188}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.16526318, y: 5.0539856, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &433376791
 GameObject:
   m_ObjectHideFlags: 0
@@ -22389,6 +22428,10 @@ Prefab:
       propertyPath: mMaterials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
+    - target: {fileID: 100014, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_RootGameObject: {fileID: 1849301434}
@@ -22638,6 +22681,7 @@ GameObject:
   - 114: {fileID: 739109688}
   - 114: {fileID: 739109690}
   - 114: {fileID: 739109691}
+  - 114: {fileID: 739109692}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -22667,6 +22711,8 @@ MonoBehaviour:
   tileItems:
   - {fileID: 100034, guid: 085dc39824e117548a66577623ad8f83, type: 2}
   - {fileID: 100000, guid: 80e74ef21e1f431458eb2395043eb46b, type: 2}
+  - {fileID: 100000, guid: 30db58e2b0a51054b98d0ef798f7bcd6, type: 2}
+  - {fileID: 100000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
   blockSprites:
   - {fileID: 21300000, guid: ac8cbdf0c723fb642aba72ebef0e00d7, type: 3}
   - {fileID: 21300000, guid: 88a63d28f0027e04ead7313af9bbca6e, type: 3}
@@ -22800,6 +22846,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7afa1223def8d4f4c9eab01e386db651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &739109692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 739109681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b3c3be1014d7a40a03353cdb7342a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &740738211
@@ -27317,6 +27374,46 @@ MonoBehaviour:
   formatting: 1
   currentValue: 0
   animationTime: 1
+--- !u!1001 &1024806816
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 8.16526318
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 5.0539856
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 3a3adeae9f390494aacb03f0791e7480, type: 2}
+  m_RootGameObject: {fileID: 430725188}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &1025901886
 GameObject:
   m_ObjectHideFlags: 0
@@ -29286,7 +29383,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1155638342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1348.27502, y: 63.6193237, z: 0}
+  m_LocalPosition: {x: -31.3995361, y: 63.6193848, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 597051404}
@@ -29490,7 +29587,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: 40
+      scalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -38043,7 +38140,7 @@ Transform:
   m_GameObject: {fileID: 1611880936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 193.222046, y: -.858032227, z: 0}
-  m_LocalScale: {x: .342583597, y: .342583597, z: .200000003}
+  m_LocalScale: {x: .800000012, y: .800000012, z: .800000012}
   m_Children: []
   m_Father: {fileID: 597051404}
 --- !u!212 &1611880938
@@ -38067,7 +38164,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 9fd7cc3622ee648a28de4165803f911f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d3f37957a4823e4a9c0a82878255195, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1618421009
 GameObject:
