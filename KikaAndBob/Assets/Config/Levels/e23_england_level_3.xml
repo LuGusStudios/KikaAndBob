@@ -1,37 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-	<BackgroundMusicName>e23_england01</BackgroundMusicName>
-	<Width>17</Width>
-	<Height>17</Height>
+	<BackgroundMusicName></BackgroundMusicName>
+	<Width>13</Width>
+	<Height>13</Height>
 	<CameraTracksPlayer>True</CameraTracksPlayer>
 	<Layout>
-		xxxxxxxxxxxxxxxxx
-		xpoooooooooooooox
-		xoxxxxxxxxxxxxxxx
-		xpooxoooxoooxphpx
-		xoxoxoxoooxoxoxox
-		xoxoxoxxxxxoooxox
-		xoxoxoxpppxxxxxox
-		xoxoooxpppooopxox
-		xoxxxxxpppxxxxxhx
-		xpooooxhxxxooohpx
-		xoxxxoxpxoooxxxxx
-		xoooxoxpooxoxooox
-		xxxoxoxxxxxxxoxxx
-		xoooxooopoooooxox
-		xoxxxxxxhxxxxxxox
-		xooooooooooooooox
-		xxxxxxxxoxxxxxxxx
+		xxxxxxxxxxxxx
+		xpoopxpxpoopx
+		xoxxoxoxoxxox
+		xooopxoxpooox
+		xoxxxxoxxxxox
+		xpoxpoooooopx
+		xxoxoooooxoxx
+		xooooooopxpox
+		xoxxxxoxxxxox
+		xpoopxoxpoopx
+		xoxxoooooxxox
+		xpoopxoxpoopx
+		xxxxxxoxxxxxx
 	</Layout>
 	<Characters>
 		<Character>
 			<ID>Kika</ID>
 			<Speed>2</Speed>
-			<XLocation>8</XLocation>
+			<XLocation>6</XLocation>
 			<YLocation>1</YLocation>
 			<SpawnDelay>0</SpawnDelay>
 			<StartDirection>undefined</StartDirection>
 			<DefaultTargetTiles>
+			</DefaultTargetTiles>
+		</Character>
+    <Character>
+			<ID>GuardPatrol02</ID>
+			<Speed>1</Speed>
+			<XLocation>11</XLocation>
+			<YLocation>11</YLocation>
+			<SpawnDelay>0</SpawnDelay>
+			<StartDirection>down</StartDirection>
+			<DefaultTargetTiles>
+				<Tile>
+					<X>11</X>
+					<Y>7</Y>
+				</Tile>
+				<Tile>
+					<X>11</X>
+					<Y>10</Y>
+				</Tile>
+			</DefaultTargetTiles>
+		</Character>
+    <Character>
+			<ID>GuardPatrol02</ID>
+			<Speed>1</Speed>
+			<XLocation>1</XLocation>
+			<YLocation>1</YLocation>
+			<SpawnDelay>0</SpawnDelay>
+			<StartDirection>right</StartDirection>
+			<DefaultTargetTiles>
+				<Tile>
+					<X>4</X>
+					<Y>1</Y>
+				</Tile>
+				<Tile>
+					<X>1</X>
+					<Y>1</Y>
+				</Tile>
+			</DefaultTargetTiles>
+		</Character>
+    <Character>
+			<ID>GuardPatrol01</ID>
+			<Speed>1.5</Speed>
+			<XLocation>11</XLocation>
+			<YLocation>1</YLocation>
+			<SpawnDelay>0</SpawnDelay>
+			<StartDirection>right</StartDirection>
+			<DefaultTargetTiles>
+				<Tile>
+					<X>8</X>
+					<Y>1</Y>
+				</Tile>
+				<Tile>
+					<X>8</X>
+					<Y>3</Y>
+				</Tile>
+        <Tile>
+					<X>11</X>
+					<Y>3</Y>
+				</Tile>
+      <Tile>
+					<X>11</X>
+					<Y>1</Y>
+				</Tile>
+			</DefaultTargetTiles>
+		</Character>
+   <Character>
+			<ID>GuardPatrol01</ID>
+			<Speed>1.5</Speed>
+			<XLocation>1</XLocation>
+			<YLocation>9</YLocation>
+			<SpawnDelay>0</SpawnDelay>
+			<StartDirection>right</StartDirection>
+			<DefaultTargetTiles>
+				<Tile>
+					<X>4</X>
+					<Y>9</Y>
+				</Tile>
+				<Tile>
+					<X>1</X>
+					<Y>9</Y>
+				</Tile>
 			</DefaultTargetTiles>
 		</Character>
 	</Characters>
@@ -39,46 +115,79 @@
 	</Updaters>
 	<TileItems>
     <TileItem>
-			<ID>GuardDoor01</ID>
-			<TileCoordinates>
-				<X>8</X>
-				<Y>0</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>HidingSpot</ID>
+      <TileCoordinates>
+        <X>5</X>
+        <Y>2</Y>
+      </TileCoordinates>
+    </TileItem>
     <TileItem>
-			<ID>HidingSpot</ID>
-			<TileCoordinates>
-				<X>14</X>
-				<Y>7</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>HidingSpot</ID>
+      <TileCoordinates>
+        <X>5</X>
+        <Y>6</Y>
+      </TileCoordinates>
+    </TileItem>
     <TileItem>
-			<ID>HidingSpot</ID>
-			<TileCoordinates>
-				<X>15</X>
-				<Y>8</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>HidingSpot</ID>
+      <TileCoordinates>
+        <X>7</X>
+        <Y>6</Y>
+      </TileCoordinates>
+    </TileItem>
     <TileItem>
-			<ID>HidingSpot</ID>
-			<TileCoordinates>
-				<X>7</X>
-				<Y>7</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>HidingSpot</ID>
+      <TileCoordinates>
+        <X>7</X>
+        <Y>2</Y>
+      </TileCoordinates>
+    </TileItem>
     <TileItem>
-			<ID>HidingSpot</ID>
-			<TileCoordinates>
-				<X>14</X>
-				<Y>13</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>GuardDoor02</ID>
+      <LinkedID>GuardPatrol02</LinkedID>
+      <TileCoordinates>
+        <X>1</X>
+        <Y>4</Y>
+      </TileCoordinates>
+    </TileItem>
     <TileItem>
-			<ID>HidingSpot</ID>
-			<TileCoordinates>
-				<X>8</X>
-				<Y>2</Y>
-			</TileCoordinates>
-		</TileItem>
+      <ID>GuardDoor02</ID>
+      <LinkedID>GuardPatrol02</LinkedID>
+      <TileCoordinates>
+        <X>2</X>
+        <Y>6</Y>
+      </TileCoordinates>
+    </TileItem>
+    <TileItem>
+      <ID>GuardDoor02</ID>
+      <LinkedID>GuardPatrol02</LinkedID>
+      <TileCoordinates>
+        <X>6</X>
+        <Y>8</Y>
+      </TileCoordinates>
+    </TileItem>
+    <TileItem>
+      <ID>GuardDoor01</ID>
+      <TileCoordinates>
+        <X>6</X>
+        <Y>0</Y>
+      </TileCoordinates>
+    </TileItem>
+    <TileItem>
+      <ID>GuardDoor02</ID>
+      <LinkedID>GuardPatrol02</LinkedID>
+      <TileCoordinates>
+        <X>10</X>
+        <Y>6</Y>
+      </TileCoordinates>
+    </TileItem>
+  <TileItem>
+      <ID>GuardDoor02</ID>
+      <LinkedID>GuardPatrol02</LinkedID>
+      <TileCoordinates>
+        <X>11</X>
+        <Y>8</Y>
+      </TileCoordinates>
+    </TileItem>
 	</TileItems>
 </Level>
