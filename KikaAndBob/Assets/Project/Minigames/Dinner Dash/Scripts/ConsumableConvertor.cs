@@ -143,7 +143,7 @@ public class ConsumableConvertor : IConsumableUser
 		if( processingTexture != null )
 			GetComponent<SpriteRenderer>().sprite = idleTexture;
 
-		if( onProcessingStart != null )
+		if( onProcessingEnd != null )
 			onProcessingEnd( currentConsumable );
 	}
 

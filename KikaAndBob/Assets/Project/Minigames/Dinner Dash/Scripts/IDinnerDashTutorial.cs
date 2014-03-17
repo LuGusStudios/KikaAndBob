@@ -231,7 +231,11 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			arrow.Hide();
 			
 			processor.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
-			processor.GetComponent<ConsumableProcessor>().onProcessingEnd += OnProcessorEnd;
+			if( processor.GetComponent<ConsumableProcessor>() != null )
+				processor.GetComponent<ConsumableProcessor>().onProcessingEnd += OnProcessorEnd;
+			else if( processor.GetComponent<ConsumableConvertor>() != null )
+				processor.GetComponent<ConsumableConvertor>().onProcessingEnd += OnProcessorEnd;
+
 			/*
 			producer1.GetComponent<IConsumableUser>().onUsed -= OnConsumableUsed;
 			
@@ -244,8 +248,11 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 			// sandwich tapped
 			//Debug.Log ("TAP processor");
 			DialogueManager.use.CreateBox( processor.transform, LugusResources.use.Localized.GetText(textBase + ".4"), "MouseLeftSmall01" ).Show ();
-
-			processor.GetComponent<ConsumableProcessor>().onProcessingEnd -= OnProcessorEnd;
+			
+			if( processor.GetComponent<ConsumableProcessor>() != null )
+				processor.GetComponent<ConsumableProcessor>().onProcessingEnd -= OnProcessorEnd;
+			else if( processor.GetComponent<ConsumableConvertor>() != null )
+				processor.GetComponent<ConsumableConvertor>().onProcessingEnd -= OnProcessorEnd;
 			
 			arrow.Show( processor );
 			processor.GetComponent<IConsumableUser>().onUsed += OnConsumableUsed;

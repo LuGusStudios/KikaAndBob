@@ -4,9 +4,15 @@ using System.Collections.Generic;
 
 public class RunnerKangeroo : MonoBehaviour 
 {
+	public ParticleSystem dust = null;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
+		if( dust == null )
+		{
+			dust = this.transform.parent.GetComponentInChildren<ParticleSystem>();
+		}
 	}
 
 	protected ILugusCoroutineHandle handle = null;
@@ -23,7 +29,7 @@ public class RunnerKangeroo : MonoBehaviour
 		{
 			handle.StopRoutine();
 		}
-	}
+	} 
 
 	protected IEnumerator JumpRoutine()
 	{
@@ -34,11 +40,19 @@ public class RunnerKangeroo : MonoBehaviour
 		{
 			gameObject.MoveTo( transform.localPosition.yAdd( 5.0f ) ).IsLocal(true).Time (halfLength).Execute();
 
-			yield return new WaitForSeconds(halfLength);
+			yield return new WaitForSeconds( halfLength / 2.0f );
 			
-			gameObject.MoveTo( transform.localPosition.yAdd( -5.0f ) ).IsLocal(true).Time (halfLength).Execute();
+			dust.Stop();
 			
-			yield return new WaitForSeconds(halfLength);
+			yield return new WaitForSeconds( halfLength / 2.0f );
+			
+			gameObject.MoveTo( transform.localPosition.yAdd( -5.0f ) ).IsLocal(true).Time (halfLength).Execute(); 
+			
+			yield return new WaitForSeconds( halfLength * 0.8f );
+			
+			dust.Play ();
+
+			yield return new WaitForSeconds( halfLength * 0.2f );
 
 			/*
 			// parabolic motion

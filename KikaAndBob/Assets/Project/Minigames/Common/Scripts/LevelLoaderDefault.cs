@@ -107,11 +107,10 @@ public class LevelLoaderDefault
 	// TO DO: this will return CrossSceneInfo for relevant game. Will probably be moved elsewhere.
 	public static IMinigameCrossSceneInfo GetCrossSceneInfo()	
 	{
-		if (Application.loadedLevelName == "e04_tasmania"
-			||Application.loadedLevelName == "e05_Mexico" 
-		    || Application.loadedLevelName == "e09_Brazil"
-			|| Application.loadedLevelName == "e10_Swiss"
-		    || Application.loadedLevelName == "e13_pacific")
+
+		if (Application.loadedLevelName == "e04_tasmania" || Application.loadedLevelName == "e05_Mexico" 
+		    || Application.loadedLevelName == "e09_Brazil" || Application.loadedLevelName == "e10_Swiss"
+		    || Application.loadedLevelName == "e13_pacific" || Application.loadedLevelName == "e19_illinois")
 		{
 			return RunnerCrossSceneInfo.use;
 		}
@@ -139,9 +138,9 @@ public class LevelLoaderDefault
 		    || Application.loadedLevelName == "e22_russia")
 		{
 			return DartsCrossSceneInfo.use;
-		}		
-		else if( Application.loadedLevelName == "e02_argentina"
-			|| Application.loadedLevelName == "e12_newyork" )
+		}	
+		else if( Application.loadedLevelName == "e02_argentina" || Application.loadedLevelName == "e12_newyork" 
+		        || Application.loadedLevelName == "e16_israel" || Application.loadedLevelName == "e26_belgium" )
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}

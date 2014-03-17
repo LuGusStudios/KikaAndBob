@@ -85,6 +85,28 @@ public static class BoundsExtensions
 	}
 }
 
+public class MonoBehaviourExtensionsHelper
+{
+	
+	public IEnumerator DisableRoutine(MonoBehaviour c, float delay)
+	{
+		yield return new WaitForSeconds(delay);
+		
+		if( c != null )
+			c.enabled = false;
+	}
+}
+
+public static class MonoBehaviourExtensions
+{
+	public static void Disable(this MonoBehaviour component, float delay = 0.0f )
+	{
+		MonoBehaviourExtensionsHelper helper = new MonoBehaviourExtensionsHelper();
+		LugusCoroutines.use.StartRoutine( helper.DisableRoutine(component, delay) );
+	}
+
+}
+
 public static class VectorExtensions
 {
 	// ex. vec = vec.y( value );
