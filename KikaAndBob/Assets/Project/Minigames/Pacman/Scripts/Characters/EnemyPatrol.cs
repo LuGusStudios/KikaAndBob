@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyPatrol : PacmanEnemyCharacter {
+public class EnemyPatrol : PacmanEnemyCharacter 
+{
 
 	protected List<PacmanTile> patrolPath = new List<PacmanTile>();
 	protected int patrolIndex = 0;

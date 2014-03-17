@@ -495,7 +495,7 @@ public class ConsumableConsumer : IConsumableUser
 	void Update () 
 	{
 		/*
-		if( LugusInput.use.KeyDown( KeyCode.P ) && this.place != null )
+		//if( LugusInput.use.KeyDown( KeyCode.P ) && this.place != null )
 		{
 			this.happiness = Random.Range(0, 11);
 			LugusCoroutines.use.StartRoutine( PaymentRoutine(0.0f) );

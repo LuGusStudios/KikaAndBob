@@ -134,7 +134,9 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 			ChangeSpriteFacing(CharacterDirections.Up);
 	}
 
-	public override void ChangeSpriteFacing (CharacterDirections direction)
+    
+
+    public override void ChangeSpriteFacing (CharacterDirections direction)
 	{
 		CharacterDirections adjustedDirection = direction;
 

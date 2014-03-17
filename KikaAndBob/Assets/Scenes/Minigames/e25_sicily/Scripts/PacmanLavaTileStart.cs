@@ -22,7 +22,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 			OnEnter();
 	}
 
-	public override void OnEnter ()
+    public override void OnEnter(PacmanCharacter character)
 	{
 		if (done)	// serves both to only call this once AND to make sure it doesn't run anymore once the proper lava tile is present
 			return;

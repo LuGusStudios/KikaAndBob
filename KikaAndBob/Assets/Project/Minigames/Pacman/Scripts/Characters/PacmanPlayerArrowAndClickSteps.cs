@@ -21,6 +21,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		
 		if (allowControl == true)
 		{
+            
 			CheckArrows();
 			CheckClick();
 		}
@@ -40,7 +41,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 		if (LugusInput.use.down && PacmanGameManager.use.GameRunning)
 		{
-			if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+			if (moveTargetTile != null)// && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
 				return;
 
 			clickedTile = PacmanLevelManager.use.GetTileByClick(LugusInput.use.lastPoint);
@@ -106,9 +107,9 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
 	private void CheckArrows()
 	{
-		if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
-			return;
-
+	    if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
+            return;
+	    
 		if (moving)
 			return;
 
@@ -148,13 +149,19 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			if (!moving)
 				DestinationReachedArrows();
 		}
+	    
 	}
 
 	private void CheckArrowsContinuous()
 	{
-		if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)
-			return;
-		
+        if (moveTargetTile != null && moveTargetTile.tileType == PacmanTile.TileType.Teleport)// || alreadyTeleported)
+            return;
+
+	    if (currentTile.tileType == PacmanTile.TileType.Hide)
+	    {
+	        HideCharacter();
+	    }
+
 		if (moving)
 			return;
 		
@@ -182,6 +189,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			clickedTile = null;
 			nextDirection = PacmanCharacter.CharacterDirections.Right;
 		}
+        
 	}
 
 
@@ -203,20 +211,21 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		moving = false;
 
 		moveTargetTile = null;
-//		
-//		// if there is no tile that was clicked, don't move any more
-//		if (clickedTile == null)
-//		{
-//			characterAnimator.PlayAnimation(characterAnimator.idle);
-//			return;
-//		}
+        		
+        // if there is no tile that was clicked, don't move any more
+        if (clickedTile == null)
+        {
+            characterAnimator.PlayAnimation(characterAnimator.idle);
+            return;
+        }
 		// if clicked tile was reached, success
-		if (currentTile == clickedTile)
+		if (currentTile == clickedTile)// || (currentTile.tileType == PacmanTile.TileType.Teleport && !alreadyTeleported)) 
 		{
+            Debug.Log("Current clicked Tile has been reached");
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-			characterAnimator.PlayAnimation(characterAnimator.idle);
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		// if x coords are the same, close enough
@@ -225,7 +234,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-			characterAnimator.PlayAnimation(characterAnimator.idle);
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		// if y coords are the same, close enough
@@ -234,7 +243,7 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			ResetMovement();
 			currentDirection = CharacterDirections.Undefined;
 			clickedTile = null;
-			characterAnimator.PlayAnimation(characterAnimator.idle);
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 			return;
 		}
 		
@@ -243,6 +252,9 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		if (nextTile != null)
 		{
 			currentDirection = nextDirection;
+
+            DoCurrentTileLeaveBehavior();
+
 			MoveTo(nextTile);
 		}
 		else // else continue in the current direction
@@ -250,14 +262,15 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 			nextTile = FindOpenTileInDirection(currentDirection);
 			if (nextTile != null)
 			{
+			    DoCurrentTileLeaveBehavior();
 				MoveTo(nextTile);
 			}
 			else
 			{
-				//PlayAnimationObject("Idle", CharacterDirections.Undefined);
-				characterAnimator.PlayAnimation(characterAnimator.idle);
+                characterAnimator.PlayAnimation(characterAnimator.idle);
 			}
 		}
+        
 	}
 
 	public void DestinationReachedArrows()
@@ -273,9 +286,10 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		}
 
 		// if arrows weren't being held down, stop
-		if (nextDirection == CharacterDirections.Undefined)
-		{
-			characterAnimator.PlayAnimation(characterAnimator.idle);
+        if (nextDirection == CharacterDirections.Undefined )
+        {
+            characterAnimator.PlayAnimation(characterAnimator.idle);
+		    moveTargetTile = null;
 			return;
 		}
 
@@ -285,12 +299,13 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 		{
 			currentDirection = nextDirection;
 			nextDirection = CharacterDirections.Undefined;
+            DoCurrentTileLeaveBehavior();
 			MoveTo(nextTile);
 			ChangeSpriteFacing(currentDirection);
 		}
 		else
 		{
-			characterAnimator.PlayAnimation(characterAnimator.idle);
+            characterAnimator.PlayAnimation(characterAnimator.idle);
 		}
 //		else // else continue in the current direction
 //		{
@@ -312,4 +327,39 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 //		
 
 	}
+
+ 
+   protected override void MoveTo(PacmanTile target)
+    {
+        base.MoveTo(target);
+        PacmanTile teleportTile = null;
+        //check targettile linked tile so destination has been reached when entering the teleport
+        foreach (GameObject go in target.tileItems)
+        {
+            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+            { 
+                teleportTile = go.GetComponent<PacmanTileItemTeleport>().linkedTile.parentTile;
+            }
+        }
+        if (teleportTile != null)
+        {
+            clickedTile = teleportTile;
+        }
+    }
+
+    public void DoCurrentTileLeaveBehavior()
+    {
+        foreach (GameObject go in currentTile.tileItems)
+        {
+            if (go.GetComponent<PacmanTileItem>() != null)
+            {
+                go.GetComponent<PacmanTileItem>().OnLeave(this);
+                //only if it's a hide tile turn on character again
+                if (go.GetComponent<PacmanTileItemHide>() != null)
+                {
+                    ShowCharacter();
+                }
+            }
+        }
+    }
 }

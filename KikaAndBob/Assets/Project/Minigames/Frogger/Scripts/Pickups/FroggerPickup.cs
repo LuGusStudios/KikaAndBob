@@ -16,8 +16,6 @@ public class FroggerPickup : FroggerLaneItem
 			r.enabled = false;	
 		}
 
-		bool foundAll = true;
-
 		FroggerGameManager.use.ModifyPickUpCount(1);
 		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(this.transform.position).Execute();
 	}

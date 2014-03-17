@@ -33,8 +33,6 @@ public class PacmanLavaTile : PacmanTileItem
 
 	public override void Initialize ()
 	{
-		print ("afhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-
 		RegisterSurroundingTiles();
 
 		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
@@ -164,11 +162,10 @@ public class PacmanLavaTile : PacmanTileItem
 		}
 	}
 
-	public override void OnTryEnter ()
+    public override void OnTryEnter(PacmanCharacter character)
 	{
 	}
 
-	
 	public void InitializeSprite()
 	{
 		SpriteRenderer thisSpriteRenderer = GetComponent<SpriteRenderer>();

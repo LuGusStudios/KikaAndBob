@@ -69,7 +69,7 @@ public class RunnerScoreManager : LugusSingletonRuntime<RunnerScoreManager>
 				scoreAmount *= -1;
 			}
 
-			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position ).Audio("Collide01").Color(Color.red).Execute();
+			ScoreVisualizer.Score(commodity, -scoreAmount).Time (1.0f).Position( position )/*.Audio("Collide01")*/.Color(Color.red).Execute();
 		}
 
 
