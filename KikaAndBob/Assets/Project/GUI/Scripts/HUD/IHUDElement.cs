@@ -53,6 +53,8 @@ public abstract class IHUDElement : MonoBehaviour
 			iconKey = "IconKey01";
 		else if( _commodity == KikaAndBob.CommodityType.Key02 )
 			iconKey = "IconKey02";
+		else if( _commodity == KikaAndBob.CommodityType.Dynamite )
+			iconKey = "Dynamite01";
 		else if( _commodity == KikaAndBob.CommodityType.Custom )
 		{
 			icon.enabled = false;
