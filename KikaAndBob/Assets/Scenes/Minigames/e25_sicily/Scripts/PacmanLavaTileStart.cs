@@ -155,7 +155,17 @@ public class PacmanLavaTileStart : PacmanTileItem
 		newLavaTileObject.transform.position += new Vector3(0, 0, -0.2f);
 
 		newLavaTileObject.name = "LavaTile" + parentTile.ToString();	// might as well assign a name to prevent "Name(Clone)(Clone)(Clone)(Clone)(Clone)" ...
-		newLavaTileObject.transform.parent = this.transform.parent;
+	
+		if (PacmanLevelManager.use.temporaryParent != null)
+		{
+			newLavaTileObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+		}
+		else
+		{
+			Debug.LogWarning("PacmanLavaTileStart: No temporary items parent found. This tile will not be removed in the next round!");
+			newLavaTileObject.transform.parent = this.transform.parent;
+		}
+
 
 		done = true;	// set this true so the lava tile created below will be the one the player can 'die' on
 		PacmanLavaTile newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTile>();

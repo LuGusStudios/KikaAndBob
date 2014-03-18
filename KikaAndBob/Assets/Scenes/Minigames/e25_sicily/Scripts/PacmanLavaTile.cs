@@ -58,7 +58,6 @@ public class PacmanLavaTile : PacmanTileItem
 				}
 				else if (tileItem.GetComponent<PacmanLavaStop>() != null)
 				{
-					print ("afdsdjfkj");
 					isOpenTile = false;
 					break;
 				}
@@ -142,12 +141,19 @@ public class PacmanLavaTile : PacmanTileItem
 				if (tile == null)	// should probably never happen, but doesn't hurt to check
 					continue;
 
-
-
 					GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
 					newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
 					newLavaTileObject.name = "LavaTrail" + tile.ToString();
-					newLavaTileObject.transform.parent = this.transform.parent;
+
+					if (PacmanLevelManager.use.temporaryParent != null)
+					{
+						newLavaTileObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+					}
+					else
+					{
+						Debug.LogWarning("PacmanLavaTile: No temporary items parent found. This tile will not be removed in the next round!");
+						newLavaTileObject.transform.parent = this.transform.parent;
+					}
 					
 					surroundingLavaTiles.Add(tile);
 					tile.tileItems.Add(newLavaTileObject);

@@ -56,6 +56,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	protected Transform levelParent = null;
 	protected Transform prefabParent = null;
 	protected Transform characterParent = null;
+	[HideInInspector]
+	public Transform temporaryParent = null;	// items parented to this transform are removed each time a new round begins (player died but still has lives left)
+												// not all minigames require this, so for backwards compatibility, it makes to allow for (and check for) this being null
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected List<PacmanCharacter> spawnedCharacters = new List<PacmanCharacter>();
 	
@@ -96,6 +99,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		effectsParent = levelRoot.FindChild("EffectsParent");
 		characterParent = levelRoot.FindChild("CharacterParent");
 		prefabParent = levelRoot.FindChild("Prefabs");
+		temporaryParent = levelRoot.FindChild("TemporaryObjects");	// see declaration above
+
 		doorPrefab = GetPrefab("Door");
 	}
 
@@ -465,6 +470,30 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			{
 				updaterContainer.AddComponent<PacmanBomberUpdater>();
 			}
+		}
+	}
+
+	public void ClearTempItems()
+	{
+		if (temporaryParent == null)
+		{
+			Debug.Log("PacmanLevelManager: No temporary items to clear.");
+			return;
+		}
+
+		Debug.Log("PacmanLevelManager: Clearing temporary items.");
+
+		// first delete temporary items
+
+		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
+		{
+			Destroy(temporaryParent.GetChild(i).gameObject);
+		}
+
+		// update tile item lists. all things parented to temporaryParent will be removed
+		foreach(PacmanTile tile in levelTiles)
+		{
+			tile.PruneTileItems();
 		}
 	}
 

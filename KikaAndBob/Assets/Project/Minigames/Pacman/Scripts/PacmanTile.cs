@@ -44,4 +44,18 @@ public class PacmanTile
 	{
 		return PacmanLevelManager.use.GetLevelRoot().position.v2() + location;
 	}
+
+	// will only leave behind non-null tileitems (e.g. temporary items that are cleared each round)
+	public void PruneTileItems()
+	{
+		List<GameObject> oldList = new List<GameObject>(tileItems);
+
+		tileItems.Clear();
+
+		foreach(GameObject tileItem in oldList)
+		{
+			if (tileItem != null)
+				tileItems.Add(tileItem);
+		}
+	}
 }
