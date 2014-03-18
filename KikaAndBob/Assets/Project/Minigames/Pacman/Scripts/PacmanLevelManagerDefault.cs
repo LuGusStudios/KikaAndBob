@@ -121,11 +121,13 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
+			levelParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(levelParent.GetChild(i).gameObject);
 		}
 		
 		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
 		{
+			pickupParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(pickupParent.GetChild(i).gameObject);
 		}
 		
@@ -139,6 +141,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				characterParent.GetChild(i).GetComponent<PacmanCharacter>().enabled = false;
 				characterParent.GetChild(i).gameObject.SetActive(false);
 			}
+
+			characterParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
 		#endif

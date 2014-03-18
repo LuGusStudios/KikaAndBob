@@ -46,8 +46,10 @@ public class PacmanBackgroundTiling : MonoBehaviour
 			#if UNITY_EDITOR
 			DestroyImmediate(transform.GetChild(i).gameObject);
 			#else
+			transform.gameObject.SetActive(false);
 			Destroy(transform.GetChild(i).gameObject);
 			#endif
+
 		}
 
 		Vector2 dimensions = backgroundSprite.bounds.size.v2();
