@@ -95,22 +95,21 @@ public class PacmanLavaTile : PacmanTileItem
 		
 		done = true;
 		
-		GameObject particleObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("FireParticles"));
-		ParticleSystem ps = particleObject.GetComponent<ParticleSystem>();
+		GameObject flameObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("FlameAnimation"));
 		Vector3 playerPos = PacmanGameManager.use.GetActivePlayer().transform.position.zAdd(-1f);
-		particleObject.transform.position = playerPos;
-		ps.Play();
+		flameObject.transform.position = playerPos;
+		flameObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+	
+		PacmanGameManager.use.GetActivePlayer().HideCharacter();
 		
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.5f);
 		
 		GameObject ashObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("AshPile"));
 		ashObject.transform.position = playerPos;
-		PacmanGameManager.use.GetActivePlayer().gameObject.SetActive(false);
+		ashObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+
+		yield return new WaitForSeconds(1.5f);
 		
-		
-		yield return new WaitForSeconds(1.0f);
-		
-		Destroy(ashObject, 1.0f);
 		PacmanGameManager.use.LoseLife();
 		
 		yield break;
@@ -120,8 +119,12 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 		while (true)
 		{
-			if (surroundingLavaTiles.Count >= 4)
+			if (surroundingLavaTiles.Count >= 4 || done)
 				yield break;
+
+			// don't want this continuing after winning or losing
+			while (!PacmanGameManager.use.gameRunning)
+				yield return null;
 
 			// first update the surroundingOpenTiles list. An other lava tile might already have started claiming it!
 			for (int i = surroundingOpenTiles.Count - 1; i >= 0; i--) 

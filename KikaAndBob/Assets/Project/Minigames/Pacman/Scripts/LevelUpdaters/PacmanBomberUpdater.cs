@@ -8,8 +8,7 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 	protected ParticleSystem explosionEffect = null;
 	protected GameObject bombPrefab = null;
 	protected bool running = false;
-	protected List<ChargedTile> chargedTiles = new List<ChargedTile>();
-	protected PacmanPlayerCharacter player = null;
+	protected List<PacmanTile> chargedTiles = new List<PacmanTile>();
 
 	protected class ChargedTile
 	{
@@ -41,7 +40,6 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 
 	public override void Activate()
 	{
-		player = (PacmanPlayerCharacter) FindObjectOfType(typeof(PacmanPlayerCharacter));
 		explosionEffect = PacmanLevelManager.use.GetPrefab("Explosion").GetComponent<ParticleSystem>();
 		bombPrefab = PacmanLevelManager.use.GetPrefab("Bomb");
 		running = true;
@@ -57,6 +55,8 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 		if (!running)
 			return;
 
+		PacmanPlayerCharacter player = PacmanGameManager.use.GetActivePlayer();
+
 		// place bombs
 		if (PacmanInput.use.GetAction1() && PacmanPickups.use.GetPickupAmount("Dynamite") >= 1)
 		{
@@ -64,9 +64,9 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 			PacmanPickups.use.ModifyPickupAmount("Dynamite", -1);
 
 			bool currentTileAlreadyCharged = false;
-			foreach(ChargedTile ctile in chargedTiles)
+			foreach(PacmanTile ctile in chargedTiles)
 			{
-				if (ctile.attachedTile == player.currentTile)
+				if (ctile == player.currentTile)
 				{
 					currentTileAlreadyCharged = true;
 					break;
@@ -75,43 +75,57 @@ public class PacmanBomberUpdater : PacmanLevelUpdater {
 			
 			if (!currentTileAlreadyCharged)
 			{
-				GameObject bomb = (GameObject) Instantiate(bombPrefab);
-				bomb.transform.parent = PacmanLevelManager.use.effectsParent;
-				bomb.transform.localPosition = player.currentTile.location;
+				GameObject bomb = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("DynamiteCharged"));
+				bomb.transform.position = player.currentTile.GetWorldLocation().v3().zAdd(-5.0f);
 
-				chargedTiles.Add(new ChargedTile(player.currentTile, bombTime, bomb));
+				PacmanDynamiteCharged charge = bomb.GetComponent<PacmanDynamiteCharged>();
+				charge.parentTile = player.currentTile;
+				charge.IsCounting(true);
+
+				player.currentTile.tileItems.Add(charge);
+
+	 			chargedTiles.Add(player.currentTile);
 			}
 		}
 
-		// update placed bombs
-		for (int i = 0; i < chargedTiles.Count; i++) 
+		for (int i = chargedTiles.Count - 1; i >= 0; i--)
 		{
-			ChargedTile ctile = chargedTiles[i];
-
-			ctile.UpdateCharge();
-
-			if (ctile.TimerDone())
+			if (chargedTiles[i] == null)
 			{
-				// remove bomb icon
-				Destroy(ctile.bombItem);
-
-				// display explosion effect and remove it after a few minutes
-				ParticleSystem ps = (ParticleSystem) Instantiate(explosionEffect);
-				ps.transform.parent = PacmanLevelManager.use.effectsParent;
-				ps.transform.localPosition = ctile.attachedTile.location;
-				ps.Play();
-				Destroy(ps.gameObject, 5);
-
-				// clear tiles around
-				foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(ctile.attachedTile))
-				{
-					Destroy(tile.rendered);
-					tile.tileType = PacmanTile.TileType.Open;
-				}
-
-				chargedTiles.Remove(ctile);
+				chargedTiles.Remove(chargedTiles[i]);
 			}
 		}
+				                                         
+
+//		// update placed bombs
+//		for (int i = 0; i < chargedTiles.Count; i++) 
+//		{
+//			ChargedTile ctile = chargedTiles[i];
+//
+//			ctile.UpdateCharge();
+//
+//			if (ctile.TimerDone())
+//			{
+//				// remove bomb icon
+//				Destroy(ctile.bombItem);
+//
+//				// display explosion effect and remove it after a few minutes
+//				ParticleSystem ps = (ParticleSystem) Instantiate(explosionEffect);
+//				ps.transform.parent = PacmanLevelManager.use.effectsParent;
+//				ps.transform.localPosition = ctile.attachedTile.location;
+//				ps.Play();
+//				Destroy(ps.gameObject, 5);
+//
+//				// clear tiles around
+//				foreach (PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(ctile.attachedTile))
+//				{
+//					Destroy(tile.rendered);
+//					tile.tileType = PacmanTile.TileType.Open;
+//				}
+//
+//				chargedTiles.Remove(ctile);
+//			}
+//		}
 	}
 }
 

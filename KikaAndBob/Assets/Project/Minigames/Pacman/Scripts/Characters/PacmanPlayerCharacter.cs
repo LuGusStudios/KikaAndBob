@@ -121,6 +121,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public override void Reset()
 	{
+		ShowCharacter();
 		gameObject.SetActive(true);
 		moving = false;
 		poweredUp = false;
@@ -497,7 +498,7 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	public void DoHitEffect()
 	{
-		if (hitRoutineBusy || PacmanGameManager.use.Paused)
+		if (hitRoutineBusy || PacmanGameManager.use.Paused || !PacmanGameManager.use.gameRunning)
 			return;
 
 		float duration = 1.5f;
@@ -510,9 +511,10 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 
 	protected IEnumerator HitRoutine(float duration)
 	{
+		hitRoutineBusy = true;
+
 		PacmanGameManager.use.LoseLife();
 
-		hitRoutineBusy = true;
 		PacmanGameManager.use.gameRunning = false;
 
 		characterAnimator.PlayAnimation(characterAnimator.hitAnimation);

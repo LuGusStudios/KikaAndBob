@@ -394,7 +394,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemPrefab == null)
 			{
 				Debug.LogError("Did not find tile item ID: " + definition.id);
-				return;
+				continue;
 			}
 
 			PacmanTile targetTile = GetTile(definition.tileCoordinates, false);
@@ -473,33 +473,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 	}
 
-//	public void ClearTempItems()
-//	{
-//		if (temporaryParent == null)
-//		{
-//			Debug.Log("PacmanLevelManager: No temporary items to clear.");
-//			return;
-//		}
-//
-//		Debug.Log("PacmanLevelManager: Clearing temporary items.");
-//
-//		// first delete temporary items
-//
-//		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
-//		{
-//			Destroy(temporaryParent.GetChild(i).gameObject);
-//		}
-//		
-//		// update tile item lists. all things parented to temporaryParent will be removed
-//
-//		for (int i = 0; i < levelTiles.GetLength(0); i++) 
-//		{
-//			for (int j = 0; j < levelTiles.GetLength(1); j++) 
-//			{
-//				levelTiles[i, j].PruneTileItems();
-//			}
-//		}
-//	}
+	public void ClearTempItems()
+	{
+		if (temporaryParent == null)
+		{
+			Debug.Log("PacmanLevelManager: No temporary items to clear.");
+			return;
+		}
+
+		Debug.Log("PacmanLevelManager: Clearing temporary items.");
+
+		// many of these can already have been destroyed by the ResetTiles method
+		// other things, not associated with one particular tile, gets removed here
+
+		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
+		{
+			Destroy(temporaryParent.GetChild(i).gameObject);
+		}
+	}
 
 	public void ResetTiles()
 	{

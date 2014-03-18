@@ -179,6 +179,8 @@ public class PacmanGameManagerDefault : IGameManager {
 	{
 		PacmanLevelManager.use.ResetTiles();
 
+		PacmanLevelManager.use.ClearTempItems();
+
 		ResetPlayerChars();
 
 		ResetEnemies();
