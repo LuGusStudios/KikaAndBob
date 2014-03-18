@@ -425,9 +425,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
                     tileItemScript.linkedId = definition.linkedId;
 			    }
                 tileItemScripts.Add(tileItemScript);
+
+				targetTile.tileItems.Add(tileItemScript);
 			}
-            
-			targetTile.tileItems.Add(tileItem);
 		}
 
         foreach (PacmanTileItem tileItemScript in tileItemScripts)
@@ -473,27 +473,42 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		}
 	}
 
-	public void ClearTempItems()
+//	public void ClearTempItems()
+//	{
+//		if (temporaryParent == null)
+//		{
+//			Debug.Log("PacmanLevelManager: No temporary items to clear.");
+//			return;
+//		}
+//
+//		Debug.Log("PacmanLevelManager: Clearing temporary items.");
+//
+//		// first delete temporary items
+//
+//		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
+//		{
+//			Destroy(temporaryParent.GetChild(i).gameObject);
+//		}
+//		
+//		// update tile item lists. all things parented to temporaryParent will be removed
+//
+//		for (int i = 0; i < levelTiles.GetLength(0); i++) 
+//		{
+//			for (int j = 0; j < levelTiles.GetLength(1); j++) 
+//			{
+//				levelTiles[i, j].PruneTileItems();
+//			}
+//		}
+//	}
+
+	public void ResetTiles()
 	{
-		if (temporaryParent == null)
+		for (int i = 0; i < levelTiles.GetLength(0); i++) 
 		{
-			Debug.Log("PacmanLevelManager: No temporary items to clear.");
-			return;
-		}
-
-		Debug.Log("PacmanLevelManager: Clearing temporary items.");
-
-		// first delete temporary items
-
-		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
-		{
-			Destroy(temporaryParent.GetChild(i).gameObject);
-		}
-
-		// update tile item lists. all things parented to temporaryParent will be removed
-		foreach(PacmanTile tile in levelTiles)
-		{
-			tile.PruneTileItems();
+			for (int j = 0; j < levelTiles.GetLength(1); j++) 
+			{
+				levelTiles[i, j].ResetTile();
+			}
 		}
 	}
 

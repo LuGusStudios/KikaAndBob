@@ -48,7 +48,7 @@ public class PacmanLavaTile : PacmanTileItem
 		{
 			bool isOpenTile = true;
 			
-			foreach (GameObject tileItem in tile.tileItems)
+			foreach (PacmanTileItem tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
@@ -123,10 +123,10 @@ public class PacmanLavaTile : PacmanTileItem
 			if (surroundingLavaTiles.Count >= 4)
 				yield break;
 
-			// first update the surroundingOpenTiles list. An other lava might already have started claiming it!
+			// first update the surroundingOpenTiles list. An other lava tile might already have started claiming it!
 			for (int i = surroundingOpenTiles.Count - 1; i >= 0; i--) 
 			{
-				foreach (GameObject tileItem in surroundingOpenTiles[i].tileItems)
+				foreach (PacmanTileItem tileItem in surroundingOpenTiles[i].tileItems)
 				{
 					if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 					{
@@ -155,17 +155,24 @@ public class PacmanLavaTile : PacmanTileItem
 						newLavaTileObject.transform.parent = this.transform.parent;
 					}
 					
-					surroundingLavaTiles.Add(tile);
-					tile.tileItems.Add(newLavaTileObject);
-					
 					PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
 					newLavaTile.parentTile = tile;
 					newLavaTile.originLavaTile = this;
+
+
+					surroundingLavaTiles.Add(tile);
+					tile.tileItems.Add(newLavaTile);
+
 					newLavaTile.Initialize();
 			}
 
 			yield return new WaitForSeconds(updateCheckSpeed);
 		}
+	}
+
+	public override void Reset ()
+	{
+		RegisterSurroundingTiles();
 	}
 
     public override void OnTryEnter(PacmanCharacter character)

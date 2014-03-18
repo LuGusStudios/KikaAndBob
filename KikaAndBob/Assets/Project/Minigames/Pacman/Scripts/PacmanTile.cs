@@ -25,8 +25,9 @@ public class PacmanTile
 	public Vector2 location;
 	public Vector2 gridIndices;
 	public int exitCount;
-	public List<GameObject> tileItems = new List<GameObject>();
-	
+	public List<PacmanTileItem> tileItems = new List<PacmanTileItem>();
+	//public List<GameObject> tileItems = new List<GameObject>();
+
 	public PacmanTile()
 	{
 		tileType = TileType.Open;
@@ -45,17 +46,40 @@ public class PacmanTile
 		return PacmanLevelManager.use.GetLevelRoot().position.v2() + location;
 	}
 
+	public void ResetTile()
+	{
+		PruneTileItems();
+		ResetTileItems();
+	}
+
 	// will only leave behind non-null tileitems (e.g. temporary items that are cleared each round)
 	public void PruneTileItems()
 	{
-		List<GameObject> oldList = new List<GameObject>(tileItems);
+		if (PacmanLevelManager.use.temporaryParent == null)
+			return;
+
+		List<PacmanTileItem> oldList = new List<PacmanTileItem>(tileItems);
 
 		tileItems.Clear();
 
-		foreach(GameObject tileItem in oldList)
+		foreach(PacmanTileItem tileItem in oldList)
 		{
-			if (tileItem != null)
+			if (tileItem != null && tileItem.transform.parent != PacmanLevelManager.use.temporaryParent)
+			{
 				tileItems.Add(tileItem);
+			}
+			else
+			{
+				GameObject.Destroy(tileItem.gameObject);
+			}
+		}
+	}
+
+	public void ResetTileItems()
+	{
+		foreach(PacmanTileItem tileItem in tileItems)
+		{
+			tileItem.Reset();
 		}
 	}
 }

@@ -177,7 +177,7 @@ public class PacmanGameManagerDefault : IGameManager {
 	// starts new round in the same level
 	public void StartNewRound()
 	{
-		PacmanLevelManager.use.ClearTempItems();
+		PacmanLevelManager.use.ResetTiles();
 
 		ResetPlayerChars();
 

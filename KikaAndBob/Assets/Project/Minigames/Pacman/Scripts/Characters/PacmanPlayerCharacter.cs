@@ -225,19 +225,31 @@ public class PacmanPlayerCharacter : PacmanCharacter {
         base.MoveTo(target);
 
         //Send teleport event out
-        foreach (GameObject go in target.tileItems)
+
+		// altered by Kasper
+//        foreach (GameObject go in target.tileItems)
+//        {
+//            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+//            {
+//                if (OnTeleported != null)
+//                {
+//                    OnTeleported(target);
+//                    Debug.Log("TELEPORT on " + target.location); 
+//                }
+//            }
+//        }
+
+        foreach (PacmanTileItem tileItem in target.tileItems)
         {
-            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+			if (tileItem.GetComponent<PacmanTileItemTeleport>() != null)
             {
                 if (OnTeleported != null)
                 {
                     OnTeleported(target);
                     Debug.Log("TELEPORT on " + target.location); 
                 }
-
-                
             }
-        }
+        }		
     }
 
     // Effects per tile
@@ -251,12 +263,19 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		}
 
 		// check all sorts things placed on this tile
-		foreach(GameObject go in currentTile.tileItems)
+
+		// altered by Kasper
+//		foreach(GameObject go in currentTile.tileItems)
+//		{
+//			if (go.GetComponent<PacmanTileItem>() != null)
+//			{
+//				go.GetComponent<PacmanTileItem>().OnEnter(this);
+//			}
+//		}
+
+		foreach(PacmanTileItem tileItem in currentTile.tileItems)
 		{
-			if (go.GetComponent<PacmanTileItem>() != null)
-			{
-				go.GetComponent<PacmanTileItem>().OnEnter(this);
-			}
+			tileItem.OnEnter(this);
 		}
 
 		if (currentTile.tileType == PacmanTile.TileType.Pickup)
@@ -396,12 +415,19 @@ public class PacmanPlayerCharacter : PacmanCharacter {
 		if (inspectedTile != null)
 		{
 			// first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
-			foreach(GameObject go in inspectedTile.tileItems)
+
+			// altered by Kasper
+//			foreach(GameObject go in inspectedTile.tileItems)
+//			{
+//				if (go.GetComponent<PacmanTileItem>() != null)
+//				{
+//					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//				}
+//			}
+
+			foreach(PacmanTileItem tileItem in inspectedTile.tileItems)
 			{
-				if (go.GetComponent<PacmanTileItem>() != null)
-				{
-					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
-				}
+				tileItem.OnTryEnter(this);
 			}
 
 			if (IsEnemyWalkable(inspectedTile))

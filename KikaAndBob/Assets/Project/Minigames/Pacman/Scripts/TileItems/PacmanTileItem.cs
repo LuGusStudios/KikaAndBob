@@ -50,4 +50,9 @@ public class PacmanTileItem : MonoBehaviour
     {
         
     }
+
+	public virtual void Reset()
+	{
+
+	}
 }

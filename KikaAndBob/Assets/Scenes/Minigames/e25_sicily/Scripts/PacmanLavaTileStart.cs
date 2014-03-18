@@ -69,7 +69,7 @@ public class PacmanLavaTileStart : PacmanTileItem
 		{
 			bool isOpenTile = true;
 			
-			foreach (GameObject tileItem in tile.tileItems)
+			foreach (PacmanTileItem tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
@@ -155,6 +155,12 @@ public class PacmanLavaTileStart : PacmanTileItem
 		newLavaTileObject.transform.position += new Vector3(0, 0, -0.2f);
 
 		newLavaTileObject.name = "LavaTile" + parentTile.ToString();	// might as well assign a name to prevent "Name(Clone)(Clone)(Clone)(Clone)(Clone)" ...
+
+		// we dont want to copy the original lava tile's particle effect - this indicates the 'origin' lava tile
+		// this will basically only happen for the first 'generation' of child lava tiles
+
+		if (newLavaTileObject.GetComponentInChildren<ParticleSystem>() != null)
+			Destroy(newLavaTileObject.GetComponentInChildren<ParticleSystem>().gameObject);
 	
 		if (PacmanLevelManager.use.temporaryParent != null)
 		{
@@ -170,8 +176,9 @@ public class PacmanLavaTileStart : PacmanTileItem
 		done = true;	// set this true so the lava tile created below will be the one the player can 'die' on
 		PacmanLavaTile newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTile>();
 		newLavaTile.parentTile = parentTile;
-		parentTile.tileItems.Add(newLavaTile.gameObject);
-		parentTile.tileItems.Remove(this.gameObject);
+
+		parentTile.tileItems.Add(newLavaTile);
+		parentTile.tileItems.Remove(this);
 
 
 		newLavaTile.RegisterSurroundingTiles();
