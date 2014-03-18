@@ -16,7 +16,8 @@ public class PacmanTile
 		EnemyAvoid,
 		Door,
 		Upgrade,
-		Lethal
+		Lethal,
+        Hide
 	}
 
 	public GameObject rendered;

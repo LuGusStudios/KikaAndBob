@@ -12,7 +12,7 @@ public class PacmanDynamite : PacmanTileItem
 		PacmanPickups.use.RegisterPickup(id);
 	}
 
-	public override void OnEnter ()
+	public override void OnEnter (PacmanCharacter character)
 	{
 		if (pickedUp)
 			return;

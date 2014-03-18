@@ -7,6 +7,8 @@ public class RunnerProjectileDropper : MonoBehaviour
 	public GameObject projectile = null;
 	public DataRange timeBetweenProjectiles = new DataRange( 1.0f, 3.0f );
 
+	protected ILugusCoroutineHandle spawnHandle = null;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -24,7 +26,8 @@ public class RunnerProjectileDropper : MonoBehaviour
 		if( !this.enabled ) 
 			return;
 
-		LugusCoroutines.use.StartRoutine( ShootRoutine() );
+		OnDisable();
+		spawnHandle = LugusCoroutines.use.StartRoutine( ShootRoutine() );
 	}
 	
 	protected void Awake()
@@ -35,6 +38,15 @@ public class RunnerProjectileDropper : MonoBehaviour
 	protected void Start () 
 	{
 		SetupGlobal();
+	}
+
+	public void OnDisable()
+	{
+		if( spawnHandle != null )
+		{
+			spawnHandle.StopRoutine();
+			spawnHandle = null;
+		}
 	}
 	
 	protected void Update () 
@@ -49,7 +61,9 @@ public class RunnerProjectileDropper : MonoBehaviour
 			GameObject newProjectile = (GameObject) GameObject.Instantiate( projectile );
 			newProjectile.transform.position = this.transform.position.xAdd( Random.Range(-0.5f, 0.5f) ).yAdd( -0.3f ).zAdd( -1.0f );
 
-			GameObject.Destroy( newProjectile, 20.0f );
+			newProjectile.transform.parent = this.transform;
+
+			//GameObject.Destroy( newProjectile, 20.0f );
 
 			yield return new WaitForSeconds( timeBetweenProjectiles.Random () );
 		}

@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a57edb2d87cb34ba1d7457b1eafec2, type: 3}
+  m_Name: Cuba02
+  m_EditorClassIdentifier: 
+  backgroundMusicName: 
+  levelPostFix: 1
+  lanes:
+  - laneID: LaneSidewalk
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Rock01
+      positioning: .300000012
+    - spawnID: Carwreck01
+      positioning: .899999976
+  - laneID: LaneStreet
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: CubanCar
+      positioning: 0
+    - spawnID: ManholeCover
+      positioning: .200000003
+    - spawnID: Manhole
+      positioning: .699999988
+  - laneID: LaneGrass
+    goRight: 1
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Palm03
+      positioning: .600000024
+    - spawnID: Palm02
+      positioning: .800000012
+    - spawnID: Cigar01
+      positioning: .699999988
+  - laneID: LaneSand01
+    goRight: 0
+    speed: 4
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Bomber
+      positioning: 0
+  - laneID: LaneSand02
+    goRight: 1
+    speed: 2
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Crab
+      positioning: 0
+    - spawnID: Rock02
+      positioning: .899999976
+  - laneID: LaneWater
+    goRight: 1
+    speed: 1.5
+    minGapDistance: 4
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 1
+    spawnItems:
+    - spawnID: TurtleWater
+      positioning: 0
+  - laneID: LaneSand02
+    goRight: 0
+    speed: 3
+    minGapDistance: 3
+    maxGapDistance: 6
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems:
+    - spawnID: Landmine
+      positioning: .600000024
+    - spawnID: Carwreck03
+      positioning: .800000012
+  - laneID: LaneStreet
+    goRight: 1
+    speed: 1.5
+    minGapDistance: 10
+    maxGapDistance: 10
+    repeatAllowFactor: .200000003
+    backgroundScrollingSpeed: 0
+    spawnItems: []

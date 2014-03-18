@@ -19,10 +19,10 @@ public class PacmanLavaTileStart : PacmanTileItem
 	protected void Update()
 	{
 		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
-			OnEnter();
+			LugusCoroutines.use.StartRoutine(BurnUp());
 	}
 
-	public override void OnEnter ()
+    public override void OnEnter(PacmanCharacter character)
 	{
 		if (done)	// serves both to only call this once AND to make sure it doesn't run anymore once the proper lava tile is present
 			return;

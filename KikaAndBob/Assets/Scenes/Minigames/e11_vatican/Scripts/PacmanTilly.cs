@@ -20,7 +20,7 @@ public class PacmanTilly :  PacmanTileItem
 		}
 	}
 
-	public override void OnEnter ()
+    public override void OnEnter(PacmanCharacter character)
 	{
 			PacmanGameManager.use.WinGame();
 			TillyFly();
