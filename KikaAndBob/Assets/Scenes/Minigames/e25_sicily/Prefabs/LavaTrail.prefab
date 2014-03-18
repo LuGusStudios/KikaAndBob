@@ -24,7 +24,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.8014183, y: -3.36939764, z: -99.9994965}
+  m_LocalPosition: {x: 2.61268854, y: 11.7561407, z: -99.9994965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -50,12 +50,12 @@ TrailRenderer:
   m_SortingOrder: 0
   m_SortingLayerID: 0
   m_Time: 5
-  m_StartWidth: .899999976
+  m_StartWidth: 0
   m_EndWidth: .899999976
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 16777215
+      rgba: 4294967295
     m_Color[1]:
       serializedVersion: 2
       rgba: 4294967295
@@ -67,8 +67,8 @@ TrailRenderer:
       rgba: 4294967295
     m_Color[4]:
       serializedVersion: 2
-      rgba: 16777215
-  m_MinVertexDistance: .100000001
+      rgba: 4294967295
+  m_MinVertexDistance: .0500000007
   m_Autodestruct: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -82,6 +82,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originLavaTile: {fileID: 0}
+  lava1Way: {fileID: 21300000, guid: 62ac92a8155c21245af004bbcbe34eb2, type: 3}
+  lava2WayStraight: {fileID: 21300000, guid: 77c174448404ac74288045d53cebb1f9, type: 3}
+  lava2WayCorner: {fileID: 21300000, guid: 68cb6697b4c1ee74f8cc6cdd6bb7226d, type: 3}
+  lava3Way: {fileID: 21300000, guid: 74f5e913262995e448a55b04a672e9d4, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

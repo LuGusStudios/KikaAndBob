@@ -23,7 +23,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public int height = 13;
 	public float scale = 64;
 	public float wallTileScaleFactor = 0.6f;
-	public float pickupScaleFactor = 0.15f;
+	public float pickupScaleFactor = 0.15f; 
 	
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
@@ -101,7 +101,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public void ClearLevel()
 	{
-		#if UNITY_EDITOR
+		/*#if UNITY_EDITOR
 		Debug.Log("Clearing level (playing in editor).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
@@ -117,7 +117,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			DestroyImmediate(characterParent.GetChild(i).gameObject);
 		}
-		#else
+		#else*/
 		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
@@ -145,7 +145,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			characterParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
-		#endif
+		//#endif
 	}
 
 	// only used for testing and for quickly building a level
@@ -414,6 +414,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemScript != null)
 			{
 				tileItemScript.parentTile = targetTile;
+
                 if (!string.IsNullOrEmpty(definition.uniqueId) )
 			    {
 			        tileItemScript.uniqueId = definition.uniqueId;
@@ -449,11 +450,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			updaters[i].Deactivate();
 
-			#if UNITY_EDITOR
+			/*#if UNITY_EDITOR
 			DestroyImmediate(updaters[i]);
-			#else
+			#else*/
 			Destroy(updaters[i]);
-			#endif
+			//#endif
 
 		}
 
@@ -462,6 +463,11 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (id == "DoorUpdater" && updaterContainer.GetComponent<DoorUpdater>() == null)
 			{
 				updaterContainer.AddComponent<DoorUpdater>();
+			}
+
+			if (id == "BomberUpdater" && updaterContainer.GetComponent<PacmanBomberUpdater>() == null)
+			{
+				updaterContainer.AddComponent<PacmanBomberUpdater>();
 			}
 		}
 	}

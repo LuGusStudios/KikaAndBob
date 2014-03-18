@@ -153,6 +153,15 @@ public class PacmanGameManagerDefault : IGameManager {
 
 		gameRunning = true;
 
+
+		IPacmanSpecificConfig[] configs = GetComponents<IPacmanSpecificConfig>();
+
+		foreach(IPacmanSpecificConfig config in configs)
+		{
+			config.DoSetup();
+		}
+
+
 		Debug.Log("Finished starting up new level.");
 	}
 

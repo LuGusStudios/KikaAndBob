@@ -43,12 +43,12 @@ public class PacmanBackgroundTiling : MonoBehaviour
 		// TO DO: avoid this if not necessary? only do once?
 		for (int i = transform.childCount - 1; i >= 0; i--) 
 		{
-			#if UNITY_EDITOR
+			/*#if UNITY_EDITOR
 			DestroyImmediate(transform.GetChild(i).gameObject);
-			#else
+			#else*/
 			transform.gameObject.SetActive(false);
 			Destroy(transform.GetChild(i).gameObject);
-			#endif
+			//#endif
 
 		}
 
