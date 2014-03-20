@@ -67,8 +67,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 		{
 			Debug.LogError("Missing character animator on: " + gameObject.name);
 		}
-	    characterSpriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
-	    characterSkinnedMeshRenderers = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+	    characterSpriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
+	    characterSkinnedMeshRenderers = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
 	}
 
 	public virtual void SetUpGlobal()
@@ -304,6 +304,7 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
     public void ShowCharacter()
     {
+		Debug.Log("Showing character: " + gameObject.name);
         foreach (SpriteRenderer spriteRenderer in characterSpriteRenderers)
         {
             spriteRenderer.enabled = true;
@@ -317,6 +318,8 @@ public abstract class PacmanCharacter : MonoBehaviour {
 
     public void HideCharacter()
     {
+		Debug.Log("Hiding character: " + gameObject.name);
+
         foreach (SpriteRenderer spriteRenderer in characterSpriteRenderers)
         {
             spriteRenderer.enabled = false;

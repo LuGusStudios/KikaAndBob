@@ -288,13 +288,21 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         //When the patrol guard enters a trap kill itself
         if (currentTile.tileType == PacmanTile.TileType.Lethal)
         {
-            foreach (GameObject go in currentTile.tileItems)
-            {
-                if (go.GetComponent<PacmanTileItem>() != null)
-                {
-                    go.GetComponent<PacmanTileItem>().OnEnter(this);
-                }
-            }
+			// altered by Kasper
+//            foreach (GameObject go in currentTile.tileItems)
+//            {
+//                if (go.GetComponent<PacmanTileItem>() != null)
+//                {
+//                    go.GetComponent<PacmanTileItem>().OnEnter(this);
+//                }
+//            }
+
+			foreach (PacmanTileItem tileItem in currentTile.tileItems)
+			{
+				tileItem.OnEnter(this);
+			}
+
+
             DefeatedEffect();
 
         }
@@ -331,12 +339,28 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
     }
     protected override void DoCurrentTileBehavior()
     {
-        foreach (GameObject go in currentTile.tileItems)
-        {
+		// altered by Kasper
+//        foreach (GameObject go in currentTile.tileItems)
+//        {
+//            //if the tile has a teleport tile item teleport and set to false
+//            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+//            {
+//                go.GetComponent<PacmanTileItemTeleport>().OnEnter(this);
+//                if (useTeleport)
+//                {
+//                    FollowTiles.Add(currentTile);
+//                }
+//                useTeleport = false;
+//                lockedSteps = 0;
+//            }
+//        }
+
+		foreach(PacmanTileItem tileItem in currentTile.tileItems)
+		{
             //if the tile has a teleport tile item teleport and set to false
-            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+			if (tileItem.gameObject.GetComponent<PacmanTileItemTeleport>() != null)
             {
-                go.GetComponent<PacmanTileItemTeleport>().OnEnter(this);
+				tileItem.gameObject.GetComponent<PacmanTileItemTeleport>().OnEnter(this);
                 if (useTeleport)
                 {
                     FollowTiles.Add(currentTile);
@@ -344,7 +368,8 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
                 useTeleport = false;
                 lockedSteps = 0;
             }
-        }
+		}
+
         // if we just teleported and hit the next non-teleport tile, we're done teleporting
         if (currentTile.tileType != PacmanTile.TileType.Teleport & alreadyTeleported)
         {
@@ -441,10 +466,16 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             {
                 
                 // check if any players are on the currently inspected tile and moving
-                foreach (GameObject tileItem in tile.tileItems)
-                {
-                    tileItem.GetComponent<PacmanTileItem>().OnTryEnter(this);
-                }
+				// altered by Kasper
+//                foreach (GameObject tileItem in tile.tileItems)
+//                {
+//                    tileItem.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//                }
+
+				foreach(PacmanTileItem tileItem in tile.tileItems)
+				{
+					tileItem.OnTryEnter(this);
+				}
             }
         }
     }
@@ -465,12 +496,19 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
     }
     public void DoCurrentTileLeaveBehavior()
     {
-        foreach (GameObject go in currentTile.tileItems)
-        {
-            if (go.GetComponent<PacmanTileItem>() != null)
-            {
-                go.GetComponent<PacmanTileItem>().OnLeave(this);
-            }
-        }
+
+		// altered by Kasper
+//        foreach (GameObject go in currentTile.tileItems)
+//        {
+//            if (go.GetComponent<PacmanTileItem>() != null)
+//            {
+//                go.GetComponent<PacmanTileItem>().OnLeave(this);
+//            }
+//        }
+
+		foreach(PacmanTileItem tileItem in currentTile.tileItems)
+		{
+			tileItem.OnLeave(this);
+		}
     }
 }

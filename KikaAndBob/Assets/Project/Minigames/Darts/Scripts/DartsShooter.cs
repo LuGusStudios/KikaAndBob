@@ -47,7 +47,7 @@ public class DartsShooter : MonoBehaviour
 		if( shooting )
 			return;
 
-		if( LugusInput.use.down )
+		if( LugusInput.use.down && DartsLevelConfiguration.use.GameRunning)
 		{
 			LugusCoroutines.use.StartRoutine( ShootRoutine() );
 		}
@@ -79,6 +79,8 @@ public class DartsShooter : MonoBehaviour
 		// move the shooter itself backwards to give impression it's the shooter being thrown and quickly replaced afterwards
 		Vector3 originalPosition = this.transform.localPosition;
 		this.gameObject.MoveTo( originalPosition + (transform.up * -2.0f) ).IsLocal(true).Time (0.1f).Execute();
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Jump01"));
 
 		yield return new WaitForSeconds(travelTime / 2.0f);
 		
@@ -121,7 +123,7 @@ public class DartsShooter : MonoBehaviour
 			
 			//Debug.Log (Time.frameCount + " MISSED ");
 
-			yield return new WaitForSeconds(3.0f);
+			//yield return new WaitForSeconds(3.0f);
 
 			GameObject.Destroy( bullet );
 		}
