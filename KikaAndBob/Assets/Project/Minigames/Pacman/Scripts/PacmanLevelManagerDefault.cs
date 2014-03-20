@@ -101,23 +101,53 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 
 	public void ClearLevel()
 	{
-		/*#if UNITY_EDITOR
+		#if UNITY_EDITOR
 		Debug.Log("Clearing level (playing in editor).");
-		for (int i = levelParent.childCount - 1; i >= 0; i--) 
+		if (Application.isPlaying)
 		{
-			DestroyImmediate(levelParent.GetChild(i).gameObject);
+			for (int i = levelParent.childCount - 1; i >= 0; i--)
+			{
+				levelParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(levelParent.GetChild(i).gameObject);
+			}
+
+			for (int i = pickupParent.childCount - 1; i >= 0; i--)
+			{
+				pickupParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(pickupParent.GetChild(i).gameObject);
+			}
+
+			for (int i = characterParent.childCount - 1; i >= 0; i--)
+			{
+				if (characterParent.GetChild(i).GetComponent<PacmanCharacter>() != null)
+				{
+					characterParent.GetChild(i).GetComponent<PacmanCharacter>().enabled = false;
+					characterParent.GetChild(i).gameObject.SetActive(false);
+				}
+
+				characterParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(characterParent.GetChild(i).gameObject);
+			}
+		}
+		else
+		{
+			for (int i = levelParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(levelParent.GetChild(i).gameObject);
+			}
+
+			for (int i = pickupParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(pickupParent.GetChild(i).gameObject);
+			}
+
+			for (int i = characterParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(characterParent.GetChild(i).gameObject);
+			}
 		}
 		
-		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(pickupParent.GetChild(i).gameObject);
-		}
-		
-		for (int i = characterParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(characterParent.GetChild(i).gameObject);
-		}
-		#else*/
+		#else
 		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
@@ -145,7 +175,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			characterParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
-		//#endif
+		#endif
 	}
 
 	// only used for testing and for quickly building a level
@@ -450,11 +480,18 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			updaters[i].Deactivate();
 
-			/*#if UNITY_EDITOR
-			DestroyImmediate(updaters[i]);
-			#else*/
+			#if UNITY_EDITOR
+			if (Application.isPlaying)
+			{
+				Destroy(updaters[i]);
+			}
+			else
+			{
+				DestroyImmediate(updaters[i]);
+			}
+			#else
 			Destroy(updaters[i]);
-			//#endif
+			#endif
 
 		}
 

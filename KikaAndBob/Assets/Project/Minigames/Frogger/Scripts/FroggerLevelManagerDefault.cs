@@ -71,21 +71,33 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 	public void ClearLevel()
 	{
-		/*
 		#if UNITY_EDITOR
 		// clear existing level
-		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+		if (Application.isPlaying)
 		{
-			DestroyImmediate(lanesRoot.GetChild(i).gameObject);
+			for (int i = lanesRoot.childCount - 1; i >= 0; i--)
+			{
+				lanesRoot.GetChild(i).gameObject.SetActive(false);
+				Destroy(lanesRoot.GetChild(i).gameObject);
+			}
 		}
+		else
+		{
+			for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
+			{
+				DestroyImmediate(lanesRoot.GetChild(i).gameObject);
+			}
+		}
+
 		#else
-		*/
+		
 		for (int i = lanesRoot.childCount - 1; i >= 0; i--) 
 		{
 			lanesRoot.GetChild(i).gameObject.SetActive(false);
 			Destroy(lanesRoot.GetChild(i).gameObject);
 		}
-		//#endif
+
+		#endif
 	}
 
 	public void BuildLevel(FroggerLevelDefinition level)
