@@ -115,6 +115,7 @@ public class LevelLoaderDefault
 			return RunnerCrossSceneInfo.use;
 		}
 		else if (Application.loadedLevelName == "e01_kenia"
+			|| Application.loadedLevelName == "e07_france"
 			|| Application.loadedLevelName == "e17_greenland"
 			|| Application.loadedLevelName == "e18_amsterdam"
 			|| Application.loadedLevelName == "e21_cuba")

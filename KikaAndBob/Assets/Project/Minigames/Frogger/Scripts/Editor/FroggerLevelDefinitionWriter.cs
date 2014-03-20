@@ -8,7 +8,7 @@ using UnityEditor;
 [CustomEditor(typeof(FroggerLevelDefinition))]
 public class FroggerLevelDefinitionWriter : LevelDefinitionWriter
 {
-	protected override void SaveConfig()
+	protected override void SaveConfig(string saveLocation)
 	{
 		FroggerLevelDefinition level = (FroggerLevelDefinition)target;
 
