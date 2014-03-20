@@ -8,6 +8,22 @@ public class PacmanDynamiteCharged : PacmanTileItem
 	protected float timer = 0.0f;
 	protected float chargeTime = 1.0f;
 	protected bool isCounting = false;
+	protected ParticleSystem fuseParticles = null;
+
+	public override void SetupLocal ()
+	{
+		base.SetupLocal ();
+
+		if (fuseParticles == null)
+		{
+			fuseParticles = GetComponentInChildren<ParticleSystem>();
+		}
+
+		if (fuseParticles == null)
+		{
+			Debug.Log("PacmanDynamiteCharged: Missing fuse particles.");
+		}
+	}
 
 	protected void Update()
 	{
@@ -42,6 +58,8 @@ public class PacmanDynamiteCharged : PacmanTileItem
 			Debug.LogError("PacmanDynamiteCharged: Parent tile was null");
 			yield break;
 		}
+
+		fuseParticles.Play();
 
 		GameObject explosion = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("DynamiteExplosion"));
 		explosion.transform.position = parentTile.GetWorldLocation().v3().zAdd(-5.0f);

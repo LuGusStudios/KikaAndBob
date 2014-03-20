@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PacmanBomberUpdater : PacmanLevelUpdater {
-
+public class PacmanBomberUpdater : PacmanLevelUpdater 
+{
 	public float bombTime = 5;
 	protected ParticleSystem explosionEffect = null;
 	protected GameObject bombPrefab = null;

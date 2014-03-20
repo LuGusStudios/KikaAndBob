@@ -98,7 +98,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdatePickupCounter(int newValue)
 	{ 
-		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Audio("PickupSound").Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
 		//HUDManager.use.CounterLargeRight1.SetValue(newValue, false);
 	}
 

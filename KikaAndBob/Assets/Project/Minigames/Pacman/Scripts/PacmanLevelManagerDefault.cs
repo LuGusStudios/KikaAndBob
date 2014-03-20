@@ -21,7 +21,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanLevelDefinition[] levels = null;
 	public int width = 13;
 	public int height = 13;
-	public float scale = 64;
+	public float scale = 1;
 	public float wallTileScaleFactor = 0.6f;
 	public float pickupScaleFactor = 0.15f; 
 	
