@@ -309,6 +309,11 @@ public class RunnerManagerDefault : IGameManager
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 			
 			AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+			if( background == LugusResources.use.errorAudio )
+			{
+				background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background2");
+			}
+
 			if( background != LugusResources.use.errorAudio ) 
 			{
 				
