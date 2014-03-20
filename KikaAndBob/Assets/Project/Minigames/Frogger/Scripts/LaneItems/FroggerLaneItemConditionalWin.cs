@@ -26,7 +26,7 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		{
 			if (requiredPickups == null)
 			{
-				requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+				FindRequiredPickups();
 			}
 
 			return requiredPickups;
@@ -49,8 +49,8 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 
 		// Find all of the required pickups in the scene
 		if (requiredPickups == null)
-		{ 
-			requiredPickups = new List<FroggerRequiredPickup>(GameObject.FindObjectsOfType<FroggerRequiredPickup>());
+		{
+			FindRequiredPickups();
 		}
 
 		// Find the bone animation, and start the idle animation
@@ -79,6 +79,26 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 	private void Start () 
 	{
 		SetupGlobal();
+	}
+
+	protected void FindRequiredPickups()
+	{
+		//GameObject.FindObjectOfType(typeof(FroggerRequiredPickup))
+		FroggerRequiredPickup[] pickups = GameObject.FindObjectsOfType<FroggerRequiredPickup>();
+
+		Debug.LogError("Length of found pickups: " + pickups.Length);
+
+		requiredPickups = new List<FroggerRequiredPickup>();
+
+		foreach (FroggerRequiredPickup pickup in pickups)
+		{
+			if (!requiredPickups.Contains(pickup))
+			{
+				requiredPickups.Add(pickup);
+			}
+
+			Debug.Log("Found pickup at position: " + pickup.transform.position.x + ", " + pickup.transform.position.y);
+		}
 	}
 
 	protected override void EnterSurfaceEffect(FroggerCharacter character)
