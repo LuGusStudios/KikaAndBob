@@ -45,6 +45,20 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterLargeRight1.gameObject.SetActive(true);
 		HUDManager.use.CounterLargeRight1.commodity = KikaAndBob.CommodityType.Feather;
 		HUDManager.use.CounterLargeRight1.SetValue(0);
+
+		// Make a custom counter for required pick ups
+		FroggerLaneItemConditionalWin cWin = GameObject.FindObjectOfType<FroggerLaneItemConditionalWin>();
+		if (cWin != null)
+		{
+			HUDManager.use.CounterLargeRight2.gameObject.SetActive(true);
+			HUDManager.use.CounterLargeRight2.commodity = KikaAndBob.CommodityType.Custom;
+			HUDManager.use.CounterLargeRight2.suffix = "/" + cWin.RequiredPickups.Count;
+			HUDManager.use.CounterLargeRight2.SetValue(0);
+
+			// Custom icon
+			HUDManager.use.CounterLargeRight2.icon.sprite = cWin.pickupIcon;
+			HUDManager.use.CounterLargeRight2.icon.enabled = true;
+		}
 	}
 
 	public void GameWon(float timer, int pickupCount, int scoreTotal)

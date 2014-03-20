@@ -59,7 +59,7 @@ public interface IRunnerCharacterController_Skiing
 public class RunnerCharacterController : MonoBehaviour 
 {
 	private static IRunnerCharacterController _use = null;
-	
+
 	public static void Reset()
 	{
 		_use = null;

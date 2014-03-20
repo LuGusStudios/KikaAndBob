@@ -331,14 +331,14 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		{
 			if( LugusInput.use.Key(KeyCode.LeftArrow) )
 			{
-				if( !left && (Time.time - leftStartTime < 0.3f) )
-				{
+				//if( !left && (Time.time - leftStartTime < 0.3f) )
+				//{
 					// dash to the left
-					Debug.LogWarning("DASH LEFT");
-					horizontalSpeedBoost = 500.0f;
-				}
+					//Debug.LogWarning("DASH LEFT");
+					//horizontalSpeedBoost = 500.0f;
+				//}
 
-				leftStartTime = Time.time;
+				//leftStartTime = Time.time;
 
 				left = true;
 			}
@@ -354,14 +354,14 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		{
 			if( LugusInput.use.Key(KeyCode.RightArrow) )
 			{
-				if( !right && (Time.time - rightStartTime < 0.3f) )
-				{
+				//if( !right && (Time.time - rightStartTime < 0.3f) )
+				//{
 					// dash to the right
-					Debug.LogWarning("DASH RIGHT");
-					horizontalSpeedBoost = 500.0f;
-				}
+					//Debug.LogWarning("DASH RIGHT");
+					//horizontalSpeedBoost = 500.0f;
+				//}
 				
-				rightStartTime = Time.time;
+				//rightStartTime = Time.time;
 
 				right = true;
 			}

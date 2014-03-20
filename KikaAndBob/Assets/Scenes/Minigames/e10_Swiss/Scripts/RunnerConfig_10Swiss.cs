@@ -46,10 +46,10 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
-		character.speedRange = new DataRange(10,10);
+		character.speedRange = new DataRange(7,10);
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.1f, 1.0f ); 
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f ); 
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,5);
 
 		RunnerManager.use.targetDistance = 600.0f;
@@ -59,10 +59,10 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
-		character.speedRange = new DataRange(10,14);
+		character.speedRange = new DataRange(8,13);
 		character.timeToMaxSpeed = 90;
 		RunnerInteractionManager.use.timeToMax = 90;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );   
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		
 		RunnerManager.use.targetDistance = 900.0f; 
@@ -72,10 +72,10 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 	{
 		RunnerCharacterControllerSkiing character = RunnerCharacterControllerSkiing.use;
 		
-		character.speedRange = new DataRange(14,17);
-		character.timeToMaxSpeed = 60;
-		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.5f );  
+		character.speedRange = new DataRange(10,15);
+		character.timeToMaxSpeed = 90;
+		RunnerInteractionManager.use.timeToMax = 90;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.7f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
@@ -86,7 +86,7 @@ public class RunnerConfig_10Swiss : IRunnerConfig
 		DisableInteractionZones( inactiveZones );
 		*/
 		
-		RunnerManager.use.targetDistance = 1500.0f;
+		RunnerManager.use.targetDistance = 1200.0f;
 	}
 	
 	public void SetupGlobal()

@@ -7,6 +7,8 @@ public class ParallaxMover : MonoBehaviour
 	public Vector3 speed = Vector3.zero;
 	public IRunnerCharacterController character = null;
 
+	public bool move = true;
+
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -35,6 +37,9 @@ public class ParallaxMover : MonoBehaviour
 	
 	protected void Update () 
 	{
+		if( !move )
+			return;
+
 		Vector3 modifier = Vector3.one;
 		if( character != null )
 		{

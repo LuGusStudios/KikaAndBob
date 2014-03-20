@@ -44,7 +44,6 @@ public class FroggerLaneItemIceHole : FroggerLaneItemLethal
 
 		GameObject splashCopy = (GameObject)Instantiate(splash.gameObject);
 		splashCopy.transform.position = this.transform.position;
-		//splashCopy.transform.position = character.transform.position + new Vector3(0, 0, -10);
 		splashCopy.SetActive(true);
 
 		yield return new WaitForSeconds(0.8f);

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b28dfe5ee59229a42a5e1021d65930ff, type: 3}
+  m_Name: EnglandLevel04
+  m_EditorClassIdentifier: 
+  backgroundMusicName: VaticanBackground
+  width: 9
+  height: 9
+  cameraTracksPlayer: 1
+  level: xxxxxxxxxxoooxoooxxoooxoooxxoooxoooxxxxxxxxxxxoooxoooxxoooxoooxxoooxoooxxxxxxxxxx
+  characters:
+  - id: Kika
+    speed: 2
+    xLocation: 1
+    yLocation: 1
+    spawnDelay: 0
+    startDirection: 0
+    defaultTargetTiles: []
+  - id: GuardPatrol02
+    speed: 1
+    xLocation: 1
+    yLocation: 5
+    spawnDelay: 0
+    startDirection: 2
+    defaultTargetTiles:
+    - {x: 7, y: 1}
+    - {x: 5, y: 1}
+  updaters: []
+  tileItems:
+  - id: Teleport01
+    uniqueId: tp01
+    linkedId: tp02
+    tileCoordinates: {x: 2, y: 2}
+  - id: Teleport01
+    uniqueId: tp02
+    linkedId: tp03
+    tileCoordinates: {x: 2, y: 6}
+  - id: Teleport01
+    uniqueId: tp03
+    linkedId: tp04
+    tileCoordinates: {x: 6, y: 6}
+  - id: Teleport01
+    uniqueId: tp04
+    linkedId: tp01
+    tileCoordinates: {x: 6, y: 2}

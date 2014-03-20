@@ -50,7 +50,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		character.timeToMaxSpeed = 60;
 		RunnerInteractionManager.use.timeToMax = 60;
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 1.0f );  
-		RunnerInteractionManager.use.difficultyRange = new DataRange(3,5);
+		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 
 		RunnerManager.use.targetDistance = 600.0f;
 	}
@@ -65,7 +65,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.8f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		
-		RunnerManager.use.targetDistance = 900.0f;
+		RunnerManager.use.targetDistance = 900.0f; 
 	}
 	
 	public void Level2()
@@ -73,9 +73,9 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		RunnerCharacterControllerFasterSlower character = RunnerCharacterControllerFasterSlower.use;
 		
 		character.speedRange = new DataRange(12,17);
-		character.timeToMaxSpeed = 60;
-		RunnerInteractionManager.use.timeToMax = 60;
-		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.5f );  
+		character.timeToMaxSpeed = 90;
+		RunnerInteractionManager.use.timeToMax = 90;
+		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( 1.0f, 0.7f );  
 		RunnerInteractionManager.use.difficultyRange = new DataRange(3,6);
 		/*
 		// the tasmanian devils appear too often underneath a sliding enemy, so disable them here
@@ -87,7 +87,7 @@ public class RunnerConfig_05Mexico : IRunnerConfig
 		*/
 		
 		
-		RunnerManager.use.targetDistance = 1500.0f;
+		RunnerManager.use.targetDistance = 1200.0f;
 	}
 	
 	public void SetupGlobal()

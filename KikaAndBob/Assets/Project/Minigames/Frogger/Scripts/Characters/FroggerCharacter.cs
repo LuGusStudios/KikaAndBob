@@ -16,6 +16,14 @@ namespace KikaAndBobFrogger
 
 public class FroggerCharacter : MonoBehaviour {
 
+	public FroggerLane CurrentLane
+	{
+		get
+		{
+			return currentLane;
+		}
+	}
+
 	public float speed = 100;
 	public float maxScale = 1f;
 	public float minScale = 0.4f;
@@ -26,6 +34,7 @@ public class FroggerCharacter : MonoBehaviour {
 	protected bool movingToLane = false;
 	protected ILugusCoroutineHandle laneMoveRoutine = null;
 	protected ParticleSystem hitParticles = null;
+
 	[HideInInspector]
 	public FroggerCharacterAnimator characterAnimator = null;
 	protected Vector3 originalScale = Vector3.one;
@@ -248,16 +257,22 @@ public class FroggerCharacter : MonoBehaviour {
 		// this means moving half of the current lane's height plus half of the target lane's height
 		//float targetDistance = (currentLane.GetHeight() * 0.5f) +  (targetLane.GetHeight() * 0.5f);
 
-		float targetDistance = Vector2.Distance(currentLane.GetCenterPoint(), targetLane.GetCenterPoint());
+		//float targetDistance = Vector2.Distance(currentLane.GetCenterPoint(), targetLane.GetCenterPoint());
+		float targetDistance = Mathf.Abs(currentLane.transform.position.y - targetLane.transform.position.y);
 
 		float coveredDistance = 0;
-		Vector3 lastPosition = transform.position;
 
-		float startZ = currentLane.transform.position.z;
 		float targetZ = targetLane.transform.position.z - 5;
+
+		// if we're going to a lane below, then set the z-position already
+		if (!toHigher)
+		{
+			transform.position = transform.position.z(targetZ);
+		}
 
 		while(coveredDistance < targetDistance)
 		{
+			// The distance that should be traveled this frame
 			float nextMoveDistance = speed * Time.deltaTime;
 
 			// Clamp the distance added this frame to maximum amount still needed. If not, the character might overshoot due to framerate.
@@ -276,17 +291,20 @@ public class FroggerCharacter : MonoBehaviour {
 				transform.Translate(-1 * transform.up.normalized * nextMoveDistance, Space.World);
 			}
 
-			// lerp between lane z positions
-			transform.position = transform.position.z(Mathf.Lerp(startZ, targetZ, targetDistance / coveredDistance));
-
 			// measure distance since last frame - this way we can track progress in whichever direction instead of just one
 			// !!!: Make sure to ignore z movement here (so set z distance for the two comparison points to be identical)
-			coveredDistance += Vector3.Distance(lastPosition, transform.position.z(lastPosition.z));
-			lastPosition = transform.position;
+			//coveredDistance += Vector3.Distance(lastPosition, transform.position.z(lastPosition.z));
+			coveredDistance += nextMoveDistance;
 
 			ScaleByDistanceHorizontal();
 
 			yield return new WaitForEndOfFrame();
+		}
+
+		// If we're going to a lane above, then we set the z-position at the end
+		if (toHigher)
+		{
+			transform.position = transform.position.z(targetZ);
 		}
 
 		movingToLane = false;
