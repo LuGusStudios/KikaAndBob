@@ -8,7 +8,7 @@ using UnityEditor;
 [CustomEditor(typeof(DartsLevelDefinition))]
 public class DartsLevelDefinitionWriter : LevelDefinitionWriter
 {
-	protected override void SaveConfig()
+	protected override void SaveConfig(string saveLocation)
 	{
 		DartsLevelDefinition level = (DartsLevelDefinition)target;
 

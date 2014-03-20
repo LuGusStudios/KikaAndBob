@@ -16,8 +16,6 @@ public class FroggerFreezingPlayer : FroggerPlayer
 		// If there wasn't any input for some time, then let the character start to freeze.
 		// If the freezing animation is complete (played once), then the game is lost
 
-		FroggerCameraController.use.UpdateCameraFollow(this);
-
 		if (!movingToLane && FroggerGameManager.use.gameRunning)
 		{
 			if (LugusInput.use.Key(KeyCode.UpArrow)
@@ -34,6 +32,7 @@ public class FroggerFreezingPlayer : FroggerPlayer
 			}
 			else
 			{
+				FroggerCameraController.use.UpdateCameraFollow(this);
 
 				if (!headingUp)
 				{
@@ -49,9 +48,14 @@ public class FroggerFreezingPlayer : FroggerPlayer
 				{
 					FroggerGameManager.use.LoseGame();
 					freezeTimer = preFreezeTime;
-
 				}
+
+				ClampToScreen();
 			}
+		}
+		else
+		{
+			FroggerCameraController.use.UpdateCameraFollow(this);
 		}
 	}
 

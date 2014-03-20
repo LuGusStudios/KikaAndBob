@@ -7,12 +7,14 @@ using UnityEditor;
 
 public abstract class LevelDefinitionWriter : Editor 
 {
-	public string saveLocation = Application.dataPath + "/Config/Levels/";
+	public string saveLocationConfig = Application.dataPath + "/Config/Levels/";
+	public string saveLocationResources = Application.dataPath + "/Resources/Shared/Text/";
 
 	protected string sceneName = Path.GetFileNameWithoutExtension(EditorApplication.currentScene);
 	protected string levelPostfix = "1";
 
-	protected bool askConfirmation = false;
+	protected bool askConfirmationConfig = false;
+	protected bool askConfirmationResources = false;
 
 	public override void OnInspectorGUI()
 	{
@@ -21,19 +23,24 @@ public abstract class LevelDefinitionWriter : Editor
 		GUILayout.Label(sceneName + "_level_" + levelPostfix.ToString(), GUILayout.MaxWidth(150));
 		GUILayout.EndHorizontal();
 
-		if (!askConfirmation)
+		if (!askConfirmationConfig && !askConfirmationResources)
 		{
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Level nr:");
 			levelPostfix = GUILayout.TextField(levelPostfix.ToString(), GUILayout.MaxWidth(150));
 			GUILayout.EndHorizontal();
 
-			if (GUILayout.Button("Save level", GUILayout.Width(100), GUILayout.Height(20)))
+			if (GUILayout.Button("Save in config", GUILayout.Width(150), GUILayout.Height(20)))
 			{
-				Save();
+				Save(saveLocationConfig);
+			}
+
+			if (GUILayout.Button("Save in resources", GUILayout.Width(150), GUILayout.Height(20)))
+			{
+				Save(saveLocationResources);
 			}
 		}
-		else
+		else if (askConfirmationConfig)
 		{
 			GUILayout.Label("A level configuration with the same name already exists.");
 			GUILayout.Label("Are you sure you want to overwrite the existing file?");
@@ -41,39 +48,65 @@ public abstract class LevelDefinitionWriter : Editor
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Yes", GUILayout.Width(50)))
 			{
-				askConfirmation = false;
-				SaveConfig();
+				askConfirmationConfig = false;
+				SaveConfig(saveLocationConfig);
 			}
 			if (GUILayout.Button("No", GUILayout.Width(50)))
 			{
-				askConfirmation = false;
+				askConfirmationConfig = false;
 			}
 			GUILayout.EndHorizontal();
 		}
+		else if (askConfirmationResources)
+		{
+			GUILayout.Label("A level configuration with the same name already exists.");
+			GUILayout.Label("Are you sure you want to overwrite the existing file?");
+
+			GUILayout.BeginHorizontal();
+			if (GUILayout.Button("Yes", GUILayout.Width(50)))
+			{
+				askConfirmationResources = false;
+				SaveConfig(saveLocationResources);
+			}
+			if (GUILayout.Button("No", GUILayout.Width(50)))
+			{
+				askConfirmationResources = false;
+			}
+			GUILayout.EndHorizontal();
+		}
+
 
 		GUILayout.Space(20);
 
 		DrawDefaultInspector();
 	}
 
-	private void Save()
+	private void Save(string saveLocation)
 	{
-		if (!Directory.Exists(saveLocation))
+		if (!Directory.Exists(saveLocationConfig))
 		{
-			Directory.CreateDirectory(saveLocation);
+			Directory.CreateDirectory(saveLocationConfig);
 		}
 
 		string fileName = sceneName + "_level_" + levelPostfix.ToString() + ".xml";
 		string fullPath = saveLocation + fileName;
 		if (File.Exists(fullPath))
 		{
-			askConfirmation = true;
+			if (saveLocation == saveLocationConfig)
+			{
+				askConfirmationConfig = true;
+			}
+			else if (saveLocation == saveLocationResources)
+			{
+				askConfirmationResources = true;
+			}
+
 			return;
 		}
 
-		SaveConfig();
+		SaveConfig(saveLocation);
 	}
 
-	protected abstract void SaveConfig();
+	protected abstract void SaveConfig(string saveLocation);
 }
 #endif
