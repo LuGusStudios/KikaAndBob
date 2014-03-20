@@ -21,7 +21,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanLevelDefinition[] levels = null;
 	public int width = 13;
 	public int height = 13;
-	public float scale = 64;
+	public float scale = 1;
 	public float wallTileScaleFactor = 0.6f;
 	public float pickupScaleFactor = 0.15f; 
 	
@@ -56,6 +56,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	protected Transform levelParent = null;
 	protected Transform prefabParent = null;
 	protected Transform characterParent = null;
+	[HideInInspector]
+	public Transform temporaryParent = null;	// items parented to this transform are removed each time a new round begins (player died but still has lives left)
+												// not all minigames require this, so for backwards compatibility, it makes to allow for (and check for) this being null
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected List<PacmanCharacter> spawnedCharacters = new List<PacmanCharacter>();
 	
@@ -96,6 +99,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		effectsParent = levelRoot.FindChild("EffectsParent");
 		characterParent = levelRoot.FindChild("CharacterParent");
 		prefabParent = levelRoot.FindChild("Prefabs");
+		temporaryParent = levelRoot.FindChild("TemporaryObjects");	// see declaration above
+
 		doorPrefab = GetPrefab("Door");
 	}
 
@@ -389,7 +394,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemPrefab == null)
 			{
 				Debug.LogError("Did not find tile item ID: " + definition.id);
-				return;
+				continue;
 			}
 
 			PacmanTile targetTile = GetTile(definition.tileCoordinates, false);
@@ -420,9 +425,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
                     tileItemScript.linkedId = definition.linkedId;
 			    }
                 tileItemScripts.Add(tileItemScript);
+
+				targetTile.tileItems.Add(tileItemScript);
 			}
-            
-			targetTile.tileItems.Add(tileItem);
 		}
 
         foreach (PacmanTileItem tileItemScript in tileItemScripts)
@@ -464,6 +469,36 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (id == "BomberUpdater" && updaterContainer.GetComponent<PacmanBomberUpdater>() == null)
 			{
 				updaterContainer.AddComponent<PacmanBomberUpdater>();
+			}
+		}
+	}
+
+	public void ClearTempItems()
+	{
+		if (temporaryParent == null)
+		{
+			Debug.Log("PacmanLevelManager: No temporary items to clear.");
+			return;
+		}
+
+		Debug.Log("PacmanLevelManager: Clearing temporary items.");
+
+		// many of these can already have been destroyed by the ResetTiles method
+		// other things, not associated with one particular tile, gets removed here
+
+		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
+		{
+			Destroy(temporaryParent.GetChild(i).gameObject);
+		}
+	}
+
+	public void ResetTiles()
+	{
+		for (int i = 0; i < levelTiles.GetLength(0); i++) 
+		{
+			for (int j = 0; j < levelTiles.GetLength(1); j++) 
+			{
+				levelTiles[i, j].ResetTile();
 			}
 		}
 	}
