@@ -21,15 +21,23 @@ public class PacmanDynamiteCharged : PacmanTileItem
 
 		if (fuseParticles == null)
 		{
-			Debug.Log("PacmanDynamiteCharged: Missing fuse particles.");
+			Debug.LogError("PacmanDynamiteCharged: Missing fuse particles.");
 		}
 	}
 
 	protected void Update()
 	{
 		if (!isCounting)
-			return;
+		{
+			if(fuseParticles.isPlaying)
+				fuseParticles.Stop();
 
+			return;
+		}
+
+		if(!fuseParticles.isPlaying)
+			fuseParticles.Play();
+		
 		if (timer < chargeTime)
 			timer += Time.deltaTime;
 		else
@@ -59,8 +67,6 @@ public class PacmanDynamiteCharged : PacmanTileItem
 			yield break;
 		}
 
-		fuseParticles.Play();
-
 		GameObject explosion = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("DynamiteExplosion"));
 		explosion.transform.position = parentTile.GetWorldLocation().v3().zAdd(-5.0f);
 
@@ -87,8 +93,9 @@ public class PacmanDynamiteCharged : PacmanTileItem
 				PacmanGameManager.use.GetActivePlayer().DoHitEffect();
 			}
 
-			Destroy(tile.rendered);
-			tile.tileType = PacmanTile.TileType.Open;
+			// we're not destroying tiles proper anymore
+//			Destroy(tile.rendered);
+//			tile.tileType = PacmanTile.TileType.Open;
 
 			// destroy tile items on neighboring tiles
 			for (int i = tile.tileItems.Count - 1; i >= 0; i--) 

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class PacmanDynamite : PacmanTileItem 
 {
-	public string id = "Dynamite";
+	public string pickUpID = "Dynamite";
 	protected bool pickedUp = false;
 	protected bool destroyed = false;
 
 	public override void Initialize ()
 	{
-		PacmanPickups.use.RegisterPickup(id);
+		PacmanPickups.use.RegisterPickup(pickUpID);
 	}
 
 	public override void OnEnter (PacmanCharacter character)
@@ -22,7 +22,7 @@ public class PacmanDynamite : PacmanTileItem
 		
 		this.gameObject.SetActive(false);
 		
-		PacmanPickups.use.ModifyPickupAmount(id, 1);
+		PacmanPickups.use.ModifyPickupAmount(pickUpID, 1);
 	}
 
 	public override void DestroyTileItem ()
@@ -47,6 +47,7 @@ public class PacmanDynamite : PacmanTileItem
 		parentTile.tileItems.Add(chargedVersion);
 		parentTile.tileItems.Remove(this);
 
+		// remove this component
 		Destroy(this);
 	}
 
