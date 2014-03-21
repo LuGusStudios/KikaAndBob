@@ -13,13 +13,48 @@
 			<LaneItems>
 				<LaneItem>
 					<SpawnID>Tilly</SpawnID>
-					<Positioning>0.4</Positioning>
+					<Positioning>0.2</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Stoneman</SpawnID>
+					<Positioning>0.5</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Pickup</SpawnID>
+					<Positioning>0.6</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Pickup</SpawnID>
+					<Positioning>0.8</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
 		<Lane>
-			<LaneID>LaneIce06</LaneID>
+			<LaneID>LaneIce03</LaneID>
 			<GoRight>True</GoRight>
+			<Speed>4</Speed>
+			<MinGapDistance>3</MinGapDistance>
+			<MaxGapDistance>5</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>IceHole01</SpawnID>
+					<Positioning>0.1</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>IceHole02</SpawnID>
+					<Positioning>0.5</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Pickup</SpawnID>
+					<Positioning>0.8</Positioning>
+				</LaneItem>
+			</LaneItems>
+		</Lane>
+		<Lane>
+			<LaneID>LaneIce02</LaneID>
+			<GoRight>False</GoRight>
 			<Speed>0</Speed>
 			<MinGapDistance>0</MinGapDistance>
 			<MaxGapDistance>0</MaxGapDistance>
@@ -27,85 +62,85 @@
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
-					<SpawnID>IceHole02</SpawnID>
+					<SpawnID>IceHole01</SpawnID>
 					<Positioning>0.3</Positioning>
 				</LaneItem>
 				<LaneItem>
-					<SpawnID>IceCrack</SpawnID>
+					<SpawnID>IceHole01</SpawnID>
 					<Positioning>0.8</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Pickup</SpawnID>
+					<Positioning>0.1</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Pickup</SpawnID>
+					<Positioning>0.6</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
 		<Lane>
-			<LaneID>LaneWater01</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>3</Speed>
-			<MinGapDistance>2</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
-			<RepeatAllowFactor>0.3</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0.3</BackgroundScrollingSpeed>
+			<LaneID>LaneSnow04</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>14</Speed>
+			<MinGapDistance>40</MinGapDistance>
+			<MaxGapDistance>80</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
-					<SpawnID>IceBlock01</SpawnID>
+					<SpawnID>PolarBearBig</SpawnID>
+					<Positioning>0</Positioning>
+				</LaneItem>
+			</LaneItems>
+		</Lane>
+		<Lane>
+			<LaneID>LaneSnow04</LaneID>
+			<GoRight>False</GoRight>
+			<Speed>0</Speed>
+			<MinGapDistance>0</MinGapDistance>
+			<MaxGapDistance>0</MaxGapDistance>
+			<RepeatAllowFactor>0</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+			</LaneItems>
+		</Lane>
+		<Lane>
+			<LaneID>LaneSnow05</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>4</Speed>
+			<MinGapDistance>5</MinGapDistance>
+			<MaxGapDistance>9</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>Snowmobile</SpawnID>
 					<Positioning>0</Positioning>
 				</LaneItem>
 				<LaneItem>
-					<SpawnID>IceBlock02</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-				<LaneItem>
-					<SpawnID>BobbingIceRock</SpawnID>
+					<SpawnID>PolarBearSmall</SpawnID>
 					<Positioning>0</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
 		<Lane>
 			<LaneID>LaneSnow03</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>0</Speed>
-			<MinGapDistance>0</MinGapDistance>
-			<MaxGapDistance>0</MaxGapDistance>
-			<RepeatAllowFactor>0</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneWater02</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>3</Speed>
-			<MinGapDistance>1</MinGapDistance>
-			<MaxGapDistance>4</MaxGapDistance>
-			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>BobbingMammoth</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-				<LaneItem>
-					<SpawnID>IceBlock02</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneWater01</LaneID>
 			<GoRight>True</GoRight>
-			<Speed>4</Speed>
-			<MinGapDistance>2</MinGapDistance>
-			<MaxGapDistance>5</MaxGapDistance>
+			<Speed>7</Speed>
+			<MinGapDistance>8</MinGapDistance>
+			<MaxGapDistance>14</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0.8</BackgroundScrollingSpeed>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
-					<SpawnID>IceBlock01</SpawnID>
+					<SpawnID>PolarBearBig</SpawnID>
 					<Positioning>0</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
 		<Lane>
-			<LaneID>LaneSnow05</LaneID>
+			<LaneID>LaneSnow02</LaneID>
 			<GoRight>False</GoRight>
 			<Speed>0</Speed>
 			<MinGapDistance>0</MinGapDistance>
@@ -124,122 +159,10 @@
 			<RepeatAllowFactor>0</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneSnow03</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>0</Speed>
-			<MinGapDistance>0</MinGapDistance>
-			<MaxGapDistance>0</MaxGapDistance>
-			<RepeatAllowFactor>0</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
 				<LaneItem>
 					<SpawnID>Stoneman</SpawnID>
-					<Positioning>0.5</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneSnow02</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>3</Speed>
-			<MinGapDistance>7</MinGapDistance>
-			<MaxGapDistance>10</MaxGapDistance>
-			<RepeatAllowFactor>0.4</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>Sled</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneSnow01</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>5</Speed>
-			<MinGapDistance>7</MinGapDistance>
-			<MaxGapDistance>10</MaxGapDistance>
-			<RepeatAllowFactor>0.5</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>PolarBearBig</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneIce03</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>4</Speed>
-			<MinGapDistance>1</MinGapDistance>
-			<MaxGapDistance>4</MaxGapDistance>
-			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>IceHole03</SpawnID>
-					<Positioning>0.7</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneIce01</LaneID>
-			<GoRight>True</GoRight>
-			<Speed>4</Speed>
-			<MinGapDistance>3</MinGapDistance>
-			<MaxGapDistance>5</MaxGapDistance>
-			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>Snowmobile</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-				<LaneItem>
-					<SpawnID>PolarBearSmall</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneIce02</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>0</Speed>
-			<MinGapDistance>0</MinGapDistance>
-			<MaxGapDistance>0</MaxGapDistance>
-			<RepeatAllowFactor>0</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>IceHole01</SpawnID>
 					<Positioning>0.3</Positioning>
 				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneSnow03</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>0</Speed>
-			<MinGapDistance>0</MinGapDistance>
-			<MaxGapDistance>0</MaxGapDistance>
-			<RepeatAllowFactor>0</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneSnow05</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>0</Speed>
-			<MinGapDistance>0</MinGapDistance>
-			<MaxGapDistance>0</MaxGapDistance>
-			<RepeatAllowFactor>0</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
 			</LaneItems>
 		</Lane>
 	</Lanes>
