@@ -487,6 +487,8 @@ public class RunnerManagerDefault : IGameManager
 							//Debug.LogError("Disabling pickup " + pickup.transform.Path() );
 							pickup.activated = false;
 						}
+
+						MachineButton.use.Press();
 					}
 				} 
 				else
