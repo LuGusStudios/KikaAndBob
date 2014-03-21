@@ -7,6 +7,12 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 	public RunnerPickup pickup = null;
 	public GameObject character = null;
 
+	public RunnerCharacterAnimator animator = null;
+	
+	public string normalAnimation = "ALL/SkiInstructor_Skiing";
+	public string slowAnimation = "ALL/SkiInstructor_Pizza";
+	public string fastAnimation = "ALL/SkiInstructor_Straight";
+
 	public void SetupLocal()
 	{
 		pickup = GetComponent<RunnerPickup>();
@@ -23,6 +29,11 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		if( character == null )
 		{
 			Debug.LogError(name + " : Character was null!");
+		}
+
+		if( animator == null )
+		{
+			animator = GetComponent<RunnerCharacterAnimator>();
 		}
 	}
 
@@ -54,6 +65,8 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 	protected Vector3 currentOffscreen = Vector3.zero;
 	protected IEnumerator MoveOffscreenRoutine()
 	{
+		animator.PlayAnimation( fastAnimation );
+
 		this.collider2D.enabled = false;
 
 		// face towards the offscreen point!
@@ -70,6 +83,8 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 
 	protected IEnumerator AnnoyerRoutine()
 	{
+		yield return new WaitForSeconds(0.01f); // wait for other SetupGlobal()s and Start()s to execute
+
 		// Annoyer enters the screen from the top
 		// then moves a couple of times up and down (vertically)
 		// leaves the screen vertically (top or bottom)
@@ -124,7 +139,10 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 
 		// somewhere offscreen, above the player
 		// camera origin is bottom left
-		float offscreenY = LugusUtil.ScreenHeight + this.renderer.bounds.size.y * 100.0f; // just above the screen
+
+
+
+		float offscreenY = LugusUtil.ScreenHeight + ((BoxCollider2D) this.collider2D).Bounds().size.y * 100.0f; // just above the screen
 		float screenWidthQuart = LugusUtil.ScreenWidth * 0.25f;
 
 		// around the x-center, max to the outer quarts of the screen (avoid walls)
@@ -174,6 +192,7 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		//Debug.Log ("LOCALS " + target1 + " TO " + target2 );
 
 
+		animator.PlayAnimation( normalAnimation ); // Note: this won't work without WaitForSeconds(0.01f) at the beginning of this routine
 		gameObject.MoveTo( target1 ).IsLocal(true).Time (1.0f).Execute();
 
 		yield return new WaitForSeconds(3.0f); 
@@ -181,9 +200,11 @@ public class RunnerPlayerAnnoyerSkier : MonoBehaviour
 		int count = Random.Range (1,3);
 		for( int i = 0; i < count; ++i )
 		{
+			animator.PlayAnimation( slowAnimation );
 			gameObject.MoveTo( target2 ).IsLocal(true).Time (1.0f).Execute();
 			yield return new WaitForSeconds(1.0f);
-
+			
+			animator.PlayAnimation( fastAnimation );
 			gameObject.MoveTo( target1 ).IsLocal(true).Time (2.0f).Execute();
 			yield return new WaitForSeconds(2.0f);
 		}

@@ -13,7 +13,7 @@ public class PacmanTileItemKey : PacmanTileItem
 		PacmanPickups.use.RegisterPickup(keyID);
 	}
 
-	public override void OnEnter()
+	public override void OnEnter(PacmanCharacter character)
 	{
 		if (pickedUp)
 			return;

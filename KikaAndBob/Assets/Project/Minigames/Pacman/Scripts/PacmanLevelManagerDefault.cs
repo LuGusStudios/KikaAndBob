@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,17 +21,19 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	public PacmanLevelDefinition[] levels = null;
 	public int width = 13;
 	public int height = 13;
-	public float scale = 64;
+	public float scale = 1;
 	public float wallTileScaleFactor = 0.6f;
 	public float pickupScaleFactor = 0.15f; 
 	
 	public PacmanCharacter[] characterPrefabs = null;
 	public GameObject[] tileItems = null;
-
+    
 	// MOVE TO SCRIPTABLE OBJECT 'THEME'?
 	public Sprite[] blockSprites = null;
 	public Sprite[] blockShadows = null;
 	public Sprite[] blockDecorations = null;
+    public Sprite[] OpenDecorations = null;
+    public float openDecorationScale = 1.5f;
 	public Sprite pickupSprite = null;
 	public Sprite powerUpSprite = null;
 	public Sprite doorSprite = null;
@@ -53,6 +56,9 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	protected Transform levelParent = null;
 	protected Transform prefabParent = null;
 	protected Transform characterParent = null;
+	[HideInInspector]
+	public Transform temporaryParent = null;	// items parented to this transform are removed each time a new round begins (player died but still has lives left)
+												// not all minigames require this, so for backwards compatibility, it makes to allow for (and check for) this being null
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected List<PacmanCharacter> spawnedCharacters = new List<PacmanCharacter>();
 	
@@ -61,7 +67,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	
 	public PacmanTile[,] levelTiles;
 	public List<PacmanTile> teleportTiles = new List<PacmanTile>();
-
+    public List<PacmanTileItem> tileItemScripts = new List<PacmanTileItem>();
 //	public delegate void OnLevelBuilt();
 //	public OnLevelBuilt onLevelBuilt;
 	
@@ -93,6 +99,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		effectsParent = levelRoot.FindChild("EffectsParent");
 		characterParent = levelRoot.FindChild("CharacterParent");
 		prefabParent = levelRoot.FindChild("Prefabs");
+		temporaryParent = levelRoot.FindChild("TemporaryObjects");	// see declaration above
+
 		doorPrefab = GetPrefab("Door");
 	}
 
@@ -100,29 +108,61 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		#if UNITY_EDITOR
 		Debug.Log("Clearing level (playing in editor).");
-		for (int i = levelParent.childCount - 1; i >= 0; i--) 
+		if (Application.isPlaying)
 		{
-			DestroyImmediate(levelParent.GetChild(i).gameObject);
+			for (int i = levelParent.childCount - 1; i >= 0; i--)
+			{
+				levelParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(levelParent.GetChild(i).gameObject);
+			}
+
+			for (int i = pickupParent.childCount - 1; i >= 0; i--)
+			{
+				pickupParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(pickupParent.GetChild(i).gameObject);
+			}
+
+			for (int i = characterParent.childCount - 1; i >= 0; i--)
+			{
+				if (characterParent.GetChild(i).GetComponent<PacmanCharacter>() != null)
+				{
+					characterParent.GetChild(i).GetComponent<PacmanCharacter>().enabled = false;
+					characterParent.GetChild(i).gameObject.SetActive(false);
+				}
+
+				characterParent.GetChild(i).gameObject.SetActive(false);
+				Destroy(characterParent.GetChild(i).gameObject);
+			}
+		}
+		else
+		{
+			for (int i = levelParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(levelParent.GetChild(i).gameObject);
+			}
+
+			for (int i = pickupParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(pickupParent.GetChild(i).gameObject);
+			}
+
+			for (int i = characterParent.childCount - 1; i >= 0; i--)
+			{
+				DestroyImmediate(characterParent.GetChild(i).gameObject);
+			}
 		}
 		
-		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(pickupParent.GetChild(i).gameObject);
-		}
-		
-		for (int i = characterParent.childCount - 1; i >= 0; i--) 
-		{
-			DestroyImmediate(characterParent.GetChild(i).gameObject);
-		}
 		#else
 		Debug.Log("Clearing level (build).");
 		for (int i = levelParent.childCount - 1; i >= 0; i--) 
 		{
+			levelParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(levelParent.GetChild(i).gameObject);
 		}
 		
 		for (int i = pickupParent.childCount - 1; i >= 0; i--) 
 		{
+			pickupParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(pickupParent.GetChild(i).gameObject);
 		}
 		
@@ -136,6 +176,8 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				characterParent.GetChild(i).GetComponent<PacmanCharacter>().enabled = false;
 				characterParent.GetChild(i).gameObject.SetActive(false);
 			}
+
+			characterParent.GetChild(i).gameObject.SetActive(false);
 			Destroy(characterParent.GetChild(i).gameObject);
 		}
 		#endif
@@ -386,7 +428,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemPrefab == null)
 			{
 				Debug.LogError("Did not find tile item ID: " + definition.id);
-				return;
+				continue;
 			}
 
 			PacmanTile targetTile = GetTile(definition.tileCoordinates, false);
@@ -407,11 +449,25 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (tileItemScript != null)
 			{
 				tileItemScript.parentTile = targetTile;
-				tileItemScript.Initialize();
-			}
 
-			targetTile.tileItems.Add(tileItem);
+                if (!string.IsNullOrEmpty(definition.uniqueId) )
+			    {
+			        tileItemScript.uniqueId = definition.uniqueId;
+			    }
+			    if (!string.IsNullOrEmpty(definition.linkedId))
+			    {
+                    tileItemScript.linkedId = definition.linkedId;
+			    }
+                tileItemScripts.Add(tileItemScript);
+
+				targetTile.tileItems.Add(tileItemScript);
+			}
 		}
+
+        foreach (PacmanTileItem tileItemScript in tileItemScripts)
+	    {
+            tileItemScript.Initialize();
+	    }
 	}
 
 	protected void ApplyUpdaters(string[] ids)
@@ -430,7 +486,14 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			updaters[i].Deactivate();
 
 			#if UNITY_EDITOR
-			DestroyImmediate(updaters[i]);
+			if (Application.isPlaying)
+			{
+				Destroy(updaters[i]);
+			}
+			else
+			{
+				DestroyImmediate(updaters[i]);
+			}
 			#else
 			Destroy(updaters[i]);
 			#endif
@@ -442,6 +505,41 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 			if (id == "DoorUpdater" && updaterContainer.GetComponent<DoorUpdater>() == null)
 			{
 				updaterContainer.AddComponent<DoorUpdater>();
+			}
+
+			if (id == "BomberUpdater" && updaterContainer.GetComponent<PacmanBomberUpdater>() == null)
+			{
+				updaterContainer.AddComponent<PacmanBomberUpdater>();
+			}
+		}
+	}
+
+	public void ClearTempItems()
+	{
+		if (temporaryParent == null)
+		{
+			Debug.Log("PacmanLevelManager: No temporary items to clear.");
+			return;
+		}
+
+		Debug.Log("PacmanLevelManager: Clearing temporary items.");
+
+		// many of these can already have been destroyed by the ResetTiles method
+		// other things, not associated with one particular tile, gets removed here
+
+		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
+		{
+			Destroy(temporaryParent.GetChild(i).gameObject);
+		}
+	}
+
+	public void ResetTiles()
+	{
+		for (int i = 0; i < levelTiles.GetLength(0); i++) 
+		{
+			for (int j = 0; j < levelTiles.GetLength(1); j++) 
+			{
+				levelTiles[i, j].ResetTile();
 			}
 		}
 	}
@@ -508,13 +606,24 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		if (levelTiles == null)
 			return;
-
+       
 		foreach(PacmanTile tile in levelTiles)
 		{
 			if (tile == null)
 				continue;
-
-			if (tile.tileType == PacmanTile.TileType.Collide)
+		    
+            // randomly add a tile decorator to some tiles
+            if (Random.value > 0.85f && OpenDecorations.Length > 0)
+            {
+                GameObject decoration = new GameObject(tile.gridIndices.ToString() + "Decoration");
+                decoration.transform.localScale = decoration.transform.localScale * wallTileScaleFactor;
+                decoration.transform.parent = levelParent;
+                decoration.transform.localPosition = new Vector3(tile.location.x * openDecorationScale + (width / 2 - (width * openDecorationScale) / 2),
+                    tile.location.y * openDecorationScale + ((height / 2) - (height * openDecorationScale) / 2), 5);
+                SpriteRenderer decorationSpriteRenderer = decoration.AddComponent<SpriteRenderer>();
+                decorationSpriteRenderer.sprite = OpenDecorations[Random.Range(0, OpenDecorations.Length)]; 
+            }
+		    if (tile.tileType == PacmanTile.TileType.Collide)
 			{
 				GameObject block = new GameObject(tile.gridIndices.ToString() + ": Block");
 
@@ -526,13 +635,16 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 				SpriteRenderer spriteRenderer = block.AddComponent<SpriteRenderer>();
 				spriteRenderer.sprite = blockSprites[randomIndex];
 
-				GameObject shadow = new GameObject("Shadow");
-				shadow.transform.localScale = shadow.transform.localScale * wallTileScaleFactor;
-				shadow.transform.parent = block.transform;
-				shadow.transform.localPosition = new Vector3(0, 0, 1);
-				SpriteRenderer spriteRenderer2 = shadow.AddComponent<SpriteRenderer>();
-				spriteRenderer2.sprite = blockShadows[randomIndex];
-
+			    if (blockShadows.Length > 0)
+			    {
+                    GameObject shadow = new GameObject("Shadow");
+                    shadow.transform.localScale = shadow.transform.localScale * wallTileScaleFactor;
+                    shadow.transform.parent = block.transform;
+                    shadow.transform.localPosition = new Vector3(0, 0, 1);
+                    SpriteRenderer spriteRenderer2 = shadow.AddComponent<SpriteRenderer>();
+                    spriteRenderer2.sprite = blockShadows[randomIndex];
+			    }
+				
 				tile.rendered = block;
 
 				// also randomly add a tile decorator to some tiles

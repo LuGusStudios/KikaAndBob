@@ -16,6 +16,9 @@ public class PacmanLavaTile : PacmanTileItem
 	public Sprite lava3Way = null;
 	public Sprite lava4Way = null;
 
+	protected bool done = false;
+	protected ILugusCoroutineHandle flowRoutineHandle = null;
+	
 	protected enum LavaTileType
 	{
 		None = -1,
@@ -33,7 +36,8 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 		RegisterSurroundingTiles();
 
-		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
+		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
+			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
 	}
 
 	public void RegisterSurroundingTiles()
@@ -44,40 +48,90 @@ public class PacmanLavaTile : PacmanTileItem
 		
 		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 		{
-			bool isLavaTile = false;
+			bool isOpenTile = true;
 			
-			foreach (GameObject tileItem in tile.tileItems)
+			foreach (PacmanTileItem tileItem in tile.tileItems)
 			{
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
 					surroundingLavaTiles.Add(tile);
-					isLavaTile = true;
+					isOpenTile = false;
+					break;
+				}
+				else if (tileItem.GetComponent<PacmanLavaStop>() != null)
+				{
+					isOpenTile = false;
 					break;
 				}
 			}
 			
-			if (!isLavaTile && tile.tileType != PacmanTile.TileType.Collide)
+			if (isOpenTile && tile.tileType != PacmanTile.TileType.Collide)
 			{
 				surroundingOpenTiles.Add(tile);
 			}
 		}
-		
+
+		// surroundingValidTiles = lavaTiles + open tiles - this is useful because sometimes we want to distinguish the two and sometimes not
 		surroundingValidTiles = new List<PacmanTile>(surroundingLavaTiles);
 		surroundingValidTiles.AddRange(surroundingOpenTiles);
 	}
 
+	protected void Update()
+	{
+		if (!done && PacmanGameManager.use.gameRunning && PacmanGameManager.use.GetActivePlayer().currentTile == parentTile)
+			LugusCoroutines.use.StartRoutine(BurnUp());
+	}
+	
+	public override void OnEnter (PacmanCharacter character)
+	{
+		if (done)
+			return;
+		
+		
+		LugusCoroutines.use.StartRoutine(BurnUp());
+	}
+
+	protected IEnumerator BurnUp()
+	{
+		PacmanGameManager.use.gameRunning = false;
+		
+		done = true;
+		
+		GameObject flameObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("FlameAnimation"));
+		Vector3 playerPos = PacmanGameManager.use.GetActivePlayer().transform.position.zAdd(-1f);
+		flameObject.transform.position = playerPos;
+		flameObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+	
+		PacmanGameManager.use.GetActivePlayer().HideCharacter();
+		
+		yield return new WaitForSeconds(0.5f);
+		
+		GameObject ashObject = (GameObject) Instantiate(PacmanLevelManager.use.GetPrefab("AshPile"));
+		ashObject.transform.position = playerPos;
+		ashObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+
+		yield return new WaitForSeconds(1.5f);
+		
+		PacmanGameManager.use.LoseLife();
+		
+		yield break;
+	}
 
 	protected IEnumerator UpdateRoutine()
 	{
 		while (true)
 		{
-			if (surroundingLavaTiles.Count >= 4)
+			if (surroundingLavaTiles.Count >= 4 || done)
 				yield break;
 
-			// first update the surroundingOpenTiles list. An other lava might already have started claiming it!
+			// don't want this continuing after winning or losing
+			while (!PacmanGameManager.use.gameRunning)
+				yield return null;
+
+			// first update the surroundingOpenTiles list. An other lava tile might already have started claiming it!
 			for (int i = surroundingOpenTiles.Count - 1; i >= 0; i--) 
 			{
-				foreach (GameObject tileItem in surroundingOpenTiles[i].tileItems)
+				foreach (PacmanTileItem tileItem in surroundingOpenTiles[i].tileItems)
 				{
 					if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 					{
@@ -92,34 +146,58 @@ public class PacmanLavaTile : PacmanTileItem
 				if (tile == null)	// should probably never happen, but doesn't hurt to check
 					continue;
 
+				if (this == null)
+				{
+					Debug.LogError("NULL");
+					continue;
+				}
+
+				GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
+				newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
+				newLavaTileObject.name = "LavaTrail" + tile.ToString();
+
+				if (PacmanLevelManager.use.temporaryParent != null)
+				{
+					newLavaTileObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+				}
+				else
+				{
+					Debug.LogWarning("PacmanLavaTile: No temporary items parent found. This tile will not be removed in the next round!");
+					newLavaTileObject.transform.parent = this.transform.parent;
+				}
+				
+				PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
+				newLavaTile.parentTile = tile;
+				newLavaTile.originLavaTile = this;
 
 
-					GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
-					newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
-					newLavaTileObject.name = "LavaTrail" + tile.ToString();
-					//	newLavaTileObject.transform.parent = this.transform.parent;
-					
-					surroundingLavaTiles.Add(tile);
-					tile.tileItems.Add(newLavaTileObject);
-					
-					PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
-					newLavaTile.parentTile = tile;
-					newLavaTile.originLavaTile = this;
-					newLavaTile.Initialize();
-			}
+				surroundingLavaTiles.Add(tile);
+				tile.tileItems.Add(newLavaTile);
 
-				yield return new WaitForSeconds(updateCheckSpeed);
+				newLavaTile.Initialize();
+			} 
+
+			yield return new WaitForSeconds(updateCheckSpeed);
 		}
 	}
 
-	public override void OnTryEnter ()
+	protected void OnDestroy()
 	{
+		if (flowRoutineHandle != null && flowRoutineHandle.Running)
+			flowRoutineHandle.StopRoutine();
 	}
 
-	public override void OnEnter ()
+	public override void Reset ()
 	{
+		RegisterSurroundingTiles();
+
+		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
+			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());
 	}
 
+    public override void OnTryEnter(PacmanCharacter character)
+	{
+	}
 
 	public void InitializeSprite()
 	{
