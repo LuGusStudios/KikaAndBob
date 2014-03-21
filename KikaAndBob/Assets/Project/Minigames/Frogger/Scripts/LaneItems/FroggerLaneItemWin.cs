@@ -24,6 +24,7 @@ public class FroggerLaneItemWin : FroggerLaneItem {
 	protected override void EnterSurfaceEffect (FroggerCharacter character)
 	{
 		TillyFly(character);
+		character.DoVictoryAnimation();
 	}
 
 	protected void TillyFly(FroggerCharacter character)

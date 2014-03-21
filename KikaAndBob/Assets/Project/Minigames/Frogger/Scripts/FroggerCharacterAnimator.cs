@@ -19,6 +19,8 @@ public class FroggerCharacterAnimator : MonoBehaviour
 	public string walkSide;
 
 	public string hit;
+
+	public string victory;
 	
 	public void SetupLocal()
 	{
