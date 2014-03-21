@@ -285,7 +285,7 @@ public class RunnerManagerDefault : IGameManager
 	public void SetupGlobal()
 	{
 		// TODO: remove me! jsut for debugging! 
-		LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
+		//LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
 
 		// lookup references to objects / scripts outside of this script
 		
@@ -318,9 +318,9 @@ public class RunnerManagerDefault : IGameManager
 			{
 				
 				// TODO: remove me! jsut for debugging! 
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
 				LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f)); 
-#endif
+//#endif
 
 			}
 
