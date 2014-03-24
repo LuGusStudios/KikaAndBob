@@ -1,58 +1,162 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-	<BackgroundMusicName></BackgroundMusicName>
+	<BackgroundMusicName>e21_cuba_background</BackgroundMusicName>
 	<Lanes>
+
 		<Lane>
-			<LaneID>LaneStreet</LaneID>
+			<LaneID>LaneSidewalk</LaneID>
 			<GoRight>True</GoRight>
-			<Speed>1.5</Speed>
-			<MinGapDistance>10</MinGapDistance>
+			<Speed>10</Speed>
+			<MinGapDistance>3</MinGapDistance>
 			<MaxGapDistance>10</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
+				<LaneItem>
+					<SpawnID>Castro</SpawnID>
+					<Positioning>0.8</Positioning>
+				</LaneItem>
 			</LaneItems>
 		</Lane>
+
 		<Lane>
-			<LaneID>LaneSand02</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>3</Speed>
+			<LaneID>LaneStreet</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>10</Speed>
 			<MinGapDistance>3</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>CubanCar</SpawnID>
+					<Positioning>0</Positioning>
+				</LaneItem>
+			</LaneItems>			
+		</Lane>
+
+		<Lane>
+			<LaneID>LaneSidewalk</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>5</Speed>
+			<MinGapDistance>3</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.1</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.3</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.5</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.7</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.9</Positioning>
+				</LaneItem>
+			</LaneItems>			
+		</Lane>
+
+		<Lane>
+			<LaneID>LaneSand01</LaneID>
+			<GoRight>False</GoRight>
+			<Speed>5</Speed>
+			<MinGapDistance>3</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
 					<SpawnID>Landmine</SpawnID>
+					<Positioning>0.02</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Landmine</SpawnID>
+					<Positioning>0.2</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Landmine</SpawnID>
+					<Positioning>0.4</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Landmine</SpawnID>
 					<Positioning>0.6</Positioning>
 				</LaneItem>
 				<LaneItem>
-					<SpawnID>Carwreck03</SpawnID>
+					<SpawnID>Landmine</SpawnID>
 					<Positioning>0.8</Positioning>
 				</LaneItem>
-			</LaneItems>
-		</Lane>
+				<LaneItem>
+					<SpawnID>Landmine</SpawnID>
+					<Positioning>0.98</Positioning>
+				</LaneItem>
+			</LaneItems>			
+		</Lane>	
+
 		<Lane>
-			<LaneID>LaneWater</LaneID>
-			<GoRight>True</GoRight>
-			<Speed>1.5</Speed>
-			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<LaneID>LaneGrass</LaneID>
+			<GoRight>False</GoRight>
+			<Speed>5</Speed>
+			<MinGapDistance>3</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>1</BackgroundScrollingSpeed>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
-					<SpawnID>TurtleWater</SpawnID>
+					<SpawnID>Crab</SpawnID>
 					<Positioning>0</Positioning>
 				</LaneItem>
-			</LaneItems>
-		</Lane>
+			</LaneItems>			
+		</Lane>	
+
+		<Lane>
+			<LaneID>LaneGrass</LaneID>
+			<GoRight>False</GoRight>
+			<Speed>4</Speed>
+			<MinGapDistance>2</MinGapDistance>
+			<MaxGapDistance>8</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>Propaganda</SpawnID>
+					<Positioning>0.1</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Rock01</SpawnID>
+					<Positioning>0.28</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Landmine</SpawnID>
+					<Positioning>0.35</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Palm01</SpawnID>
+					<Positioning>0.6</Positioning>
+				</LaneItem>	
+				<LaneItem>
+					<SpawnID>Palm02</SpawnID>
+					<Positioning>0.49</Positioning>
+				</LaneItem>	
+			</LaneItems>			
+		</Lane>	
+
 		<Lane>
 			<LaneID>LaneSand02</LaneID>
-			<GoRight>True</GoRight>
-			<Speed>2</Speed>
-			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<GoRight>False</GoRight>
+			<Speed>4</Speed>
+			<MinGapDistance>2</MinGapDistance>
+			<MaxGapDistance>8</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
@@ -61,90 +165,130 @@
 					<Positioning>0</Positioning>
 				</LaneItem>
 				<LaneItem>
-					<SpawnID>Rock02</SpawnID>
-					<Positioning>0.9</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
+					<SpawnID>CubanCar</SpawnID>
+					<Positioning>0</Positioning>
+				</LaneItem>			
+			</LaneItems>			
+		</Lane>	
+
+
+		<Lane>
+			<LaneID>LaneSand02</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>5.32</Speed>
+			<MinGapDistance>2</MinGapDistance>
+			<MaxGapDistance>8</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>Crab</SpawnID>
+					<Positioning>0</Positioning>
+				</LaneItem>				
+			</LaneItems>			
+		</Lane>	
+
 		<Lane>
 			<LaneID>LaneSand01</LaneID>
-			<GoRight>False</GoRight>
-			<Speed>4</Speed>
-			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
-			<RepeatAllowFactor>0.2</RepeatAllowFactor>
-			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
-			<LaneItems>
-				<LaneItem>
-					<SpawnID>Bomber</SpawnID>
-					<Positioning>0</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
-		<Lane>
-			<LaneID>LaneGrass</LaneID>
 			<GoRight>True</GoRight>
-			<Speed>4</Speed>
-			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<Speed>1.5</Speed>
+			<MinGapDistance>10</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
-				<LaneItem>
-					<SpawnID>Palm03</SpawnID>
-					<Positioning>0.6</Positioning>
-				</LaneItem>
 				<LaneItem>
 					<SpawnID>Palm02</SpawnID>
-					<Positioning>0.8</Positioning>
-				</LaneItem>
+					<Positioning>0.1</Positioning>
+				</LaneItem>				
+				<LaneItem>
+					<SpawnID>Palm01</SpawnID>
+					<Positioning>0.3</Positioning>
+				</LaneItem>	
+				<LaneItem>
+					<SpawnID>Palm01</SpawnID>
+					<Positioning>0.71</Positioning>
+				</LaneItem>	
 				<LaneItem>
 					<SpawnID>Cigar01</SpawnID>
-					<Positioning>0.7</Positioning>
-				</LaneItem>
-			</LaneItems>
-		</Lane>
+					<Positioning>0.8</Positioning>
+				</LaneItem>	
+				<LaneItem>
+					<SpawnID>Palm03</SpawnID>
+					<Positioning>0.91</Positioning>
+				</LaneItem>	
+			</LaneItems>			
+		</Lane>	
 		<Lane>
 			<LaneID>LaneStreet</LaneID>
-			<GoRight>True</GoRight>
+			<GoRight>False</GoRight>
 			<Speed>4</Speed>
-			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<MinGapDistance>8</MinGapDistance>
+			<MaxGapDistance>9</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
 					<SpawnID>CubanCar</SpawnID>
 					<Positioning>0</Positioning>
-				</LaneItem>
-				<LaneItem>
-					<SpawnID>ManholeCover</SpawnID>
-					<Positioning>0.2</Positioning>
-				</LaneItem>
-				<LaneItem>
-					<SpawnID>Manhole</SpawnID>
-					<Positioning>0.7</Positioning>
-				</LaneItem>
+				</LaneItem>					
 			</LaneItems>
 		</Lane>
 		<Lane>
-			<LaneID>LaneSidewalk</LaneID>
+			<LaneID>LaneStreet</LaneID>
 			<GoRight>True</GoRight>
-			<Speed>4</Speed>
+			<Speed>6</Speed>
 			<MinGapDistance>4</MinGapDistance>
-			<MaxGapDistance>6</MaxGapDistance>
+			<MaxGapDistance>9</MaxGapDistance>
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
 				<LaneItem>
-					<SpawnID>Rock01</SpawnID>
-					<Positioning>0.3</Positioning>
-				</LaneItem>
+					<SpawnID>CubanCar</SpawnID>
+					<Positioning>0</Positioning>
+				</LaneItem>					
+			</LaneItems>
+		</Lane>	
+		<Lane>
+			<LaneID>LaneSidewalk</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>6</Speed>
+			<MinGapDistance>4</MinGapDistance>
+			<MaxGapDistance>9</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
 				<LaneItem>
-					<SpawnID>Carwreck01</SpawnID>
-					<Positioning>0.9</Positioning>
-				</LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>0.5</Positioning>
+				</LaneItem>					
+			</LaneItems>
+		</Lane>		
+		<Lane>
+			<LaneID>LaneSand02</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>1.5</Speed>
+			<MinGapDistance>10</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+				<LaneItem>
+					<SpawnID>Propaganda</SpawnID>
+					<Positioning>0.8</Positioning>
+				</LaneItem>				
 			</LaneItems>
 		</Lane>
+		<Lane>
+			<LaneID>LaneSand01</LaneID>
+			<GoRight>True</GoRight>
+			<Speed>1.5</Speed>
+			<MinGapDistance>10</MinGapDistance>
+			<MaxGapDistance>10</MaxGapDistance>
+			<RepeatAllowFactor>0.2</RepeatAllowFactor>
+			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
+			<LaneItems>
+			</LaneItems>
+		</Lane>	
 	</Lanes>
 </Level>

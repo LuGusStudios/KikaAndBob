@@ -44,7 +44,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	public void HitableHit(IDartsHitable hitable)
 	{
-		Debug.Log ("HIT POSITION " + hitable.transform.position); 
+	//	Debug.Log ("HIT POSITION " + hitable.transform.position); 
 
 		if (negativeScore)
 			DartsScoreManager.use.AddScore( -hitable.GetScore(), hitable.transform.position );

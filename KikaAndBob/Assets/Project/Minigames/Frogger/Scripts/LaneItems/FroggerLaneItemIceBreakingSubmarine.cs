@@ -119,6 +119,8 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 
 		iceHole.gameObject.SetActive(true);
 
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("IceCrack01"));
+
 		// Animate the periscope
 		periscope.gameObject.SetActive(true);
 		iTweener periscopeAnim = iTweenExtensions.MoveTo(periscope.gameObject, periscope.transform.position + new Vector3(0f, 1.5f, 0f)).Time(0.5f);
@@ -136,6 +138,8 @@ public class FroggerLaneItemIceBreakingSubmarine : FroggerLaneItemLethal
 		yield return new WaitForSeconds(0.5f);
 
 		periscope.gameObject.SetActive(false);
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("IceCrack01"));
 
 		// Animate the the ice hole's scale and let the submarine appear above the ice
 		submarine.gameObject.SetActive(true);

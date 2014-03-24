@@ -334,13 +334,23 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
         base.MoveTo(target);
         PacmanTile teleportTile = null;
         //check targettile linked tile so destination has been reached when entering the teleport
-        foreach (GameObject go in target.tileItems)
-        {
-            if (go.GetComponent<PacmanTileItemTeleport>() != null)
-            { 
-                teleportTile = go.GetComponent<PacmanTileItemTeleport>().linkedTile.parentTile;
-            }
-        }
+		// linked tile
+//        foreach (GameObject go in target.tileItems)
+//        {
+//            if (go.GetComponent<PacmanTileItemTeleport>() != null)
+//            { 
+//                teleportTile = go.GetComponent<PacmanTileItemTeleport>().linkedTile.parentTile;
+//            }
+//        }
+
+		foreach(PacmanTileItem tileItem in target.tileItems)
+		{
+			if (tileItem.GetComponent<PacmanTileItemTeleport>() != null)
+			{ 
+				teleportTile = tileItem.GetComponent<PacmanTileItemTeleport>().linkedTile.parentTile;
+			}
+		}
+
         if (teleportTile != null)
         {
             clickedTile = teleportTile;
@@ -349,17 +359,28 @@ public class PacmanPlayerArrowAndClickSteps : PacmanPlayerCharacter
 
     public void DoCurrentTileLeaveBehavior()
     {
-        foreach (GameObject go in currentTile.tileItems)
-        {
-            if (go.GetComponent<PacmanTileItem>() != null)
-            {
-                go.GetComponent<PacmanTileItem>().OnLeave(this);
-                //only if it's a hide tile turn on character again
-                if (go.GetComponent<PacmanTileItemHide>() != null)
-                {
-                    ShowCharacter();
-                }
-            }
-        }
+		// altered by Kasper
+//        foreach (GameObject go in currentTile.tileItems)
+//        {
+//            if (go.GetComponent<PacmanTileItem>() != null)
+//            {
+//                go.GetComponent<PacmanTileItem>().OnLeave(this);
+//                //only if it's a hide tile turn on character again
+//                if (go.GetComponent<PacmanTileItemHide>() != null)
+//                {
+//                    ShowCharacter();
+//                }
+//            }
+//        }
+
+		foreach(PacmanTileItem tileItem in currentTile.tileItems)
+		{
+			tileItem.OnLeave(this);
+			//only if it's a hide tile turn on character again
+			if (tileItem.GetComponent<PacmanTileItemHide>() != null)
+			{
+				ShowCharacter();
+			}
+		}
     }
 }

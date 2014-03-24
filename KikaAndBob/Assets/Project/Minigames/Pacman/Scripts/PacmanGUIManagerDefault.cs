@@ -98,7 +98,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdatePickupCounter(int newValue)
 	{ 
-		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Audio("PickupSound").Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
 		//HUDManager.use.CounterLargeRight1.SetValue(newValue, false);
 	}
 
@@ -149,18 +149,32 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	// this will get called each time a new key index has been added
 	public void UpdateKeyGUIItems()
 	{
-		foreach(KeyValuePair<string, HUDCounter> keyGUI in guiKeyItems)
+		foreach(HUDCounter counter in guiKeyItems.Values)
 		{
-			string key = keyGUI.Key;
-			if (PacmanPickups.use.pickups.ContainsKey(key))
+			counter.gameObject.SetActive(false);
+		}
+
+		foreach(string pickupKey in PacmanPickups.use.pickups.Keys)
+		{
+			if (guiKeyItems.ContainsKey(pickupKey))
 			{
-				keyGUI.Value.gameObject.SetActive(true);
-			}
-			else
-			{
-				keyGUI.Value.gameObject.SetActive(false);
+				guiKeyItems[pickupKey].gameObject.SetActive(true);
 			}
 		}
+
+
+//		foreach(KeyValuePair<string, HUDCounter> keyGUI in guiKeyItems)
+//		{
+//			string key = keyGUI.Key;
+//			if (PacmanPickups.use.pickups.ContainsKey(key))
+//			{
+//				keyGUI.Value.gameObject.SetActive(true);
+//			}
+//			else
+//			{
+//				keyGUI.Value.gameObject.SetActive(false);
+//			}
+//		}
 	}
 
 	public void DisplayKeyAmount(string key, int amount)

@@ -10698,6 +10698,7 @@ MonoBehaviour:
   moving: 0
   alreadyTeleported: 0
   teleportUsed: 0
+  characterAnimator: {fileID: 0}
   poweredUp: 0
   powerupDuration: 10
   allowClickControl: 0
@@ -12840,7 +12841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e72a1a04248499543aa1d8fcff0b4331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentAnimationContainer: {fileID: 0}
+  currentBoneAnimation: {fileID: 0}
+  currentSpriteAnimation: {fileID: 0}
+  currentAnimationTransform: {fileID: 0}
   currentAnimationClip: 
   currentAnimationPath: 
   idle: Idle
@@ -12849,11 +12852,11 @@ MonoBehaviour:
   side: Left
   poweredUpIdle: MummyFront/KikaMummyFront
   poweredUp: MummyFront/KikaMummyBack
-  poweredDown: ccc
+  poweredDown: MummyFront/KikaMummyFront
   poweredSide: MummySide/KikaMummySide
   hitAnimation: Hit/KikaSide_Death
   runScared: 
-  hide: 
+  victory: 
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
