@@ -39,6 +39,8 @@ public class PacmanPrefabListWriter : PrefabListWriter
 		}
 
 		writer.Close();
+
+		Debug.Log("Wrote prefab list to: " + saveLocation);
 	}
 }
 #endif

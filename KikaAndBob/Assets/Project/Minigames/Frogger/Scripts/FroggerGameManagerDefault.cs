@@ -110,6 +110,8 @@ public class FroggerGameManagerDefault : IGameManager
 	{
 		//FroggerLevelManager.use.
 
+		HUDManager.use.StopAll();
+
 		yield return new WaitForSeconds(1.0f);
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
