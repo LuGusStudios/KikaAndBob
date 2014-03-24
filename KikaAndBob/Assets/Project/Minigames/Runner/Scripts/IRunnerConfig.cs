@@ -129,6 +129,10 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		{
 			RunnerCharacterControllerClimbing.use.timeToMaxSpeed = timeToMax2;
 		}
+		else if( RunnerCharacterControllerSkiing.Exists() )
+		{
+			RunnerCharacterControllerSkiing.use.timeToMaxSpeed = timeToMax2;
+		}
 
 		
 		RunnerInteractionManager.use.sectionSpanMultiplierRange = new DataRange( LugusConfig.use.User.GetFloat("runner.custom.sectionSpan1", sectionSpan1), 

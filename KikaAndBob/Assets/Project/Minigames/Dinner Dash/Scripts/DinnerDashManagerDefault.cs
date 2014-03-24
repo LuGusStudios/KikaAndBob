@@ -120,7 +120,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 	public override void StartGame()
 	{
-		Debug.LogError("START GAME CALLED");
+		//Debug.Log("START GAME CALLED");
 
 		_gameRunning = true;
 

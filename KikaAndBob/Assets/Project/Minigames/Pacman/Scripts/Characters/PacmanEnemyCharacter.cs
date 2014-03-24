@@ -242,7 +242,7 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 			if (tile != null)
 			{
 				// if the tile is not open, line of sight is broken
-				if (tile.tileType == PacmanTile.TileType.Collide)
+				if (tile.tileType == PacmanTile.TileType.Collide || tile.tileType == PacmanTile.TileType.Hide)
 				{
 					playerFound = false;
 					return;
@@ -347,20 +347,23 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		// enemies probably only ever have one animation
 		//characterAnimator.PlayAnimation(walkAnimation);
 
+		if (characterAnimator.currentAnimationTransform == null)
+			return;
+
 		if ( direction == CharacterDirections.Right )
 		{
 			// if going left, the scale.x needs to be negative
-			if( characterAnimator.currentBoneAnimation.transform.localScale.x > 0 )
+			if( characterAnimator.currentAnimationTransform.transform.localScale.x > 0 )
 			{
-				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
+				characterAnimator.currentAnimationTransform.transform.localScale = characterAnimator.currentAnimationTransform.transform.localScale.x( characterAnimator.currentBoneAnimation.transform.localScale.x * -1.0f );
 			}
 		}
 		else if ( direction == CharacterDirections.Left )
 		{
 			// if going right, the scale.x needs to be positive 
-			if( characterAnimator.currentBoneAnimation.transform.localScale.x < 0 )
+			if( characterAnimator.currentAnimationTransform.transform.localScale.x < 0 )
 			{
-				characterAnimator.currentBoneAnimation.transform.localScale = characterAnimator.currentBoneAnimation.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
+				characterAnimator.currentAnimationTransform.transform.localScale = characterAnimator.currentAnimationTransform.transform.localScale.x( Mathf.Abs(characterAnimator.currentBoneAnimation.transform.localScale.x) ); 
 			}
 		}
 	}
@@ -563,7 +566,8 @@ public class PacmanEnemyCharacter : PacmanCharacter {
 		   	inspectedTile.tileType == PacmanTile.TileType.LevelEnd ||
 		   	inspectedTile.tileType == PacmanTile.TileType.EnemyAvoid ||
 		  	inspectedTile.tileType == PacmanTile.TileType.Lethal ||
-		   inspectedTile.tileType == PacmanTile.TileType.Teleport
+		    inspectedTile.tileType == PacmanTile.TileType.Teleport ||
+            inspectedTile.tileType == PacmanTile.TileType.Hide
 		   )
 			return false;
 		

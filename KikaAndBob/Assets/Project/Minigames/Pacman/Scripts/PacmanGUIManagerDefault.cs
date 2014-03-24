@@ -28,6 +28,9 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 		if (!guiKeyItems.ContainsKey("Key02"))
 			guiKeyItems.Add("Key02", HUDManager.use.CounterSmallRight2);
+
+		if (!guiKeyItems.ContainsKey("Dynamite"))
+			guiKeyItems.Add("Dynamite", HUDManager.use.CounterSmallRight1);
 	}
 	
 	protected void Awake()
@@ -65,9 +68,9 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterSmallRight1.transform.position = HUDManager.use.CounterSmallRight2.transform.position;
 		HUDManager.use.CounterSmallRight2.transform.position += new Vector3(0, -1.1f, 0);
 
-		// IMPORTANT: If this HUDCounter is inactive at loadtime, its Awake will not be be called until it is set to active.
+		// IMPORTANT: If these HUDCounter are inactive at loadtime, their Awakes will not be be called until they are set to active.
 		// If SetupLocal hasn't run yet, the script may or may not have a reference to its icon renderer depending on execution order.
-		// If it does not have a reference to it, the icon cannot be set properly. Hence, manually call SetupLocal.
+		// If it does not have a reference to it, the icon cannot be set properly. Hence, manually call SetActive, then deactivate again.
 		// Ideally, a more robust solution is in order, but this will do for now.
 		
 		HUDManager.use.CounterSmallRight1.gameObject.SetActive(true);
@@ -78,8 +81,6 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.CounterSmallRight1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterSmallRight1.SetValue(0, false);
 
-		HUDManager.use.CounterSmallRight2.SetupLocal();
-		HUDManager.use.CounterSmallRight2.SetupGlobal();
 		HUDManager.use.CounterSmallRight2.commodity = KikaAndBob.CommodityType.Key02;
 		HUDManager.use.CounterSmallRight2.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterSmallRight2.SetValue(0, false);
@@ -97,7 +98,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 
 	public void UpdatePickupCounter(int newValue)
 	{ 
-		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
+		ScoreVisualizer.Score(KikaAndBob.CommodityType.Feather, 1).Audio("PickupSound").Position(PacmanGameManager.use.GetActivePlayer().transform.position).Execute();
 		//HUDManager.use.CounterLargeRight1.SetValue(newValue, false);
 	}
 
@@ -148,18 +149,32 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	// this will get called each time a new key index has been added
 	public void UpdateKeyGUIItems()
 	{
-		foreach(KeyValuePair<string, HUDCounter> keyGUI in guiKeyItems)
+		foreach(HUDCounter counter in guiKeyItems.Values)
 		{
-			string key = keyGUI.Key;
-			if (PacmanPickups.use.pickups.ContainsKey(key))
+			counter.gameObject.SetActive(false);
+		}
+
+		foreach(string pickupKey in PacmanPickups.use.pickups.Keys)
+		{
+			if (guiKeyItems.ContainsKey(pickupKey))
 			{
-				keyGUI.Value.gameObject.SetActive(true);
-			}
-			else
-			{
-				keyGUI.Value.gameObject.SetActive(false);
+				guiKeyItems[pickupKey].gameObject.SetActive(true);
 			}
 		}
+
+
+//		foreach(KeyValuePair<string, HUDCounter> keyGUI in guiKeyItems)
+//		{
+//			string key = keyGUI.Key;
+//			if (PacmanPickups.use.pickups.ContainsKey(key))
+//			{
+//				keyGUI.Value.gameObject.SetActive(true);
+//			}
+//			else
+//			{
+//				keyGUI.Value.gameObject.SetActive(false);
+//			}
+//		}
 	}
 
 	public void DisplayKeyAmount(string key, int amount)

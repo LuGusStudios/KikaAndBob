@@ -39,6 +39,11 @@ public class DartsScoreManager : LugusSingletonExisting<DartsScoreManager>
 		
 		if (score > 0)
 		{
+			totalScore += score;
+			
+			if (totalScore < 0)
+				totalScore = 0;
+
 			Vector3 position = HUDManager.use.CounterLargeRight1.transform.position + new Vector3(0, -0.2f, -20);	// a little offset makes the score text align nicer
 
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("Blob01"));

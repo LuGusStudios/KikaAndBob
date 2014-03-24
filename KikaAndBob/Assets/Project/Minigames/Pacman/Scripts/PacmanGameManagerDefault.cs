@@ -30,7 +30,7 @@ public class PacmanGameManagerDefault : IGameManager {
 		}
 		else
 		{
-			Debug.LogError("FroggerGameManager: Invalid level data!");
+			Debug.LogError("PacmanGameManager: Invalid level data!");
 		}
 		
 		// if a level wasn't found above, we can still load a default level
@@ -70,6 +70,7 @@ public class PacmanGameManagerDefault : IGameManager {
 		else
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+
 			StartGame();
 		}
 	}
@@ -87,7 +88,10 @@ public class PacmanGameManagerDefault : IGameManager {
 	{
 		return playerChars;
 	}
-
+    public List<PacmanEnemyCharacter> GetEnemyCharacters()
+    {
+        return enemies;
+    }
 	// starts a completely new level
 	public void StartNewLevel()
 	{
@@ -149,6 +153,15 @@ public class PacmanGameManagerDefault : IGameManager {
 
 		gameRunning = true;
 
+
+		IPacmanSpecificConfig[] configs = GetComponents<IPacmanSpecificConfig>();
+
+		foreach(IPacmanSpecificConfig config in configs)
+		{
+			config.DoSetup();
+		}
+
+
 		Debug.Log("Finished starting up new level.");
 	}
 
@@ -160,9 +173,14 @@ public class PacmanGameManagerDefault : IGameManager {
 		return activePlayer;
 	}
 
+    
 	// starts new round in the same level
 	public void StartNewRound()
 	{
+		PacmanLevelManager.use.ResetTiles();
+
+		PacmanLevelManager.use.ClearTempItems();
+
 		ResetPlayerChars();
 
 		ResetEnemies();
@@ -173,6 +191,7 @@ public class PacmanGameManagerDefault : IGameManager {
 
 		Debug.Log("Finished starting up new round.");
 	}
+
 	
 	protected void ResetPlayerChars()
 	{

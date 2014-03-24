@@ -32,7 +32,7 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	public DataRange sectionSpanMultiplierRange = null;
 	public DataRange difficultyRange = null;
 	public float timeToMax = 60.0f;
-	protected float startTime = -1.0f;
+	public float startTime = -1.0f;
 
 	// READ_ONLY for external classes: constantly adjusted. Use the Range-vars above to adjust these values over time
 	public float sectionSpanMultiplier = 1.0f;
@@ -133,7 +133,8 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 					if( Application.loadedLevelName == "e13_pacific" )
 					{
-						Debug.LogError("InteractionManager: checking pacific : " + zonePrefab.sectionSpan + " from " + zonesSinceLongZone);
+						//Debug.LogError("InteractionManager: checking pacific : " + zonePrefab.sectionSpan + " from " + zonesSinceLongZone);
+
 						// in pacific, we have water-zones that are quite long and sometimes difficult
 						// we want to prevent them from spawning back-to-back
 						// so: keep tabs and only spawn a new water zone after 3 other zones have spawned
@@ -283,8 +284,11 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
 
+	}
+
+	public void SpawnForFirstSection()
+	{
 		if( groundLayer != null )
 		{
 			// normally, we have 2 sections of the same layer already setup at the scen estart
@@ -292,7 +296,6 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 			// so: counter that by forcing a spawn on the nextSection at the beginning of the level
 			OnSectionSwitch( groundLayer.currentSection, groundLayer.nextSection );
 		}
-
 	}
 	
 	protected void Awake()
@@ -304,7 +307,9 @@ public class RunnerInteractionManager : LugusSingletonExisting<RunnerInteraction
 	{
 		SetupGlobal();
 	}
-	
+
+
+
 	protected void Update () 
 	{
 	

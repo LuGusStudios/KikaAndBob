@@ -71,6 +71,8 @@ public class PacmanLevelDefinitionWriter : Editor
 			askConfirmation = true;
 			return;
 		}
+
+        SaveConfig();
 	}
 
 	private void SaveConfig()

@@ -269,14 +269,14 @@ public class RunnerManagerDefault : IGameManager
 
 
 		// NORTH // THIS DOES NOT YET SEEM TO WORK... (in Brazil only?) WEIRD
-		if( LugusCamera.game.transform.position.y > shiftYTreshold || LugusInput.use.KeyDown(KeyCode.R) )
+		if( LugusCamera.game.transform.position.y > shiftYTreshold /*|| LugusInput.use.KeyDown(KeyCode.R)*/ )
 		{ 
 			ShiftLevel( -1 * LugusCamera.game.transform.position.y, false ); // shift back to 0.0f
 		}
 
 
 	}
-
+	 
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -284,23 +284,18 @@ public class RunnerManagerDefault : IGameManager
 	
 	public void SetupGlobal()
 	{
+		// TODO: remove me! jsut for debugging! 
+		LugusAudio.use.Music().BaseTrackSettings = new LugusAudioTrackSettings().Volume(0.0f);
+
 		// lookup references to objects / scripts outside of this script
 		
 		levelLoader.FindLevels(); 
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-			RunnerCrossSceneInfo.use.levelToLoad = 667;
+		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
 		#endif
-
-		/* 
-		AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
-		if( background != LugusResources.use.errorAudio ) 
-		{
-			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
-		}
-		*/
 
 		
 		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
@@ -309,9 +304,27 @@ public class RunnerManagerDefault : IGameManager
 			cc.gameObject.SetActive(false);
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
-		else
+		else 
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			
+			AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+			if( background == LugusResources.use.errorAudio )
+			{
+				background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background2");
+			}
+
+			if( background != LugusResources.use.errorAudio ) 
+			{
+				
+				// TODO: remove me! jsut for debugging! 
+#if !UNITY_EDITOR
+				LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f)); 
+#endif
+
+			}
+
+
 
 			StartGame();
 		}
@@ -321,18 +334,94 @@ public class RunnerManagerDefault : IGameManager
 
 	public override void StartGame()
 	{
-		_gameRunning = true;
+		LugusCoroutines.use.StartRoutine( StartGameRoutine() );
+	}
+
+	protected IEnumerator StartGameRoutine()
+	{
 		Debug.Log ("Starting Runner game");
 
-		startTime = Time.time;
+		RunnerCameraPuller puller = null;
+		if( RunnerCameraPuller.Exists() )
+			puller = RunnerCameraPuller.use;
+		
+		RunnerInteractionManager.use.Deactivate();
+		RunnerCharacterController.useBehaviour.enabled = false;
 
+		if( puller != null )
+		{
+			puller.rigidbody2D.isKinematic = true;
+			puller.enabled = false;
+		}
+
+		yield return new WaitForSeconds(0.01f); // give other SetupGlobal()s the time to do their work (especially HUDManager)
+		
+		if( Application.loadedLevelName == "e09_Brazil" )
+		{
+			RunnerCharacterAnimatorFasterSlower fs = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorFasterSlower>();
+			fs.PlayAnimation(fs.stillAnimation);
+		}
+
+		yield return new WaitForSeconds(0.5f); // give fade-out time to finish
+
+		//HUDManager.use.CountdownScreen.gameObject.SetActive(true); // make sure this is active. Is done in SetupGlobal 
+
+		if( Application.loadedLevelName == "e10_Swiss" ||
+		    Application.loadedLevelName == "e13_pacific" )
+		{
+			HUDManager.use.CountdownScreen.countText.textMesh.color = Color.black;
+			HUDManager.use.CountdownScreen.countTextShadow.textMesh.color = Color.white;
+		}
+
+		if( Application.loadedLevelName == "e10_Swiss" )
+		{
+			// there are trail renderers on the skies in switserland
+			// everytime we shift, the renderers fill the screen for a second, which looks buggy
+			// so try to delay the shift as long as possible.  
+			shiftYTreshold = 1800.0f;
+		}
+
+		#if !UNITY_EDITOR
+		HUDManager.use.CountdownScreen.StartCountdown(3, 3.0f);
+
+		yield return new WaitForSeconds(3.0f);
+		#endif
+
+		if( Application.loadedLevelName == "e09_Brazil" )
+		{
+			// in brazil, there's a bug if you press one of the arrow keys before the countdown is finished
+			// the animtion won't play correctly untill you release the button
+			// hard force this directly after the countdown
+			RunnerCharacterControllerClimbing cl = RunnerCharacterControllerClimbing.use;
+			cl.up = false;
+			cl.left = false;
+			cl.down = false;
+			cl.right = false;
+
+			cl.currentSpeedType = KikaAndBob.Runner.SpeedType.STILL;
+		}
+
+		_gameRunning = true;
 		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
 
+
+		RunnerCharacterController.useBehaviour.enabled = true;
+		
+		if( puller != null )
+		{
+			puller.rigidbody2D.isKinematic = false;
+			puller.enabled = true;
+		}
+
+		startTime = Time.time;
+		
+		RunnerInteractionManager.use.Activate();
+		RunnerInteractionManager.use.SpawnForFirstSection ();
 		RunnerInteractionManager.use.StartTimer();
-	
+		
 		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
 		LugusCoroutines.use.StartRoutine( DistanceRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
-
+		
 		if( this.gameType == KikaAndBob.RunnerGameType.NONE )
 		{
 			Debug.LogError(transform.Path () + " : No RunnerGameType set! Config should do this!!!");
@@ -343,12 +432,114 @@ public class RunnerManagerDefault : IGameManager
 	{
 		_gameRunning = false;
 
+		// endless runners can only stop when the character dies
+		// so: start death animation and stop camera
 
+		// distance-based runners: just stop camera and let the character move out of the screen
 
+		float endscreenDelay = 1.0f;
+
+		if( this.gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+
+			if( RunnerCameraPuller.Exists() )
+			{
+				// climber: also disable the controller and animation, cam stops automatically
+				RunnerCharacterController.useBehaviour.enabled = false;
+				
+				RunnerCharacterAnimatorFasterSlower fs = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorFasterSlower>();
+				fs.PlayAnimation(fs.stillAnimation);
+
+				//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
+				//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+			}
+			else
+			{
+				FollowCameraContinuous cam = LugusCamera.game.GetComponent<FollowCameraContinuous>();
+				if( cam != null )
+				{
+					cam.DisableParallax();
+					cam.enabled = false;
+
+					RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+					//RunnerCharacterController.useBehaviour.rigidbody2D.velocity = Vector3.zero;
+					RunnerCharacterController.useBehaviour.Disable( 10.0f ); 
+
+					if( Application.loadedLevelName == "e19_illinois" )
+					{
+						// make kika run out of screen a little more slowly please
+						RunnerCharacterControllerJumpSlide c = RunnerCharacterControllerJumpSlide.use;
+						c.speedRange.to = 6;//c.speedRange.to / 2.0f;
+
+						// if we're kinematic we will "float" if we were jumping when reaching the red button
+						RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = false;
+
+						Vector2 vel = RunnerCharacterController.useBehaviour.rigidbody2D.velocity;
+						vel.x = 0.7f;
+
+						RunnerCharacterController.useBehaviour.rigidbody2D.velocity = vel;
+
+						// since we're not kinematic here, disable pickups because otherwhise we would still get collisions
+						RunnerPickup[] pickups = GameObject.FindObjectsOfType<RunnerPickup>();
+						foreach( RunnerPickup pickup in pickups )
+						{
+							//Debug.LogError("Disabling pickup " + pickup.transform.Path() );
+							pickup.activated = false;
+						}
+					}
+				} 
+				else
+				{
+					Debug.LogError(transform.Path () + " : No FollowCameraContinuous found!");
+				}
+			}
+		}
+		else
+		{
+			FollowCameraContinuous cam = LugusCamera.game.GetComponent<FollowCameraContinuous>();
+			if( cam != null )
+			{
+				cam.DisableParallax();
+				cam.enabled = false;
+			}
+			else
+			{
+				Debug.LogError(transform.Path () + " : No FollowCameraContinuous found!");
+			}
+
+			RunnerCharacterAnimatorJumpSlide animator = RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimatorJumpSlide>();
+
+			if( animator != null )
+			{
+				//RunnerCharacterController.useBehaviour.rigidbody2D.velocity = Vector3.zero;
+				//RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+				
+				( (RunnerCharacterControllerJumpSlide) RunnerCharacterController.jumpSlide).EnlargeShadow();
+				RunnerCharacterController.useBehaviour.enabled = false;
+				animator.characterDead = true;
+				animator.dust.enableEmission = false;
+				animator.PlayAnimation( animator.deathAnimation );
+
+				endscreenDelay = 2.0f;
+			}
+			else
+			{
+				Debug.LogError(transform.Path () + " : No RunnerCharacterAnimatorJumpSlide found!");
+			}
+
+			//RunnerCharacterController.useBehaviour.enabled = false;
+			//RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
+			//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
+			//RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+		}
+
+		/*
 		RunnerCharacterController.useBehaviour.enabled = false;
 		RunnerCharacterController.useBehaviour.rigidbody2D.isKinematic = true;
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().StopAll();
 		RunnerCharacterController.useBehaviour.GetComponent<RunnerCharacterAnimator>().enabled = false;
+		*/
 
 		RunnerInteractionManager.use.Deactivate();
 
@@ -359,7 +550,7 @@ public class RunnerManagerDefault : IGameManager
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 	
 
-		LugusCoroutines.use.StartRoutine( ScoreAnimationRoutine() );
+		LugusCoroutines.use.StartRoutine( ScoreAnimationRoutine(endscreenDelay) );
 		
 		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
 		bool success = true;
@@ -381,8 +572,10 @@ public class RunnerManagerDefault : IGameManager
 
 	//public int pickupsPerSecondConversion = 1; // how many pickups a user should score before he gets 1 second added or subtracted from his timescore
 
-	protected IEnumerator ScoreAnimationRoutine()
+	protected IEnumerator ScoreAnimationRoutine(float delay)
 	{
+		yield return new WaitForSeconds( delay );
+
 		// 1. let time and pickups count up individually
 		// 2. move time over to score (in 1 time)
 		// 3. move pickups over to score (in groups of x, where x = number of pickups to warrant 1 second extra score)
@@ -560,8 +753,8 @@ public class RunnerManagerDefault : IGameManager
 	
 	protected void Update () 
 	{
-
-		if( LugusInput.use.Key( KeyCode.S) )
+		/*
+		//if( LugusInput.use.Key( KeyCode.S) )
 		{
 			timeSpent = Random.Range(50, 100);
 			startTime = Time.time - Random.Range(50, 100);
@@ -570,6 +763,7 @@ public class RunnerManagerDefault : IGameManager
 
 			StopGame();
 		}  
+		*/
 
 	}
 

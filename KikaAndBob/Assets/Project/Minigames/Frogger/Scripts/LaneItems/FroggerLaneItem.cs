@@ -7,12 +7,34 @@ public class FroggerLaneItem : FroggerSurface
 												// if false, item ends up before player (e.g. "cars", obstacles)
 	public bool goRight = false;
 
-	public string lanePresenceSoundKey = null;
+	public FroggerLane ParentLane
+	{
+		get
+		{
+			if (parentLane == null)
+			{
+				FindParentLane();
+			}
+			
+			return parentLane;
+		}
+	}
 
 	protected float coveredDistance = 0;
 	protected float laneLength = 0;
-	protected int location = 0; // 0: off screen first, 1: on screen
+	protected int location = 0;			// 0: off screen first, 1: on screen
 	protected float positioning  = -1; // if -1, will be placed randomly and spawned, otherwise is placed fixed
+	protected FroggerLane parentLane = null;
+
+	public virtual void SetupGlobal()
+	{
+		FindParentLane();
+	}
+
+	private void Start()
+	{
+		SetupGlobal(); 
+	}
 	
 	public void UpdateLaneItem(float displacement)
 	{
@@ -48,5 +70,17 @@ public class FroggerLaneItem : FroggerSurface
 
 	protected virtual void AfterMovedEffect()
 	{
+	}
+
+	protected void FindParentLane()
+	{
+		if (transform.parent != null)
+		{
+			FroggerLane lane = transform.parent.GetComponent<FroggerLane>();
+			if (lane != null)
+			{
+				parentLane = lane;
+			}
+		}
 	}
 }

@@ -104,7 +104,7 @@ public class ConsumableProcessor : IConsumableUser
 		}
 		else 
 		{
-			subject.transform.position = this.transform.position + new Vector3(10,10, 0);
+			subject.transform.position = this.transform.position + new Vector3(10,10, -1);
 		}
 
 

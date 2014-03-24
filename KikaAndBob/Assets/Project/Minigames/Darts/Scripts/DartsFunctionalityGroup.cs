@@ -14,6 +14,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	protected IDartsHitable lastHitable = null;
+	protected float enableTime = 0.0f;
 
 	public void SetupLocal()
 	{
@@ -43,7 +44,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 	public void HitableHit(IDartsHitable hitable)
 	{
-		Debug.Log ("HIT POSITION " + hitable.transform.position); 
+	//	Debug.Log ("HIT POSITION " + hitable.transform.position); 
 
 		if (negativeScore)
 			DartsScoreManager.use.AddScore( -hitable.GetScore(), hitable.transform.position );
@@ -85,8 +86,19 @@ public class DartsFunctionalityGroup : MonoBehaviour
 
 		int tryCounter = 0;
 
-		// cycle randomly through list to find next item with fixed iteration limit
-		do
+//		// at game start, immediately allow one to be shown
+//		if (Time.time < minTimeBetweenShows && hitables.Count > 0 )
+//		{
+//			output = hitables[Random.Range(0, hitables.Count)];
+//		}
+
+		if (!DartsLevelConfiguration.use.GameRunning || Time.time - enableTime < minTimeBetweenShows)	// no point to doing the loop below before this time.
+		{
+			return null;
+		}
+
+		// cycle randomly through list to find next item, with fixed iteration limit
+		while(output == null && tryCounter < 50)
 		{
 			tryCounter++;
 
@@ -94,16 +106,16 @@ public class DartsFunctionalityGroup : MonoBehaviour
 			IDartsHitable hitable = hitables[randomIndex];
 
 			if (avoidRepeat && hitable == lastHitable)
+			{
 				continue;
+			}
 
 			if (!hitable.Shown && (Time.time - hitable.lastHideTime) >= minTimeBetweenShows)
 			{
 				output = hitable;
 				lastHitable = hitable;
 			}
-
 		}
-		while(output == null && tryCounter < 50);
 
 		// fallback in case iteration limit was reached - find first available hitable
 		if (output == null)
@@ -210,5 +222,7 @@ public class DartsFunctionalityGroup : MonoBehaviour
 		}
 
 		this.enabled = enabled;
+
+		enableTime = Time.time;
 	}
 }

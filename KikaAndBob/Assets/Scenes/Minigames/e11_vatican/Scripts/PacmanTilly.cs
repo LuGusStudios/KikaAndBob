@@ -6,6 +6,9 @@ using SmoothMoves;
 public class PacmanTilly :  PacmanTileItem
 {
 	protected BoneAnimation tilly = null;
+	protected Vector3 originalLocation = Vector3.zero;
+	protected bool destroyed = false;
+	protected bool found = false;
 
 	public override void SetupLocal ()
 	{
@@ -18,12 +21,33 @@ public class PacmanTilly :  PacmanTileItem
 		{
 			Debug.LogError("PacmanTilly: Missing bone animation!");
 		}
+
+	}
+	
+
+    public override void OnEnter(PacmanCharacter character)
+	{
+		found = true;
+		PacmanGameManager.use.WinGame();
+		TillyFly();
 	}
 
-	public override void OnEnter ()
+	public override void DestroyTileItem ()
 	{
-			PacmanGameManager.use.WinGame();
-			TillyFly();
+		if (destroyed || found)
+			return;
+
+		destroyed = true;
+
+		PacmanGameManager.use.LoseLife();
+		TillyFly();
+	}
+
+	public override void Reset ()
+	{
+		destroyed = false;
+		iTween.Stop(gameObject);
+		transform.position = parentTile.GetWorldLocation().v3() + new Vector3(0, 0, -5.0f);
 	}
 
 	protected void TillyFly()
