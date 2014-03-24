@@ -8,6 +8,9 @@ public class DartsFlipper : IDartsHitable
 	public Vector3 shownPosition = Vector3.zero;
 
 	public string hitSoundKey = "Poof01";
+
+	protected SpriteRenderer offVersion = null;
+	protected SpriteRenderer onVersion = null;
 	
 	public override void OnHit()
 	{
@@ -37,14 +40,20 @@ public class DartsFlipper : IDartsHitable
 	
 	public override void Show()
 	{
+		onVersion.enabled = true;
+		offVersion.enabled = false;
+
 		this.Shown = true;
-		gameObject.ScaleTo( originalScale ).Time ( 0.1f /*TODO*/).Execute();
+		//gameObject.ScaleTo( originalScale ).Time ( 0.1f /*TODO*/).Execute();
 	}
 	
 	public override void Hide()
 	{
+		onVersion.enabled = false;
+		offVersion.enabled = true;
+
 		this.Shown = false;
-		gameObject.ScaleTo( originalScale.x( originalScale.x / 10.0f)  ).Time ( 0.1f /*TODO*/).Execute();
+		//gameObject.ScaleTo( originalScale.x( originalScale.x / 10.0f)  ).Time ( 0.1f /*TODO*/).Execute();
 	}
 
 	public Vector3 originalScale = Vector3.one;
@@ -52,6 +61,27 @@ public class DartsFlipper : IDartsHitable
 	public void SetupLocal()
 	{
 		originalScale = this.transform.localScale;
+
+		if (offVersion == null)
+		{
+			Transform t = transform.FindChild("OffVersion");
+
+			if (t != null)
+				offVersion = t.GetComponent<SpriteRenderer>();
+		}
+
+		if (offVersion == null)
+			Debug.Log("DartsFlipper: Missing Off version.");
+
+		if (onVersion == null)
+		{
+			onVersion = GetComponent<SpriteRenderer>();
+		}
+
+		if (onVersion == null)
+		{
+			Debug.Log("DartsFlipper: Missing On version.");
+		}
 	}
 	
 	public void SetupGlobal()

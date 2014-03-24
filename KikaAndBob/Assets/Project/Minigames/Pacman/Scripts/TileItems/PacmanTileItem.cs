@@ -26,11 +26,6 @@ public class PacmanTileItem : MonoBehaviour
 	{
 	}
 
-	protected void Update () 
-	{
-	
-	}
-
 	public virtual void Initialize()
 	{
 
@@ -50,4 +45,14 @@ public class PacmanTileItem : MonoBehaviour
     {
         
     }
+
+	public virtual void Reset()
+	{
+
+	}
+
+	public virtual void DestroyTileItem()
+	{
+
+	}
 }

@@ -79,12 +79,17 @@ public class PacmanEnemyPatrolButler : PacmanEnemyPatrolGuard
         if (inspectedTile != null)
         {
             // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
-            foreach (GameObject go in inspectedTile.tileItems)
+			// Altered by Kasper
+//			foreach (GameObject go in inspectedTile.tileItems)
+//			{
+//				if (go.GetComponent<PacmanTileItem>() != null)
+//				{
+//					go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//				}
+//			}
+            foreach (PacmanTileItem tileItem in inspectedTile.tileItems)
             {
-                if (go.GetComponent<PacmanTileItem>() != null)
-                {
-                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
-                }
+            	tileItem.OnTryEnter(this);
             }
             if (IsEnemyWalkable(inspectedTile))
             {
@@ -104,13 +109,20 @@ public class PacmanEnemyPatrolButler : PacmanEnemyPatrolGuard
         if (inspectedTile != null)
         {
             // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
-            foreach (GameObject go in inspectedTile.tileItems)
+			// altered by Kasper
+//            foreach (GameObject go in inspectedTile.tileItems)
+//            {
+//                if (go.GetComponent<PacmanTileItem>() != null)
+//                {
+//                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//                }
+//            }
+
+            foreach (PacmanTileItem tileItem in inspectedTile.tileItems)
             {
-                if (go.GetComponent<PacmanTileItem>() != null)
-                {
-                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
-                }
+                tileItem.OnTryEnter(this);
             }
+
             if (IsEnemyWalkable(inspectedTile))
             {
                 float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
@@ -128,13 +140,20 @@ public class PacmanEnemyPatrolButler : PacmanEnemyPatrolGuard
         if (inspectedTile != null)
         {
             // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
-            foreach (GameObject go in inspectedTile.tileItems)
-            {
-                if (go.GetComponent<PacmanTileItem>() != null)
-                {
-                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
-                }
-            }
+			// altered by Kasper
+//            foreach (GameObject go in inspectedTile.tileItems)
+//            {
+//                if (go.GetComponent<PacmanTileItem>() != null)
+//                {
+//                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//                }
+//            }
+
+			foreach (PacmanTileItem tileItem in inspectedTile.tileItems)
+			{
+				tileItem.OnTryEnter(this);
+			}
+
             if (IsEnemyWalkable(inspectedTile))
             {
                 float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
@@ -152,13 +171,20 @@ public class PacmanEnemyPatrolButler : PacmanEnemyPatrolGuard
         if (inspectedTile != null)
         {
             // first we run OnTryEnter(), because this might still alter things about the tile (e.g. changing it from Collide to Open if the player has a key for a door)
-            foreach (GameObject go in inspectedTile.tileItems)
-            {
-                if (go.GetComponent<PacmanTileItem>() != null)
-                {
-                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
-                }
-            }
+			// altered by Kasper
+//            foreach (GameObject go in inspectedTile.tileItems)
+//            {
+//                if (go.GetComponent<PacmanTileItem>() != null)
+//                {
+//                    go.GetComponent<PacmanTileItem>().OnTryEnter(this);
+//                }
+//            }
+
+			foreach (PacmanTileItem tileItem in inspectedTile.tileItems)
+			{
+				tileItem.OnTryEnter(this);
+			}
+
             if (IsEnemyWalkable(inspectedTile))
             {
                 float distance = Vector2.Distance(inspectedTile.location, targetTile.location);
