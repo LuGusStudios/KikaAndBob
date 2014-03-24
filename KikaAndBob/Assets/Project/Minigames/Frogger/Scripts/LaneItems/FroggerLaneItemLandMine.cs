@@ -123,6 +123,7 @@ public class FroggerLaneItemLandMine : FroggerLaneItemDestructible
 
 	protected override void EnterSurfaceEffect(FroggerCharacter character)
 	{
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("MineCharge01"));
 		mineState = MineState.EXPLODING;
 	}
 

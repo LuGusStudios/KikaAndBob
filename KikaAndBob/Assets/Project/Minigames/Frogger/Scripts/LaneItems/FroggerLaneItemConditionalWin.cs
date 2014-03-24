@@ -86,7 +86,7 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		//GameObject.FindObjectOfType(typeof(FroggerRequiredPickup))
 		FroggerRequiredPickup[] pickups = GameObject.FindObjectsOfType<FroggerRequiredPickup>();
 
-		Debug.LogError("Length of found pickups: " + pickups.Length);
+		Debug.Log("Length of found pickups: " + pickups.Length);
 
 		requiredPickups = new List<FroggerRequiredPickup>();
 

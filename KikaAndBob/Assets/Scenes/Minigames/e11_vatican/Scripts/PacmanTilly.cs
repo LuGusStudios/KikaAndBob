@@ -27,9 +27,9 @@ public class PacmanTilly :  PacmanTileItem
 
     public override void OnEnter(PacmanCharacter character)
 	{
-			found = true;
-			PacmanGameManager.use.WinGame();
-			TillyFly();
+		found = true;
+		PacmanGameManager.use.WinGame();
+		TillyFly();
 	}
 
 	public override void DestroyTileItem ()
