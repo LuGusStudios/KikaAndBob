@@ -40,7 +40,20 @@ public class FroggerGameManagerDefault : IGameManager
 	}
 
 	public override void StopGame()
-	{}
+	{
+		Debug.Log("FroggerGameManager: Won game!");
+		
+		gameRunning = false;
+		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
+		
+		LugusConfig.use.User.SetBool(saveKey, true, true);
+		LugusConfig.use.SaveProfiles();
+		
+		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
+		//TO DO: STORE SCORE TOTAL HERE!
+		
+		LugusCoroutines.use.StartRoutine(EndGameRoutine(timer, pickupCount, scoreTotal));
+	}
 
 	public void SetUpLevel()
 	{
@@ -90,22 +103,15 @@ public class FroggerGameManagerDefault : IGameManager
 
 	public void WinGame()
 	{
-		Debug.Log("FroggerGameManager: Won game!");
-
-		gameRunning = false;
-		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
-
-		LugusConfig.use.User.SetBool(saveKey, true, true);
-		LugusConfig.use.SaveProfiles();
-
-		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
-		//TO DO: STORE SCORE TOTAL HERE!
-
-		LugusCoroutines.use.StartRoutine(EndGameRoutine(timer, pickupCount, scoreTotal));
+		StopGame();
 	}
 
 	protected IEnumerator EndGameRoutine(float timer, int pickupCount, int scoreTotal)
 	{
+		//FroggerLevelManager.use.
+
+		HUDManager.use.StopAll();
+
 		yield return new WaitForSeconds(1.0f);
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);

@@ -432,6 +432,11 @@ public class FroggerCharacter : MonoBehaviour {
 		LugusCoroutines.use.StartRoutine(SmoothMovesUtil.Blink(boneAnimations, color, duration, count));
 	}
 
+	public void DoVictoryAnimation()
+	{
+		characterAnimator.PlayAnimation(characterAnimator.victory);
+	}
+
 	public void DoHitAnimation()
 	{
 		hitParticles.Play();

@@ -17,6 +17,7 @@ public class PacmanLavaTile : PacmanTileItem
 	public Sprite lava4Way = null;
 
 	protected bool done = false;
+	protected ILugusCoroutineHandle flowRoutineHandle = null;
 	
 	protected enum LavaTileType
 	{
@@ -35,7 +36,8 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 		RegisterSurroundingTiles();
 
-		StartCoroutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
+		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
+			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
 	}
 
 	public void RegisterSurroundingTiles()
@@ -144,38 +146,53 @@ public class PacmanLavaTile : PacmanTileItem
 				if (tile == null)	// should probably never happen, but doesn't hurt to check
 					continue;
 
-					GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
-					newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
-					newLavaTileObject.name = "LavaTrail" + tile.ToString();
+				if (this == null)
+				{
+					Debug.LogError("NULL");
+					continue;
+				}
 
-					if (PacmanLevelManager.use.temporaryParent != null)
-					{
-						newLavaTileObject.transform.parent = PacmanLevelManager.use.temporaryParent;
-					}
-					else
-					{
-						Debug.LogWarning("PacmanLavaTile: No temporary items parent found. This tile will not be removed in the next round!");
-						newLavaTileObject.transform.parent = this.transform.parent;
-					}
-					
-					PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
-					newLavaTile.parentTile = tile;
-					newLavaTile.originLavaTile = this;
+				GameObject newLavaTileObject = (GameObject) Instantiate(lavaTrailPrefab);
+				newLavaTileObject.transform.position = tile.GetWorldLocation().v3().z(this.transform.position.z);
+				newLavaTileObject.name = "LavaTrail" + tile.ToString();
+
+				if (PacmanLevelManager.use.temporaryParent != null)
+				{
+					newLavaTileObject.transform.parent = PacmanLevelManager.use.temporaryParent;
+				}
+				else
+				{
+					Debug.LogWarning("PacmanLavaTile: No temporary items parent found. This tile will not be removed in the next round!");
+					newLavaTileObject.transform.parent = this.transform.parent;
+				}
+				
+				PacmanLavaTileStart newLavaTile = newLavaTileObject.GetComponent<PacmanLavaTileStart>();
+				newLavaTile.parentTile = tile;
+				newLavaTile.originLavaTile = this;
 
 
-					surroundingLavaTiles.Add(tile);
-					tile.tileItems.Add(newLavaTile);
+				surroundingLavaTiles.Add(tile);
+				tile.tileItems.Add(newLavaTile);
 
-					newLavaTile.Initialize();
-			}
+				newLavaTile.Initialize();
+			} 
 
 			yield return new WaitForSeconds(updateCheckSpeed);
 		}
 	}
 
+	protected void OnDestroy()
+	{
+		if (flowRoutineHandle != null && flowRoutineHandle.Running)
+			flowRoutineHandle.StopRoutine();
+	}
+
 	public override void Reset ()
 	{
 		RegisterSurroundingTiles();
+
+		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
+			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());
 	}
 
     public override void OnTryEnter(PacmanCharacter character)
