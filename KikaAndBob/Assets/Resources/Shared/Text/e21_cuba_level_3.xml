@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-	<BackgroundMusicName></BackgroundMusicName>
+	<BackgroundMusicName>e21_cuba_background</BackgroundMusicName>
 	<Lanes>
-
 
 		<Lane>
 			<LaneID>LaneSand01</LaneID>
@@ -149,14 +148,14 @@
 			<LaneItems>
 				<LaneItem>
 					<SpawnID>Manhole</SpawnID>
-					<Positioning>.2</Positioning>
+					<Positioning>.8</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
 
 		<Lane>
 			<LaneID>LaneStreet</LaneID>
-			<GoRight>False</GoRight>
+			<GoRight>True</GoRight>
 			<Speed>6.3</Speed>
 			<MinGapDistance>4</MinGapDistance>
 			<MaxGapDistance>5</MaxGapDistance>
@@ -200,7 +199,7 @@
 
 		<Lane>
 			<LaneID>LaneStreet</LaneID>
-			<GoRight>True</GoRight>
+			<GoRight>False</GoRight>
 			<Speed>5</Speed>
 			<MinGapDistance>4</MinGapDistance>
 			<MaxGapDistance>5</MaxGapDistance>
@@ -210,6 +209,14 @@
 				<LaneItem>
 					<SpawnID>CubanCar</SpawnID>
 					<Positioning>0</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>.7</Positioning>
+				</LaneItem>
+				<LaneItem>
+					<SpawnID>Manhole</SpawnID>
+					<Positioning>.3</Positioning>
 				</LaneItem>
 			</LaneItems>
 		</Lane>
@@ -426,6 +433,10 @@
 			<RepeatAllowFactor>0.2</RepeatAllowFactor>
 			<BackgroundScrollingSpeed>0</BackgroundScrollingSpeed>
 			<LaneItems>
+				<LaneItem>
+					<SpawnID>Palm02</SpawnID>
+					<Positioning>0.1</Positioning>
+				</LaneItem>
 				<LaneItem>
 					<SpawnID>Palm03</SpawnID>
 					<Positioning>0.8</Positioning>

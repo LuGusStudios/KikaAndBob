@@ -6,6 +6,7 @@ public class DartsPuddingThrower : MonoBehaviour
 {
 	public GameObject bulletPrefab = null;
 	public string[] shootSoundKeys = null;
+	public string[] hitSoundKeys = null;
 	
 	public DataRange bulletTravelTimeRange = new DataRange(0.1f, 0.2f);
 	
@@ -84,7 +85,7 @@ public class DartsPuddingThrower : MonoBehaviour
 		Transform hit = LugusInput.use.RayCastFromMouse(LugusCamera.game);
 		
 		shooting = true; 
-		
+
 		GameObject bullet = (GameObject) GameObject.Instantiate( bulletPrefab );
 		bullet.transform.position = transform.position;
 		bullet.transform.eulerAngles = transform.eulerAngles;
@@ -111,6 +112,12 @@ public class DartsPuddingThrower : MonoBehaviour
 		
 		if( hit != null && hitable != null && hitable.Shown )
 		{
+			if (hitSoundKeys != null && hitSoundKeys.Length > 0)
+			{
+				string key = hitSoundKeys[Random.Range(0, hitSoundKeys.Length)];
+				LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(key));
+			}
+
 			//bullet.transform.localScale *= (1.0f / hit.transform.localScale.x);
 			bullet.transform.parent = hit;
 			
