@@ -98,6 +98,11 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 	
 	protected IEnumerator PlayerSeenRoutine()
 	{
+		PacmanGameManager.use.gameRunning = false;	// need to set this already so other guards can't detect the player anymore
+
+		PacmanPlayerCharacter player = PacmanGameManager.use.GetActivePlayer();
+		player.characterAnimator.PlayAnimation(player.characterAnimator.idle);
+
 		detectedRoutineRunning = true;
 
 		angryParticles.Play();

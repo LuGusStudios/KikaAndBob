@@ -105,6 +105,11 @@ public class LugusCoroutineHandleDefault : MonoBehaviour, ILugusCoroutineHandle
 	
 	public void StopRoutine()
 	{
+		if( this == null || this.gameObject == null )
+		{
+			return;
+		}
+
 		StopAllCoroutines();
 		
 		_routineCount = 0;

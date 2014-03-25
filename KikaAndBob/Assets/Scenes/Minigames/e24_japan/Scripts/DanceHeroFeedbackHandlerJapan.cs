@@ -174,6 +174,26 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 		HUDManager.use.CounterLargeBottomLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterLargeBottomLeft1.SetValue(0);
 
+		HUDManager.use.CounterSmallLeft2.gameObject.SetActive(true);
+		HUDManager.use.CounterSmallLeft2.commodity = KikaAndBob.CommodityType.Custom;
+		HUDManager.use.CounterSmallLeft2.formatting = HUDCounter.Formatting.Int;
+		HUDManager.use.CounterSmallLeft2.prefix = "X";
+		HUDManager.use.CounterSmallLeft2.SetValue(1);
+
+		// this positions it nicely over the other counter
+		HUDManager.use.CounterSmallLeft2.transform.position = HUDManager.use.CounterLargeBottomLeft1.transform.position + new Vector3(-0.9f, 1.1f, 0.0f);
+
+		HUDManager.use.ProgressBarLeftBottom.gameObject.SetActive(true);
+		HUDManager.use.ProgressBarLeftBottom.commodity = KikaAndBob.CommodityType.Time;
+		HUDManager.use.ProgressBarLeftBottom.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+
+		HUDManager.use.ProgressBarLeftBottom.transform.position = HUDManager.use.ProgressBarLeftBottom.transform.position.xAdd(6.0f);
+
+		// this vertically aligns the progress bar and the score counter
+		// For some reason this is NOT the case by default. Reapplying the GUI prefab might potentially screw with positioning elsewhere.
+		// So instead we do it this way, which will always keep working, even if it the prefab is changed later.
+		HUDManager.use.ProgressBarLeftBottom.transform.position = HUDManager.use.ProgressBarLeftBottom.transform.position.y(HUDManager.use.CounterLargeBottomLeft1.transform.position.y);
+
 		sculptureIndex = 0;
 			
 		sculpturesOnScreen.Clear();
@@ -241,6 +261,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 
 	protected void OnLevelRestart()
 	{
+		HUDManager.use.ProgressBarLeftBottom.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
 		LugusCoroutines.use.StartRoutine(PauseRoutine());
 	}
 
