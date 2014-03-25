@@ -59,6 +59,8 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         // update player in case we've changed players (two character game etc.)
         player = PacmanGameManager.use.GetActivePlayer();
         
+		ScaleFOV();
+
         // the player is in neutral state unless something else is happening
         NeutralEffect();
 
