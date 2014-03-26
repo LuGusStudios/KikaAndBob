@@ -7,6 +7,7 @@ public class FroggerLaneCanyon : FroggerLane
 	public ParticleSystem poof = null;
 	public float cloudSpeed = 1f;
 	public List<FroggerLaneItem> clouds = new List<FroggerLaneItem>();
+	public string poofSFXName = "";
 
 	protected List<FroggerLaneItem> spawnedClouds = new List<FroggerLaneItem>();
 	protected float cloudSpawnDistance = 0f;
@@ -77,6 +78,15 @@ public class FroggerLaneCanyon : FroggerLane
 
 	private IEnumerator VanishCharacterRoutine(FroggerCharacter character)
 	{
+		if (!string.IsNullOrEmpty(poofSFXName))
+		{
+			AudioClip poofSFX = LugusResources.use.Shared.GetAudio(poofSFXName);
+			if (poofSFX != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.SFX().Play(poofSFX);
+			}
+		}
+
 		float time = 0.3f;
 
 		character.gameObject.MoveTo(character.transform.position.y(character.transform.position.y - 10f)).Time(time).Execute();

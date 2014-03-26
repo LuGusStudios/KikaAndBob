@@ -116,6 +116,16 @@ public class FroggerBeeHive : FroggerCollider
 		// Next, bees are spawned from the hive that will follow the player for
 		// a little while
 
+		// Play the sound effect
+		if (!string.IsNullOrEmpty(buzzingSFXName))
+		{
+			AudioClip buzzingSFX = LugusResources.use.Shared.GetAudio(buzzingSFXName);
+			if (buzzingSFX != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.SFX().Play(buzzingSFX);
+			}
+		}
+
 		// Shake the beehive a little bit
 		if (beeHive != null)
 		{
