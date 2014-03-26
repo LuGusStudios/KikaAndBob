@@ -37,7 +37,7 @@ public class PacmanLavaTile : PacmanTileItem
 		RegisterSurroundingTiles();
 
 		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
-			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());	// starting this the old way - it doesn't need to be terminated, and this way it will be stopped if the object disappears
+			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());
 	}
 
 	public void RegisterSurroundingTiles()
@@ -49,9 +49,12 @@ public class PacmanLavaTile : PacmanTileItem
 		foreach(PacmanTile tile in PacmanLevelManager.use.GetTilesAroundStraight(parentTile))
 		{
 			bool isOpenTile = true;
-			
+
 			foreach (PacmanTileItem tileItem in tile.tileItems)
 			{
+				if (tileItem.gameObject.activeSelf == false)
+					continue;
+
 				if (tileItem.GetComponent<PacmanLavaTile>() != null || tileItem.GetComponent<PacmanLavaTileStart>() != null)
 				{
 					surroundingLavaTiles.Add(tile);
@@ -86,8 +89,7 @@ public class PacmanLavaTile : PacmanTileItem
 	{
 		if (done)
 			return;
-		
-		
+
 		LugusCoroutines.use.StartRoutine(BurnUp());
 	}
 
@@ -122,11 +124,16 @@ public class PacmanLavaTile : PacmanTileItem
 		while (true)
 		{
 			if (surroundingLavaTiles.Count >= 4 || done)
+			{
 				yield break;
+				print ("DONE");
+			}
 
 			// don't want this continuing after winning or losing
 			while (!PacmanGameManager.use.gameRunning)
 				yield return null;
+
+	
 
 			// first update the surroundingOpenTiles list. An other lava tile might already have started claiming it!
 			for (int i = surroundingOpenTiles.Count - 1; i >= 0; i--) 
@@ -189,10 +196,14 @@ public class PacmanLavaTile : PacmanTileItem
 
 	public override void Reset ()
 	{
-		RegisterSurroundingTiles();
+		done = false;
 
+		RegisterSurroundingTiles();
+		
 		if (flowRoutineHandle == null || !flowRoutineHandle.Running)
+		{
 			flowRoutineHandle = LugusCoroutines.use.StartRoutine(UpdateRoutine());
+		}
 	}
 
     public override void OnTryEnter(PacmanCharacter character)

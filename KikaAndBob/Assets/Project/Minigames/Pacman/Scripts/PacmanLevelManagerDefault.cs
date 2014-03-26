@@ -525,7 +525,7 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		Debug.Log("PacmanLevelManager: Clearing temporary items.");
 
 		// many of these can already have been destroyed by the ResetTiles method
-		// other things, not associated with one particular tile, gets removed here
+		// other things, not associated with one particular tile, get removed here
 
 		for (int i = temporaryParent.childCount - 1; i >= 0; i--)
 		{
@@ -539,7 +539,15 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		{
 			for (int j = 0; j < levelTiles.GetLength(1); j++) 
 			{
-				levelTiles[i, j].ResetTile();
+				levelTiles[i, j].PruneTileItems();
+			}
+		}
+
+		for (int i = 0; i < levelTiles.GetLength(0); i++) 
+		{
+			for (int j = 0; j < levelTiles.GetLength(1); j++) 
+			{
+				levelTiles[i, j].ResetTileItems();
 			}
 		}
 	}
