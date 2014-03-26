@@ -13,6 +13,8 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
     protected int lockedSteps = 0;
     protected float chaseSpeedMultiplier = 0.5f;
     protected float maxChaseSpeedInPercentage = 0.90f;
+	protected SpriteRenderer hearRadius = null;
+
     public override void SetUpLocal()
     {
         base.SetUpLocal();
@@ -21,6 +23,15 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
         canRecieveTeleportTile = false;
         useTeleport = false;
         //allowUTurns = false;
+
+		if (hearRadius == null)
+		{
+			Transform child = transform.FindChild("HearRadius");
+			hearRadius = child.GetComponent<SpriteRenderer>();
+		}
+
+		if (hearRadius == null)
+			Debug.LogError("PacmanEnemyPatrolGuardChase: Missing hear radius!");
     }
 
     protected void OnEnable()
@@ -50,6 +61,49 @@ public class PacmanEnemyPatrolGuardChase : PacmanEnemyPatrolGuard
             canRecieveTeleportTile = false;
         }
     }
+
+	protected override void ScaleFOV ()
+	{
+		float playerDistance = Vector2.Distance(transform.position.v2(), PacmanGameManager.use.GetActivePlayer().transform.position.v2());
+		float maxDistance = (forwardDetectDistance) * PacmanLevelManager.use.scale;
+
+		hearRadius.color = hearRadius.color.a(Mathf.Lerp(1.0f, 0.0f, Mathf.Clamp(playerDistance / maxDistance, 0.0f, 1.0f)));
+
+		lineMaterial.SetColor("_TintColor", lineMaterial.GetColor("_TintColor").a(1.0f - Mathf.Clamp(playerDistance / maxDistance, 0.0f, 1.0f ) ));
+
+		
+		PacmanTile[] view = PacmanLevelManager.use.GetTilesInDirection(currentTile, forwardDetectDistance, currentDirection);
+		PacmanTile lastTile = null;
+		
+		foreach (PacmanTile tile in view)
+		{
+			if (tile == null || tile.tileType == PacmanTile.TileType.Collide)
+				break;
+			
+			lastTile = tile;
+		}
+		
+		if (lastTile != null)
+		{
+			if (!fovRenderer.enabled)
+				fovRenderer.enabled = true;
+			
+			fovRenderer.SetPosition(0, transform.position);
+			
+			Vector3 targetLocation = lastTile.GetWorldLocation().v3().z(transform.position.z);
+			
+			targetLocation += (targetLocation - transform.position).normalized * (PacmanLevelManager.use.scale * 0.5f);
+			
+			fovRenderer.SetPosition(1, targetLocation);
+		}
+		else
+		{
+			if (fovRenderer.enabled)
+				fovRenderer.enabled = false;
+		}
+
+
+	}
 
     protected override void Update()
     {
