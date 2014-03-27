@@ -7,6 +7,7 @@ public class PacmanGameManager : LugusSingletonExisting<PacmanGameManagerDefault
 
 public class PacmanGameManagerDefault : IGameManager {
 
+	public int startLives = 3;
 	public bool allowPickupWin =  true;	// if true, just picking up all pickups wins the game - if false, the win condition will need to be triggered in a different way
 	public bool gameRunning = false;
 	protected float timer = 0.0f;
@@ -145,7 +146,7 @@ public class PacmanGameManagerDefault : IGameManager {
 	
 
 		// reset lives
-		lives = 3;
+		lives = startLives;
 		PacmanGUIManager.use.UpdateLives(lives);
 
 		// reset sound effects
