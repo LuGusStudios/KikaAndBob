@@ -162,18 +162,7 @@ public abstract class FroggerLane : FroggerSurface
 	
 	protected virtual void Update()
 	{
-		// move background if there is a moving one
-		if (scrollingBackground != null)
-		{
-			scrollingOffset = scrollingOffset.x(scrollingOffset.x + (scrollingSpeed * Time.deltaTime));
-			
-			if (Mathf.Abs(scrollingOffset.x) >= GetSurfaceSize().x)
-			{
-				scrollingOffset = scrollingOffset.x(0);
-			}
-			
-			scrollingBackground.localPosition = scrollingOffset;
-		}
+		ScrollBackground();
 
 		if (dynamicSpawnItems.Count < 1 || speed <= 0)
 			return;
@@ -201,7 +190,7 @@ public abstract class FroggerLane : FroggerSurface
 		}
 	}
 
-	private GameObject SpawnLaneItem()
+	protected GameObject SpawnLaneItem()
 	{
 		// just ensures this also works in the editor
 		if (surfaceCollider == null)
@@ -264,5 +253,21 @@ public abstract class FroggerLane : FroggerSurface
 		dynamicSpawnedItems.Add(itemScript);
 
 		return spawnedItem;
+	}
+
+	protected void ScrollBackground()
+	{
+		// move background if there is a moving one
+		if (scrollingBackground != null)
+		{
+			scrollingOffset = scrollingOffset.x(scrollingOffset.x + (scrollingSpeed * Time.deltaTime));
+
+			if (Mathf.Abs(scrollingOffset.x) >= GetSurfaceSize().x)
+			{
+				scrollingOffset = scrollingOffset.x(0);
+			}
+
+			scrollingBackground.localPosition = scrollingOffset;
+		}
 	}
 }

@@ -159,7 +159,7 @@ public class PacmanEnemyPatrolGuard : EnemyPatrol
 			ChangeSpriteFacing(CharacterDirections.Up);
 	}
 
-    protected void ScaleFOV()
+    protected virtual void ScaleFOV()
 	{
 		float playerDistance = Vector2.Distance(transform.position.v2(), PacmanGameManager.use.GetActivePlayer().transform.position.v2());
 		float maxDistance = (forwardDetectDistance) * PacmanLevelManager.use.scale;

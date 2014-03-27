@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PacmanTileItemTeleport : PacmanTileItem 
 {
+	public string enterSoundKey = "Ladder01";
     public PacmanTileItem linkedTile; 
     public override void Initialize()
     {
@@ -31,11 +32,29 @@ public class PacmanTileItemTeleport : PacmanTileItem
     {
         if (!character.teleportUsed)
         {
-            character.transform.localPosition = linkedTile.parentTile.location.v3();
-            character.currentTile = linkedTile.parentTile;
-            character.teleportUsed = true;
+			character.teleportUsed = true;
+			LugusCoroutines.use.StartRoutine(TunnelRoutine(character));
         }  
     }
+
+	protected IEnumerator TunnelRoutine(PacmanCharacter character)
+	{
+		PacmanGameManager.use.gameRunning = false;
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(enterSoundKey));
+
+		PacmanScreenFader.use.FadeInAndOut(1.0f);
+
+		yield return new WaitForSeconds(0.5f);
+
+
+		character.transform.localPosition = linkedTile.parentTile.location.v3();
+		character.currentTile = linkedTile.parentTile;
+
+		PacmanGameManager.use.gameRunning = true;
+
+		yield break;
+	}
 
     public override void OnLeave(PacmanCharacter character)
     {
