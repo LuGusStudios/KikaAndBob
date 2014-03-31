@@ -72,7 +72,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			// TODO: make the line function better... now it's just in the ActionPoint prefab, but often it goes unused, causing overhead...
 			Transform line = actionPoint.transform.FindChild("Line");
 			line.localScale = line.localScale.x ( units / line.renderer.bounds.size.x );
-			Debug.LogError ("Line width " + line.renderer.bounds.size.x );
+			//Debug.LogError ("Line width " + line.renderer.bounds.size.x );
 
 			
 			renderer.actionPoints.Add( actionPoint.transform );

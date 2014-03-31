@@ -6,7 +6,8 @@ public class DartsRussiaTrainSound : MonoBehaviour
 {
 	public void SetupGlobal()
 	{
-		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("TrainRide01"), false, new LugusAudioTrackSettings().Loop(true).Volume(1.0f));
+		if (DartsLevelConfiguration.use.GameRunning)
+			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("TrainRide01"), false, new LugusAudioTrackSettings().Loop(true).Volume(1.0f));
 	}
 
 	protected void Start () 
