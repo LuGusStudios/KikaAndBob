@@ -45,14 +45,8 @@ public class PacmanTile
 	{
 		return PacmanLevelManager.use.GetLevelRoot().position.v2() + location;
 	}
-
-	public void ResetTile()
-	{
-		PruneTileItems();
-		ResetTileItems();
-	}
-
-	// will only leave behind non-null tileitems (e.g. temporary items that are cleared each round)
+	
+	// will only leave behind tile items that are not temporary (per-round) items
 	public void PruneTileItems()
 	{
 		if (PacmanLevelManager.use.temporaryParent == null)
@@ -70,6 +64,7 @@ public class PacmanTile
 			}
 			else
 			{
+				tileItem.gameObject.SetActive(false);
 				GameObject.Destroy(tileItem.gameObject);
 			}
 		}
