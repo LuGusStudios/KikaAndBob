@@ -36,6 +36,11 @@ public class FroggerBees : MonoBehaviour
 
 	public void FollowTarget(Transform target, float aliveTime, float speed)
 	{
+		if (target == null)
+		{
+			return;
+		}
+
 		this.target = target;
 		this.aliveTime = aliveTime;
 		this.speed = speed;
@@ -58,11 +63,6 @@ public class FroggerBees : MonoBehaviour
 
 	private IEnumerator FollowTargetRoutine()
 	{
-		if (target == null)
-		{
-			yield break;
-		}
-
 		float scalingTime = 0.5f;
 
 		// Set the scale of the object to be small at first
@@ -132,13 +132,6 @@ public class FroggerBees : MonoBehaviour
 				gameObject.ScaleTo(transform.localScale * scaleFadeFactor).Time(scalingTime).Execute();
 				yield return new WaitForSeconds(scalingTime);
 				break;
-		}
-
-		// When the timer runs out, scale back down and destroy the game object
-		if (scaleFadeEnabled)
-		{
-			gameObject.ScaleTo(transform.localScale * scaleFadeFactor).Time(scalingTime).Execute();
-			yield return new WaitForSeconds(scalingTime);
 		}
 
 		GameObject.Destroy(gameObject);

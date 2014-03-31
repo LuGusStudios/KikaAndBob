@@ -361,7 +361,15 @@ public class FroggerCharacter : MonoBehaviour {
 		{
 			if (hit.transform != null)
 			{
-				// first check if we're on any other kind of lane item (e.g. log) and only the detect the topmost of these (in case anything ever passes under something else)
+				// First, check if we found a pickup item
+				FroggerPickup pickup = hit.transform.GetComponent<FroggerPickup>();
+				if (pickup != null)
+				{
+					pickup.Enter(this);
+					continue;
+				}
+
+				// Second, check if we're on any other kind of lane item (e.g. log) and only the detect the topmost of these (in case anything ever passes under something else)
 				if (laneItemFound == false)
 				{
 					laneItemUnderMe = hit.transform.GetComponent<FroggerLaneItem>();
