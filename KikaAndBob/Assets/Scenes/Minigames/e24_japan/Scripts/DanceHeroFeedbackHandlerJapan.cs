@@ -102,6 +102,9 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 	
 	public void OnDisplayModifier()
 	{
+		HUDManager.use.CounterSmallLeft2.SetValue(Mathf.FloorToInt(feedback.GetScoreModifier()), false);
+
+
 		modifierDisplayPrefab.GetComponent<TextMesh>().text = "X" + Mathf.FloorToInt(feedback.GetScoreModifier()).ToString();
 		GameObject modifierDisplay = (GameObject)Instantiate(modifierDisplayPrefab);
 		modifierDisplay.transform.position = bobAnim.transform.position + new Vector3(0, 2, -1);
@@ -365,6 +368,7 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 																										// e.g. if we don't repeat the level, we'll immediately see the final scultpture stageultpture stage
 			}
 		}
+
 		
 		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
 		{
@@ -382,10 +386,24 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 		if (sculptureIndex == 4)	// if we finished sculptures, show the Tilly sculpture
 		{
 			bobAnim.Play("BobSculpting_IdleHappy");
+
+			AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdAah");
+			
+			if (clip != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.Music().Play(clip);
+			}
 		}
 		else
 		{
 			bobAnim.Play("BobSculpting_IdleSad");
+
+			AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdBoo");
+			
+			if (clip != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.Music().Play(clip);
+			}
 		}
 
 		yield return new WaitForSeconds(1.0f);
