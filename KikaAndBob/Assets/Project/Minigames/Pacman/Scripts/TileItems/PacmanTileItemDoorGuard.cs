@@ -18,6 +18,7 @@ public class PacmanTileItemDoorGuard : PacmanTileItem
             parentTile.tileType = PacmanTile.TileType.Open;
             transform.GetComponent<SpriteRenderer>().enabled = false;
             //this.gameObject.SetActive(false);
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("GateOpen01"));
         }
     }
 }
