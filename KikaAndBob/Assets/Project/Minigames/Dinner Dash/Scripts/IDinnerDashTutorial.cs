@@ -122,7 +122,7 @@ public abstract class IDinnerDashTutorial : MonoBehaviour
 		else if( stepCount == startCount + 1 )
 		{
 			// sandwich tapped
-			DialogueManager.use.CreateBox( producer.transform, LugusResources.use.Localized.GetText(textBase + ".2"), "MouseLeftSmall01" ).Show ();
+			DialogueManager.use.CreateBox( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().transform, LugusResources.use.Localized.GetText(textBase + ".2"), "MouseLeftSmall01" ).Show ();
 
 			arrow.Show( DinnerDashManager.use.consumerManager.GetNextActiveConsumer().gameObject );
 			producer.GetComponent<ConsumableProducer>().onUsed -= OnConsumableUsed;
