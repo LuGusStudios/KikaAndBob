@@ -261,7 +261,6 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 
 	protected void OnLevelRestart()
 	{
-		HUDManager.use.ProgressBarLeftBottom.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
 		LugusCoroutines.use.StartRoutine(PauseRoutine());
 	}
 
@@ -310,6 +309,13 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.negative")); 
 
 			bobAnim.Play("BobSculpting_IdleSad");
+
+			AudioClip clip = LugusResources.use.Shared.GetAudio("CrowdBoo");
+			
+			if (clip != LugusResources.use.errorAudio)
+			{
+				LugusAudio.use.Music().Play(clip);
+			}
 		}
 		
 		foreach (DanceHeroLane lane in DanceHeroLevel.use.lanes)
@@ -329,9 +335,12 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.repeat"));
 
 		yield return new WaitForSeconds(1.0f);
-		
-		Debug.Log("DanceHeroFeedbackHandlerMorocco: Ended break.");
+
+		HUDManager.use.ProgressBarLeftBottom.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
+
+		// set GameRunning true to end pause
 		DanceHeroLevel.use.SetGameRunning(true);
+		Debug.Log("DanceHeroFeedbackHandlerMorocco: Ended break.");
 	}
 
 	protected void OnLevelFinished()
