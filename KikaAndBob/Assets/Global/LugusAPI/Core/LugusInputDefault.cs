@@ -296,7 +296,7 @@ public class LugusInputDefault : MonoBehaviour
 		ProcessMouse();
 
 
-		if( Input.GetKeyDown(KeyCode.Tab) ) 
+		if( Input.GetKeyDown(KeyCode.Tab) )   
 		{
 			LugusDebug.debug = !LugusDebug.debug;
 		}
