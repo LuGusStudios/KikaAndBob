@@ -109,11 +109,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 10130393}
-  - 114: {fileID: 10130396}
-  - 111: {fileID: 10130395}
-  - 137: {fileID: 10130394}
   m_Layer: 20
-  m_Name: SAD
+  m_Name: LegR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -127,17 +124,16 @@ Transform:
   m_GameObject: {fileID: 10130392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00505345315, y: .00505345315, z: .00505345315}
-  m_Children:
-  - {fileID: 881564552}
-  m_Father: {fileID: 1636739429}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1886093696}
 --- !u!137 &10130394
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13700000, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 10130392}
+  m_GameObject: {fileID: 1479349259}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -158,45 +154,45 @@ SkinnedMeshRenderer:
   m_UpdateWhenOffscreen: 0
   m_Mesh: {fileID: 0}
   m_Bones:
-  - {fileID: 881564552}
-  - {fileID: 1199558154}
-  - {fileID: 408419926}
-  - {fileID: 2068514569}
-  - {fileID: 1453246785}
-  - {fileID: 1101890692}
-  - {fileID: 2048622760}
-  - {fileID: 1772548797}
-  - {fileID: 1667764861}
-  - {fileID: 865173881}
-  - {fileID: 1929535794}
-  - {fileID: 759800740}
-  - {fileID: 722086549}
-  - {fileID: 1550030113}
-  - {fileID: 439847689}
-  - {fileID: 1412240354}
-  - {fileID: 1476380130}
-  - {fileID: 1670868040}
-  - {fileID: 1755020697}
-  - {fileID: 1019797672}
-  - {fileID: 1988543619}
-  - {fileID: 996407335}
-  - {fileID: 1197929249}
-  - {fileID: 1683154378}
-  - {fileID: 1997186914}
   - {fileID: 706664183}
+  - {fileID: 1997186914}
+  - {fileID: 1683154378}
+  - {fileID: 1197929249}
+  - {fileID: 996407335}
+  - {fileID: 1988543619}
+  - {fileID: 1019797672}
+  - {fileID: 1755020697}
+  - {fileID: 1670868040}
+  - {fileID: 1476380130}
+  - {fileID: 1412240354}
+  - {fileID: 439847689}
+  - {fileID: 1550030113}
+  - {fileID: 722086549}
+  - {fileID: 759800740}
+  - {fileID: 1929535794}
+  - {fileID: 865173881}
+  - {fileID: 1667764861}
+  - {fileID: 1772548797}
+  - {fileID: 2048622760}
+  - {fileID: 1101890692}
+  - {fileID: 1453246785}
+  - {fileID: 2068514569}
+  - {fileID: 408419926}
+  - {fileID: 1199558154}
+  - {fileID: 881564552}
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_DirtyAABB: 1
+    m_Center: {x: -36.0291138, y: 632.968994, z: 0}
+    m_Extent: {x: 551.614258, y: 669.699463, z: 0}
+  m_DirtyAABB: 0
 --- !u!111 &10130395
 Animation:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11100000, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 10130392}
+  m_GameObject: {fileID: 1479349259}
   m_Enabled: 1
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
@@ -212,14 +208,14 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400088, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 10130392}
+  m_GameObject: {fileID: 820662220}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 2146667132, guid: 289bab7cc27a12745b5df9b71d7b06c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mRenderer: {fileID: 10130394}
-  mAnimation: {fileID: 10130395}
+  mRenderer: {fileID: 1479349261}
+  mAnimation: {fileID: 1479349262}
   mMesh: {fileID: 0}
   mVertices:
   - {x: 0, y: 0, z: 0}
@@ -391,9 +387,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 0
       vertexIndices: 000000000300000001000000030000000200000001000000
-    gameObject: {fileID: 881564551}
-    boneTransform: {fileID: 881564552}
-    spriteTransform: {fileID: 1199558154}
+    gameObject: {fileID: 615921677}
+    boneTransform: {fileID: 615921678}
+    spriteTransform: {fileID: 1479427294}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -409,9 +405,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 1
       vertexIndices: 040000000700000005000000070000000600000005000000
-    gameObject: {fileID: 408419925}
-    boneTransform: {fileID: 408419926}
-    spriteTransform: {fileID: 2068514569}
+    gameObject: {fileID: 1001007511}
+    boneTransform: {fileID: 1001007512}
+    spriteTransform: {fileID: 1994588409}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -427,9 +423,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 2
       vertexIndices: 080000000b000000090000000b0000000a00000009000000
-    gameObject: {fileID: 1453246784}
-    boneTransform: {fileID: 1453246785}
-    spriteTransform: {fileID: 1101890692}
+    gameObject: {fileID: 2110179221}
+    boneTransform: {fileID: 2110179222}
+    spriteTransform: {fileID: 281300321}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -445,9 +441,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 3
       vertexIndices: 0c0000000f0000000d0000000f0000000e0000000d000000
-    gameObject: {fileID: 2048622759}
-    boneTransform: {fileID: 2048622760}
-    spriteTransform: {fileID: 1772548797}
+    gameObject: {fileID: 1896663710}
+    boneTransform: {fileID: 1896663711}
+    spriteTransform: {fileID: 440701037}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -463,9 +459,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 4
       vertexIndices: 100000001300000011000000130000001200000011000000
-    gameObject: {fileID: 1667764860}
-    boneTransform: {fileID: 1667764861}
-    spriteTransform: {fileID: 865173881}
+    gameObject: {fileID: 1287897516}
+    boneTransform: {fileID: 1287897517}
+    spriteTransform: {fileID: 70304515}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -481,9 +477,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 5
       vertexIndices: 140000001700000015000000170000001600000015000000
-    gameObject: {fileID: 1929535793}
-    boneTransform: {fileID: 1929535794}
-    spriteTransform: {fileID: 759800740}
+    gameObject: {fileID: 437484821}
+    boneTransform: {fileID: 437484822}
+    spriteTransform: {fileID: 1110583473}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -499,9 +495,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 6
       vertexIndices: 180000001b000000190000001b0000001a00000019000000
-    gameObject: {fileID: 722086548}
-    boneTransform: {fileID: 722086549}
-    spriteTransform: {fileID: 1550030113}
+    gameObject: {fileID: 1238512988}
+    boneTransform: {fileID: 1238512989}
+    spriteTransform: {fileID: 730354487}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -517,9 +513,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 7
       vertexIndices: 1c0000001f0000001d0000001f0000001e0000001d000000
-    gameObject: {fileID: 439847688}
-    boneTransform: {fileID: 439847689}
-    spriteTransform: {fileID: 1412240354}
+    gameObject: {fileID: 417829322}
+    boneTransform: {fileID: 417829323}
+    spriteTransform: {fileID: 46517685}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -535,9 +531,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 8
       vertexIndices: 200000002300000021000000230000002200000021000000
-    gameObject: {fileID: 1476380129}
-    boneTransform: {fileID: 1476380130}
-    spriteTransform: {fileID: 1670868040}
+    gameObject: {fileID: 677172892}
+    boneTransform: {fileID: 677172893}
+    spriteTransform: {fileID: 1703621154}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -553,9 +549,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 9
       vertexIndices: 240000002700000025000000270000002600000025000000
-    gameObject: {fileID: 1755020696}
-    boneTransform: {fileID: 1755020697}
-    spriteTransform: {fileID: 1019797672}
+    gameObject: {fileID: 750771256}
+    boneTransform: {fileID: 750771257}
+    spriteTransform: {fileID: 1654202050}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -571,9 +567,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 10
       vertexIndices: 280000002b000000290000002b0000002a00000029000000
-    gameObject: {fileID: 1988543618}
-    boneTransform: {fileID: 1988543619}
-    spriteTransform: {fileID: 996407335}
+    gameObject: {fileID: 15974569}
+    boneTransform: {fileID: 15974570}
+    spriteTransform: {fileID: 1057767790}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -589,9 +585,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 11
       vertexIndices: 2c0000002f0000002d0000002f0000002e0000002d000000
-    gameObject: {fileID: 1197929248}
-    boneTransform: {fileID: 1197929249}
-    spriteTransform: {fileID: 1683154378}
+    gameObject: {fileID: 258881450}
+    boneTransform: {fileID: 258881451}
+    spriteTransform: {fileID: 490867867}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -607,9 +603,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 12
       vertexIndices: 300000003300000031000000330000003200000031000000
-    gameObject: {fileID: 1997186913}
-    boneTransform: {fileID: 1997186914}
-    spriteTransform: {fileID: 706664183}
+    gameObject: {fileID: 1886093695}
+    boneTransform: {fileID: 1886093696}
+    spriteTransform: {fileID: 10130393}
     boneAnimation: {fileID: 10130396}
     boneCollider: {fileID: 0}
     boneColor:
@@ -620,32 +616,32 @@ MonoBehaviour:
     materialIndex: 0
     depth: 13
   mBoneTransforms:
-  - {fileID: 881564552}
-  - {fileID: 1199558154}
-  - {fileID: 408419926}
-  - {fileID: 2068514569}
-  - {fileID: 1453246785}
-  - {fileID: 1101890692}
-  - {fileID: 2048622760}
-  - {fileID: 1772548797}
-  - {fileID: 1667764861}
-  - {fileID: 865173881}
-  - {fileID: 1929535794}
-  - {fileID: 759800740}
-  - {fileID: 722086549}
-  - {fileID: 1550030113}
-  - {fileID: 439847689}
-  - {fileID: 1412240354}
-  - {fileID: 1476380130}
-  - {fileID: 1670868040}
-  - {fileID: 1755020697}
-  - {fileID: 1019797672}
-  - {fileID: 1988543619}
-  - {fileID: 996407335}
-  - {fileID: 1197929249}
-  - {fileID: 1683154378}
-  - {fileID: 1997186914}
-  - {fileID: 706664183}
+  - {fileID: 615921678}
+  - {fileID: 1479427294}
+  - {fileID: 1001007512}
+  - {fileID: 1994588409}
+  - {fileID: 2110179222}
+  - {fileID: 281300321}
+  - {fileID: 1896663711}
+  - {fileID: 440701037}
+  - {fileID: 1287897517}
+  - {fileID: 70304515}
+  - {fileID: 437484822}
+  - {fileID: 1110583473}
+  - {fileID: 1238512989}
+  - {fileID: 730354487}
+  - {fileID: 417829323}
+  - {fileID: 46517685}
+  - {fileID: 677172893}
+  - {fileID: 1703621154}
+  - {fileID: 750771257}
+  - {fileID: 1654202050}
+  - {fileID: 15974570}
+  - {fileID: 1057767790}
+  - {fileID: 258881451}
+  - {fileID: 490867867}
+  - {fileID: 1886093696}
+  - {fileID: 10130393}
   mMaterials:
   - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
   buildID: 201402121438208612
@@ -848,7 +844,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -861,7 +857,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -888,7 +884,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -901,7 +897,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -928,7 +924,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -941,7 +937,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -968,7 +964,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -981,7 +977,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -1008,7 +1004,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -1021,7 +1017,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -1048,7 +1044,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -1061,7 +1057,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -1088,7 +1084,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -1101,7 +1097,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -1128,7 +1124,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -1141,7 +1137,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -1168,7 +1164,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -1181,7 +1177,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -1208,7 +1204,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -1221,7 +1217,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -1248,7 +1244,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -1261,7 +1257,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -1288,7 +1284,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -1301,7 +1297,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -1331,7 +1327,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -1344,7 +1340,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -1371,7 +1367,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -1384,7 +1380,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -1411,7 +1407,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -1424,7 +1420,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -1451,7 +1447,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -1464,7 +1460,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -1491,7 +1487,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -1504,7 +1500,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -1531,7 +1527,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -1544,7 +1540,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -1571,7 +1567,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -1584,7 +1580,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -1611,7 +1607,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -1624,7 +1620,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -1651,7 +1647,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -1664,7 +1660,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -1691,7 +1687,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -1704,7 +1700,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -1731,7 +1727,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -1744,7 +1740,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -1771,7 +1767,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 0}
+      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -1784,7 +1780,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 0}
+      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -1795,7 +1791,7 @@ MonoBehaviour:
         height: .25
       originalPivotOffset: {x: -.114445575, y: .383869529}
   textureAtlases:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
   mAnimationClips:
   - animationName: KikaSad
     fps: 5
@@ -2455,7 +2451,7 @@ MonoBehaviour:
           inTangent: 0
           outTangent: 0
   mAnimationStates: []
-  mLocalTransform: {fileID: 10130393}
+  mLocalTransform: {fileID: 820662221}
   mMeshColor: {r: 1, g: 1, b: 1, a: 1}
   updateColors: 0
   updatePrefabs: 1
@@ -2494,7 +2490,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 15974570}
   m_Layer: 20
-  m_Name: Hand_Sprite
+  m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2507,10 +2503,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 15974569}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1654202050}
+  m_Children:
+  - {fileID: 1057767790}
+  m_Father: {fileID: 750771257}
 --- !u!1 &18185011
 GameObject:
   m_ObjectHideFlags: 0
@@ -2942,7 +2939,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 46517685}
   m_Layer: 20
-  m_Name: TearR
+  m_Name: TearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2955,11 +2952,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 46517684}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 677172893}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 417829323}
 --- !u!1 &47395472
 GameObject:
   m_ObjectHideFlags: 0
@@ -3014,7 +3010,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -3.72408104, z: 0}
   m_LocalScale: {x: 2.66471767, y: 2.66471767, z: 2.66471767}
   m_Children: []
-  m_Father: {fileID: 1338918728}
+  m_Father: {fileID: 1421972950}
 --- !u!114 &50589894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3084,8 +3080,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 53109012}
+  - 212: {fileID: 1421972951}
   m_Layer: 20
-  m_Name: LegR_Sprite
+  m_Name: ControlsHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3098,10 +3095,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 53109011}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.37068176, y: 1.71876812, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 490867867}
+  m_Father: {fileID: 1411786618}
 --- !u!1 &70304514
 GameObject:
   m_ObjectHideFlags: 0
@@ -3111,7 +3108,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 70304515}
   m_Layer: 20
-  m_Name: EyeTearL
+  m_Name: HairR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3124,11 +3121,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 70304514}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 437484822}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 1287897517}
 --- !u!1 &72527578
 GameObject:
   m_ObjectHideFlags: 0
@@ -7218,7 +7214,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 258881451}
   m_Layer: 20
-  m_Name: LegL_Sprite
+  m_Name: LegL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7231,10 +7227,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 258881450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1057767790}
+  m_Children:
+  - {fileID: 490867867}
+  m_Father: {fileID: 615921678}
 --- !u!1 &260100047
 GameObject:
   m_ObjectHideFlags: 0
@@ -8243,7 +8240,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 281300321}
   m_Layer: 20
-  m_Name: HairL
+  m_Name: Head_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8255,12 +8252,11 @@ Transform:
   m_PrefabParentObject: {fileID: 400318, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 281300320}
-  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
-  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1896663711}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 2110179222}
 --- !u!1 &283968777
 GameObject:
   m_ObjectHideFlags: 0
@@ -17844,7 +17840,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 408419926}
   m_Layer: 20
-  m_Name: Body
+  m_Name: LegL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17857,13 +17853,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 408419925}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1755020697}
-  - {fileID: 2068514569}
-  - {fileID: 1453246785}
-  m_Father: {fileID: 881564552}
+  m_Children: []
+  m_Father: {fileID: 2068514569}
 --- !u!1 &412927758
 GameObject:
   m_ObjectHideFlags: 0
@@ -18028,7 +18021,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 417829323}
   m_Layer: 20
-  m_Name: TearL_Sprite
+  m_Name: TearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18041,10 +18034,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 417829322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 730354487}
+  m_Children:
+  - {fileID: 46517685}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &421279062
 GameObject:
   m_ObjectHideFlags: 0
@@ -21938,7 +21932,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 437484822}
   m_Layer: 20
-  m_Name: EyeTearL_Sprite
+  m_Name: EyeTearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21951,10 +21945,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 437484821}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 70304515}
+  m_Children:
+  - {fileID: 1110583473}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &439493154
 GameObject:
   m_ObjectHideFlags: 0
@@ -23009,7 +23004,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 439847689}
   m_Layer: 20
-  m_Name: TearL
+  m_Name: EyeTearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23022,11 +23017,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 439847688}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1412240354}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 1412240354}
 --- !u!1 &440701036
 GameObject:
   m_ObjectHideFlags: 0
@@ -23036,7 +23030,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 440701037}
   m_Layer: 20
-  m_Name: HairR
+  m_Name: HairL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23048,12 +23042,11 @@ Transform:
   m_PrefabParentObject: {fileID: 400312, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 440701036}
-  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
-  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1287897517}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 1896663711}
 --- !u!1 &444401355
 GameObject:
   m_ObjectHideFlags: 0
@@ -23764,7 +23757,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 490867867}
   m_Layer: 20
-  m_Name: LegR
+  m_Name: LegL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23777,11 +23770,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 490867866}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 53109012}
-  m_Father: {fileID: 820662221}
+  m_Children: []
+  m_Father: {fileID: 258881451}
 --- !u!1 &493918474
 GameObject:
   m_ObjectHideFlags: 0
@@ -24729,7 +24721,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 615921678}
   m_Layer: 20
-  m_Name: Root_Sprite
+  m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24744,7 +24736,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1001007512}
+  - {fileID: 258881451}
+  - {fileID: 1886093696}
+  - {fileID: 1479427294}
   m_Father: {fileID: 820662221}
 --- !u!1 &616618170
 GameObject:
@@ -30979,7 +30975,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 677172893}
   m_Layer: 20
-  m_Name: TearR_Sprite
+  m_Name: TearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30992,10 +30988,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 677172892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 46517685}
+  m_Children:
+  - {fileID: 1703621154}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &678498409
 GameObject:
   m_ObjectHideFlags: 0
@@ -32221,7 +32218,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 706664183}
   m_Layer: 20
-  m_Name: LegR_Sprite
+  m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32236,8 +32233,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1997186914}
+  m_Children:
+  - {fileID: 1683154378}
+  - {fileID: 2068514569}
+  - {fileID: 1199558154}
+  - {fileID: 1997186914}
+  m_Father: {fileID: 1479349260}
 --- !u!1 &709279822
 GameObject:
   m_ObjectHideFlags: 0
@@ -32546,9 +32547,9 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
-  - {fileID: 7400000, guid: 09b94d4f462654740b6ce31c9109ac24, type: 2}
   - {fileID: 7400000, guid: db763ad1fadaba74298b3b6e487319ec, type: 2}
+  - {fileID: 7400000, guid: 09b94d4f462654740b6ce31c9109ac24, type: 2}
+  - {fileID: 7400000, guid: ee0655b29a6686042a3c27e0ad803602, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -37076,7 +37077,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 722086549}
   m_Layer: 20
-  m_Name: EyeTearR
+  m_Name: EyeTearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37089,11 +37090,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 722086548}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1550030113}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 1550030113}
 --- !u!1 &723544716
 GameObject:
   m_ObjectHideFlags: 0
@@ -37268,7 +37268,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 730354487}
   m_Layer: 20
-  m_Name: TearL
+  m_Name: EyeTearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37281,11 +37281,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 730354486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 417829323}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 1238512989}
 --- !u!1 &730807628
 GameObject:
   m_ObjectHideFlags: 0
@@ -37827,7 +37826,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 750771257}
   m_Layer: 20
-  m_Name: Arm_Sprite
+  m_Name: Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37840,10 +37839,12 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 750771256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1703621154}
+  m_Children:
+  - {fileID: 1654202050}
+  - {fileID: 15974570}
+  m_Father: {fileID: 1001007512}
 --- !u!1 &754269238
 GameObject:
   m_ObjectHideFlags: 0
@@ -38038,7 +38039,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 759800740}
   m_Layer: 20
-  m_Name: EyeTearL_Sprite
+  m_Name: TearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38051,10 +38052,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 759800739}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 171.428574, y: -4.65119839, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1929535794}
+  m_Children:
+  - {fileID: 1929535794}
+  m_Father: {fileID: 996407335}
 --- !u!1 &768162428
 GameObject:
   m_ObjectHideFlags: 0
@@ -38548,8 +38550,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 820662221}
+  - 114: {fileID: 10130396}
+  - 111: {fileID: 1479349262}
+  - 137: {fileID: 1479349261}
   m_Layer: 20
-  m_Name: Root
+  m_Name: SAD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38563,13 +38568,10 @@ Transform:
   m_GameObject: {fileID: 820662220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .00505345315, y: .00505345315, z: .00505345315}
   m_Children:
-  - {fileID: 1479427294}
-  - {fileID: 1057767790}
-  - {fileID: 490867867}
   - {fileID: 615921678}
-  m_Father: {fileID: 1479349260}
+  m_Father: {fileID: 1183539523}
 --- !u!1 &821291839
 GameObject:
   m_ObjectHideFlags: 0
@@ -40160,7 +40162,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 865173881}
   m_Layer: 20
-  m_Name: HairR_Sprite
+  m_Name: TearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40173,10 +40175,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 865173880}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1667764861}
+  m_Children:
+  - {fileID: 1667764861}
+  m_Father: {fileID: 996407335}
 --- !u!1 &868838441
 GameObject:
   m_ObjectHideFlags: 0
@@ -40470,7 +40473,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 881564552}
   m_Layer: 20
-  m_Name: Root
+  m_Name: LegR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40485,12 +40488,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 408419926}
-  - {fileID: 1197929249}
-  - {fileID: 1997186914}
-  - {fileID: 1199558154}
-  m_Father: {fileID: 10130393}
+  m_Children: []
+  m_Father: {fileID: 1199558154}
 --- !u!1 &887150378
 GameObject:
   m_ObjectHideFlags: 0
@@ -40674,12 +40673,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1292490115}
+  - {fileID: 1411786618}
   - {fileID: 687358774}
   - {fileID: 1658881683}
   - {fileID: 26265674}
   - {fileID: 649514355}
   - {fileID: 1151108371}
-  - {fileID: 1886093696}
   m_Father: {fileID: 0}
 --- !u!114 &895332961
 MonoBehaviour:
@@ -41459,7 +41458,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 996407335}
   m_Layer: 20
-  m_Name: Hand_Sprite
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41472,10 +41471,17 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 996407334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1988543619}
+  m_Children:
+  - {fileID: 1412240354}
+  - {fileID: 1550030113}
+  - {fileID: 1019797672}
+  - {fileID: 1670868040}
+  - {fileID: 1988543619}
+  - {fileID: 759800740}
+  - {fileID: 865173881}
+  m_Father: {fileID: 1683154378}
 --- !u!1 &998059300
 GameObject:
   m_ObjectHideFlags: 0
@@ -41669,7 +41675,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1001007512}
   m_Layer: 20
-  m_Name: Body_Sprite
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41682,10 +41688,13 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1001007511}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1479427294}
+  m_Children:
+  - {fileID: 750771257}
+  - {fileID: 1994588409}
+  - {fileID: 2110179222}
+  m_Father: {fileID: 615921678}
 --- !u!1 &1004225450
 GameObject:
   m_ObjectHideFlags: 0
@@ -41886,7 +41895,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1019797672}
   m_Layer: 20
-  m_Name: Arm_Sprite
+  m_Name: HairL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41898,11 +41907,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400186, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1019797671}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
+  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1755020697}
+  m_Children:
+  - {fileID: 1755020697}
+  m_Father: {fileID: 996407335}
 --- !u!1 &1022198042
 GameObject:
   m_ObjectHideFlags: 0
@@ -45500,7 +45510,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1057767790}
   m_Layer: 20
-  m_Name: LegL
+  m_Name: Hand_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45513,11 +45523,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1057767789}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 258881451}
-  m_Father: {fileID: 820662221}
+  m_Children: []
+  m_Father: {fileID: 15974570}
 --- !u!1 &1058464416
 GameObject:
   m_ObjectHideFlags: 0
@@ -46205,7 +46214,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1101890692}
   m_Layer: 20
-  m_Name: Head_Sprite
+  m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46218,10 +46227,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1101890691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1453246785}
+  m_Children:
+  - {fileID: 1453246785}
+  m_Father: {fileID: 1772548797}
 --- !u!1 &1102347710
 GameObject:
   m_ObjectHideFlags: 0
@@ -46366,7 +46376,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1110583473}
   m_Layer: 20
-  m_Name: EyeTearR
+  m_Name: EyeTearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46379,11 +46389,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1110583472}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1238512989}
-  m_Father: {fileID: 1994588409}
+  m_Children: []
+  m_Father: {fileID: 437484822}
 --- !u!1 &1111331653
 GameObject:
   m_ObjectHideFlags: 0
@@ -47859,7 +47868,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 718491481}
-  - {fileID: 1479349260}
+  - {fileID: 820662221}
   m_Father: {fileID: 1151108371}
 --- !u!114 &1183539524
 MonoBehaviour:
@@ -48044,7 +48053,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1197929249}
   m_Layer: 20
-  m_Name: LegL
+  m_Name: Body_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48057,11 +48066,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1197929248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1683154378}
-  m_Father: {fileID: 881564552}
+  m_Children: []
+  m_Father: {fileID: 1683154378}
 --- !u!1 &1198571678
 GameObject:
   m_ObjectHideFlags: 0
@@ -48098,7 +48106,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1199558154}
   m_Layer: 20
-  m_Name: Root_Sprite
+  m_Name: LegR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48111,10 +48119,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1199558153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 881564552}
+  m_Children:
+  - {fileID: 881564552}
+  m_Father: {fileID: 706664183}
 --- !u!1 &1201447065
 GameObject:
   m_ObjectHideFlags: 0
@@ -48535,7 +48544,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1238512989}
   m_Layer: 20
-  m_Name: EyeTearR_Sprite
+  m_Name: EyeTearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48548,10 +48557,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1238512988}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1110583473}
+  m_Children:
+  - {fileID: 730354487}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &1241864833
 GameObject:
   m_ObjectHideFlags: 0
@@ -49037,7 +49047,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1287897517}
   m_Layer: 20
-  m_Name: HairR_Sprite
+  m_Name: HairR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49049,11 +49059,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400308, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1287897516}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
+  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 440701037}
+  m_Children:
+  - {fileID: 70304515}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &1292490114
 GameObject:
   m_ObjectHideFlags: 0
@@ -50474,8 +50485,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1338918728}
-  m_Layer: 0
-  m_Name: CountTextContainer
+  - 23: {fileID: 1411786621}
+  - 102: {fileID: 1411786620}
+  - 114: {fileID: 1886093697}
+  m_Layer: 20
+  m_Name: CountTextShadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50488,12 +50502,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1338918727}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.2399998, y: 7.67999983, z: .0695800781}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 50589893}
-  - {fileID: 1411786618}
-  m_Father: {fileID: 1886093696}
+  m_LocalPosition: {x: .113271713, y: -4.06420517, z: 1}
+  m_LocalScale: {x: 2.66471791, y: 2.66471791, z: 2.66471791}
+  m_Children: []
+  m_Father: {fileID: 1421972950}
 --- !u!1 &1339201835
 GameObject:
   m_ObjectHideFlags: 0
@@ -52204,16 +52216,14 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1411786618}
-  - 23: {fileID: 1411786621}
-  - 102: {fileID: 1411786620}
   - 114: {fileID: 1411786619}
   m_Layer: 20
-  m_Name: CountTextShadow
+  m_Name: CountdownScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1411786618
 Transform:
   m_ObjectHideFlags: 0
@@ -52221,10 +52231,12 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1411786617}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .113271713, y: -4.06420517, z: 1}
-  m_LocalScale: {x: 2.66471791, y: 2.66471791, z: 2.66471791}
-  m_Children: []
-  m_Father: {fileID: 1338918728}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 53109012}
+  - {fileID: 1421972950}
+  m_Father: {fileID: 895332960}
 --- !u!114 &1411786619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52234,14 +52246,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1411786617}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aec74f7b78409447cb624b72b7f47699, type: 3}
+  m_Script: {fileID: 11500000, guid: 788e29edd202244f0b84f5ce939e3672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: -1
-  autoUpdate: 0
-  allowSmallerCharacterSize: 1
-  allowSplit: 1
-  textMesh: {fileID: 0}
+  duration: 3
+  countDownFrom: 3
+  controlsHint: {fileID: 0}
+  countText: {fileID: 0}
+  countTextShadow: {fileID: 0}
+  originalTextScale: {x: 1, y: 1, z: 1}
 --- !u!102 &1411786620
 TextMesh:
   serializedVersion: 3
@@ -52249,7 +52262,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 10200044, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1411786617}
+  m_GameObject: {fileID: 1338918727}
   m_Text: 3
   m_OffsetZ: 0
   m_CharacterSize: .200000003
@@ -52270,7 +52283,7 @@ Renderer:
   m_PrefabParentObject: {fileID: 2300044, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1411786617}
+  m_GameObject: {fileID: 1338918727}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -52295,7 +52308,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1412240354}
   m_Layer: 20
-  m_Name: TearL_Sprite
+  m_Name: EyeTearL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52308,10 +52321,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1412240353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 439847689}
+  m_Children:
+  - {fileID: 439847689}
+  m_Father: {fileID: 996407335}
 --- !u!1 &1417986190
 GameObject:
   m_ObjectHideFlags: 0
@@ -52392,9 +52406,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1421972950}
-  - 212: {fileID: 1421972951}
-  m_Layer: 20
-  m_Name: ControlsHint
+  m_Layer: 0
+  m_Name: CountTextContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52407,17 +52420,19 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1421972949}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.37068176, y: 1.71876812, z: 0}
+  m_LocalPosition: {x: 10.2399998, y: 7.67999983, z: .0695800781}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1886093696}
+  m_Children:
+  - {fileID: 50589893}
+  - {fileID: 1338918728}
+  m_Father: {fileID: 1411786618}
 --- !u!212 &1421972951
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 21200114, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1421972949}
+  m_GameObject: {fileID: 53109011}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -53588,7 +53603,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1453246785}
   m_Layer: 20
-  m_Name: Head
+  m_Name: Hand_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53601,17 +53616,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1453246784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1929535794}
-  - {fileID: 722086549}
-  - {fileID: 2048622760}
-  - {fileID: 1667764861}
-  - {fileID: 1101890692}
-  - {fileID: 439847689}
-  - {fileID: 1476380130}
-  m_Father: {fileID: 408419926}
+  m_Children: []
+  m_Father: {fileID: 1101890692}
 --- !u!1 &1455438455
 GameObject:
   m_ObjectHideFlags: 0
@@ -53848,7 +53856,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1476380130}
   m_Layer: 20
-  m_Name: TearR
+  m_Name: HairR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53861,11 +53869,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1476380129}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -199.999969, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1670868040}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 1670868040}
 --- !u!1 &1477646940
 GameObject:
   m_ObjectHideFlags: 0
@@ -54005,8 +54012,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 1479349260}
   - 114: {fileID: 1479349263}
-  - 111: {fileID: 1479349262}
-  - 137: {fileID: 1479349261}
+  - 111: {fileID: 10130395}
+  - 137: {fileID: 10130394}
   m_Layer: 20
   m_Name: SAD
   m_TagString: Untagged
@@ -54022,17 +54029,17 @@ Transform:
   m_GameObject: {fileID: 1479349259}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00505345315, y: .00505345315, z: .00505345315}
+  m_LocalScale: {x: .00505300006, y: .00505300006, z: .00505300006}
   m_Children:
-  - {fileID: 820662221}
-  m_Father: {fileID: 1183539523}
+  - {fileID: 706664183}
+  m_Father: {fileID: 1636739429}
 --- !u!137 &1479349261
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13700002, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1479349259}
+  m_GameObject: {fileID: 820662220}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -54053,7 +54060,6 @@ SkinnedMeshRenderer:
   m_UpdateWhenOffscreen: 0
   m_Mesh: {fileID: 0}
   m_Bones:
-  - {fileID: 820662221}
   - {fileID: 615921678}
   - {fileID: 1479427294}
   - {fileID: 1001007512}
@@ -54078,7 +54084,8 @@ SkinnedMeshRenderer:
   - {fileID: 1057767790}
   - {fileID: 258881451}
   - {fileID: 490867867}
-  - {fileID: 53109012}
+  - {fileID: 1886093696}
+  - {fileID: 10130393}
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
@@ -54091,7 +54098,7 @@ Animation:
   m_PrefabParentObject: {fileID: 11100002, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1479349259}
+  m_GameObject: {fileID: 820662220}
   m_Enabled: 1
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: a8196eaf0ef075c4f8c460c94f0fe91f, type: 2}
@@ -54113,8 +54120,8 @@ MonoBehaviour:
   m_Script: {fileID: 2146667132, guid: 289bab7cc27a12745b5df9b71d7b06c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mRenderer: {fileID: 1479349261}
-  mAnimation: {fileID: 1479349262}
+  mRenderer: {fileID: 10130394}
+  mAnimation: {fileID: 10130395}
   mMesh: {fileID: 0}
   mVertices:
   - {x: 0, y: 0, z: 0}
@@ -54286,9 +54293,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 0
       vertexIndices: 000000000300000001000000030000000200000001000000
-    gameObject: {fileID: 820662220}
-    boneTransform: {fileID: 820662221}
-    spriteTransform: {fileID: 615921678}
+    gameObject: {fileID: 706664182}
+    boneTransform: {fileID: 706664183}
+    spriteTransform: {fileID: 1997186914}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54304,9 +54311,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 1
       vertexIndices: 040000000700000005000000070000000600000005000000
-    gameObject: {fileID: 1479427293}
-    boneTransform: {fileID: 1479427294}
-    spriteTransform: {fileID: 1001007512}
+    gameObject: {fileID: 1683154377}
+    boneTransform: {fileID: 1683154378}
+    spriteTransform: {fileID: 1197929249}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54322,9 +54329,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 2
       vertexIndices: 080000000b000000090000000b0000000a00000009000000
-    gameObject: {fileID: 1994588408}
-    boneTransform: {fileID: 1994588409}
-    spriteTransform: {fileID: 2110179222}
+    gameObject: {fileID: 996407334}
+    boneTransform: {fileID: 996407335}
+    spriteTransform: {fileID: 1988543619}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54340,9 +54347,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 3
       vertexIndices: 0c0000000f0000000d0000000f0000000e0000000d000000
-    gameObject: {fileID: 281300320}
-    boneTransform: {fileID: 281300321}
-    spriteTransform: {fileID: 1896663711}
+    gameObject: {fileID: 1019797671}
+    boneTransform: {fileID: 1019797672}
+    spriteTransform: {fileID: 1755020697}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54358,9 +54365,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 4
       vertexIndices: 100000001300000011000000130000001200000011000000
-    gameObject: {fileID: 440701036}
-    boneTransform: {fileID: 440701037}
-    spriteTransform: {fileID: 1287897517}
+    gameObject: {fileID: 1670868039}
+    boneTransform: {fileID: 1670868040}
+    spriteTransform: {fileID: 1476380130}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54376,9 +54383,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 5
       vertexIndices: 140000001700000015000000170000001600000015000000
-    gameObject: {fileID: 70304514}
-    boneTransform: {fileID: 70304515}
-    spriteTransform: {fileID: 437484822}
+    gameObject: {fileID: 1412240353}
+    boneTransform: {fileID: 1412240354}
+    spriteTransform: {fileID: 439847689}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54394,9 +54401,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 6
       vertexIndices: 180000001b000000190000001b0000001a00000019000000
-    gameObject: {fileID: 1110583472}
-    boneTransform: {fileID: 1110583473}
-    spriteTransform: {fileID: 1238512989}
+    gameObject: {fileID: 1550030112}
+    boneTransform: {fileID: 1550030113}
+    spriteTransform: {fileID: 722086549}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54412,9 +54419,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 7
       vertexIndices: 1c0000001f0000001d0000001f0000001e0000001d000000
-    gameObject: {fileID: 730354486}
-    boneTransform: {fileID: 730354487}
-    spriteTransform: {fileID: 417829323}
+    gameObject: {fileID: 759800739}
+    boneTransform: {fileID: 759800740}
+    spriteTransform: {fileID: 1929535794}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54430,9 +54437,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 8
       vertexIndices: 200000002300000021000000230000002200000021000000
-    gameObject: {fileID: 46517684}
-    boneTransform: {fileID: 46517685}
-    spriteTransform: {fileID: 677172893}
+    gameObject: {fileID: 865173880}
+    boneTransform: {fileID: 865173881}
+    spriteTransform: {fileID: 1667764861}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54448,9 +54455,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 9
       vertexIndices: 240000002700000025000000270000002600000025000000
-    gameObject: {fileID: 1703621153}
-    boneTransform: {fileID: 1703621154}
-    spriteTransform: {fileID: 750771257}
+    gameObject: {fileID: 1772548796}
+    boneTransform: {fileID: 1772548797}
+    spriteTransform: {fileID: 2048622760}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54466,9 +54473,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 10
       vertexIndices: 280000002b000000290000002b0000002a00000029000000
-    gameObject: {fileID: 1654202049}
-    boneTransform: {fileID: 1654202050}
-    spriteTransform: {fileID: 15974570}
+    gameObject: {fileID: 1101890691}
+    boneTransform: {fileID: 1101890692}
+    spriteTransform: {fileID: 1453246785}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54484,9 +54491,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 11
       vertexIndices: 2c0000002f0000002d0000002f0000002e0000002d000000
-    gameObject: {fileID: 1057767789}
-    boneTransform: {fileID: 1057767790}
-    spriteTransform: {fileID: 258881451}
+    gameObject: {fileID: 2068514568}
+    boneTransform: {fileID: 2068514569}
+    spriteTransform: {fileID: 408419926}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54502,9 +54509,9 @@ MonoBehaviour:
     boneQuad:
       boneNodeIndex: 12
       vertexIndices: 300000003300000031000000330000003200000031000000
-    gameObject: {fileID: 490867866}
-    boneTransform: {fileID: 490867867}
-    spriteTransform: {fileID: 53109012}
+    gameObject: {fileID: 1199558153}
+    boneTransform: {fileID: 1199558154}
+    spriteTransform: {fileID: 881564552}
     boneAnimation: {fileID: 1479349263}
     boneCollider: {fileID: 0}
     boneColor:
@@ -54515,32 +54522,32 @@ MonoBehaviour:
     materialIndex: 0
     depth: 13
   mBoneTransforms:
-  - {fileID: 820662221}
-  - {fileID: 615921678}
-  - {fileID: 1479427294}
-  - {fileID: 1001007512}
-  - {fileID: 1994588409}
-  - {fileID: 2110179222}
-  - {fileID: 281300321}
-  - {fileID: 1896663711}
-  - {fileID: 440701037}
-  - {fileID: 1287897517}
-  - {fileID: 70304515}
-  - {fileID: 437484822}
-  - {fileID: 1110583473}
-  - {fileID: 1238512989}
-  - {fileID: 730354487}
-  - {fileID: 417829323}
-  - {fileID: 46517685}
-  - {fileID: 677172893}
-  - {fileID: 1703621154}
-  - {fileID: 750771257}
-  - {fileID: 1654202050}
-  - {fileID: 15974570}
-  - {fileID: 1057767790}
-  - {fileID: 258881451}
-  - {fileID: 490867867}
-  - {fileID: 53109012}
+  - {fileID: 706664183}
+  - {fileID: 1997186914}
+  - {fileID: 1683154378}
+  - {fileID: 1197929249}
+  - {fileID: 996407335}
+  - {fileID: 1988543619}
+  - {fileID: 1019797672}
+  - {fileID: 1755020697}
+  - {fileID: 1670868040}
+  - {fileID: 1476380130}
+  - {fileID: 1412240354}
+  - {fileID: 439847689}
+  - {fileID: 1550030113}
+  - {fileID: 722086549}
+  - {fileID: 759800740}
+  - {fileID: 1929535794}
+  - {fileID: 865173881}
+  - {fileID: 1667764861}
+  - {fileID: 1772548797}
+  - {fileID: 2048622760}
+  - {fileID: 1101890692}
+  - {fileID: 1453246785}
+  - {fileID: 2068514569}
+  - {fileID: 408419926}
+  - {fileID: 1199558154}
+  - {fileID: 881564552}
   mMaterials:
   - {fileID: 2100000, guid: f16f4bf4c71be4b54949050eae7780f5, type: 2}
   buildID: 201402121438208612
@@ -56363,7 +56370,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1479427294}
   m_Layer: 20
-  m_Name: Body
+  m_Name: Root_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56376,13 +56383,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1479427293}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1703621154}
-  - {fileID: 1001007512}
-  - {fileID: 1994588409}
-  m_Father: {fileID: 820662221}
+  m_Children: []
+  m_Father: {fileID: 615921678}
 --- !u!1 &1481166619
 GameObject:
   m_ObjectHideFlags: 0
@@ -57180,7 +57184,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1550030113}
   m_Layer: 20
-  m_Name: EyeTearR_Sprite
+  m_Name: EyeTearR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57193,10 +57197,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1550030112}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -120.338974, y: 166.949142, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 722086549}
+  m_Children:
+  - {fileID: 722086549}
+  m_Father: {fileID: 996407335}
 --- !u!1 &1550094982
 GameObject:
   m_ObjectHideFlags: 0
@@ -62773,7 +62778,7 @@ Transform:
   m_LocalPosition: {x: 10.347168, y: 3.45271206, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 10130393}
+  - {fileID: 1479349260}
   m_Father: {fileID: 687358774}
 --- !u!1 &1654202049
 GameObject:
@@ -62784,7 +62789,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1654202050}
   m_Layer: 20
-  m_Name: Hand
+  m_Name: Arm_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62797,11 +62802,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1654202049}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 15974570}
-  m_Father: {fileID: 1703621154}
+  m_Children: []
+  m_Father: {fileID: 750771257}
 --- !u!43 &1654848765
 Mesh:
   m_ObjectHideFlags: 0
@@ -63882,7 +63886,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1667764861}
   m_Layer: 20
-  m_Name: HairR
+  m_Name: TearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63894,12 +63898,11 @@ Transform:
   m_PrefabParentObject: {fileID: 400208, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1667764860}
-  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
-  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 865173881}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 865173881}
 --- !u!1 &1670868039
 GameObject:
   m_ObjectHideFlags: 0
@@ -63909,7 +63912,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1670868040}
   m_Layer: 20
-  m_Name: TearR_Sprite
+  m_Name: HairR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63921,11 +63924,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400190, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1670868039}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .112869173, w: .993609905}
+  m_LocalPosition: {x: -137.499985, y: 370.312439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1476380130}
+  m_Children:
+  - {fileID: 1476380130}
+  m_Father: {fileID: 996407335}
 --- !u!1 &1673513701
 GameObject:
   m_ObjectHideFlags: 0
@@ -64248,7 +64252,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1683154378}
   m_Layer: 20
-  m_Name: LegL_Sprite
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64261,10 +64265,13 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1683154377}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 406.240692, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1197929249}
+  m_Children:
+  - {fileID: 1772548797}
+  - {fileID: 1197929249}
+  - {fileID: 996407335}
+  m_Father: {fileID: 706664183}
 --- !u!1 &1683322368
 GameObject:
   m_ObjectHideFlags: 0
@@ -64576,7 +64583,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1703621154}
   m_Layer: 20
-  m_Name: Arm
+  m_Name: TearR_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64589,12 +64596,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1703621153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 750771257}
-  - {fileID: 1654202050}
-  m_Father: {fileID: 1479427294}
+  m_Children: []
+  m_Father: {fileID: 677172893}
 --- !u!1 &1705574852
 GameObject:
   m_ObjectHideFlags: 0
@@ -65013,7 +65018,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1755020697}
   m_Layer: 20
-  m_Name: Arm
+  m_Name: HairL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65026,12 +65031,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1755020696}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1019797672}
-  - {fileID: 1988543619}
-  m_Father: {fileID: 408419926}
+  m_Children: []
+  m_Father: {fileID: 1019797672}
 --- !u!1 &1757100578
 GameObject:
   m_ObjectHideFlags: 0
@@ -65229,7 +65232,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1772548797}
   m_Layer: 20
-  m_Name: HairL_Sprite
+  m_Name: Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65242,10 +65245,12 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1772548796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -21.8181763, y: 310.909027, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2048622760}
+  m_Children:
+  - {fileID: 2048622760}
+  - {fileID: 1101890692}
+  m_Father: {fileID: 1683154378}
 --- !u!1 &1792945447
 GameObject:
   m_ObjectHideFlags: 0
@@ -67703,14 +67708,13 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1886093696}
-  - 114: {fileID: 1886093697}
   m_Layer: 20
-  m_Name: CountdownScreen
+  m_Name: LegR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1886093696
 Transform:
   m_ObjectHideFlags: 0
@@ -67718,30 +67722,28 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1886093695}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1421972950}
-  - {fileID: 1338918728}
-  m_Father: {fileID: 895332960}
+  - {fileID: 10130393}
+  m_Father: {fileID: 615921678}
 --- !u!114 &1886093697
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400122, guid: 3683dd9ca71b94da4b8abb805cf9512e,
     type: 2}
   m_PrefabInternal: {fileID: 1017775670}
-  m_GameObject: {fileID: 1886093695}
+  m_GameObject: {fileID: 1338918727}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 788e29edd202244f0b84f5ce939e3672, type: 3}
+  m_Script: {fileID: 11500000, guid: aec74f7b78409447cb624b72b7f47699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 3
-  countDownFrom: 3
-  controlsHint: {fileID: 0}
-  countText: {fileID: 0}
-  countTextShadow: {fileID: 0}
-  originalTextScale: {x: 1, y: 1, z: 1}
+  width: -1
+  autoUpdate: 0
+  allowSmallerCharacterSize: 1
+  allowSplit: 1
+  textMesh: {fileID: 0}
 --- !u!1 &1887973255
 GameObject:
   m_ObjectHideFlags: 0
@@ -67880,7 +67882,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1896663711}
   m_Layer: 20
-  m_Name: HairL_Sprite
+  m_Name: HairL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67892,11 +67894,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400314, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1896663710}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
+  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 281300321}
+  m_Children:
+  - {fileID: 440701037}
+  m_Father: {fileID: 2110179222}
 --- !u!1 &1898048107
 GameObject:
   m_ObjectHideFlags: 0
@@ -68191,7 +68194,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1929535794}
   m_Layer: 20
-  m_Name: EyeTearL
+  m_Name: TearL_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68204,11 +68207,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1929535793}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.3050766, y: 160.169479, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 759800740}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 759800740}
 --- !u!1 &1938469494
 GameObject:
   m_ObjectHideFlags: 0
@@ -68809,7 +68811,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1988543619}
   m_Layer: 20
-  m_Name: Hand
+  m_Name: Head_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68822,11 +68824,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1988543618}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -56.4908295, y: -309.335114, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 996407335}
-  m_Father: {fileID: 1755020697}
+  m_Children: []
+  m_Father: {fileID: 996407335}
 --- !u!1 &1990021431
 GameObject:
   m_ObjectHideFlags: 0
@@ -72423,7 +72424,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1994588409}
   m_Layer: 20
-  m_Name: Head
+  m_Name: Body_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72436,17 +72437,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1994588408}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 70304515}
-  - {fileID: 1110583473}
-  - {fileID: 281300321}
-  - {fileID: 440701037}
-  - {fileID: 2110179222}
-  - {fileID: 730354487}
-  - {fileID: 46517685}
-  m_Father: {fileID: 1479427294}
+  m_Children: []
+  m_Father: {fileID: 1001007512}
 --- !u!1 &1997186913
 GameObject:
   m_ObjectHideFlags: 0
@@ -72456,7 +72450,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1997186914}
   m_Layer: 20
-  m_Name: LegR
+  m_Name: Root_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72469,11 +72463,10 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 1997186913}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37.8536568, y: 415.810669, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 706664183}
-  m_Father: {fileID: 881564552}
+  m_Children: []
+  m_Father: {fileID: 706664183}
 --- !u!1 &2005984456
 GameObject:
   m_ObjectHideFlags: 0
@@ -73276,7 +73269,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2048622760}
   m_Layer: 20
-  m_Name: HairL
+  m_Name: Arm_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73288,12 +73281,11 @@ Transform:
   m_PrefabParentObject: {fileID: 400216, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 2048622759}
-  m_LocalRotation: {x: 0, y: 0, z: .10517697, w: .994453549}
-  m_LocalPosition: {x: 195.312469, y: 364.062439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1772548797}
-  m_Father: {fileID: 1453246785}
+  m_Children: []
+  m_Father: {fileID: 1772548797}
 --- !u!1 &2052663586
 GameObject:
   m_ObjectHideFlags: 0
@@ -73514,7 +73506,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2068514569}
   m_Layer: 20
-  m_Name: Body_Sprite
+  m_Name: LegL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73527,10 +73519,11 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 2068514568}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.07683659, y: 435.728271, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 408419926}
+  m_Children:
+  - {fileID: 408419926}
+  m_Father: {fileID: 706664183}
 --- !u!1 &2068748104
 GameObject:
   m_ObjectHideFlags: 0
@@ -73874,7 +73867,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2110179222}
   m_Layer: 20
-  m_Name: Head_Sprite
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73887,10 +73880,17 @@ Transform:
   m_PrefabInternal: {fileID: 1017775670}
   m_GameObject: {fileID: 2110179221}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 24.3885822, y: 396.369965, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1994588409}
+  m_Children:
+  - {fileID: 437484822}
+  - {fileID: 1238512989}
+  - {fileID: 1896663711}
+  - {fileID: 1287897517}
+  - {fileID: 281300321}
+  - {fileID: 417829323}
+  - {fileID: 677172893}
+  m_Father: {fileID: 1001007512}
 --- !u!1 &2111803866
 GameObject:
   m_ObjectHideFlags: 0
