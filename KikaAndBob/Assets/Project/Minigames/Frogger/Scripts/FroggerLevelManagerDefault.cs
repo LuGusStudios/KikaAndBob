@@ -66,6 +66,13 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 		else
 		{
 			Debug.LogWarning("Level music name was null or empty.");
+
+			AudioClip background = LugusResources.use.Shared.GetAudio(Application.loadedLevelName + "_background");
+			
+			if( background != LugusResources.use.errorAudio ) 
+			{
+				LugusAudio.use.Music().Play(background, true, musicSettings);
+			}
 		}
 	}
 

@@ -261,8 +261,18 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 			KikaAndBob.ScreenAnchor avoidQuadrant = KikaAndBob.ScreenAnchorHelper.GetQuadrantRect( avoid );
 			Debug.LogWarning("Avoiding " + avoid.Path() + " which is in quadrant " + avoidQuadrant );
 
-			if( avoidQuadrant == KikaAndBob.ScreenAnchor.TopLeft || avoidQuadrant == KikaAndBob.ScreenAnchor.BottomLeft )
+			//if( avoidQuadrant == KikaAndBob.ScreenAnchor.TopLeft || avoidQuadrant == KikaAndBob.ScreenAnchor.BottomLeft )
+			//	quadrant = KikaAndBob.ScreenAnchor.TopRight;
+			
+			if( avoidQuadrant == KikaAndBob.ScreenAnchor.TopLeft )
+				quadrant = KikaAndBob.ScreenAnchor.BottomRight;
+
+			if( avoidQuadrant == KikaAndBob.ScreenAnchor.BottomLeft )
 				quadrant = KikaAndBob.ScreenAnchor.TopRight;
+			
+			if( avoidQuadrant == KikaAndBob.ScreenAnchor.TopRight )
+				quadrant = KikaAndBob.ScreenAnchor.BottomLeft;
+
 		}
 		
 		return CreateBox( quadrant, subAnchor, text, icon );

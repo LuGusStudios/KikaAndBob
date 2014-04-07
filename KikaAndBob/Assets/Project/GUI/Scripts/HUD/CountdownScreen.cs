@@ -156,7 +156,7 @@ public class CountdownScreen : MonoBehaviour
 	protected void Update () 
 	{
 		/*
-		if( LugusInput.use.KeyDown( KeyCode.C ) )
+		//if( LugusInput.use.KeyDown( KeyCode.C ) )
 		{
 			RepositionControlHints( KikaAndBob.ScreenAnchor.BottomLeft, KikaAndBob.ScreenAnchor.BottomLeft);
 			StartCountdown( 3, 3 );
