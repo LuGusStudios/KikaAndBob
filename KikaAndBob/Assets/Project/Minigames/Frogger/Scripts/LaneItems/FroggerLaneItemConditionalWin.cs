@@ -5,7 +5,9 @@ using SmoothMoves;
 
 public class FroggerLaneItemConditionalWin : FroggerLaneItem 
 {
-	public UnityEngine.Sprite pickupIcon = null;
+	public KikaAndBob.CommodityType pickupType = KikaAndBob.CommodityType.NONE;
+	public KikaAndBob.ScreenAnchor messageAnchor = KikaAndBob.ScreenAnchor.NONE;
+	public float messageHideTimer = 5f;
 
 	public BoneAnimation boneAnimation = null;
 	public string idleAnimationName = "";
@@ -123,6 +125,19 @@ public class FroggerLaneItemConditionalWin : FroggerLaneItem
 		}
 		else
 		{
+			UnityEngine.Sprite icon = HUDManager.use.GetElementForCommodity(pickupType).icon.sprite;
+			string message = LugusResources.use.Localized.GetText(Application.loadedLevelName + ".conditionalwin.pickups");
+
+			if (messageAnchor != KikaAndBob.ScreenAnchor.NONE)
+			{
+				DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Top, message, icon).Show(messageHideTimer);
+			}
+			else
+			{
+				DialogueManager.use.CreateBox(transform, message, icon).Show(messageHideTimer);
+			}
+			
+
 			StartCoroutine(DeniedAnimationRoutine());
 		}
 	}

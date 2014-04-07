@@ -37,25 +37,27 @@ public abstract class IHUDElement : MonoBehaviour
 		icon.enabled = true;
 
 		string iconKey = "";
-		if( _commodity == KikaAndBob.CommodityType.Money )
+		if (_commodity == KikaAndBob.CommodityType.Money)
 			iconKey = "IconMoney01";
-		else if( _commodity == KikaAndBob.CommodityType.Feather )
+		else if (_commodity == KikaAndBob.CommodityType.Feather)
 			iconKey = "IconFeather01";
-		else if( _commodity == KikaAndBob.CommodityType.Time )
+		else if (_commodity == KikaAndBob.CommodityType.Time)
 			iconKey = "IconTime01";
-		else if( _commodity == KikaAndBob.CommodityType.Life )
+		else if (_commodity == KikaAndBob.CommodityType.Life)
 			iconKey = "IconHeart01";
-		else if( _commodity == KikaAndBob.CommodityType.Score )
+		else if (_commodity == KikaAndBob.CommodityType.Score)
 			iconKey = "IconScore01";
-		else if( _commodity == KikaAndBob.CommodityType.Distance )
+		else if (_commodity == KikaAndBob.CommodityType.Distance)
 			iconKey = "IconSpeed01";
-		else if( _commodity == KikaAndBob.CommodityType.Key01 )
+		else if (_commodity == KikaAndBob.CommodityType.Key01)
 			iconKey = "IconKey01";
-		else if( _commodity == KikaAndBob.CommodityType.Key02 )
+		else if (_commodity == KikaAndBob.CommodityType.Key02)
 			iconKey = "IconKey02";
-		else if( _commodity == KikaAndBob.CommodityType.Dynamite )
+		else if (_commodity == KikaAndBob.CommodityType.Dynamite)
 			iconKey = "Dynamite01";
-		else if( _commodity == KikaAndBob.CommodityType.Custom )
+		else if (_commodity == KikaAndBob.CommodityType.Cigar)
+			iconKey = "Sigar01";
+		else if (_commodity == KikaAndBob.CommodityType.Custom)
 		{
 			icon.enabled = false;
 		}

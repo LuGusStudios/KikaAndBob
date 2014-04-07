@@ -14,7 +14,22 @@ public class DanceHeroLevel : LugusSingletonRuntime<DanceHeroLevelDefault>
 }
 
 public class DanceHeroLevelDefault : IGameManager
-{	
+{
+	public int LevelRepeatAmount
+	{
+		get
+		{
+			return levelRepeatAmount;
+		}
+	}
+	public int LevelRepeatIndex
+	{
+		get
+		{
+			return levelRepeatIndex;
+		}
+	}
+
 	public DanceHeroLevel.TimeProgressionMode mode = DanceHeroLevel.TimeProgressionMode.PER_LANE;
 
 	public delegate void OnLevelStarted();
@@ -39,6 +54,7 @@ public class DanceHeroLevelDefault : IGameManager
 	protected bool gameRunning = false;
 
 	protected int levelRepeatAmount = 1;
+	protected int levelRepeatIndex = 0;
 	protected int targetBatchScore = 0;
 
 	public void SetupLocal()
@@ -209,7 +225,7 @@ public class DanceHeroLevelDefault : IGameManager
 	{
 		gameRunning = true;
 
-		for (int i = 0; i < levelRepeatAmount; i++) 
+		for (levelRepeatIndex = 0; levelRepeatIndex < levelRepeatAmount; levelRepeatIndex++) 
 		{
 			musicTrack = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
 			
@@ -224,8 +240,8 @@ public class DanceHeroLevelDefault : IGameManager
 			}
 
 			yield return new WaitForSeconds(levelDuration);
-			
-			if (i < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
+
+			if (levelRepeatIndex < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
 			{
 				Debug.Log("DanceHeroLevel: Level stage ended.");
 
