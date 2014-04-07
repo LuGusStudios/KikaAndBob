@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class FroggerRequiredPickup : FroggerLaneItem 
 {
+
+	public KikaAndBob.CommodityType pickupType = KikaAndBob.CommodityType.NONE;
+
 	public bool PickedUp
 	{
 		get
@@ -25,6 +28,9 @@ public class FroggerRequiredPickup : FroggerLaneItem
 			r.enabled = false;
 		}
 
-		ScoreVisualizer.Score(KikaAndBob.CommodityType.Custom, 1).Position(this.transform.position).Execute();
+		if (pickupType != KikaAndBob.CommodityType.NONE)
+		{
+			ScoreVisualizer.Score(pickupType, 1).Position(this.transform.position).Execute();
+		}
 	}
 }

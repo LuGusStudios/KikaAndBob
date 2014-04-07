@@ -8,6 +8,9 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 	//public int scoreValue = 7;	// 0-4 = bad, 5 - 9 = neutral, 10 - 14 = good
 	public float maxScoreModifier = 9.0f;
 
+	// Use this if the game needs to display a message the first frame
+	public bool hideMessageAtStart = true;
+
 	public delegate void OnDisplayModifier();
 	public OnDisplayModifier onDisplayModifier = null;
 
@@ -69,7 +72,10 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 	public void SetupGlobal()
 	{
-		message.gameObject.SetActive(false);
+		if (hideMessageAtStart)
+		{
+			message.gameObject.SetActive(false);
+		}
 
 		// read language specific feedback text
 
@@ -230,21 +236,21 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		Destroy(scoreDisplay, 0.5f);
 	}
 
-
-
-	public void DisplayMessage(string messageText)
+	public void DisplayMessage(string messageText, float duration = 0.5f)
 	{
 		message.text = messageText;
+
+		TextMeshWrapperHelper.use.WrapText(message, 15, false);
 
 		if (messageRoutine != null && messageRoutine.Running)
 		{
 			messageRoutine.StopRoutine();
 		}
 
-		messageRoutine = LugusCoroutines.use.StartRoutine(MessageRoutine());
+		messageRoutine = LugusCoroutines.use.StartRoutine(MessageRoutine(duration));
 	}
 
-	protected IEnumerator MessageRoutine()
+	protected IEnumerator MessageRoutine(float duration)
 	{
 		if (!message.gameObject.activeSelf)
 		{
@@ -261,7 +267,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			yield return new WaitForEndOfFrame();
 		}
 
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(duration);
 
 
 		message.gameObject.ScaleTo(Vector3.zero).EaseType(iTween.EaseType.linear).IsLocal(true).Time(0.5f).Execute();
