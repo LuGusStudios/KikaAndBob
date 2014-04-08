@@ -260,6 +260,10 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 		}
 
 		UpdatePaperStack(1);
+
+		// Display the amount of levels need to be played
+		string message = LugusResources.use.GetText("dance.level.start.pre") + " " + DanceHeroLevel.use.LevelRepeatAmount + " " + LugusResources.use.GetText("dance.level.start.post");
+		DanceHeroFeedback.use.DisplayMessage(message, 1f);
 	}
 
 	protected void OnLevelRestart()
@@ -335,9 +339,20 @@ public class DanceHeroFeedbackHandlerJapan : MonoBehaviour
 
 		yield return new WaitForSeconds(3.0f);
 
-		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.repeat"));
+		// Display remaining levels to play
+		int remainingLevels = DanceHeroLevel.use.LevelRepeatAmount - (DanceHeroLevel.use.LevelRepeatIndex + 1);
+		string message = string.Empty;
+		if (remainingLevels > 1)
+		{
+			message = LugusResources.use.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.GetText("dance.level.restart.pre") + " " + remainingLevels + " " + LugusResources.use.GetText("dance.level.restart.post");
+		}
+		else
+		{
+			message = LugusResources.use.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.GetText("dance.level.last.pre") + " " + remainingLevels + " " + LugusResources.use.GetText("dance.level.last.post");
+		}
+		DanceHeroFeedback.use.DisplayMessage(message, 2f);
 
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(2f);
 
 		HUDManager.use.ProgressBarLeftBottom.SetTimer(DanceHeroLevel.use.GetTotalLevelDuration());
 

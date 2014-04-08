@@ -51,13 +51,9 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		if (cWin != null)
 		{
 			HUDManager.use.CounterLargeRight2.gameObject.SetActive(true);
-			HUDManager.use.CounterLargeRight2.commodity = KikaAndBob.CommodityType.Custom;
+			HUDManager.use.CounterLargeRight2.commodity = cWin.pickupType;
 			HUDManager.use.CounterLargeRight2.suffix = "/" + cWin.RequiredPickups.Count;
 			HUDManager.use.CounterLargeRight2.SetValue(0);
-
-			// Custom icon
-			HUDManager.use.CounterLargeRight2.icon.sprite = cWin.pickupIcon;
-			HUDManager.use.CounterLargeRight2.icon.enabled = true;
 		}
 	}
 

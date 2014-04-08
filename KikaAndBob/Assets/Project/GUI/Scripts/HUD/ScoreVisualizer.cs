@@ -17,7 +17,8 @@ namespace KikaAndBob
 		Custom = 7,
 		Key01 = 8,
 		Key02 = 9,
-		Dynamite = 10
+		Dynamite = 10,
+		Cigar = 11
 	}
 }
 
