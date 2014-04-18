@@ -327,9 +327,9 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e24_japan/e24_japan.unity");
 
 		// 1.5
-		levels.Add("Assets/Scenes/Minigames/e15_india/e15_india.unity");
-		levels.Add("Assets/Scenes/Minigames/e14_buthan/e14_buthan.unity");
-		levels.Add("Assets/Scenes/Minigames/e17_greenland/e17_greenland.unity");
+		//levels.Add("Assets/Scenes/Minigames/e15_india/e15_india.unity");
+		//levels.Add("Assets/Scenes/Minigames/e14_buthan/e14_buthan.unity");
+		//levels.Add("Assets/Scenes/Minigames/e17_greenland/e17_greenland.unity");
 
 
 		// 0.11
@@ -337,7 +337,7 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e25_sicily/e25_sicily.unity");
 		//levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity"); 
 
-		// 1.6
+		// 1.6 
 		//levels.Add("Assets/Scenes/Minigames/e19_illinois/e19_illinois.unity");
 		//levels.Add("Assets/Scenes/Minigames/e21_cuba/e21_cuba.unity");
 		//levels.Add("Assets/Scenes/Minigames/e24_japan/e24_japan.unity");
@@ -348,9 +348,9 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
 		
 		// 1.7
-		//levels.Add("Assets/Scenes/Minigames/e22_russia/e22_russia.unity");
-		//levels.Add("Assets/Scenes/Minigames/e25_sicily/e25_sicily.unity");
-		//levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity"); 
+		levels.Add("Assets/Scenes/Minigames/e22_russia/e22_russia.unity");
+		levels.Add("Assets/Scenes/Minigames/e25_sicily/e25_sicily.unity");
+		levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity"); 
 		
 		// 1.8
 		//levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
