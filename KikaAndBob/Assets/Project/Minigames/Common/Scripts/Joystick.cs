@@ -11,9 +11,11 @@ public class Boundary
 }
 
 
+
+
 public class Joystick : MonoBehaviour
 {
-	public enum JoystickCardinalDirection
+	public enum JoystickDirection
 	{
 		None = 0,
 		Up = 1,
@@ -23,11 +25,12 @@ public class Joystick : MonoBehaviour
 	}
 
 	public float joystickRadius = 50f;
-	public float pushScaling = 0.8f;
+	//public float pushScaling = 0.8f;
+	public bool cardinalDirectionsOnly = false;
 	protected Vector2 originalScreenPos = Vector3.zero;
 	protected Vector3 originalPosition = Vector3.zero;
 	protected float originalScale = 1.0f;
-	protected JoystickCardinalDirection currentDirection = JoystickCardinalDirection.None;
+	protected JoystickDirection currentDirection = JoystickDirection.None;
 
 	/* Dead zone is a central area of customizable size where small movements are not registered */
 	public Vector2 deadZone = new Vector2(0.2f, 0.2f);
@@ -38,11 +41,12 @@ public class Joystick : MonoBehaviour
 
 	
 	/* Finger last used on this joystick */
-	private int lastFingerId = -1;
+	protected int lastFingerId = -1;
 	/* How much time there is left for a tap to occur */
-	private float tapTimeWindow;
-	private Vector2 fingerDownPos;
-	private float firstDeltaTime;
+	protected float tapTimeWindow;
+	protected Vector2 fingerDownPos;
+	protected float firstDeltaTime;
+	protected IGameManager gameManager = null;
 
 	public bool isFingerDown
 	{
@@ -70,15 +74,36 @@ public class Joystick : MonoBehaviour
 		get;
 		private set;
 	}
-	
+
+	private static bool enumeratedJoysticks =  false;
 	/* A static collection of all joysticks */
 	private static List<Joystick> joysticks;
 	/* Time allowed between taps */
 	private static float tapTimeDelta = 0.3f;
 	
-	private void Awake()
+	protected void Awake()
 	{
-		joysticks = new List<Joystick>((Joystick[])FindObjectsOfType(typeof(Joystick)));
+		SetUpLocal();
+
+	}
+
+	public void SetUpLocal()
+	{
+		if (!enumeratedJoysticks)
+		{
+			joysticks = new List<Joystick>((Joystick[])FindObjectsOfType(typeof(Joystick)));
+			enumeratedJoysticks = true;
+		}
+
+		if (gameManager == null)
+		{
+			gameManager = (IGameManager) FindObjectOfType(typeof(IGameManager));
+		}
+
+		if (gameManager == null)
+		{
+			Debug.Log("Joystick: No game manager in this scene!");
+		}
 
 		originalPosition = transform.position; 
 		originalScreenPos = LugusCamera.ui.WorldToScreenPoint(originalPosition);
@@ -101,6 +126,15 @@ public class Joystick : MonoBehaviour
 	
 	private void Update()
 	{
+		if (gameManager != null)
+		{
+			if (!gameManager.GameRunning)
+			{
+				return;
+			}
+		}
+	
+
 		int count = Input.touchCount;
 		
 		/* Adjust the tap time window while it still available */
@@ -179,13 +213,43 @@ public class Joystick : MonoBehaviour
 					float distance = Vector2.Distance(finalPosition, originalScreenPos);
 					Vector2 direction = (touch.position - originalScreenPos).normalized;
 
+					// clamp pad to joystick circle
 					if (distance > joystickRadius)
 					{
 						finalPosition = originalScreenPos + (direction * joystickRadius);
 					}
 
+					if (cardinalDirectionsOnly)
+					{
+						float value1 = Mathf.Abs(finalPosition.x - originalScreenPos.x);
+						float value2 = Mathf.Abs(finalPosition.y - originalScreenPos.y);
+
+						print ( value1 > value2 ? "value1" : "value2" );
+
+						if ( value1 > value2 )
+						{
+							if (finalPosition.x > originalScreenPos.x)
+								finalPosition = originalScreenPos.xAdd(joystickRadius);
+							else if (finalPosition.x < originalScreenPos.x)
+								finalPosition = originalScreenPos.xAdd(-1 * joystickRadius);
+						}
+						else
+						{
+							print (finalPosition.y);
+
+							if (finalPosition.y > originalScreenPos.y)
+								finalPosition = originalScreenPos.yAdd(joystickRadius);
+							else if (finalPosition.y < originalScreenPos.y)
+								finalPosition = originalScreenPos.yAdd(-1 * joystickRadius);
+						}
+
+						lastTouchPosition = finalPosition;
+			
+
+					}
+
 					transform.position = LugusCamera.ui.ScreenToWorldPoint(finalPosition.v3()).z(transform.position.z);
-					
+
 					if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
 					{
 						ResetJoystick();
@@ -202,7 +266,6 @@ public class Joystick : MonoBehaviour
 			                       Mathf.Clamp( ( lastTouchPosition.x - originalScreenPos.x ) / joystickRadius, -1.0f, 1.0f ),
 			                       Mathf.Clamp( ( lastTouchPosition.y - originalScreenPos.y ) / joystickRadius, -1.0f, 1.0f ));
 		}
-
 		
 		/* Adjust for dead zone */
 		float absoluteX = Mathf.Abs(position.x);
@@ -233,9 +296,11 @@ public class Joystick : MonoBehaviour
 		DetectDirection();
 	}
 
+
+
 	protected void DetectDirection()
 	{
-		currentDirection = JoystickCardinalDirection.None;
+		currentDirection = JoystickDirection.None;
 
 		if (position == Vector2.zero)
 			return;
@@ -252,19 +317,24 @@ public class Joystick : MonoBehaviour
 
 		if (angle < 0 && angle > -90)
 		{
-			currentDirection = JoystickCardinalDirection.Right;
+			currentDirection = JoystickDirection.Right;
 		}
 		else if (angle < -90 && angle > -180)
 		{
-			currentDirection = JoystickCardinalDirection.Down;
+			currentDirection = JoystickDirection.Down;
 		}
 		else if (angle > 0 && angle < 90)
 		{
-			currentDirection = JoystickCardinalDirection.Up;
+			currentDirection = JoystickDirection.Up;
 		}
 		else
 		{
-			currentDirection = JoystickCardinalDirection.Left;
+			currentDirection = JoystickDirection.Left;
 		}
+	}
+
+	public bool IsInDirection(JoystickDirection direction)
+	{
+		return direction == currentDirection;
 	}
 }
