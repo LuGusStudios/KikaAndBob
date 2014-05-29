@@ -60,17 +60,59 @@ public class DirectionPad : MonoBehaviour
 	{
 		SetupGlobal();
 	}
+
+	protected int lastFingerId = -1;
 	
 	protected void Update () 
 	{
-		currentDirection = Joystick.JoystickDirection.None;
 		DirectionPadButton currentButton = null;
 		Transform hit = null;
+		int currentTouchIndex = -1;
 
 		if (Input.touchCount > 0)
 		{
-			hit = LugusInput.use.RaycastFromScreenPoint(Input.GetTouch(0).position);
+			if (lastFingerId == -1)
+			{
+				currentTouchIndex = 0;
+				lastFingerId =  Input.GetTouch(currentTouchIndex).fingerId;
+			}
+			else
+			{
+				bool sameFingerFound = false;
+				for (int i = 0; i < Input.touchCount; i++) 
+				{
+					if (Input.GetTouch(i).fingerId == lastFingerId)
+					{
+						currentTouchIndex = i;
+						sameFingerFound = true;
+						break;
+					}
+				}
+
+				if (!sameFingerFound)
+				{
+					currentTouchIndex = 0;
+					lastFingerId = Input.GetTouch(currentTouchIndex).fingerId;
+				}
+			}
 		}
+		else
+		{
+			lastFingerId = -1;
+		}
+
+		if (currentTouchIndex > -1)
+		{
+			hit = LugusInput.use.RaycastFromScreenPoint( Input.GetTouch(currentTouchIndex).position);
+		}
+
+
+
+//		if (Input.touchCount > 0)
+//		{
+//		
+//			hit = LugusInput.use.RaycastFromScreenPoint(Input.GetTouch(0).position);
+//		}
 
 		if (hit != null)
 		{
@@ -82,6 +124,10 @@ public class DirectionPad : MonoBehaviour
 					break;
 				}
 			}
+		}
+		else
+		{
+			currentDirection = Joystick.JoystickDirection.None;
 		}
 
 
@@ -99,5 +145,11 @@ public class DirectionPad : MonoBehaviour
 
 
 		lastButtonUsed = currentButton;
+	}
+
+	public bool IsInDirection(Joystick.JoystickDirection direction)
+	{
+		print (currentDirection);
+		return currentDirection == direction;
 	}
 }
