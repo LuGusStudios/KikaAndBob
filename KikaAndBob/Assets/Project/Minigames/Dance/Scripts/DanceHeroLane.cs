@@ -14,10 +14,6 @@ public class DanceHeroLane : MonoBehaviour
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
 
 	public Color laneColor = Color.white;
-	
-//	[HideInInspector]
-//	public BoneAnimation characterAnim = null;
-//	// public GameObject character = null;
 
 	public delegate void OnItemSpawned(DanceHeroLaneItemRenderer laneItemRenderer);
 	public OnItemSpawned onItemSpawned = null;
@@ -147,6 +143,15 @@ public class DanceHeroLane : MonoBehaviour
 		if( actionPoint == null )
 		{
 			Debug.LogError(name + " : no ActionPoint known for this lane!");
+		}
+		else
+		{
+			// The mobile controls rely on this collider. Rather than hoping the collider was added consistently on all three lanes across all scenes, we add it here in script.
+			if (actionPoint.GetComponent<CircleCollider2D>() == null)
+			{
+				CircleCollider2D circleCollider = actionPoint.gameObject.AddComponent<CircleCollider2D>();
+				circleCollider.radius = 1.0f;
+			}
 		}
 
 		if( scoreDisplay == null )

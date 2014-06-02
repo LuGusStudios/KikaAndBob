@@ -129,7 +129,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 	{
 		if(Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
 		{
-			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)
+			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)	// i.e. if this the most forward lane item renderer
 			{
 				if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
 				{
@@ -141,29 +141,71 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				}
 				else
 				{
-					if( LugusInput.use.KeyDown( item.KeyCode ) )
+					if (Input.touchCount >= 1 && LugusInput.use.down)
 					{
-						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-							DetectSingle(true, actionPoint);
-						else
-							DetectStreak(true, actionPoint);
+						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
+						Transform hitTransform = null;
 
-						RegisterLaneChange();
+						if (rayHit.collider != null)
+						{
+							hitTransform = rayHit.collider.transform;
+						}
+
+
+						if (hitTransform == this.item.lane.actionPoint)
+						{
+							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+								DetectSingle(true, actionPoint);
+							else
+								DetectStreak(true, actionPoint);
+							
+							RegisterLaneChange();
+						}
 					}
-
-					if( LugusInput.use.KeyUp( item.KeyCode ) )
+					else if (Input.touchCount >= 1 && LugusInput.use.up)
 					{
-						if( this.item.type == KikaAndBob.LaneItemType.STREAK )
-							DetectStreak(false, actionPoint);
+						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
+						Transform hitTransform = null;
 
-						// No point to hitting single points on key up
+						if (rayHit.collider != null)
+						{
+							hitTransform = rayHit.collider.transform;
+						}
 
-//						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-//							DetectSingle(false, actionPoint);
-//						else
-//							DetectStreak(false, actionPoint);
+						if (hitTransform == this.item.lane.actionPoint)
+						{
+							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+								DetectStreak(false, actionPoint);
 
-						RegisterLaneChange();
+							RegisterLaneChange();
+						}
+					}
+					else
+					{
+						if( LugusInput.use.KeyDown( item.KeyCode ) )
+						{
+							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+								DetectSingle(true, actionPoint);
+							else
+								DetectStreak(true, actionPoint);
+
+							RegisterLaneChange();
+						}
+
+						if( LugusInput.use.KeyUp( item.KeyCode ) )
+						{
+							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+								DetectStreak(false, actionPoint);
+
+							// No point to hitting single points on key up
+
+	//						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+	//							DetectSingle(false, actionPoint);
+	//						else
+	//							DetectStreak(false, actionPoint);
+
+							RegisterLaneChange();
+						}
 					}
 				}
 			}

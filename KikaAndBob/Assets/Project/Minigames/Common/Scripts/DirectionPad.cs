@@ -149,7 +149,6 @@ public class DirectionPad : MonoBehaviour
 
 	public bool IsInDirection(Joystick.JoystickDirection direction)
 	{
-		print (currentDirection);
 		return currentDirection == direction;
 	}
 }
