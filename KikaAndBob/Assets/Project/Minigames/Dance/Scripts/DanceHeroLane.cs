@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using SmoothMoves;
@@ -8,7 +8,7 @@ public class DanceHeroLane : MonoBehaviour
 {
 	public List<DanceHeroLaneItem> items = new List<DanceHeroLaneItem>();
 	public float speed = 4;
-	public Transform actionPoint = null;
+	public Transform pressPoint = null;
 	public Transform scoreDisplay = null;
 
 	public KikaAndBob.LaneItemActionType defaultActionType = KikaAndBob.LaneItemActionType.NONE;
@@ -135,21 +135,21 @@ public class DanceHeroLane : MonoBehaviour
 
 	public void SetupLocal()
 	{
-		if( actionPoint == null )
+		if( pressPoint == null )
 		{
-			actionPoint = transform.FindChild("ActionPoint");
+			pressPoint = transform.FindChild("ActionPoint");
 		}
 
-		if( actionPoint == null )
+		if( pressPoint == null )
 		{
 			Debug.LogError(name + " : no ActionPoint known for this lane!");
 		}
 		else
 		{
 			// The mobile controls rely on this collider. Rather than hoping the collider was added consistently on all three lanes across all scenes, we add it here in script.
-			if (actionPoint.GetComponent<CircleCollider2D>() == null)
+			if (pressPoint.GetComponent<CircleCollider2D>() == null)
 			{
-				CircleCollider2D circleCollider = actionPoint.gameObject.AddComponent<CircleCollider2D>();
+				CircleCollider2D circleCollider = pressPoint.gameObject.AddComponent<CircleCollider2D>();
 				circleCollider.radius = 1.0f;
 			}
 		}
@@ -224,7 +224,7 @@ public class DanceHeroLane : MonoBehaviour
 
 	protected IEnumerator HighlightLaneNegativeRoutine()
 	{
-		Transform highlight = actionPoint.FindChild("Highlight");
+		Transform highlight = pressPoint.FindChild("Highlight");
 
 		highlight.renderer.material.color = Color.red;
 		highlight.gameObject.SetActive(true);
@@ -273,7 +273,7 @@ public class DanceHeroLane : MonoBehaviour
 			highlightRoutine.StopRoutine();
 		}
 
-		GameObject highlight = actionPoint.FindChild("Highlight").gameObject;
+		GameObject highlight = pressPoint.FindChild("Highlight").gameObject;
 
 		iTween.Stop(highlight);
 		highlight.SetActive(false);
@@ -281,7 +281,7 @@ public class DanceHeroLane : MonoBehaviour
 
 	protected IEnumerator HighlightLanePositiveRoutine()
 	{
-		Transform highlight = actionPoint.FindChild("Highlight");
+		Transform highlight = pressPoint.FindChild("Highlight");
 
 		highlight.renderer.material.color = Color.white;
 		highlight.gameObject.SetActive(true);
@@ -315,7 +315,7 @@ public class DanceHeroLane : MonoBehaviour
 
 	protected IEnumerator HighlightLanePositivePermanentRoutine()
 	{
-		Transform highlight = actionPoint.FindChild("Highlight");
+		Transform highlight = pressPoint.FindChild("Highlight");
 		
 		highlight.renderer.material.color = Color.white;
 		highlight.gameObject.SetActive(true);
@@ -409,7 +409,7 @@ public class DanceHeroLane : MonoBehaviour
 		}
 
 		// Delay between the action point and spawning from the character
-		float constDelay = Vector2.Distance(this.transform.position.v2(), this.actionPoint.position.v2()) / this.speed;
+		float constDelay = Vector2.Distance(this.transform.position.v2(), this.pressPoint.position.v2()) / this.speed;
 		float prevTime = 0.0f;
 
 		// While still reading valid lane data

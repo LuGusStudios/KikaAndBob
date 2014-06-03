@@ -224,8 +224,6 @@ public class Joystick : MonoBehaviour
 						float value1 = Mathf.Abs(finalPosition.x - originalScreenPos.x);
 						float value2 = Mathf.Abs(finalPosition.y - originalScreenPos.y);
 
-						print ( value1 > value2 ? "value1" : "value2" );
-
 						if ( value1 > value2 )
 						{
 							if (finalPosition.x > originalScreenPos.x)
@@ -235,8 +233,6 @@ public class Joystick : MonoBehaviour
 						}
 						else
 						{
-							print (finalPosition.y);
-
 							if (finalPosition.y > originalScreenPos.y)
 								finalPosition = originalScreenPos.yAdd(joystickRadius);
 							else if (finalPosition.y < originalScreenPos.y)

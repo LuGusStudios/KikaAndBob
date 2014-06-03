@@ -27,6 +27,8 @@ public class RunnerConfig_04Tasmania : IRunnerConfig
 		
 		SetupHUDForGame();
 
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
+
 		LoadGUIVarsFromRealSetup();
 	}
 

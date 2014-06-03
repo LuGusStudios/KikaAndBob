@@ -130,7 +130,6 @@ public class DirectionPad : MonoBehaviour
 			currentDirection = Joystick.JoystickDirection.None;
 		}
 
-
 		if (currentButton != lastButtonUsed)
 		{
 			if (currentButton != null)
@@ -140,9 +139,10 @@ public class DirectionPad : MonoBehaviour
 			}
 
 			if (lastButtonUsed != null)
+			{
 				lastButtonUsed.SetPressed(false);
+			}
 		}
-
 
 		lastButtonUsed = currentButton;
 	}
@@ -150,5 +150,15 @@ public class DirectionPad : MonoBehaviour
 	public bool IsInDirection(Joystick.JoystickDirection direction)
 	{
 		return currentDirection == direction;
+	}
+
+	public bool IsInDirectionDown(Joystick.JoystickDirection direction)
+	{
+		return currentDirection == direction && LugusInput.use.down;
+	}
+
+	public bool IsInDirectionUp(Joystick.JoystickDirection direction)
+	{
+		return currentDirection == direction && LugusInput.use.up;
 	}
 }

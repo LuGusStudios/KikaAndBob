@@ -24,6 +24,8 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	protected RunnerCharacterShadow shadow = null;
 	protected Vector3 originalShadowScale = Vector3.one;
 
+	protected DirectionPad directionPad = null;
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -70,7 +72,6 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		{
 			Debug.LogError(name + " : no GroundCheck found!");
 		}
-
 	}
 	
 	public void SetupGlobal()
@@ -101,6 +102,16 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 		slidingTrack = LugusAudio.use.SFX ().GetTrack();
 		slidingTrack.Play( LugusResources.use.Shared.GetAudio( slideSound ), new LugusAudioTrackSettings().Loop(true).Volume(0.05f) );
 		slidingTrack.Pause();
+
+		if (directionPad == null)
+		{
+			directionPad = GameObject.FindObjectOfType<DirectionPad>();
+		}
+
+		if (directionPad == null)
+		{
+			Debug.LogWarning(transform.Path () + " : No direction pad found. Continuining without."); 
+		}
 	}
 
 	public void OnDisable()
@@ -216,7 +227,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 	protected void CheckJump()
 	{
 		// both space and mouse button 1 (or single touch) work
-		if( (LugusInput.use.KeyDown (KeyCode.Space) || LugusInput.use.down || LugusInput.use.KeyDown(KeyCode.UpArrow)) && this.Grounded )
+		if( (LugusInput.use.KeyDown (KeyCode.Space) /*|| Input.GetMouseButtonDown(0)*/ || (directionPad != null && directionPad.IsInDirectionDown(Joystick.JoystickDirection.Up)) || LugusInput.use.KeyDown(KeyCode.UpArrow)) && this.Grounded )
 		{
 			triggerJump = true;
 			jumping = true;
@@ -260,7 +271,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 			//Debug.LogError("Checking keyhold slide " + extra);
 		}
 
-		if( (LugusInput.use.KeyDown(KeyCode.DownArrow) || Input.GetMouseButtonDown(1) || extra) && this.Grounded)
+		if( (LugusInput.use.KeyDown(KeyCode.DownArrow) /*|| Input.GetMouseButtonDown(1)*/ || (directionPad != null && directionPad.IsInDirectionDown(Joystick.JoystickDirection.Down)) || extra) && this.Grounded)
 		{
 			//Debug.LogError(Time.frameCount + " SLIDING EXTRA? " + extra);
 
@@ -290,7 +301,7 @@ public class RunnerCharacterControllerJumpSlide : LugusSingletonExisting<RunnerC
 				onSlide(true);
 		}
 
-		if( sliding && (LugusInput.use.KeyUp(KeyCode.DownArrow) ||  Input.GetMouseButtonUp(1) || (Time.time - slideStartTime > 1.5f)) )
+		if( sliding && (LugusInput.use.KeyUp(KeyCode.DownArrow) || (directionPad != null && directionPad.IsInDirectionUp(Joystick.JoystickDirection.Down)) /*||  Input.GetMouseButtonUp(1)*/ || (Time.time - slideStartTime > 1.5f)) )
 		{
 			//Debug.LogError(Time.frameCount + " SLIDING Stopped ");
 

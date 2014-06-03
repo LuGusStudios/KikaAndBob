@@ -125,141 +125,328 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			CheckAction( actionPoints[currentActionPointIndex] );
 	}
 
+	// this will be the new check
 	protected void CheckAction(Transform actionPoint)
 	{
-		if(Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
+		// we're only interested in the frontmost item
+		if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer != this)	
+			return;
+
+		// within range of press point
+		if(Vector2.Distance( actionPoint.transform.position.v2(), item.lane.pressPoint.transform.position.v2() ) < 0.8f )
 		{
-			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)	// i.e. if this the most forward lane item renderer
+			if (Input.touchCount > 0)
 			{
-				if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
-				{
-					// TODO: raycast! both down and up
-					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-						DetectSingle(true, actionPoint);
-					else
-						DetectStreak(true, actionPoint);
-				}
-				else
-				{
-					if (Input.touchCount >= 1 && LugusInput.use.down)
-					{
-						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
-						Transform hitTransform = null;
-
-						if (rayHit.collider != null)
-						{
-							hitTransform = rayHit.collider.transform;
-						}
-
-
-						if (hitTransform == this.item.lane.actionPoint)
-						{
-							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-								DetectSingle(true, actionPoint);
-							else
-								DetectStreak(true, actionPoint);
-							
-							RegisterLaneChange();
-						}
-					}
-					else if (Input.touchCount >= 1 && LugusInput.use.up)
-					{
-						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
-						Transform hitTransform = null;
-
-						if (rayHit.collider != null)
-						{
-							hitTransform = rayHit.collider.transform;
-						}
-
-						if (hitTransform == this.item.lane.actionPoint)
-						{
-							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
-								DetectStreak(false, actionPoint);
-
-							RegisterLaneChange();
-						}
-					}
-					else
-					{
-						if( LugusInput.use.KeyDown( item.KeyCode ) )
-						{
-							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-								DetectSingle(true, actionPoint);
-							else
-								DetectStreak(true, actionPoint);
-
-							RegisterLaneChange();
-						}
-
-						if( LugusInput.use.KeyUp( item.KeyCode ) )
-						{
-							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
-								DetectStreak(false, actionPoint);
-
-							// No point to hitting single points on key up
-
-	//						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
-	//							DetectSingle(false, actionPoint);
-	//						else
-	//							DetectStreak(false, actionPoint);
-
-							RegisterLaneChange();
-						}
-					}
-				}
+				CheckTouchInputCorrect(actionPoint);
+			}
+			else
+			{
+				CheckKeyInputCorrect(actionPoint);
 			}
 		}
-		// in front of action point
-		// transform.localPosition.x + actionPoint.transform.localPosition.x = rightmost point of this item or streak
-		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.actionPoint.transform.localPosition.x)
+		// in front of press point
+		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.pressPoint.transform.localPosition.x)
 		{
-			// we only want this checked for the currently frontmost lane item; 
-			// if not, this will always trigger (even while hitting an action point) as long as there are spawned LaneItemRenders past the first one
-			// this means we also want to keep track of which LaneItem is currently the leading one for each lane
-			// DanceHeroLane.use.IncreaseLeadingLaneItem() should therefore be called both from succesful hits as missed hits
-			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)
+			if (Input.touchCount > 0)
 			{
-				if (this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
-				{
-					if( LugusInput.use.KeyUp( item.KeyCode ) )
-					{
-						this.item.lane.HighlightLaneNegative();
-						DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
-						MissedSingle();
-
-						RegisterLaneChange();
-					}
-				}
-				else
-				{
-					if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
-					{
-						this.item.lane.HighlightLaneNegative();
-						DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
-					}
-					else
-					{
-						if( LugusInput.use.KeyDown( item.KeyCode ) )
-						{
-							this.item.lane.HighlightLaneNegative();
-							DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
-
-							RegisterLaneChange();
-						}
-					}
-				}
+				CheckTouchInputEarly(actionPoint);
+			}
+			else
+			{
+				CheckKeyInputEarly(actionPoint);
 			}
 		}
-		// past action point
-		// transform.localPosition.x + actionPoint.transform.localPosition.x = rightmost point of this item or streak
-		else if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
+		// past press point
+		else if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.pressPoint.transform.localPosition.x)
 		{
 			// by definition, missing the first point of a streak means missing the entire thing, so it's pointless to check for streaks separately
 			MissedSingle();
+
+			// once point is offscreen, remove it 
 			CheckOffScreen(actionPoint);
 		}
 	}
+
+	protected void CheckTouchInputCorrect(Transform actionPoint)
+	{
+		if (WasActionPointTouched())
+		{
+			RegisterLaneChange();
+
+			if (LugusInput.use.down)
+			{
+				// player hit action point or first action point of streak
+				if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+					DetectSingle(true, actionPoint);
+				else
+					DetectStreak(true, actionPoint);
+			}
+			else if (LugusInput.use.up)
+			{
+				// player released touch on last action point of streak
+				if ( this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
+					DetectStreak(false, actionPoint);
+			}
+		}
+	}
+
+	protected void CheckTouchInputEarly(Transform actionPoint)
+	{
+		if (WasActionPointTouched())
+		{
+			RegisterLaneChange();
+
+			if (LugusInput.use.down)
+			{
+				this.item.lane.HighlightLaneNegative();
+				DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+			}
+			else if (LugusInput.use.up)
+			{
+				if (this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
+				{
+					this.item.lane.HighlightLaneNegative();
+					DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+					MissedSingle();
+				}
+			}
+		}
+	}
+
+	protected void CheckKeyInputCorrect(Transform actionPoint)
+	{
+		if( LugusInput.use.KeyDown( item.KeyCode ) )
+		{
+			if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+				DetectSingle(true, actionPoint);
+			else
+				DetectStreak(true, actionPoint);
+
+			RegisterLaneChange();
+		}
+
+		if( LugusInput.use.KeyUp( item.KeyCode ) )
+		{
+			if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+				DetectStreak(false, actionPoint);
+
+			RegisterLaneChange();
+		}
+	}
+
+	protected void CheckKeyInputEarly(Transform actionPoint)
+	{
+		if (this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
+		{
+			if( LugusInput.use.KeyUp( item.KeyCode ) )
+			{
+				this.item.lane.HighlightLaneNegative();
+				DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+				MissedSingle();
+
+				RegisterLaneChange();
+			}
+		}
+		else
+		{
+			if( LugusInput.use.KeyDown( item.KeyCode ) )
+			{
+				this.item.lane.HighlightLaneNegative();
+				DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+
+				RegisterLaneChange();
+			}
+		}
+	}
+
+	protected bool WasActionPointTouched()
+	{
+		for (int i = 0; i < Input.touchCount; i++) 
+		{
+			Touch touch = Input.GetTouch(i);
+
+			RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(touch.position).v2(), Vector3.forward.v2());
+	
+			if (rayHit.collider != null && rayHit.collider.transform == this.item.lane.pressPoint)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+//	protected void CheckAction(Transform actionPoint)
+//	{
+//		if(Vector2.Distance(actionPoint.transform.position.v2 (), item.lane.actionPoint.transform.position.v2()) < 0.8f )
+//		{
+//			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)	// i.e. if this the most forward lane item renderer
+//			{
+//				if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
+//				{
+//					// TODO: raycast! both down and up
+//					if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//						DetectSingle(true, actionPoint);
+//					else
+//						DetectStreak(true, actionPoint);
+//				}
+//				else
+//				{
+//					if (Input.touchCount >= 1 && LugusInput.use.down)
+//					{
+//						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
+//						Transform hitTransform = null;
+//
+//						if (rayHit.collider != null)
+//						{
+//							hitTransform = rayHit.collider.transform;
+//						}
+//
+//						if (hitTransform == this.item.lane.actionPoint)
+//						{
+//							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//								DetectSingle(true, actionPoint);
+//							else
+//								DetectStreak(true, actionPoint);
+//							
+//							RegisterLaneChange();
+//						}
+//					}
+//					else if (Input.touchCount >= 1 && LugusInput.use.up)
+//					{
+//						RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
+//						Transform hitTransform = null;
+//
+//						if (rayHit.collider != null)
+//						{
+//							hitTransform = rayHit.collider.transform;
+//						}
+//
+//						if (hitTransform == this.item.lane.actionPoint)
+//						{
+//							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+//								DetectStreak(false, actionPoint);
+//
+//							RegisterLaneChange();
+//						}
+//					}
+//					else
+//					{
+//						if( LugusInput.use.KeyDown( item.KeyCode ) )
+//						{
+//							if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//								DetectSingle(true, actionPoint);
+//							else
+//								DetectStreak(true, actionPoint);
+//
+//							RegisterLaneChange();
+//						}
+//
+//						if( LugusInput.use.KeyUp( item.KeyCode ) )
+//						{
+//							if( this.item.type == KikaAndBob.LaneItemType.STREAK )
+//								DetectStreak(false, actionPoint);
+//
+//							// No point to hitting single points on key up
+//
+//	//						if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
+//	//							DetectSingle(false, actionPoint);
+//	//						else
+//	//							DetectStreak(false, actionPoint);
+//
+//							RegisterLaneChange();
+//						}
+//					}
+//				}
+//			}
+//		}
+//		// in front of action point
+//		// transform.localPosition.x + actionPoint.transform.localPosition.x = rightmost point of this item or streak
+//		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.actionPoint.transform.localPosition.x)
+//		{
+//			// we only want this checked for the currently frontmost lane item; 
+//			// if not, this will always trigger (even while hitting an action point) as long as there are spawned LaneItemRenders past the first one
+//			// this means we also want to keep track of which LaneItem is currently the leading one for each lane
+//			// DanceHeroLane.use.IncreaseLeadingLaneItem() should therefore be called both from succesful hits as missed hits
+//			if (this.item.lane.GetCurrentLeadingItem().laneItemRenderer == this)
+//			{
+//				if (Input.touchCount >= 1 && LugusInput.use.down)
+//				{
+//					RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(Input.GetTouch(0).position).v2(), Vector3.forward.v2());
+//					Transform hitTransform = null;
+//					
+//					if (rayHit.collider != null)
+//					{
+//						hitTransform = rayHit.collider.transform;
+//					}
+//
+//					if (hitTransform == this.item.lane.actionPoint)
+//					{
+//						if ( LugusInput.use.down )
+//						{
+//							 if ( this.item.type == KikaAndBob.LaneItemType.SINGLE || 
+//							 	( this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex <= 0) )
+//							{
+//								this.item.lane.HighlightLaneNegative();
+//								DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+//								
+//								RegisterLaneChange();
+//							}
+//						}
+//						else if ( LugusInput.use.up && this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
+//						{
+//							this.item.lane.HighlightLaneNegative();
+//							DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+//							MissedSingle();
+//							
+//							RegisterLaneChange();
+//						}
+//					}
+//				}
+//				else
+//				{
+//					if (this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
+//					{
+//						if( LugusInput.use.KeyUp( item.KeyCode ) )
+//						{
+//							this.item.lane.HighlightLaneNegative();
+//							DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+//							MissedSingle();
+//
+//							RegisterLaneChange();
+//						}
+//					}
+//					else
+//					{
+//						if( this.item.actionType == KikaAndBob.LaneItemActionType.BUTTON )
+//						{
+//							this.item.lane.HighlightLaneNegative();
+//							DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+//						}
+//						else
+//						{
+//							if( LugusInput.use.KeyDown( item.KeyCode ) )
+//							{
+//								this.item.lane.HighlightLaneNegative();
+//								DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
+//
+//								RegisterLaneChange();
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		// past action point
+//		// transform.localPosition.x + actionPoint.transform.localPosition.x = rightmost point of this item or streak
+//		else if (transform.localPosition.x + actionPoint.transform.localPosition.x > item.lane.actionPoint.transform.localPosition.x)
+//		{
+//			// by definition, missing the first point of a streak means missing the entire thing, so it's pointless to check for streaks separately
+//			MissedSingle();
+//			CheckOffScreen(actionPoint);
+//		}
+//	}
 
 	protected void MissedSingle()
 	{
