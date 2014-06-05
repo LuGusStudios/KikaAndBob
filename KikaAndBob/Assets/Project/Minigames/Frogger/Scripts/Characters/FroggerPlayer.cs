@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class FroggerPlayer : FroggerCharacter {
@@ -32,21 +32,21 @@ public class FroggerPlayer : FroggerCharacter {
 
 		if (!movingToLane && FroggerGameManager.use.gameRunning)
 		{
-			if (LugusInput.use.Key(KeyCode.UpArrow) || (directionPad != null && directionPad.IsInDirection(Joystick.JoystickDirection.Up) ))
+			if (LugusInput.use.Key(KeyCode.UpArrow) || (directionPad != null && directionPad.IsDirection(Joystick.JoystickDirection.Up) ))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneAbove(currentLane));
 				headingUp = true;
 			}
-			else if (LugusInput.use.Key(KeyCode.DownArrow) || (directionPad != null && directionPad.IsInDirection(Joystick.JoystickDirection.Down) ))
+			else if (LugusInput.use.Key(KeyCode.DownArrow) || (directionPad != null && directionPad.IsDirection(Joystick.JoystickDirection.Down) ))
 			{
 				MoveToLane(FroggerLaneManager.use.GetLaneBelow(currentLane));
 				headingUp = false;
 			}
-			else if (LugusInput.use.Key(KeyCode.LeftArrow) || (directionPad != null && directionPad.IsInDirection(Joystick.JoystickDirection.Left) ))
+			else if (LugusInput.use.Key(KeyCode.LeftArrow) || (directionPad != null && directionPad.IsDirection(Joystick.JoystickDirection.Left) ))
 			{
 				MoveSideways(false);
 			}
-			else if (LugusInput.use.Key(KeyCode.RightArrow) || (directionPad != null && directionPad.IsInDirection(Joystick.JoystickDirection.Right) ))
+			else if (LugusInput.use.Key(KeyCode.RightArrow) || (directionPad != null && directionPad.IsDirection(Joystick.JoystickDirection.Right) ))
 			{
 				MoveSideways(true);
 			}

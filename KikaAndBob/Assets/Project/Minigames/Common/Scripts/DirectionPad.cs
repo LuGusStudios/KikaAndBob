@@ -147,17 +147,17 @@ public class DirectionPad : MonoBehaviour
 		lastButtonUsed = currentButton;
 	}
 
-	public bool IsInDirection(Joystick.JoystickDirection direction)
+	public bool IsDirection(Joystick.JoystickDirection direction)
 	{
 		return currentDirection == direction;
 	}
 
-	public bool IsInDirectionDown(Joystick.JoystickDirection direction)
+	public bool IsDirectionDown(Joystick.JoystickDirection direction)
 	{
 		return currentDirection == direction && LugusInput.use.down;
 	}
 
-	public bool IsInDirectionUp(Joystick.JoystickDirection direction)
+	public bool IsDirectionUp(Joystick.JoystickDirection direction)
 	{
 		return currentDirection == direction && LugusInput.use.up;
 	}

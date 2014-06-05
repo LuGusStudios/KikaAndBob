@@ -16,6 +16,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public float horizontalSpeed = 4.0f; 
 
 	protected Vector3 originalScale = Vector3.zero;
+	protected Joystick joystick = null;
 
 	public DataRange xEdges = new DataRange(-6.192653f, 8.181341f);
 
@@ -97,6 +98,16 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		// lookup references to objects / scripts outside of this script
 		startTime = Time.time;
+
+		if (joystick == null)
+		{
+			joystick = GameObject.FindObjectOfType<Joystick>();
+		}
+
+		if (joystick == null)
+		{
+			Debug.LogError("RunnerCharacterControllerClimbing: Missing joystick. Continuing without.");
+		}
 	}
 	
 	protected void Awake()
@@ -114,53 +125,89 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		if( !this.enabled )
 			return;
 
-		/*
-		if( up )
-		{
-			this.rigidbody2D.velocity = new Vector2( 0.0f, horizontalSpeed );
-		}
-		else if( down )
-		{
-			this.rigidbody2D.velocity = new Vector2( 0.0f, -1.0f * horizontalSpeed );
-		}
-		else if( right )
-		{
-			this.rigidbody2D.velocity = new Vector2( horizontalSpeed, 0.0f );
-		}
-		else if( left )
-		{
-			this.rigidbody2D.velocity = new Vector2( -1.0f * horizontalSpeed, 0.0f );
-		}
-		else
-		{
-			this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
-		}
-		*/
-
 		float speed = RunnerCameraPuller.use.currentSpeed + 1.0f; //* 1.2f; // 20% faster than camera
 		
 		this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
+
+
+//			if( up )
+//			{
+//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( speed * 1.2f );
+//				this.transform.localScale = originalScale;
+//			}
+//			else if( down )
+//			{
+//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * speed * 0.8f );
+//				this.transform.localScale = originalScale.xMul(-1.0f);
+//			}
+//
+//			if( right )
+//			{
+//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
+//				this.transform.localScale = originalScale.xMul(-1.0f);
+//			}
+//			else if( left )
+//			{
+//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
+//				this.transform.localScale = originalScale; 
+//			}
+	
+		bool checkJoystick = joystick != null && joystick.enabled && !joystick.IsInDirection(Joystick.JoystickDirection.None);
+
+		Vector2 finalVelocity = Vector2.zero;
+
 		if( up )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( speed * 1.2f );
+			if (checkJoystick && !upDisabled)
+			{
+				finalVelocity = finalVelocity.y(joystick.position.y * speed * 1.2f);
+			}
+			else
+				finalVelocity = finalVelocity.y( speed * 1.2f );
+
+
 			this.transform.localScale = originalScale;
 		}
 		else if( down )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * speed * 0.8f );
+			if (checkJoystick && !downDisabled)
+			{
+				finalVelocity = finalVelocity.y(joystick.position.y * speed * 0.8f);
+			}
+			else
+				finalVelocity = finalVelocity.y( -1.0f * speed * 0.8f );
+
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 
 		if( right )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
+			if (checkJoystick && !rightDisabled)
+			{
+				finalVelocity = finalVelocity.x(joystick.position.x * speed * horizontalSpeedBoost);
+			}
+			else
+				finalVelocity = finalVelocity.x( speed * horizontalSpeedBoost );
+
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 		else if( left )
 		{
-			this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
+			if (checkJoystick && !leftDisabled)
+			{
+				finalVelocity = finalVelocity.x(joystick.position.x * speed * horizontalSpeedBoost);
+			}
+			else
+				finalVelocity = finalVelocity.x( -1.0f * speed * horizontalSpeedBoost );
+
 			this.transform.localScale = originalScale; 
 		}
+
+
+
+		this.rigidbody2D.velocity = finalVelocity;
+
+
 
 		horizontalSpeedBoost = 1.0f;
 
@@ -327,9 +374,11 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 	public void Update()
 	{
+		bool checkJoystick = joystick != null && joystick.enabled && !joystick.IsInDirection(Joystick.JoystickDirection.None);
+
 		if( !leftDisabled )
 		{
-			if( LugusInput.use.Key(KeyCode.LeftArrow) )
+			if( LugusInput.use.Key(KeyCode.LeftArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Left) ))
 			{
 				//if( !left && (Time.time - leftStartTime < 0.3f) )
 				//{
@@ -350,9 +399,9 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			}
 		}
 		
-		if(  !rightDisabled )
+		if(!rightDisabled )
 		{
-			if( LugusInput.use.Key(KeyCode.RightArrow) )
+			if( LugusInput.use.Key(KeyCode.RightArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Right) ))
 			{
 				//if( !right && (Time.time - rightStartTime < 0.3f) )
 				//{
@@ -373,7 +422,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 		if( !upDisabled )
 		{
-			if( LugusInput.use.Key(KeyCode.UpArrow) )
+				if( LugusInput.use.Key(KeyCode.UpArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Up) ))
 			{
 				up = true;
 			}
@@ -385,7 +434,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 
 		if( !downDisabled )
 		{
-			if( LugusInput.use.Key(KeyCode.DownArrow) )
+			if( LugusInput.use.Key(KeyCode.DownArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Down) ))
 			{
 				down = true;
 			}
