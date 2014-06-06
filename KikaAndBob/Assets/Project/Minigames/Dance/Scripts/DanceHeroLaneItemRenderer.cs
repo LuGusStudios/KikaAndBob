@@ -133,7 +133,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			return;
 
 		// within range of press point
-		if(Vector2.Distance( actionPoint.transform.position.v2(), item.lane.pressPoint.transform.position.v2() ) < 0.8f )
+		if(Vector2.Distance( actionPoint.transform.position.v2(), item.lane.pressPoint.position.v2() ) < 0.8f )
 		{
 			if (Input.touchCount > 0)
 			{
@@ -145,7 +145,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			}
 		}
 		// in front of press point
-		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.pressPoint.transform.localPosition.x)
+		else if (transform.localPosition.x + actionPoint.transform.localPosition.x < item.lane.pressPoint.localPosition.x)
 		{
 			if (Input.touchCount > 0)
 			{
@@ -169,11 +169,12 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 	protected void CheckTouchInputCorrect(Transform actionPoint)
 	{
-		if (WasActionPointTouched())
+		Touch pressPointTouch;
+		if (WasPressPointTouched(out pressPointTouch))
 		{
 			RegisterLaneChange();
 
-			if (LugusInput.use.down)
+			if (pressPointTouch.phase == TouchPhase.Began)
 			{
 				// player hit action point or first action point of streak
 				if( this.item.type == KikaAndBob.LaneItemType.SINGLE )
@@ -181,7 +182,7 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 				else
 					DetectStreak(true, actionPoint);
 			}
-			else if (LugusInput.use.up)
+			else if (pressPointTouch.phase == TouchPhase.Ended)
 			{
 				// player released touch on last action point of streak
 				if ( this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
@@ -192,16 +193,17 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 	protected void CheckTouchInputEarly(Transform actionPoint)
 	{
-		if (WasActionPointTouched())
+		Touch pressPointTouch;
+		if (WasPressPointTouched(out pressPointTouch))
 		{
 			RegisterLaneChange();
 
-			if (LugusInput.use.down)
+			if (pressPointTouch.phase == TouchPhase.Began)
 			{
 				this.item.lane.HighlightLaneNegative();
 				DanceHeroFeedback.use.UpdateScore(DanceHeroFeedback.ScoreType.PRESS_INCORRECT, item.lane);
 			}
-			else if (LugusInput.use.up)
+			else if (pressPointTouch.phase == TouchPhase.Ended)
 			{
 				if (this.item.type == KikaAndBob.LaneItemType.STREAK && currentActionPointIndex > 0)
 				{
@@ -259,16 +261,25 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		}
 	}
 
-	protected bool WasActionPointTouched()
+	protected bool WasPressPointTouched(out Touch pressPointTouch)
 	{
+		pressPointTouch = new Touch();
+		print ("----------------------------");
+		
 		for (int i = 0; i < Input.touchCount; i++) 
 		{
 			Touch touch = Input.GetTouch(i);
+
+			if (this.item.lane.name == "Lane1")
+			{
+				print (touch.position);
+			}
 
 			RaycastHit2D rayHit = Physics2D.Raycast(LugusCamera.game.ScreenToWorldPoint(touch.position).v2(), Vector3.forward.v2());
 	
 			if (rayHit.collider != null && rayHit.collider.transform == this.item.lane.pressPoint)
 			{
+				pressPointTouch = touch;
 				return true;
 			}
 		}

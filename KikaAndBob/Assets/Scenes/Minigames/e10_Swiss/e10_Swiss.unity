@@ -11002,6 +11002,22 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7ea0dd0aed7e9264585d385a0af88958, type: 2}
+      propertyPath: cardinalDirectionsOnly
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7ea0dd0aed7e9264585d385a0af88958, type: 2}
+      propertyPath: movableJoystick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7ea0dd0aed7e9264585d385a0af88958, type: 2}
+      propertyPath: deadZone.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7ea0dd0aed7e9264585d385a0af88958, type: 2}
+      propertyPath: deadZone.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7ea0dd0aed7e9264585d385a0af88958, type: 2}
   m_RootGameObject: {fileID: 708689195}
@@ -30324,6 +30340,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 708689196}
+  - 114: {fileID: 1899808440}
   m_Layer: 0
   m_Name: Joystick
   m_TagString: Untagged
@@ -57958,9 +57975,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1899808438}
-  - 131: {fileID: 1899808442}
-  - 114: {fileID: 1899808441}
-  - 114: {fileID: 1899808440}
   - 212: {fileID: 1899808439}
   m_Layer: 20
   m_Name: JoystickPad
@@ -58010,49 +58024,19 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400000, guid: 7ea0dd0aed7e9264585d385a0af88958,
     type: 2}
   m_PrefabInternal: {fileID: 216910640}
-  m_GameObject: {fileID: 1899808437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d48b19a102fadd40815e1295f3bc255, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1899808441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 7ea0dd0aed7e9264585d385a0af88958,
-    type: 2}
-  m_PrefabInternal: {fileID: 216910640}
-  m_GameObject: {fileID: 1899808437}
+  m_GameObject: {fileID: 708689195}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee0035ea6ab3a214590e0405dc3d4802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   joystickRadius: 40
-  cardinalDirectionsOnly: 1
-  deadZone: {x: .800000012, y: .800000012}
+  cardinalDirectionsOnly: 0
+  movableJoystick: 1
+  returnSquareCoords: 0
+  deadZone: {x: 0, y: 0}
   normalize: 0
   tapCount: 0
---- !u!131 &1899808442
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 13100000, guid: 7ea0dd0aed7e9264585d385a0af88958,
-    type: 2}
-  m_PrefabInternal: {fileID: 216910640}
-  m_GameObject: {fileID: 1899808437}
-  m_Enabled: 0
-  m_Texture: {fileID: 2800000, guid: 622b3876445221e4d88497774b0d5382, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &1905721162
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class RunnerConfig_19Illinois : IRunnerConfig
 	public override void LoadLevel(int index)
 	{
 		RunnerManager.use.gameType = KikaAndBob.RunnerGameType.Distance;
-		RunnerManager.use.targetDistance = 300.0f;
+		RunnerManager.use.targetDistance = 300.0f; 
 
 		index--;
 
@@ -26,6 +26,8 @@ public class RunnerConfig_19Illinois : IRunnerConfig
 			LevelCustom(); 
 		
 		SetupHUDForGame();
+
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Bottom, KikaAndBob.ScreenAnchor.Bottom); 
 
 		LoadGUIVarsFromRealSetup();
 	}

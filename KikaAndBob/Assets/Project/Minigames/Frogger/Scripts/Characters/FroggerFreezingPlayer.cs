@@ -21,7 +21,9 @@ public class FroggerFreezingPlayer : FroggerPlayer
 			if (LugusInput.use.Key(KeyCode.UpArrow)
 				|| LugusInput.use.Key(KeyCode.DownArrow)
 				|| LugusInput.use.Key(KeyCode.LeftArrow)
-				|| LugusInput.use.Key(KeyCode.RightArrow))
+				|| LugusInput.use.Key(KeyCode.RightArrow)
+			    || (directionPad != null && !directionPad.IsDirection(Joystick.JoystickDirection.None))
+			    )
 			{
 				base.UpdatePosition();
 				freezeTimer = preFreezeTime;
