@@ -33833,6 +33833,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1403230596}
   - 114: {fileID: 1403230597}
+  - 114: {fileID: 1403230598}
   m_Layer: 0
   m_Name: Joystick
   m_TagString: Untagged
@@ -33868,9 +33869,22 @@ MonoBehaviour:
   joystickRadius: 40
   cardinalDirectionsOnly: 0
   movableJoystick: 1
+  returnSquareCoords: 0
   deadZone: {x: .400000006, y: .400000006}
   normalize: 0
   tapCount: 0
+--- !u!114 &1403230598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 7ea0dd0aed7e9264585d385a0af88958,
+    type: 2}
+  m_PrefabInternal: {fileID: 1716622114}
+  m_GameObject: {fileID: 1403230595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca28612ed96a7924faca415a256fcaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1407633872
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,7 +50,6 @@ public class Joystick : MonoBehaviour
 	protected float tapTimeWindow;
 	protected Vector2 fingerDownPos;
 	protected float firstDeltaTime;
-	protected IGameManager gameManager = null;
 
 	public bool isFingerDown
 	{
@@ -85,28 +84,12 @@ public class Joystick : MonoBehaviour
 	/* Time allowed between taps */
 	private static float tapTimeDelta = 0.3f;
 	
-	protected void Awake()
-	{
-		SetUpLocal();
-
-	}
-
-	public void SetUpLocal()
+	public void SetupLocal()
 	{
 		if (!enumeratedJoysticks)
 		{
 			joysticks = new List<Joystick>((Joystick[])FindObjectsOfType(typeof(Joystick)));
 			enumeratedJoysticks = true;
-		}
-
-		if (gameManager == null)
-		{
-			gameManager = (IGameManager) FindObjectOfType(typeof(IGameManager));
-		}
-
-		if (gameManager == null)
-		{
-			Debug.Log("Joystick: No game manager in this scene!");
 		}
 
 		if (joystickPad == null)
@@ -131,6 +114,19 @@ public class Joystick : MonoBehaviour
 		}
 	}
 
+	public void SetupGlobal()
+	{
+	}
+	
+	protected void Awake()
+	{
+		SetupLocal();
+	}
+	
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
 	
 	public void ResetJoystick()
 	{
@@ -154,17 +150,8 @@ public class Joystick : MonoBehaviour
 		}
 	}
 	
-	
-	private void Update()
+	protected void Update()
 	{
-		if (gameManager != null)
-		{
-			if (!gameManager.GameRunning)
-			{
-				return;
-			}
-		}
-	
 		int count = Input.touchCount;
 		
 		/* Adjust the tap time window while it still available */
@@ -304,7 +291,6 @@ public class Joystick : MonoBehaviour
 		if (!returnSquareCoords)
 		{
 			DetectCircularPosition(lastTouchPosition);
-			print (position);
 		}
 
 		DetectDirection();
