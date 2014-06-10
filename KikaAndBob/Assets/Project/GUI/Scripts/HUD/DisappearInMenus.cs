@@ -27,6 +27,12 @@ public class DisappearInMenus : MonoBehaviour
 			Debug.Log("DisappearInMenus: No game manager in this scene! Disabling.");
 			this.enabled = false;
 		}
+
+		// hide everything in non-mobile platforms, but keep in editor for testing
+		#if ((UNITY_WEBPLAYER || UNITY_STANDALONE) && !UNITY_EDITOR)
+		SetEnabled(false);
+		this.enabled = false;
+		#endif
 	}
 
 	protected void SetEnabled(bool enabled)
