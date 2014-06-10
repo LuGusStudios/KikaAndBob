@@ -15,6 +15,7 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 	public float timeToMaxSpeed = 60.0f;
 
 	protected Vector3 originalScale = Vector3.zero;
+	protected Joystick joystick = null;
 
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
@@ -95,6 +96,16 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 	{
 		// lookup references to objects / scripts outside of this script
 		startTime = Time.time;
+
+		if (joystick == null)
+		{
+			joystick = GameObject.FindObjectOfType<Joystick>();
+		}
+
+		if (joystick == null)
+		{
+			Debug.LogWarning("RunnerCharacterControllerSkiing: Missing joystick. Continuing without.");
+		}
 	}
 	
 	protected void Awake()
@@ -144,14 +155,25 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 
 
 		float rotationAngle = 0.0f;
+		bool checkJoystick = joystick != null && joystick.enabled && !joystick.IsInDirection(Joystick.JoystickDirection.None);
 
 		if( left )
 		{
-			rotationAngle = rotationSpeed * Time.deltaTime;
+			if (checkJoystick)
+			{
+				rotationAngle = Mathf.Abs(joystick.position.x) * rotationSpeed * Time.deltaTime;
+			}
+			else
+				rotationAngle = rotationSpeed * Time.deltaTime;
 		}
 		else if( right )
 		{
-			rotationAngle = -rotationSpeed * Time.deltaTime;
+			if (checkJoystick)
+			{
+				rotationAngle = Mathf.Abs(joystick.position.x) * -rotationSpeed * Time.deltaTime;
+			}
+			else
+				rotationAngle = -rotationSpeed * Time.deltaTime;
 		}
 
 		if( rotationAngle != 0.0f )
@@ -354,7 +376,7 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 	
 	public void Update()
 	{
-		if( LugusInput.use.Key(KeyCode.LeftArrow) )
+		if( LugusInput.use.Key(KeyCode.LeftArrow) || (joystick != null && joystick.position.x < 0) )
 		{
 			left = true;
 		}
@@ -363,7 +385,7 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 			left = false;
 		}
 		
-		if( LugusInput.use.Key(KeyCode.RightArrow) )
+		if( LugusInput.use.Key(KeyCode.RightArrow) || (joystick != null && joystick.position.x > 0) )
 		{
 			right = true;
 		}
@@ -378,14 +400,14 @@ public class RunnerCharacterControllerSkiing : LugusSingletonExisting<RunnerChar
 	protected void CheckSpeedType()
 	{
 		SpeedType targetType = SpeedType.NORMAL;
-		if( LugusInput.use.Key (KeyCode.UpArrow) )
+		if( LugusInput.use.Key (KeyCode.UpArrow)  || (joystick != null && joystick.position.y > 0) )
 		{
 			if( this.direction < 0 )// going DOWN, up is slowing down
 				targetType = SpeedType.SLOW;
 			else
 				targetType = SpeedType.FAST;
 		}
-		else if( LugusInput.use.Key (KeyCode.DownArrow) )
+		else if( LugusInput.use.Key (KeyCode.DownArrow)  || (joystick != null && joystick.position.y < 0) )
 		{
 			if( this.direction < 0 )// going DOWN, down is faster
 				targetType = SpeedType.FAST;

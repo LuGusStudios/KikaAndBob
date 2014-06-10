@@ -7080,6 +7080,62 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 5004caa1bfdab1542959d013ac54bf68, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &164075209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 164075210}
+  - 114: {fileID: 164075211}
+  - 114: {fileID: 164075212}
+  m_Layer: 20
+  m_Name: DirectionPad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &164075210
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 164075209}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 77.4949799, y: 7.0713768, z: 7.65977192}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_Children:
+  - {fileID: 361487452}
+  - {fileID: 1798688342}
+  - {fileID: 538427156}
+  - {fileID: 1203433411}
+  m_Father: {fileID: 0}
+--- !u!114 &164075211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400008, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 164075209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f55195f2bf12346bd6b4e5c94ecc29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &164075212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400010, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 164075209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca28612ed96a7924faca415a256fcaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &175539657
 GameObject:
   m_ObjectHideFlags: 0
@@ -10914,6 +10970,85 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
   m_OcclusionCulling: 1
+--- !u!1 &361487448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 361487452}
+  - 114: {fileID: 361487451}
+  - 212: {fileID: 361487450}
+  - 58: {fileID: 361487449}
+  m_Layer: 20
+  m_Name: Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!58 &361487449
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 5800000, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 361487448}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Radius: .600000024
+  m_Center: {x: 0, y: 2.38418579e-07}
+--- !u!212 &361487450
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 21200000, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 361487448}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: 9839ccc2553f3447e9e4b3b1dcd5be02, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &361487451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 361487448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd3d4e9b359b954fba2778111e8f21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 4
+  transparency: .699999988
+--- !u!4 &361487452
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 361487448}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: -4.37113883e-08}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 164075210}
 --- !u!1 &367338603
 GameObject:
   m_ObjectHideFlags: 0
@@ -13933,6 +14068,85 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 5004caa1bfdab1542959d013ac54bf68, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &538427155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100008, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 538427156}
+  - 114: {fileID: 538427159}
+  - 212: {fileID: 538427158}
+  - 58: {fileID: 538427157}
+  m_Layer: 20
+  m_Name: Up
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &538427156
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400008, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 538427155}
+  m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 164075210}
+--- !u!58 &538427157
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 5800006, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 538427155}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Radius: .600000024
+  m_Center: {x: 0, y: -4.76837158e-07}
+--- !u!212 &538427158
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 21200006, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 538427155}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: 9839ccc2553f3447e9e4b3b1dcd5be02, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &538427159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 538427155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd3d4e9b359b954fba2778111e8f21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 1
+  transparency: .699999988
 --- !u!1 &548646089
 GameObject:
   m_ObjectHideFlags: 0
@@ -15561,7 +15775,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -15574,7 +15788,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -15601,7 +15815,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -15614,7 +15828,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -15641,7 +15855,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -15654,7 +15868,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -15681,7 +15895,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -15694,7 +15908,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -15721,7 +15935,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -15734,7 +15948,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -15761,7 +15975,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -15774,7 +15988,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -15801,7 +16015,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -15814,7 +16028,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -15841,7 +16055,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -15854,7 +16068,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -15881,7 +16095,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -15894,7 +16108,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -15921,7 +16135,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -15934,7 +16148,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -15961,7 +16175,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -15974,7 +16188,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -16001,7 +16215,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -16014,7 +16228,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -16044,7 +16258,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -16057,7 +16271,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -16084,7 +16298,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -16097,7 +16311,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -16124,7 +16338,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -16137,7 +16351,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -16164,7 +16378,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -16177,7 +16391,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -16204,7 +16418,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -16217,7 +16431,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -16244,7 +16458,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -16257,7 +16471,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -16284,7 +16498,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -16297,7 +16511,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -16324,7 +16538,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -16337,7 +16551,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -16364,7 +16578,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -16377,7 +16591,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -16404,7 +16618,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -16417,7 +16631,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -16444,7 +16658,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -16457,7 +16671,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -16484,7 +16698,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -16497,7 +16711,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -16508,7 +16722,7 @@ MonoBehaviour:
         height: .25
       originalPivotOffset: {x: -.114445575, y: .383869529}
   textureAtlases:
-  - {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+  - {fileID: 0}
   mAnimationClips:
   - animationName: KikaSad
     fps: 5
@@ -19287,6 +19501,58 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1332870793}
+--- !u!1001 &732973363
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 77.4949799
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 7.0713768
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 7.65977192
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_RootGameObject: {fileID: 164075209}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &735308124
 GameObject:
   m_ObjectHideFlags: 0
@@ -19490,6 +19756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35fbec4c8b43f2741976c6105c52934c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startLives: 3
   allowPickupWin: 0
   gameRunning: 0
 --- !u!114 &739109685
@@ -23433,7 +23700,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -23446,7 +23713,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -23473,7 +23740,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -23486,7 +23753,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -23513,7 +23780,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -23526,7 +23793,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -23553,7 +23820,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -23566,7 +23833,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -23593,7 +23860,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -23606,7 +23873,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -23633,7 +23900,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -23646,7 +23913,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -23673,7 +23940,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -23686,7 +23953,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -23713,7 +23980,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -23726,7 +23993,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -23753,7 +24020,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -23766,7 +24033,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -23793,7 +24060,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -23806,7 +24073,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -23833,7 +24100,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -23846,7 +24113,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -23873,7 +24140,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -23886,7 +24153,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -23916,7 +24183,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 19d67513d5f55ac428dff4d16351aca6
       materialIndex: 0
       depth: 10
@@ -23929,7 +24196,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 19d67513d5f55ac428dff4d16351aca6
       originalMaterialIndex: 0
       originalUV:
@@ -23956,7 +24223,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aa701e0d73a88064a8ede16d04e2e931
       materialIndex: 0
       depth: 9
@@ -23969,7 +24236,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aa701e0d73a88064a8ede16d04e2e931
       originalMaterialIndex: 0
       originalUV:
@@ -23996,7 +24263,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       materialIndex: 0
       depth: 11
@@ -24009,7 +24276,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: d6e011086df1b3d4b80c2d6adb7dd833
       originalMaterialIndex: 0
       originalUV:
@@ -24036,7 +24303,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       materialIndex: 0
       depth: 12
@@ -24049,7 +24316,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 66f80fc8b7f088342ae63c5beebc38d6
       originalMaterialIndex: 0
       originalUV:
@@ -24076,7 +24343,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 4a2789e9d0f00ad4b98662f731562f63
       materialIndex: 0
       depth: 5
@@ -24089,7 +24356,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 4a2789e9d0f00ad4b98662f731562f63
       originalMaterialIndex: 0
       originalUV:
@@ -24116,7 +24383,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       materialIndex: 0
       depth: 5
@@ -24129,7 +24396,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: e7410b6bc4d8bb746bc87fc24aefe2de
       originalMaterialIndex: 0
       originalUV:
@@ -24156,7 +24423,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -24169,7 +24436,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -24196,7 +24463,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: aae367229c4398f4aabb6b4d789133da
       materialIndex: 0
       depth: 4
@@ -24209,7 +24476,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: aae367229c4398f4aabb6b4d789133da
       originalMaterialIndex: 0
       originalUV:
@@ -24236,7 +24503,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: a641dc168f098064eadd418cd5b56a32
       materialIndex: 0
       depth: 6
@@ -24249,7 +24516,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: a641dc168f098064eadd418cd5b56a32
       originalMaterialIndex: 0
       originalUV:
@@ -24276,7 +24543,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: ad62b2ae9a20c7644937d400b0b40320
       materialIndex: 0
       depth: 8
@@ -24289,7 +24556,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: ad62b2ae9a20c7644937d400b0b40320
       originalMaterialIndex: 0
       originalUV:
@@ -24316,7 +24583,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 40b486be3fd72764aaae6efa073ff2c8
       materialIndex: 0
       depth: 15
@@ -24329,7 +24596,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 40b486be3fd72764aaae6efa073ff2c8
       originalMaterialIndex: 0
       originalUV:
@@ -24356,7 +24623,7 @@ MonoBehaviour:
       localPosition: {x: 0, y: 0, z: 0}
       localRotation: 0
       localScale: {x: 0, y: 0}
-      atlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      atlas: {fileID: 0}
       textureGUID: 3d86c890cd4ea9a4781d944051d43f13
       materialIndex: 0
       depth: 13
@@ -24369,7 +24636,7 @@ MonoBehaviour:
         layer: 0
         isTrigger: 1
         tag: 
-      originalAtlas: {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+      originalAtlas: {fileID: 0}
       originalTextureGUID: 3d86c890cd4ea9a4781d944051d43f13
       originalMaterialIndex: 0
       originalUV:
@@ -24380,7 +24647,7 @@ MonoBehaviour:
         height: .25
       originalPivotOffset: {x: -.114445575, y: .383869529}
   textureAtlases:
-  - {fileID: 11400000, guid: d89b8c258448d4e6bb59c254826e5aa8, type: 2}
+  - {fileID: 0}
   mAnimationClips:
   - animationName: KikaSad
     fps: 5
@@ -30253,6 +30520,85 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 28b82441be4e59840b55880b3076df1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &1203433410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100006, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1203433411}
+  - 114: {fileID: 1203433414}
+  - 212: {fileID: 1203433413}
+  - 58: {fileID: 1203433412}
+  m_Layer: 20
+  m_Name: Down
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1203433411
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400006, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1203433410}
+  m_LocalRotation: {x: 0, y: 0, z: -.707107008, w: .70710665}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 164075210}
+--- !u!58 &1203433412
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 5800004, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1203433410}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Radius: .600000024
+  m_Center: {x: 1.1920929e-07, y: 4.76837158e-07}
+--- !u!212 &1203433413
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 21200004, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1203433410}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: 9839ccc2553f3447e9e4b3b1dcd5be02, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1203433414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400004, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1203433410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd3d4e9b359b954fba2778111e8f21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 3
+  transparency: .699999988
 --- !u!1 &1205015332
 GameObject:
   m_ObjectHideFlags: 0
@@ -40786,6 +41132,85 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_Sprite: {fileID: 21300000, guid: 155fff108c2fb7c41ab24e46046fdbee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &1798688341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100004, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1798688342}
+  - 114: {fileID: 1798688345}
+  - 212: {fileID: 1798688344}
+  - 58: {fileID: 1798688343}
+  m_Layer: 20
+  m_Name: Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1798688342
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400004, guid: e31121d58141edb4a932064c18d6e3b5, type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1798688341}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 164075210}
+--- !u!58 &1798688343
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 5800002, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1798688341}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Radius: .600000024
+  m_Center: {x: 0, y: 0}
+--- !u!212 &1798688344
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 21200002, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1798688341}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_Sprite: {fileID: 21300000, guid: 9839ccc2553f3447e9e4b3b1dcd5be02, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1798688345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400006, guid: e31121d58141edb4a932064c18d6e3b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 732973363}
+  m_GameObject: {fileID: 1798688341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd3d4e9b359b954fba2778111e8f21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 2
+  transparency: .699999988
 --- !u!1 &1800448188
 GameObject:
   m_ObjectHideFlags: 0

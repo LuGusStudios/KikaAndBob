@@ -15,6 +15,8 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	public float timeToMaxSpeed = 60.0f;
 	public float horizontalSpeed = 4.0f;
 
+	protected Joystick joystick = null;
+
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -63,6 +65,12 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 	{
 		// lookup references to objects / scripts outside of this script
 		startTime = Time.time;
+
+		if (joystick == null)
+			joystick = GameObject.FindObjectOfType<Joystick>();
+
+		if (joystick == null)
+			Debug.LogError("RunnerCharacterControllerFasterSlower: Missing joystick.");
 	}
 	
 	protected void Awake()
@@ -99,22 +107,33 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 
 		// Debug.LogWarning( rigidbody2D.velocity ); 
 
-
-		if( left )
-		{ 
-			//if( this.rigidbody2D.velocity.x > 0.0f )
-			//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
-
-			this.rigidbody2D.velocity += Vector2.right * -1.0f * horizontalSpeed * speedModifier; 
-		}
-		
-		if( right )
+		if (left == true || right == true)
 		{
-			//if( this.rigidbody2D.velocity.x < 0.0f )
-			//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
-
-			this.rigidbody2D.velocity += Vector2.right  * horizontalSpeed * speedModifier; 
+			if( left )
+			{ 
+				//if( this.rigidbody2D.velocity.x > 0.0f )
+				//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
+	
+				this.rigidbody2D.velocity += Vector2.right * -1.0f * horizontalSpeed * speedModifier; 
+			}
+			
+			if( right )
+			{
+				//if( this.rigidbody2D.velocity.x < 0.0f )
+				//	this.rigidbody2D.velocity = new Vector3(this.rigidbody2D.velocity.x / 10.0f, this.rigidbody2D.velocity.y);
+	
+				this.rigidbody2D.velocity += Vector2.right  * horizontalSpeed * speedModifier; 
+			}
 		}
+		else
+		{
+			if (joystick != null)
+				this.rigidbody2D.velocity += (Vector2.right  * horizontalSpeed * speedModifier) * (joystick.position.x * 0.375f); 
+		}
+
+
+
+			
 	}
 
 	public bool left = false;
@@ -160,6 +179,23 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 			else
 				targetType = SpeedType.SLOW;
 		}
+		else if (joystick != null && joystick.enabled)
+		{
+			if (joystick.position.y > 0)
+			{
+				if( this.direction < 0 )// going DOWN, up is slowing down
+					targetType = SpeedType.SLOW;
+				else
+					targetType = SpeedType.FAST;
+			}
+			else if (joystick.position.y < 0)
+			{
+				if( this.direction < 0 )// going DOWN, down is faster
+					targetType = SpeedType.FAST;
+				else
+					targetType = SpeedType.SLOW;
+			}
+		}
 
 
 		// in mexico, we switch between animations
@@ -189,12 +225,19 @@ public class RunnerCharacterControllerFasterSlower : LugusSingletonExisting<Runn
 		SpeedType oldType = currentSpeedType;
 		currentSpeedType = type;
 
-		if( currentSpeedType == SpeedType.NORMAL )
-			speedModifierPercentage = 0.5f;
-		else if( currentSpeedType == SpeedType.SLOW )
-			speedModifierPercentage = 0.0f;
-		else if( currentSpeedType == SpeedType.FAST )
-			speedModifierPercentage = 1.0f;
+		if ( LugusInput.use.Key (KeyCode.UpArrow) || LugusInput.use.Key (KeyCode.DownArrow))
+		{
+			if( currentSpeedType == SpeedType.NORMAL )
+				speedModifierPercentage = 0.5f;
+			else if( currentSpeedType == SpeedType.SLOW )
+				speedModifierPercentage = 0.0f;
+			else if( currentSpeedType == SpeedType.FAST )
+				speedModifierPercentage = 1.0f;
+		}
+		else if (joystick != null && joystick.enabled)
+		{
+			speedModifierPercentage = 1 - Mathf.Abs( ( joystick.position.y * 0.5f ) + 0.5f );
+		}
 
 
 		if( onSpeedTypeChange != null )

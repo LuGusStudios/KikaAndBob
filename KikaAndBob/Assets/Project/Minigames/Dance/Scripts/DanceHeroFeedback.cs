@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using SmoothMoves;
@@ -119,7 +119,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 			scoreAdd = Mathf.RoundToInt((float)scorePerHit * scoreModifier);
 			score += scoreAdd;
 		//	DisplayScoreGainAtLane(lane, scoreAdd, true);
-			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(lane.laneColor).Execute();
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.pressPoint.transform.position).Color(lane.laneColor).Execute();
 
 			if (scoreModifier >= (maxScoreModifier / 6) * nextMessageIndex)
 			{
@@ -173,7 +173,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 			scoreAdd = (int)((scorePerHit * maxScoreModifier) * 0.5f) * -1;
 			//DisplayScoreGainAtLane(lane, scoreAdd, false);
-			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.actionPoint.transform.position).Color(Color.red).MinValue(0).Execute();
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Score, scoreAdd).Time(2.0f).Position(lane.pressPoint.transform.position).Color(Color.red).MinValue(0).Execute();
 
 			score += scoreAdd;	// subtract half of maximum score
 
@@ -216,7 +216,7 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 
 		GameObject scoreDisplay = (GameObject)Instantiate(lane.scoreDisplay.gameObject);
 		scoreDisplay.transform.parent = lane.transform;
-		scoreDisplay.transform.position = lane.actionPoint.transform.position.z(-1.0f);
+		scoreDisplay.transform.position = lane.pressPoint.transform.position.z(-1.0f);
 		TextMesh textMesh = scoreDisplay.GetComponent<TextMesh>();
 		textMesh.text = gain.ToString();
 

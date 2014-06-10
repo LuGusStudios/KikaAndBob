@@ -26,6 +26,8 @@ public class RunnerConfig_13Pacific : IRunnerConfig
 			LevelCustom(); 
 		
 		SetupHUDForGame();
+
+		HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.Top, KikaAndBob.ScreenAnchor.Top);
 		
 		LoadGUIVarsFromRealSetup();
 	}
