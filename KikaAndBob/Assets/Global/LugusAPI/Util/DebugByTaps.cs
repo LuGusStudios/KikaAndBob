@@ -81,12 +81,33 @@ public class DebugByTaps : MonoBehaviour
 		GUILayout.BeginArea( new Rect(Screen.width - 200, 0, 200, Screen.height) );
 
 		List<string> levels = new List<string>();  
-		levels.Add( "DanceBuilder" );
-		levels.Add( "e02_argentina" ); 
-		levels.Add( "FroggerBuilder" );
-		levels.Add( "PacmanBuilder" );
-		levels.Add( "RunnerBuilder" );  
-		levels.Add( "DartsBuilder" ); 
+		levels.Add("e01_kenia");
+		levels.Add("e02_argentina");
+		levels.Add("e03_china");
+		levels.Add("e04_tasmania");
+		levels.Add("e05_Mexico");
+		levels.Add("e06_egypt");
+		levels.Add("e07_france");
+		levels.Add("e08_texas");
+		levels.Add("e09_Brazil");
+		levels.Add("e10_Swiss");
+		levels.Add("e11_vatican");
+		levels.Add("e12_newyork");
+		levels.Add("e13_pacific");
+		levels.Add("e14_buthan");
+		levels.Add("e15_india");
+		levels.Add("e16_israel");
+		levels.Add("e17_greenland");
+		levels.Add("e18_amsterdam");
+		levels.Add("e19_illinois");
+		levels.Add("e20_morocco");
+		levels.Add("e21_cuba");
+		levels.Add("e22_russia");
+		levels.Add("e23_england");
+		levels.Add("e24_japan");
+		levels.Add("e25_sicily");
+		levels.Add("e26_belgium");
+
 
 		foreach( string level in levels )
 		{

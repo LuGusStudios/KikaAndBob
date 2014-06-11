@@ -29,7 +29,15 @@ public class MainMenu : MonoBehaviour
 	
 	protected void Update () 
 	{
-	
+//		if (Input.GetKeyDown(KeyCode.L))
+//		{
+//			string result = "";
+//			foreach (string s in levelNames)
+//			{
+//				result += "levels.Add(\"" + s + "\");\n";
+//			}
+//			Debug.Log(result);
+//		}
 	}
 	Vector2 scroll = Vector2.zero;
 	protected void OnGUI()

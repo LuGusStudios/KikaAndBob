@@ -60,7 +60,7 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		}
 	}
 
-	protected void ShowMenu(MainMenuTypes type)
+	public void ShowMenu(MainMenuTypes type)
 	{
 		if (menus.ContainsKey(type))
 		{
