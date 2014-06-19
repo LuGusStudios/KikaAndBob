@@ -1,4 +1,4 @@
-﻿//#define DEBUG_RESOURCES
+﻿#define DEBUG_RESOURCES
 
 using UnityEngine;
 using System.Collections;
