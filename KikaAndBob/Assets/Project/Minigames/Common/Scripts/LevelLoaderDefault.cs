@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 	using System.IO;
 #endif
 
@@ -10,7 +10,7 @@ public class LevelLoaderDefault
 {
 	public enum LoadingSource { NONE = -1, SYSTEM_IO = 1, RESOURCES = 2 };
 	
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 	public LoadingSource source = LoadingSource.SYSTEM_IO;
 #else
 	public LoadingSource source = LoadingSource.RESOURCES;
@@ -32,7 +32,7 @@ public class LevelLoaderDefault
 			switch (source)
 			{
 				case LoadingSource.SYSTEM_IO:
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 					if (File.Exists(Application.dataPath + "/Config/Levels/" + levelName + ".xml"))
 					{
 						levelIndices.Add(i + 1);
@@ -66,7 +66,7 @@ public class LevelLoaderDefault
 		{
 			case LoadingSource.SYSTEM_IO:
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 				string configPath = Application.dataPath + "/Config/Levels/" + levelName + ".xml";
 				if (File.Exists(configPath))
 				{

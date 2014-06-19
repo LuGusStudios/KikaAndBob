@@ -447,8 +447,10 @@ public class FroggerCharacter : MonoBehaviour {
 
 	public void DoHitAnimation()
 	{
-		hitParticles.Play();
+
 		hitParticles.transform.position = hitParticles.transform.position.z(0);
+		hitParticles.Simulate(0.005f);
+		hitParticles.Play();
 		characterAnimator.PlayAnimation(characterAnimator.hit);
 
 		// make hit animation 'bend' in direction of hit
