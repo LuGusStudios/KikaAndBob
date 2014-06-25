@@ -10,7 +10,8 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 	{
 		NONE = -1,
 		Main = 0,
-		Settings = 1
+		Settings = 1,
+		Avatar = 2
 	}
 
 	public void SetupLocal()
@@ -25,14 +26,18 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 			menus.Add(MainMenuTypes.Main, gameMenu);
 		else
 			Debug.LogError("MainMenuManager: Missing main menu!");
-		
 
-		
 		MenuStepSettings helpMenu = transform.FindChild("Settings").GetComponent<MenuStepSettings>();
 		if (helpMenu != null)
 			menus.Add(MainMenuTypes.Settings, helpMenu);
 		else
 			Debug.LogError("MainMenuManager: Missing setting menu!");
+
+		MenuStepAvatar avatarMenu = transform.FindChild("Avatar").GetComponent<MenuStepAvatar>();
+		if (avatarMenu != null)
+			menus.Add(MainMenuTypes.Avatar, avatarMenu);
+		else
+			Debug.LogError("MainMenuManager: Missing avatar menu!");
 
 		ShowMenu(MainMenuTypes.Main);
 	}

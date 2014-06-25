@@ -55,6 +55,9 @@ public class SceneLoaderTest : MonoBehaviour {
 
 	protected void OnGUI()
 	{
+		if (!LugusDebug.debug)
+			return;
+
 		GUILayout.BeginHorizontal();
 
 		GUILayout.Space(400);
@@ -65,8 +68,8 @@ public class SceneLoaderTest : MonoBehaviour {
 		}
 
 		GUILayout.EndHorizontal();
-
-		automate = GUILayout.Toggle(automate, "Automate");
+//
+//		automate = GUILayout.Toggle(automate, "Automate");
 	}
 	
 }
