@@ -60,7 +60,12 @@ public class CountdownScreen : MonoBehaviour
 	protected IEnumerator CountdownRoutine()
 	{
 		this.transform.localPosition = Vector3.zero;
+
+#if UNITY_IOS
+		controlsHint.color = controlsHint.color.a(0.0f);
+#elif
 		controlsHint.color = Color.white;
+#endif
 
 		//Debug.LogError("Starting countdown routine " + countDownFrom + " // " + duration);
 
@@ -97,6 +102,7 @@ public class CountdownScreen : MonoBehaviour
 			countText.transform.parent.gameObject.StopTweens();
 		}
 
+#if !UNITY_IOS
 		// fade out the controls hint
 		float hintTime = 3.0f;
 
@@ -108,6 +114,7 @@ public class CountdownScreen : MonoBehaviour
 		}
 		
 		controlsHint.color = controlsHint.color.a(0.0f);	// this will ensure the fade always reaches perfect completion
+#endif
 
 
 		this.transform.localPosition = new Vector3(9999.0f, 9999.0f, 9999.0f);

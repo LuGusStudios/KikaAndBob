@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 using System.IO;
 #endif
 using System.Text;
@@ -17,7 +17,7 @@ public interface ILugusConfigProvider
 	void Store(Dictionary<string, string> data, string key);
 }
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER && !UNITY_IPHONE && !UNITY_ANDROID
 public class LugusConfigProviderDefault : ILugusConfigProvider
 {
 

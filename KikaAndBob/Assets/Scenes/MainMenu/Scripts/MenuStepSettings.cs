@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 public class MenuStepSettings : IMenuStep 
 {
-	Button exitButton = null;
-	Button musicButton = null;
-	Button soundButton = null;
+	protected Button exitButton = null;
+	protected Button musicButton = null;
+	protected Button soundButton = null;
+
+	protected TextMeshWrapper soundOnOffText = null;
+	protected TextMeshWrapper musicOnOffText = null;
+
 
 	public void SetupLocal()
 	{
@@ -29,6 +33,18 @@ public class MenuStepSettings : IMenuStep
 		
 		if (soundButton == null)
 			Debug.LogError("MenuStepSettings: Missing sound button.");
+
+		if (soundOnOffText == null)
+			soundOnOffText = transform.FindChild("TextSoundOnOff").GetComponent<TextMeshWrapper>();
+
+		if (soundOnOffText == null)
+			Debug.LogError("MenuStepSettings: Missing sound on/off text.");
+
+		if (musicOnOffText == null)
+			musicOnOffText = transform.FindChild("TextMusicOnOff").GetComponent<TextMeshWrapper>();
+
+		if (musicOnOffText == null)
+			Debug.LogError("MenuStepSettings: Missing music on/off text.");
 	}
 	
 	public void SetupGlobal()
@@ -51,6 +67,25 @@ public class MenuStepSettings : IMenuStep
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
+
+		if (musicButton.pressed)
+		{
+			bool musicMute = LugusConfig.use.User.GetBool("main.settings.musicmute", false);
+			musicMute = !musicMute;
+			LugusConfig.use.User.SetBool("main.settings.musicmute", musicMute, true);
+
+			SetMusicMute(musicMute);
+		}
+
+		if (soundButton.pressed)
+		{
+			bool soundMute = LugusConfig.use.User.GetBool("main.settings.soundmute", false);
+			soundMute = !soundMute;
+			LugusConfig.use.User.SetBool("main.settings.soundmute", soundMute, true);
+			
+			SetSoundMute(soundMute);
+		}
+
 	}
 
 	public override void Activate (bool animate)
@@ -63,5 +98,49 @@ public class MenuStepSettings : IMenuStep
 	{
 		activated = false;
 		this.gameObject.SetActive(false);
+	}
+
+	protected void SetMusicMute(bool mute)
+	{
+		float alpha = 1;
+		string textKey = "";
+
+		if (mute)
+		{
+			alpha = 0.6f;
+			LugusAudio.use.Music().VolumePercentage = 0;
+			textKey = "global.settings.off";
+		}
+		else
+		{
+			LugusAudio.use.Music().VolumePercentage = 1;
+			textKey = "global.settings.on";
+		}
+
+		SpriteRenderer spriteRenderer = musicButton.GetComponent<SpriteRenderer>();
+		spriteRenderer.color = spriteRenderer.color.a(alpha);
+		musicOnOffText.SetTextKey(textKey);
+	}
+
+	protected void SetSoundMute(bool mute)
+	{
+		float alpha = 1;
+		string textKey = "";
+
+		if (mute)
+		{
+			alpha = 0.6f;
+			LugusAudio.use.Music().VolumePercentage = 0;
+			textKey = "global.settings.off";
+		}
+		else
+		{
+			LugusAudio.use.Music().VolumePercentage = 1;
+			textKey = "global.settings.on";
+		}
+
+		SpriteRenderer spriteRenderer = soundButton.GetComponent<SpriteRenderer>();
+		spriteRenderer.color = spriteRenderer.color.a(alpha);
+		soundOnOffText.SetTextKey(textKey);
 	}
 }

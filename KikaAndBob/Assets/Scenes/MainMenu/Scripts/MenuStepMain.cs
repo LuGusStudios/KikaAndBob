@@ -61,7 +61,7 @@ public class MenuStepMain : IMenuStep
 	
 		if (avatarButton.pressed)
 		{
-
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Avatar);
 		}
 	}
 
