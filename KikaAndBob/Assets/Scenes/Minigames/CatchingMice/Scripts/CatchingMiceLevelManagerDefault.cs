@@ -653,6 +653,42 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		}
 	}
 
+	public void InstantiateTrap(CatchingMiceTrap trap, CatchingMiceTile tile)
+	{
+		// Create the trap item
+		GameObject tileItem = (GameObject)Instantiate(trap.gameObject);
+		tileItem.transform.parent = objectParent;
+		tileItem.transform.name += " " + tile.gridIndices;
+		tileItem.transform.localPosition = tile.location;
+		CatchingMiceTrap instantiatedTrap = tileItem.GetComponent<CatchingMiceTrap>();
+
+		if (instantiatedTrap != null)
+		{
+			if (instantiatedTrap.CalculateColliders())
+			{
+				instantiatedTrap.parentTile = tile;
+				
+				if ((tile.tileType & CatchingMiceTile.TileType.Trap) != CatchingMiceTile.TileType.Trap)
+				{
+					CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no trap flag set!");
+				}
+				
+				trapTiles.Add(tile);
+				instantiatedTrap.Stacks = trap.Stacks;
+			}
+			else
+			{
+				CatchingMiceLogVisualizer.use.LogError("The trap " + trap.name + " could not be placed on the grid.");
+				DestroyGameObject(tileItem);
+			}
+		}
+		else
+		{
+			CatchingMiceLogVisualizer.use.LogError("The trap to instantiate did not have a Trap component attached.");
+			DestroyGameObject(tileItem);
+		}
+	}
+
 	protected void PlaceTraps(CatchingMiceTrapDefinition[] trapdefinitions)
 	{
 		foreach (CatchingMiceTrapDefinition definition in trapdefinitions)
@@ -664,17 +700,17 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			}
 
 			// Find the trap prefab
-			GameObject trapPrefab = null;
-			foreach (CatchingMiceTrap go in trapPrefabs)
+			CatchingMiceTrap neededTrap = null;
+			foreach (CatchingMiceTrap trap in trapPrefabs)
 			{
-				if (go.name == definition.prefabName)
+				if (trap.name == definition.prefabName)
 				{
-					trapPrefab = go.gameObject;
+					neededTrap = trap;
 					break;
 				}
 			}
 
-			if (trapPrefab == null)
+			if (neededTrap == null)
 			{
 				CatchingMiceLogVisualizer.use.LogError("Did not find trap prefab name: " + definition.prefabName);
 				continue;
@@ -688,38 +724,46 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				continue;
 			}
 
-			// Create the trap item
-			GameObject tileItem = (GameObject)Instantiate(trapPrefab);
-			tileItem.transform.parent = objectParent;
-			tileItem.transform.name += " " + targetTile.gridIndices;
-			tileItem.transform.localPosition = targetTile.location;
+			InstantiateTrap(neededTrap, targetTile);
 
-			CatchingMiceTrap trap = tileItem.GetComponent<CatchingMiceTrap>();
-			if (trap != null)
-			{
-				if (trap.CalculateColliders())
-				{
-					trap.parentTile = targetTile;
 
-					if ((targetTile.tileType & CatchingMiceTile.TileType.Trap) != CatchingMiceTile.TileType.Trap)
-					{
-						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no trap flag set!");
-					}
 
-					trapTiles.Add(targetTile);
-					trap.Stacks = definition.stacks;
-				}
-				else
-				{
-					CatchingMiceLogVisualizer.use.LogError("The trap " + trap.name + " could not be placed on the grid.");
-					DestroyGameObject(trap.gameObject);
-				}
-			}
-			else
-			{
-				CatchingMiceLogVisualizer.use.LogError("The trap prefab " + trapPrefab.name + " does not have a Trap component attached.");
-				DestroyGameObject(tileItem);
-			}
+
+
+//			// Create the trap item
+//			GameObject tileItem = (GameObject)Instantiate(neededTrap);
+//			tileItem.transform.parent = objectParent;
+//			tileItem.transform.name += " " + targetTile.gridIndices;
+//			tileItem.transform.localPosition = targetTile.location;
+//
+//			CatchingMiceTrap trap = tileItem.GetComponent<CatchingMiceTrap>();
+//			if (trap != null)
+//			{
+//				if (trap.CalculateColliders())
+//				{
+//					trap.parentTile = targetTile;
+//
+//					if ((targetTile.tileType & CatchingMiceTile.TileType.Trap) != CatchingMiceTile.TileType.Trap)
+//					{
+//						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no trap flag set!");
+//					}
+//
+//					trapTiles.Add(targetTile);
+//					trap.Stacks = definition.stacks;
+//				}
+//				else
+//				{
+//					CatchingMiceLogVisualizer.use.LogError("The trap " + trap.name + " could not be placed on the grid.");
+//					DestroyGameObject(trap.gameObject);
+//				}
+//			}
+//			else
+//			{
+//				CatchingMiceLogVisualizer.use.LogError("The trap prefab " + neededTrap.name + " does not have a Trap component attached.");
+//				DestroyGameObject(tileItem);
+//			}
+
+
 		}
 	}
 	
@@ -1283,6 +1327,16 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			//return null;
 		}
 		return GetTile(xIndex, yIndex, true);
+	}
+
+	public CatchingMiceTile GetTileFromMousePosition(bool clampToEdges = false)
+	{
+		Vector3 mouseWorldPosition = LugusCamera.game.ScreenToWorldPoint(LugusInput.use.lastPoint).z(0);
+
+		int xIndex = Mathf.RoundToInt(mouseWorldPosition.x / scale);
+		int yIndex = Mathf.RoundToInt(mouseWorldPosition.y / scale);
+
+		return GetTile(xIndex, yIndex, clampToEdges);
 	}
 
 	public CatchingMiceTile GetTile(int x, int y, bool clamp)

@@ -48,17 +48,17 @@ public class CatchingMiceWorldObjectTrapFurniture : CatchingMiceTrap
 
 		if ((tile.furniture == null) || ((tile.tileType & CatchingMiceTile.TileType.Ground) == CatchingMiceTile.TileType.Ground))
 		{
-			CatchingMiceLogVisualizer.use.LogError("Furniture trap " + transform.name + " cannot be placed on the ground.");
+			CatchingMiceLogVisualizer.use.Log("Furniture trap " + transform.name + " cannot be placed on the ground.");
 			return false;
 		}
 		else if ((tile.trap != null) || ((tile.tileType & CatchingMiceTile.TileType.Trap) == CatchingMiceTile.TileType.Trap))
 		{
-			CatchingMiceLogVisualizer.use.LogError("Furniture trap " + transform.name + " cannot be placed because another trap is already present.");
+			CatchingMiceLogVisualizer.use.Log("Furniture trap " + transform.name + " cannot be placed because another trap is already present.");
 			return false;
 		}
 		else if ((tile.obstacle != null) || ((tile.tileType & CatchingMiceTile.TileType.Obstacle) == CatchingMiceTile.TileType.Obstacle))
 		{
-			CatchingMiceLogVisualizer.use.LogError("Furniture trap " + transform.name + " cannot be placed because an obstacle is already present.");
+			CatchingMiceLogVisualizer.use.Log("Furniture trap " + transform.name + " cannot be placed because an obstacle is already present.");
 			return false;
 		}
 
