@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cd115ca249659d4da097d990587c6d8, type: 3}
+  m_Name: CatchingMiceLevel02
+  m_EditorClassIdentifier: 
+  width: 5
+  height: 5
+  layout: ooooooooooooooooooooooooo
+  characters:
+  - prefabName: Cat_01
+    speed: .5
+    position: {x: 2, y: 3}
+  tileItems:
+  - prefabName: FurnitureCloset_4x2_01
+    position: {x: 7, y: 3}
+  - prefabName: FurnitureCoffeetable_1x1_01
+    position: {x: 3, y: 1}
+  - prefabName: FurnitureFridge_1x1_01
+    position: {x: 1, y: 1}
+  - prefabName: FurnitureSofa_3x1_01
+    position: {x: 2, y: 4}
+  cheeses:
+  - prefabName: Cheese_1x1_01
+    position: {x: 4, y: 0}
+    stacks: 1000
+  - prefabName: Cheese_1x1_01
+    position: {x: 0, y: 4}
+    stacks: 1000
+  traps:
+  - prefabName: 
+    position: {x: 0, y: 0}
+    stacks: 1
+  - prefabName: 
+    position: {x: 0, y: 0}
+    stacks: 1
+  - prefabName: 
+    position: {x: 0, y: 0}
+    stacks: 1
+  - prefabName: 
+    position: {x: 0, y: 0}
+    stacks: 1
+  holeItems:
+  - prefabName: Hole_1x1_01
+    holeId: Hole01
+    position: {x: 0, y: 0}
+    startDirection: 1
+  - prefabName: Hole_1x1_01
+    holeId: Hole02
+    position: {x: 0, y: 0}
+    startDirection: 2
+  - prefabName: Hole_1x1_01
+    holeId: Hole03
+    position: {x: 0, y: 0}
+    startDirection: 8
+  - prefabName: Hole_1x1_01
+    holeId: Hole04
+    position: {x: 0, y: 0}
+    startDirection: 4
+  waves:
+  - enemies:
+    - prefabName: Mouse_Skinny_01
+      holeId: Hole01
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 0
+    - prefabName: Mouse_Fat_01
+      holeId: Hole02
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 3
+    - prefabName: Mouse_Normal_01
+      holeId: Hole03
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 2
+    - prefabName: Mouse_Fast_01
+      holeId: Hole04
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 2
+    - prefabName: Mouse_Skinny_01
+      holeId: Hole04
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 1
+  patrolRoute:
+    positions: []

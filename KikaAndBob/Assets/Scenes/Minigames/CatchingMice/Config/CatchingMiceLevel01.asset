@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cd115ca249659d4da097d990587c6d8, type: 3}
+  m_Name: CatchingMiceLevel01
+  m_EditorClassIdentifier: 
+  width: 12
+  height: 13
+  layout: oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+  furniture:
+  - prefabName: FurnitureCloset_4x2_01
+    position: {x: 7, y: 3}
+  - prefabName: FurnitureCoffeetable_1x1_01
+    position: {x: 3, y: 2}
+  - prefabName: FurnitureSofa_1x2_01
+    position: {x: 7, y: 9}
+  - prefabName: FurnitureSofa_3x1_01
+    position: {x: 2, y: 5}
+  - prefabName: FurnitureFridge_1x1_01
+    position: {x: 1, y: 2}
+  obstacles:
+  - prefabName: ObstacleCooker_2x2_01
+    position: {x: 8, y: 3}
+    obstacleData: <WaveActivity><Wave>0</Wave><Wave>2</Wave></WaveActivity>
+  - prefabName: ObstacleCage_1x1_01
+    position: {x: 11, y: 12}
+    obstacleData: 
+  cheeses:
+  - prefabName: Cheese_1x1_01
+    position: {x: 5, y: 5}
+    stacks: 40
+  - prefabName: Cheese_1x1_01
+    position: {x: 5, y: 6}
+    stacks: 40
+  holeItems:
+  - prefabName: Hole_1x1_01
+    holeId: Hole01
+    position: {x: 0, y: 0}
+    startDirection: 1
+  - prefabName: Hole_1x1_01
+    holeId: Hole02
+    position: {x: 0, y: 7}
+    startDirection: 2
+  - prefabName: Hole_1x1_01
+    holeId: Hole03
+    position: {x: 11, y: 3}
+    startDirection: 8
+  - prefabName: Hole_1x1_01
+    holeId: Hole04
+    position: {x: 5, y: 12}
+    startDirection: 4
+  traps:
+  - prefabName: TrapBearTrap_1x1_01
+    position: {x: 7, y: 7}
+    stacks: 1
+  - prefabName: TrapCasserole_1x1_01
+    position: {x: 1, y: 9}
+    stacks: 1
+  - prefabName: TrapWine_1x1_01
+    position: {x: 8, y: 4}
+    stacks: 10
+  - prefabName: TrapSpray_1x1_01
+    position: {x: 1, y: 2}
+    stacks: 100
+  - prefabName: TrapPoison_1x1_01
+    position: {x: 3, y: 2}
+    stacks: 100
+  - prefabName: TrapVacuumCleaner_1x1_01
+    position: {x: 2, y: 11}
+    stacks: 3
+  - prefabName: TrapMushroom_1x1_01
+    position: {x: 10, y: 4}
+    stacks: 10
+  characters:
+  - prefabName: Cat_01
+    speed: .5
+    position: {x: 11, y: 10}
+  - prefabName: Cat_01
+    speed: .5
+    position: {x: 5, y: 6}
+  patrols:
+  - prefabName: Haakmans_01
+    speed: 1
+    positions:
+    - {x: 0, y: 0}
+    - {x: 11, y: 0}
+    - {x: 11, y: 12}
+    - {x: 0, y: 12}
+  waves:
+  - enemies:
+    - prefabName: Mouse_Skinny_01
+      holeId: Hole01
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 0
+    - prefabName: Mouse_Fat_01
+      holeId: Hole02
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 3
+    - prefabName: Mouse_Normal_01
+      holeId: Hole03
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 2
+    - prefabName: Mouse_Fast_01
+      holeId: Hole04
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 2
+    - prefabName: Mouse_Skinny_01
+      holeId: Hole04
+      amount: 5
+      spawnTimeInterval: .800000012
+      spawnDelay: 1
