@@ -91,6 +91,11 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 
 	public void CreateTrapList()
 	{
+		foreach(TrapSelectorItem item in items)
+		{
+			Destroy(item.button.gameObject);
+		}
+
 		items.Clear();
 
 		int offsetCounter = 1;
@@ -166,6 +171,8 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 				{
 					CatchingMiceGameManager.use.PickupCount -= Mathf.RoundToInt(currentSelectedTrap.Cost);
 					CatchingMiceLevelManager.use.InstantiateTrap(currentSelectedTrap, currentHoverTile);
+					CreateTrapList();
+				
 				}
 			}
 
@@ -181,6 +188,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 	protected void ResetDrag()
 	{
 		dragSprite.enabled = false;
+		dragSprite.color = Color.white;
 		dragSpriteArrow.enabled = false;
 		currentSelectedTrap = null;
 		currentHoverTile = null;
@@ -250,13 +258,17 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 			
 			clampPosition = currentHoverTile.waypoint.transform.position.z(clampPosition.z);
 			dragSprite.transform.localPosition = new Vector3(0, 1.5f, 0);
+
+			dragSprite.color = Color.white;
 			
 		}
 		else
 		{
 			if (dragSpriteArrow.enabled == true)
 				dragSpriteArrow.enabled = false;
+
 			dragSprite.transform.localPosition = Vector3.zero;
+			dragSprite.color = Color.red;
 		}
 		
 		mouseDragger.transform.position = clampPosition;

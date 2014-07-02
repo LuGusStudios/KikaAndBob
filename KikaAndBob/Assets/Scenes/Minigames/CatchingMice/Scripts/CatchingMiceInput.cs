@@ -9,19 +9,19 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 	protected CatchingMiceTile _previousTile = null;
 	protected CatchingMiceTile _lastAddedWaypoint = null;
 
-	protected LineRenderer _lineRenderer = null;
+	protected LineRenderer pathRenderer = null;
 
 	protected float _timer = 0.0f;
 	// Use this for initialization
 	void Start()
 	{
-		Transform lineRenderer = GameObject.Find("LineRenderer").transform;
-		if (lineRenderer != null)
+		Transform pathRendererTransform = GameObject.Find("PlayerPathRenderer").transform;
+		if (pathRendererTransform != null)
 		{
-			_lineRenderer = lineRenderer.GetComponent<LineRenderer>();
-			if (_lineRenderer == null)
+			pathRenderer = pathRendererTransform.GetComponent<LineRenderer>();
+			if (pathRenderer == null)
 			{
-				CatchingMiceLogVisualizer.use.LogError("Line Renderer not found");
+				CatchingMiceLogVisualizer.use.LogError("PlayerPathRenderer not found");
 			}
 		}
 	}
@@ -81,10 +81,12 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 		//First downpress
 		if (LugusInput.use.down)
 		{
-			Transform hit = LugusInput.use.RayCastFromMouse();
+			Transform hit = LugusInput.use.RayCastFromMouse(LugusCamera.game);
 
 			if (hit == null)
+			{
 				return;
+			}
 
 			//pathToWalk.Clear();
 			//CatchingMiceVisualizer.use.Log(hit.name);
@@ -110,6 +112,7 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 
 				CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileByLocation(_character.transform.position.x, _character.transform.position.y);
 				pathToWalk.Add(_character.currentTile.waypoint);
+
 
 				//CatchingMiceTile tile =  CatchingMiceLevelManager.use.GetTileByLocation(hit.position.x, hit.position.y);
 				//pathToWalk.Add(CatchingMiceLevelManager.use.GetWaypointFromTile(tile.gridIndices));
@@ -140,40 +143,44 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 
 	protected void CheckDraggingPointsOffGrid()
 	{
-		Transform hit = LugusInput.use.RayCastFromMouse();
+		Transform hit = LugusInput.use.RayCastFromMouse(LugusCamera.game);
 		float yOffset = 0.0f;
-		//on need to check this for the first count only
-		//because the player is taller than 1 tile, when you click on the tile that is above your tile, you don't want that added
-		//if you're still in the cat collider with your mouse, don't add
+
 		if (hit != null)
 		{
+			//because the player is taller than 1 tile, when you click on the tile that is above your tile, you don't want that added
+			//if you're still in the cat collider with your mouse, don't add
+			//need to check this for the first count only
 			if (pathToWalk.Count == 1)
 			{
 				CatchingMiceCharacterPlayer character = null;
-				character = hit.parent.GetComponent<CatchingMiceCharacterPlayer>();
+
+				if (hit.parent != null)
+					character = hit.parent.GetComponent<CatchingMiceCharacterPlayer>();
+
 				if (character != null && character == _character)
 					return;
 			}
 
 			//check furniture tiles for shifts
-			CatchingMiceWorldObject FurnitureObject = null;
-			FurnitureObject = hit.parent.GetComponent<CatchingMiceWorldObject>();
-			if (FurnitureObject != null)
+			CatchingMiceWorldObject furnitureObject = null;
+			furnitureObject = hit.parent.GetComponent<CatchingMiceWorldObject>();
+			if (furnitureObject != null)
 			{
-				if (FurnitureObject.parentTile != null)
+				if (furnitureObject.parentTile != null)
 				{
 					//make sure we have the furniture and not a trap
-					//if it is null than you hit a ground trap, so no furniture object
-					if (FurnitureObject.parentTile.furniture != null)
-						yOffset = FurnitureObject.parentTile.furniture.yOffset * CatchingMiceLevelManager.use.scale;
+					//if it is null, you hit a ground trap, so no furniture object
+					if (furnitureObject.parentTile.furniture != null)
+						yOffset = furnitureObject.parentTile.furniture.yOffset * CatchingMiceLevelManager.use.scale;
 				}
-
 			}
-
 		}
 
-		Vector3 dragPoint = LugusInput.use.ScreenTo3DPoint(_character.transform);
-		CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileByLocation(dragPoint.x, dragPoint.y - yOffset);
+//		Vector3 dragPoint = LugusInput.use.ScreenTo3DPoint(Input.mousePosition, _character.transform);	// this method also has an overload where the mousePosition is supplied implicitly, but this is more understandable here
+//		CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileByLocation(dragPoint.x, dragPoint.y - yOffset);
+
+		CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileFromMousePosition(false);
 
 		if (tile == null)
 		{
@@ -182,14 +189,14 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 
 		//only add a tile when its new tile is more than half a grid away
 		float distance = Vector2.Distance(tile.gridIndices, _lastAddedWaypoint.gridIndices);
-		if (distance < CatchingMiceLevelManager.use.scale / 2)
+		if (distance < CatchingMiceLevelManager.use.scale * 0.5f)
 		{
 			return;
 		}
 
 		float maxDistance = CatchingMiceLevelManager.use.scale /** 2*/;
 
-		//if distance is more then x grids away interpolate
+		//if distance is more than x grids away interpolate
 		// A path can be broken when there are null-tiles in the list
 		bool brokenPath = false;
 		if (distance > maxDistance)
@@ -217,7 +224,9 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 
 		if (!brokenPath)
 		{
-			pathToWalk.Add(CatchingMiceLevelManager.use.GetWaypointFromTile(tile.gridIndices));
+			// This seems all kinds of round-about. Tentatively fixing this.
+			//pathToWalk.Add(CatchingMiceLevelManager.use.GetWaypointFromTile(tile.gridIndices));
+			pathToWalk.Add(tile.waypoint);
 			_lastAddedWaypoint = tile;
 		}
 	}
@@ -237,7 +246,7 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 			return;
 		}
 
-		Transform hit = LugusInput.use.RayCastFromMouse();
+		Transform hit = LugusInput.use.RayCastFromMouse(LugusCamera.game);
 
 		if (hit == null)
 		{
@@ -318,14 +327,14 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 		//visualisation of the motion the player makes
 		if (pathToWalk.Count > 0)
 		{
-			_lineRenderer.SetVertexCount(pathToWalk.Count);
+			pathRenderer.SetVertexCount(pathToWalk.Count);
 			for (int i = 0; i < pathToWalk.Count; i++)
 			{
-				_lineRenderer.SetPosition(i, pathToWalk[i].transform.position.z(-1));
+				pathRenderer.SetPosition(i, pathToWalk[i].transform.position.z(-1));
 			}
 		}
 		else
-			_lineRenderer.SetVertexCount(0);
+			pathRenderer.SetVertexCount(0);
 	}
 
 	protected void OnDrawGizmos()
