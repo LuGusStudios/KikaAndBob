@@ -143,6 +143,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	public CatchingMiceCharacterMouse[] enemyPrefabs = null;
 	public GameObject[] cookiePrefabs = null;
 	public GameObject miceStepsPrefab = null;
+	public Sprite floorTileSprite = null;
+	public GameObject[] wallPieces = null;
 	#endregion
 	
 	// Protected
@@ -175,6 +177,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	protected List<CatchingMiceCharacterPatrol> patrols = new List<CatchingMiceCharacterPatrol>();
 	protected List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
 	protected List<GameObject> enemyParentList = new List<GameObject>();
+	protected float maxDepth = 0;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	#endregion
@@ -307,6 +310,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		PlaceCharacters(currentLevel.characters);
 
 		PlaceMiceHoles(currentLevel.holeItems);
+
+		PlaceWallPieces(currentLevel.wallPieces);
 	}
 
 	public void BuildLevel()
@@ -344,6 +349,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 		PlaceMiceHoles(currentLevel.holeItems);
 
+		PlaceWallPieces(currentLevel.wallPieces);
+
 		wavesList = new List<CatchingMiceWaveDefinition>(currentLevel.waves);
 	}
 
@@ -359,12 +366,20 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 					continue;
 				}
 
-				GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-				quad.gameObject.name = tiles[x, y].gridIndices.ToString();
-				quad.transform.localScale = Vector3.one * 0.98f * scale;
-				quad.transform.position = tiles[x, y].location;
-				quad.transform.parent = levelParent;
-				quad.GetComponent<MeshCollider>().enabled = false;
+				GameObject floorTile = new GameObject(tiles[x, y].gridIndices.ToString());
+				floorTile.transform.position = tiles[x, y].location;
+				floorTile.transform.parent = levelParent;
+				floorTile.transform.localScale = Vector3.one * 0.390625f; // this is the right scale to get a 256x256 sprite to be 1 Unity unit wide
+				floorTile.AddComponent<SpriteRenderer>().sprite = floorTileSprite;
+
+
+
+//				GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+//				quad.gameObject.name = tiles[x, y].gridIndices.ToString();
+//				quad.transform.localScale = Vector3.one * 0.98f * scale;
+//				quad.transform.position = tiles[x, y].location;
+//				quad.transform.parent = levelParent;
+//				quad.GetComponent<MeshCollider>().enabled = false;
 
 
 				////if (levelTiles[x, y].tileType != CatchingMiceTile.TileType.Ground)
@@ -378,7 +393,6 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 			}
 		}
-
 	}
 
 	public void PlaceWaypoints()
@@ -429,6 +443,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 	protected void ParseTiles(int _width, int _height, string layout)
 	{
+		maxDepth = 0;
+
 		// Clear grid
 		tiles = new CatchingMiceTile[_width, _height];
 
@@ -450,11 +466,48 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 						currentTile.gridIndices = new Vector2(x, y);
 
 						// We want to use the y position for the z axis because the tiles that are the highest are also the ones
-						// that are the furthers away from us
+						// that are the farthest away from us
 						currentTile.location = currentTile.gridIndices.v3().z(y) * scale;
+
+						if (currentTile.location.z > maxDepth)				
+							maxDepth = currentTile.location.z;
+
 						break;
 				}
 			}
+		}
+	}
+
+	public void PlaceWallPieces(CatchingMiceWallPieceDefinition[] wallPieceDefinitions)
+	{
+		foreach (CatchingMiceWallPieceDefinition definition in wallPieceDefinitions)
+		{
+			// Find the furniture prefab
+			GameObject wallPiecePrefab = null;
+			foreach (GameObject go in wallPieces)
+			{
+				if (go.name == definition.prefabName)
+				{
+					wallPiecePrefab = go;
+					break;
+				}
+			}
+			
+			if (wallPiecePrefab == null)
+			{
+				CatchingMiceLogVisualizer.use.LogError("Did not find wall piece ID: " + definition.prefabName);
+				continue;
+			}
+
+			// in this case, we don't look for a tile with the coordinates from the definition - we also want to be able to place wall Pieces beyond the level bounds
+			Vector3 position = definition.position * scale;
+
+			
+			// Create the furniture item
+			GameObject wallPiece = (GameObject)Instantiate(wallPiecePrefab);
+			wallPiece.transform.parent = objectParent;
+			wallPiece.transform.name += " " + definition.position;
+			wallPiece.transform.localPosition = position.z(maxDepth);
 		}
 	}
 

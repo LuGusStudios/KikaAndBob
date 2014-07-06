@@ -137,6 +137,9 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 			List<CatchingMiceWaypoint> path = new List<CatchingMiceWaypoint>(pathToWalk);
 			_character.MoveWithPath(path);
 			_character = null;
+	
+			CreatePath(path);
+
 			pathToWalk.Clear();
 		}
 	}
@@ -321,6 +324,8 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 			}
 		}
 	}
+	
+	protected Dictionary<Waypoint, LineRenderer> lineRenderers = new Dictionary<Waypoint, LineRenderer>();
 
 	public void VisualizePath()
 	{
@@ -335,6 +340,79 @@ public class CatchingMiceInput : LugusSingletonRuntime<CatchingMiceInput>
 		}
 		else
 			pathRenderer.SetVertexCount(0);
+
+
+//
+////		for (int i = 0; i < pathToWalk.Count; i++) 
+////		{
+////			if (i > 0)
+////			{
+////				LineRenderer lineRenderer = (LineRenderer) Instantiate(pathRenderer);
+////
+////				lineRenderer.SetVertexCount(2);
+////				lineRenderer.SetPosition(0, pathToWalk[i-1].parentTile.location);
+////				lineRenderer.SetPosition(1, pathToWalk[i].parentTile.location); 
+////			}
+////			else
+////			{
+////				if (pathToWalk[i].parentTile == _character.currentTile)
+////				{
+////					lineRenderers[i].SetPosition
+////				}
+////				else
+////				{
+////
+////				}
+////			}
+////		}
+//
+//			if (lineRenderers.Count < 1)
+//				return;
+//
+//
+//			int currentPlayerPathIndex = pathToWalk.IndexOf(_character.currentTile.waypoint);
+
+			
+
+//			for (int i = 0; i < pathToWalk.Count; i++) 
+//			{
+//				if (i < currentPlayerPathIndex)
+//				{
+//					if (pathToWalk[i].parentTile == _character.currentTile)
+//					{
+//						lineRenderers[i].SetPosition(0, _character.currentTile.location);
+//					}
+//					else
+//					{
+//	
+//					}
+//				}
+//			}
+
+	}
+
+	protected void CreatePath(List<CatchingMiceWaypoint> waypoints)
+	{
+		return;
+
+//		for (int i = waypoints.Count - 1; i >= 0; i--) 
+//		{
+//			Destroy(waypoints[i]);
+//		}
+
+		lineRenderers.Clear();
+
+		for (int i = 0; i < waypoints.Count; i++)
+		{
+			if (i > 0)
+			{
+				LineRenderer lineRenderer = (LineRenderer) Instantiate(pathRenderer);
+				
+				lineRenderer.SetVertexCount(2);
+				lineRenderer.SetPosition(0, waypoints[i-1].parentTile.location);
+				lineRenderer.SetPosition(1, waypoints[i].parentTile.location); 
+			}
+		}
 	}
 
 	protected void OnDrawGizmos()

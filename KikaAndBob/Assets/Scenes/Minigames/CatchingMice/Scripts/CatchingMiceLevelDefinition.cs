@@ -42,6 +42,7 @@ public class CatchingMiceLevelDefinition : ScriptableObject
         List<CatchingMiceWaveDefinition> waves = new List<CatchingMiceWaveDefinition>();
 		List<CatchingMicePatrolDefinition> patrols = new List<CatchingMicePatrolDefinition>();
 		List<CatchingMiceObstacleDefinition> obstacles = new List<CatchingMiceObstacleDefinition>();
+		List<CatchingMiceWallPieceDefinition> wallPieces = new List<CatchingMiceWallPieceDefinition>();
 
 		while (parser.Read("Level"))
 		{
@@ -93,6 +94,9 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 					case "Obstacle":
 						obstacles.Add(CatchingMiceObstacleDefinition.FromXML(parser));
 						break;
+					case "WallPiece":
+						wallPieces.Add(CatchingMiceWallPieceDefinition.FromXML(parser));
+						break;
 				}
 			}
 		}
@@ -105,6 +109,7 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 		level.waves = waves.ToArray();
 		level.patrols = patrols.ToArray();
 		level.obstacles = obstacles.ToArray();
+		level.wallPieces = wallPieces.ToArray();
 
 		return level;
 	}
@@ -197,6 +202,13 @@ public class CatchingMiceLevelDefinition : ScriptableObject
         }
         rawdata += "\t</Waves>\r\n";
 
+		rawdata += "\t<WallPieces>\r\n";
+		foreach (CatchingMiceWallPieceDefinition wallPiece in level.wallPieces)
+		{
+			rawdata += CatchingMiceWallPieceDefinition.ToXML(wallPiece, 2);
+		}
+		rawdata += "\t</WallPieces>\r\n";
+
 		rawdata += "</Level>\r\n";
 
 		return rawdata;
@@ -215,6 +227,8 @@ public class CatchingMiceLevelDefinition : ScriptableObject
     public CatchingMiceCharacterDefinition[] characters;
 	public CatchingMicePatrolDefinition[] patrols;
     public CatchingMiceWaveDefinition[] waves;
+	public CatchingMiceWallPieceDefinition[] wallPieces;
+
     
 	// Arrays of serialized classes are not created with default values
 	// Instead, initialize values once in OnEnable (which runs AFTER deserialization), checking for null / zero value
@@ -430,6 +444,87 @@ public class CatchingMiceCharacterDefinition
     public float speed = 0.5f;
 	public Vector2 position;
 }
+
+[System.Serializable]
+public class CatchingMiceWallPieceDefinition
+{
+	public string prefabName = "";
+	public Vector2 position = Vector2.zero;
+
+	public static string ToXML(CatchingMiceWallPieceDefinition wallPiece, int depth)
+	{
+		string rawdata = string.Empty;
+		
+		if (wallPiece == null)
+		{
+			CatchingMiceLogVisualizer.use.Log("CatchingMiceWallDefinition.ToXML(): The wall to be serialized is null.");
+			return rawdata;
+		}
+		
+		string tabs = string.Empty;
+		for (int i = 0; i < depth; ++i)
+		{
+			tabs += "\t";
+		}
+		
+		rawdata += tabs + "<WallPiece>\r\n";
+		rawdata += tabs + "\t<PrefabName>" + wallPiece.prefabName + "</PrefabName>\r\n";
+		rawdata += tabs + "\t<Position>\r\n";
+		rawdata += tabs + "\t\t<X>" + wallPiece.position.x.ToString() + "</X>\r\n";
+		rawdata += tabs + "\t\t<Y>" + wallPiece.position.y.ToString() + "</Y>\r\n";
+		rawdata += tabs + "\t</Position>\r\n";
+		rawdata += tabs + "</WallPiece>\r\n";
+		
+		return rawdata;
+	}
+
+	public static CatchingMiceWallPieceDefinition FromXML(TinyXmlReader parser)
+	{
+		CatchingMiceWallPieceDefinition wallPiece = new CatchingMiceWallPieceDefinition();
+		
+		if ((parser.tagType != TinyXmlReader.TagType.OPENING) ||
+		    (parser.tagName != "WallPiece"))
+		{
+			CatchingMiceLogVisualizer.use.Log("CatchingMiceWallPieceDefinition.FromXML(): unexpected tag type or tag name.");
+			return null;
+		}
+		
+		while (parser.Read("WallPiece"))
+		{
+			if (parser.tagType == TinyXmlReader.TagType.OPENING)
+			{
+				switch (parser.tagName)
+				{
+				case "PrefabName":
+					wallPiece.prefabName = parser.content;
+					break;
+				case "Position":
+					Vector2 coordinates = Vector2.zero;
+					while (parser.Read("Position"))
+					{
+						if (parser.tagType == TinyXmlReader.TagType.OPENING)
+						{
+							switch (parser.tagName)
+							{
+							case "X":
+								coordinates.x = float.Parse(parser.content);
+								break;
+							case "Y":
+								coordinates.y = float.Parse(parser.content);
+								break;
+							}
+						}
+					}
+					wallPiece.position = coordinates;
+					break;
+				}
+			}
+		}
+		
+		return wallPiece;
+	}
+}
+
 
 [System.Serializable]
 public class CatchingMiceFurnitureDefinition
