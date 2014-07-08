@@ -24,29 +24,27 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
     public override void SetupLocal()
     {
         base.SetupLocal();
-        zOffset = 0.95f;
+      //  zOffset = 0.95f;
         walkHandle = LugusCoroutines.use.GetHandle();
     }
 
-    public IEnumerator CalculatePath(List<CatchingMiceWaypoint> pathFromMouse)
+    public IEnumerator CalculatePath(List<CatchingMiceWaypoint> drawnPath)
     {
         //go to target
         List<CatchingMiceWaypoint> graph = navigationGraph;
         bool fullPath = false;
         CatchingMiceWaypoint currentWaypoint = null;
 
-        
-
-        for (int i = 1; i < pathFromMouse.Count; i++)
+        for (int i = 1; i < drawnPath.Count; i++)
         {
             if (interrupt)
 			{
                 break;
 			}
 
-            currentWaypoint = pathFromMouse[i - 1];
+            currentWaypoint = drawnPath[i - 1];
 
-            targetWaypoint = pathFromMouse[i];
+            targetWaypoint = drawnPath[i];
 
 			List<CatchingMiceWaypoint> path = CatchingMiceUtil.FindPath(graph, currentWaypoint, targetWaypoint, out fullPath, walkable);
 
@@ -113,38 +111,38 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
         interrupt = false;
     }
     
-	public void MoveWithPath(List<CatchingMiceWaypoint> path)
+	public void MoveAlongPath(List<CatchingMiceWaypoint> path)
     {
         StopCurrentBehaviour();
 
         //post process before actually going through the path
-        int count = 2;
-        while (count < path.Count)
-        {
-            Vector2 wpStart = path[count - 2].parentTile.gridIndices;
-            Vector2 wpMiddle = path[count - 1].parentTile.gridIndices;
-            Vector2 wpEnd = path[count].parentTile.gridIndices;
-
-
-            //check if the tile in between is on the same x or y axis
-            if ((wpEnd.x == wpMiddle.x && wpMiddle.x == wpStart.x) ||
-                (wpEnd.y == wpMiddle.y && wpMiddle.y == wpStart.y))
-            {
-                //check if the middle tile is inbetween the tiles
-                if ((wpEnd.x > wpMiddle.x && wpMiddle.x > wpStart.x) ||
-                     (wpEnd.y > wpMiddle.y && wpMiddle.y > wpStart.y))
-                { 
-                    path.RemoveAt(count - 1);
-                    continue;
-                }
-            }
-
-            count++;
-            //when there are less the 3 waypoints to check 
-            if (path.Count < 2)
-                break;
-
-        }
+//        int count = 2;
+//        while (count < path.Count)
+//        {
+//            Vector2 wpStart = path[count - 2].parentTile.gridIndices;
+//            Vector2 wpMiddle = path[count - 1].parentTile.gridIndices;
+//            Vector2 wpEnd = path[count].parentTile.gridIndices;
+//
+//
+//            //check if the tile in between is on the same x or y axis
+//            if ((wpEnd.x == wpMiddle.x && wpMiddle.x == wpStart.x) ||
+//                (wpEnd.y == wpMiddle.y && wpMiddle.y == wpStart.y))
+//            {
+//                //check if the middle tile is inbetween the tiles
+//                if ((wpEnd.x > wpMiddle.x && wpMiddle.x > wpStart.x) ||
+//                     (wpEnd.y > wpMiddle.y && wpMiddle.y > wpStart.y))
+//                { 
+//                    path.RemoveAt(count - 1);
+//                    continue;
+//                }
+//            }
+//
+//            count++;
+//            //when there are less the 3 waypoints to check 
+//            if (path.Count < 2)
+//                break;
+//
+//        }
 
         //CatchingMiceLogVisualizer.use.Log("path count : " + path.Count);
         StartCoroutine(CalculatePath(path));

@@ -136,7 +136,7 @@ public class CatchingMiceCharacterPatrol : ICatchingMiceCharacter {
 				CatchingMiceCage cage = CatchingMiceLevelManager.use.Cage;
 				if ((player != null)
 					&& (cage != null)
-					&& (!cage.PlayerHold.Contains(player)))
+					&& (!cage.capturedPlayers.Contains(player)))
 				{
 					cage.PlayerDetected(player);
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CatchingMiceCage : CatchingMiceObstacle
 {
-	public List<CatchingMiceCharacterPlayer> PlayerHold
+	public List<CatchingMiceCharacterPlayer> capturedPlayers
 	{
 		get
 		{
