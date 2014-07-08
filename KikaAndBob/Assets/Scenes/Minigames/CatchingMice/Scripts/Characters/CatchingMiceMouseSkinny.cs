@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -80,7 +80,7 @@ public class CatchingMiceMouseSkinny : CatchingMiceCharacterMouse
 	protected override void OnEnable()
     {
         base.OnEnable();
-        CatchingMiceLevelManager.use.TrapRemoved += TargetRemoved;
+        CatchingMiceLevelManager.use.OnTrapRemoved += TargetRemoved;
 
     }
     
@@ -93,6 +93,6 @@ public class CatchingMiceMouseSkinny : CatchingMiceCharacterMouse
 	public override void DieRoutine()
     {
         base.DieRoutine();
-        CatchingMiceLevelManager.use.TrapRemoved -= TargetRemoved;
+        CatchingMiceLevelManager.use.OnTrapRemoved -= TargetRemoved;
     }
 }

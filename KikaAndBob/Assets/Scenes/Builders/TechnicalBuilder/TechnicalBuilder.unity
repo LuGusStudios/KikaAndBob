@@ -208,7 +208,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2204893}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 190.367737, y: 13.458313, z: 0}
+  m_LocalPosition: {x: 18.7506218, y: 14.2869072, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 712427458}
@@ -5595,6 +5595,7 @@ GameObject:
   - 114: {fileID: 298701891}
   - 114: {fileID: 298701892}
   - 114: {fileID: 298701893}
+  - 114: {fileID: 298701894}
   m_Layer: 0
   m_Name: JESUS
   m_TagString: Untagged
@@ -5695,13 +5696,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 298701884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08747d79d5f20174ab7feb44b7724af8, type: 3}
+  m_Script: {fileID: 11500000, guid: d7c0fa633260bc84e9af797c846c02fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pathToWalk: []
-  currentSelectedCharacter: {fileID: 0}
-  pathRenderer: {fileID: 0}
-  _timer: 0
 --- !u!114 &298701888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5786,6 +5784,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ca7e8d5d130b484980eea2cd93fa383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &298701894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 298701884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ab35b93abbfff4f9a2c979ee5d6749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &309446008
@@ -23191,6 +23200,10 @@ Prefab:
     - target: {fileID: 400000, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100050, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3683dd9ca71b94da4b8abb805cf9512e, type: 2}

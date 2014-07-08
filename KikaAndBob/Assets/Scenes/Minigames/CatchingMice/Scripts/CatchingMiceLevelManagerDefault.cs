@@ -122,10 +122,10 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	// Events
 	#region Events
 	public delegate void TrapRemovedEventHandler(CatchingMiceTile trapTile);
-	public event TrapRemovedEventHandler TrapRemoved;
+	public event TrapRemovedEventHandler OnTrapRemoved;
 
 	public delegate void CheeseRemovedEventHandler(CatchingMiceTile cheeseTile);
-	public event CheeseRemovedEventHandler CheeseRemoved;
+	public event CheeseRemovedEventHandler OnCheeseRemoved;
 	#endregion
 
 	// Inspector
@@ -1514,9 +1514,9 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		// Remove the references of the trap
 		trapTiles.Remove(tile);
 		
-		if((tile.trap != null) && (TrapRemoved != null))
+		if((tile.trap != null) && (OnTrapRemoved != null))
 		{
-			TrapRemoved(tile);
+			OnTrapRemoved(tile);
 		}
 
 		tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Trap;
@@ -1540,9 +1540,9 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		// Remove the references of the trap
 		cheeseTiles.Remove(tile);
 
-		if ((tile.cheese != null) && (CheeseRemoved != null))
+		if ((tile.cheese != null) && (OnCheeseRemoved != null))
 		{
-			CheeseRemoved(tile);
+			OnCheeseRemoved(tile);
 		}
 
 		tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;

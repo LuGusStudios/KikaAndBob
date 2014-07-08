@@ -33,7 +33,7 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 			pickupCount = value;
 
 			if (onPickupCountChanged != null)
-				onPickupCountChanged();
+				onPickupCountChanged(PickupCount);
 		}
 	}
 	public int CurrentWave
@@ -52,7 +52,7 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 	public delegate void WaveEndedEventHandler(int waveIndex);
 	public event WaveEndedEventHandler WaveEnded;
 
-	public delegate void PickupCountChanged();
+	public delegate void PickupCountChanged(int newAmount);
 	public event PickupCountChanged onPickupCountChanged;
 	#endregion
 

@@ -43,7 +43,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
     
 	protected virtual void OnEnable() 
     {
-		CatchingMiceLevelManager.use.CheeseRemoved += TargetRemoved;
+		CatchingMiceLevelManager.use.OnCheeseRemoved += TargetRemoved;
     }
     
 	protected virtual void OnDisable()
@@ -172,7 +172,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 	public virtual void DieRoutine()
     {
 		currentTile.AddCookies(cookieDrops);
-        CatchingMiceLevelManager.use.CheeseRemoved -= TargetRemoved;
+        CatchingMiceLevelManager.use.OnCheeseRemoved -= TargetRemoved;
 		CatchingMiceLevelManager.use.EnemyDied(this);
 		CatchingMiceGameManager.use.EnemiesAlive -= 1;
 

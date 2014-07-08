@@ -75,7 +75,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 
 	public void SetupGlobal()
 	{
-		CreateTrapList();
+		CreateTrapList(CatchingMiceGameManager.use.PickupCount);
 		ResetDrag();
 	}
 	
@@ -89,7 +89,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 		SetupGlobal();
 	}
 
-	public void CreateTrapList()
+	public void CreateTrapList(int newAmount)
 	{
 		foreach(TrapSelectorItem item in items)
 		{
@@ -122,7 +122,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 			trapButton.transform.localPosition = new Vector3(0, -currentOffset.y, 0);	// change this to x (or z) for a menu in a different direction
 			currentOffset += icon.bounds.extents;	// then increase it again for the other half
 
-			if (trap.Cost > CatchingMiceGameManager.use.PickupCount)
+			if (trap.Cost > newAmount)
 			{
 				icon.color = icon.color.a(0.4f);
 			}
@@ -170,9 +170,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 				if (CatchingMiceGameManager.use.PickupCount >= currentSelectedTrap.Cost)
 				{
 					CatchingMiceGameManager.use.PickupCount -= Mathf.RoundToInt(currentSelectedTrap.Cost);
-					CatchingMiceLevelManager.use.InstantiateTrap(currentSelectedTrap, currentHoverTile);
-					CreateTrapList();
-				
+					CatchingMiceLevelManager.use.InstantiateTrap(currentSelectedTrap, currentHoverTile);			
 				}
 			}
 

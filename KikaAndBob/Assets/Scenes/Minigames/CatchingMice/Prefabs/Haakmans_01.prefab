@@ -15693,6 +15693,9 @@ MonoBehaviour:
   walkAnimationClip: _Walk
   eatingAnimationClip: _Attack
   idleAnimationClip: _Idle
+  _sideAnimationClip: Side
+  _frontAnimationClip: Front
+  _backAnimationClip: Back
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15704,13 +15707,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 539a2a435dd711d4e8f8dbb91ae5f3aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zOffset: 0
+  zOffset: 11
   tileTraversalTime: .5
   damage: 1
   attackInterval: .5
   targetWaypoint: {fileID: 0}
   walkable: 1
   movementDirection: {x: 0, y: 0, z: 0}
+  health: 1
   moving: 0
   jumping: 0
   attacking: 0
