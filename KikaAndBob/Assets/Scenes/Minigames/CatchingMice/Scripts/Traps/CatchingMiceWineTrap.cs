@@ -23,7 +23,7 @@ public class CatchingMiceWineTrap : CatchingMiceWorldObjectTrapFurniture {
 		Vector2 min, max;
 		CalculateTrapBounds(out min, out max);
 
-		while (CatchingMiceGameManager.use.gameRunning
+		while (CatchingMiceGameManager.use.GameRunning
 			&& (stacks > 0)
 			&& (health > 0))
 		{

@@ -57,7 +57,7 @@ public class CatchingMiceCharacterPatrol : ICatchingMiceCharacter {
 		// For each set of waypoints, find the path between
 		// them, and let the patrol character walk from waypoint
 		// to waypoint
-		while (CatchingMiceGameManager.use.gameRunning)
+		while (CatchingMiceGameManager.use.GameRunning)
 		{
 			CatchingMiceWaypoint current = patrolRoute[waypointIndex];
 			CatchingMiceWaypoint next = null;

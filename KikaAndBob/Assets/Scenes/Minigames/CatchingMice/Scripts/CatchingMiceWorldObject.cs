@@ -18,7 +18,7 @@ public class CatchingMiceWorldObject : MonoBehaviour
 		List<CatchingMiceTile> tileList = new List<CatchingMiceTile>();
 
 		if (boxColliders2D.Length <= 0) {
-			CatchingMiceLogVisualizer.use.Log("No collider has been found. Will be using 1 tile");
+			CatchingMiceLogVisualizer.use.Log("No collider has been found on object " + this.name + ". Will be using 1 tile");
 			CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileByLocation(transform.position.x, transform.position.y);
 
 			if (ValidateTile(tile))

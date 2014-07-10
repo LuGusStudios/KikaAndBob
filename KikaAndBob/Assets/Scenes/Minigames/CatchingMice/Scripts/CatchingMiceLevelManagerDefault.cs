@@ -126,6 +126,9 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 	public delegate void CheeseRemovedEventHandler(CatchingMiceTile cheeseTile);
 	public event CheeseRemovedEventHandler OnCheeseRemoved;
+
+	public delegate void LevelBuiltEventHandler();
+	public event LevelBuiltEventHandler OnLevelBuilt;
 	#endregion
 
 	// Inspector
@@ -312,6 +315,11 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		PlaceMiceHoles(currentLevel.holeItems);
 
 		PlaceWallPieces(currentLevel.wallPieces);
+
+		if (OnLevelBuilt != null)
+		{
+			OnLevelBuilt();
+		}
 	}
 
 	public void BuildLevel()
@@ -352,6 +360,11 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		PlaceWallPieces(currentLevel.wallPieces);
 
 		wavesList = new List<CatchingMiceWaveDefinition>(currentLevel.waves);
+
+		if (OnLevelBuilt != null)
+		{
+			OnLevelBuilt();
+		}
 	}
 
 	public void CreateGrid()
@@ -1384,11 +1397,16 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 	public CatchingMiceTile GetTileFromMousePosition(bool clampToEdges = false)
 	{
-		Vector3 mouseWorldPosition = LugusCamera.game.ScreenToWorldPoint(LugusInput.use.lastPoint).z(0);
+		return GetTileFromMousePosition(LugusCamera.game, clampToEdges);
+	}
 
+	public CatchingMiceTile GetTileFromMousePosition(Camera camera, bool clampToEdges = false)
+	{
+		Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(LugusInput.use.lastPoint).z(0);
+		
 		int xIndex = Mathf.RoundToInt(mouseWorldPosition.x / scale);
 		int yIndex = Mathf.RoundToInt(mouseWorldPosition.y / scale);
-
+		
 		return GetTile(xIndex, yIndex, clampToEdges);
 	}
 

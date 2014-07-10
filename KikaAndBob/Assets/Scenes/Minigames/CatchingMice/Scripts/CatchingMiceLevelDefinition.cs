@@ -43,6 +43,7 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 		List<CatchingMicePatrolDefinition> patrols = new List<CatchingMicePatrolDefinition>();
 		List<CatchingMiceObstacleDefinition> obstacles = new List<CatchingMiceObstacleDefinition>();
 		List<CatchingMiceWallPieceDefinition> wallPieces = new List<CatchingMiceWallPieceDefinition>();
+		List<string> availableTraps = new List<string>();
 
 		while (parser.Read("Level"))
 		{
@@ -97,6 +98,9 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 					case "WallPiece":
 						wallPieces.Add(CatchingMiceWallPieceDefinition.FromXML(parser));
 						break;
+					case "AvailableTrap":
+						availableTraps.Add(parser.content);
+					break;
 				}
 			}
 		}
@@ -110,6 +114,7 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 		level.patrols = patrols.ToArray();
 		level.obstacles = obstacles.ToArray();
 		level.wallPieces = wallPieces.ToArray();
+		level.availableTraps = availableTraps.ToArray();
 
 		return level;
 	}
@@ -209,6 +214,13 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 		}
 		rawdata += "\t</WallPieces>\r\n";
 
+		rawdata += "\t<AvailableTraps>\r\n";
+		foreach (string availableTrap in level.availableTraps)
+		{
+			rawdata += "\t\t<AvailableTrap>" + availableTrap + "</AvailableTrap>\r\n";
+		}
+		rawdata += "\t</AvailableTraps>\r\n";
+
 		rawdata += "</Level>\r\n";
 
 		return rawdata;
@@ -228,6 +240,7 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 	public CatchingMicePatrolDefinition[] patrols;
     public CatchingMiceWaveDefinition[] waves;
 	public CatchingMiceWallPieceDefinition[] wallPieces;
+	public string[] availableTraps;
 
     
 	// Arrays of serialized classes are not created with default values

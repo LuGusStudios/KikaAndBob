@@ -35,7 +35,7 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 		Vector2 min, max;
 		CalculateTrapBounds(out min, out max);
 
-		while (CatchingMiceGameManager.use.gameRunning
+		while (CatchingMiceGameManager.use.GameRunning
 			&& (stacks > 0)
 			&& (health > 0))
 		{
@@ -93,7 +93,7 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 			dustParticles.Play();
 		}
 
-		while(CatchingMiceGameManager.use.gameRunning
+		while(CatchingMiceGameManager.use.GameRunning
 			&& (timeLeft > 0)
 			&& (health > 0))
 		{

@@ -145,6 +145,10 @@ public class LevelLoaderDefault
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}
+		else if (Application.loadedLevelName == "TechnicalBuilder") // TODO: Add proper level name here.
+		{
+			return CatchingMiceCrossSceneInfo.use;
+		}
 		
 		Debug.LogError("StepLevelMenu: " + Application.loadedLevelName + " is an unknown scene!");
 		return null;

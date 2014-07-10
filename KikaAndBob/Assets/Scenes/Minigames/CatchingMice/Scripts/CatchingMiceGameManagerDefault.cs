@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class CatchingMiceGameManager : LugusSingletonExisting<CatchingMiceGameManagerDefault>
 {
 }
-public class CatchingMiceGameManagerDefault : MonoBehaviour
+public class CatchingMiceGameManagerDefault : IGameManager
 {
-	public bool gameRunning = false;
+	protected bool gameRunning = false;
 	public float preWaveTime = 30.0f;
 
 	#region Accessors
@@ -47,10 +47,10 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 
 	#region Events
 	public delegate void WaveStartedEventHandler(int waveIndex);
-	public event WaveStartedEventHandler WaveStarted;
+	public event WaveStartedEventHandler onWaveStarted;
 
 	public delegate void WaveEndedEventHandler(int waveIndex);
-	public event WaveEndedEventHandler WaveEnded;
+	public event WaveEndedEventHandler onWaveEnded;
 
 	public delegate void PickupCountChanged(int newAmount);
 	public event PickupCountChanged onPickupCountChanged;
@@ -64,17 +64,17 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 	protected float timer = 0;
 
 	protected bool infiniteLevel = false;
-	protected bool paused = false;
-	
+
 	protected ILugusCoroutineHandle gameRoutineHandle = null;
 
-	protected CatchingMiceLevelLoader levelLoader = null;
+	protected LevelLoaderDefault levelLoader = new LevelLoaderDefault();
 	#endregion
 
-	public bool GameRunning
+	public override bool GameRunning
 	{
 		get { return gameRunning; }
 	}
+
 	public float Timer
 	{
 		get
@@ -93,7 +93,7 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 		NONE = -1
 	}
 
-	public delegate void OnGameStateChange();
+	public delegate void OnGameStateChange(CatchingMiceGameManagerDefault.State state);
 	public OnGameStateChange onGameStateChange;
 
 	protected CatchingMiceGameManagerDefault.State state = State.NONE;
@@ -106,7 +106,7 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 		{
 			DoNewStateBehaviour(state);
 			if (onGameStateChange != null)
-				onGameStateChange();
+				onGameStateChange(st);
 		}
 	}
 
@@ -158,9 +158,9 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting wave phase");
 
-		if (WaveStarted != null)
+		if (onWaveStarted != null)
 		{
-			WaveStarted(currentWave);
+			onWaveStarted(currentWave);
 		}
 		
 		//spawn waves
@@ -180,15 +180,13 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting post-wave phase");
 
-		if (WaveEnded != null)
+		if (onWaveEnded != null)
 		{
-			WaveEnded(currentWave);
+			onWaveEnded(currentWave);
 		}
 
-		currentWave++;
-
 		//check if start next wave (preWavePhase), cheese has been eaten or waves has been iterated
-		if (currentWave > CatchingMiceLevelManager.use.Waves.Count - 1)
+		if (currentWave + 1 >= CatchingMiceLevelManager.use.Waves.Count)
 		{
 			//can be changed so when you want infinite levels
 			SetState(State.Won);
@@ -200,6 +198,7 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 		else
 		{
 			//still waves left, get next wave
+			currentWave++;
 			SetState(State.PreWave);
 		}
 	}
@@ -207,120 +206,111 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 	public void WinState()
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: won");
+		HUDManager.use.LevelEndScreen.Show(true);
 	}
 
 	public void LoseState()
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: lost");
+		HUDManager.use.LevelEndScreen.Show(false);
 	}
-
-	// TODO: Something has to be done in here when the level selection menu is live
-	public void StartGame()
+	
+	public override void StartGame()
 	{
-		CatchingMiceLevelManager.use.ClearLevel();
-
-		// TODO: Modify this when the level selection menu goes live
-		if (levelLoader == null)
-		{
-			levelLoader = new CatchingMiceLevelLoader();
-			levelLoader.FindLevels();
-		}
-
-		if (CatchingMiceCrossSceneInfo.use.LevelToLoad == -1)
-		{
-			List<int> indexes = levelLoader.levelIndices;
-			if (indexes.Count > 0)
-			{
-				CatchingMiceCrossSceneInfo.use.LevelToLoad = indexes[0];
-			}
-			else
-			{
-				CatchingMiceLogVisualizer.use.LogWarning("No levels could be found!");
-				return;
-			}
-		}
+		string levelData = levelLoader.GetLevelData(CatchingMiceCrossSceneInfo.use.GetLevelIndex());
 		
-		string levelData = levelLoader.GetLevelData(CatchingMiceCrossSceneInfo.use.LevelToLoad);
-		CatchingMiceLevelDefinition levelDefinition = CatchingMiceLevelDefinition.FromXML(levelData);
-		CatchingMiceLevelManager.use.CurrentLevel = levelDefinition;
-
-		if (CatchingMiceLevelManager.use.CurrentLevel != null)
+		if (!string.IsNullOrEmpty(levelData))
 		{
-			CatchingMiceLevelManager.use.BuildLevel();
-			LugusCoroutines.use.StopAllRoutines();
-			gameRunning = true;
+			CatchingMiceLevelDefinition newLevel = CatchingMiceLevelDefinition.FromXML(levelData);
+			CatchingMiceLevelManager.use.CurrentLevel = newLevel;
 
-			if (CatchingMiceLevelManager.use.Waves.Count > 0)
+			if (CatchingMiceLevelManager.use.CurrentLevel != null)
 			{
-				currentWave = 0;
-				SetState(State.PreWave);
+				CatchingMiceLevelManager.use.BuildLevel();
+				LugusCoroutines.use.StopAllRoutines();
+				gameRunning = true;
+	
+				if (CatchingMiceLevelManager.use.Waves.Count > 0)
+				{
+					currentWave = 0;
+					SetState(State.PreWave);
+				}
+
+				CatchingMiceGUI.use.ResetGUI();
+
+				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
 			}
-		}	
-	}
-
-	public void StopGame()
-	{
-
-	}
-
-	public virtual void ReloadLevel()
-	{
-		Application.LoadLevel(Application.loadedLevelName);
-	}
-
-	public bool Paused
-	{
-		get { return paused; }
-		set
-		{
-			SetPaused(value);
-		}
-	}
-
-	public void SetPaused(bool pause)
-	{
-		Debug.Log("GameManager : setPaused : " + pause);
-		if (pause)
-		{
-			// Try pause
-			if (Paused)
-			{
-				Debug.LogError(transform.Path() + " : IGameManager:SetPaused : game was already paused. Doing nothing");
-				return;
-			}
-
-			// pause
-			Time.timeScale = 0.0001f;
-			// update the physics timestep as well
-			// otherwhise, moving objects with colliders (all our Buttons) wouldn't update collision correctly!
-			Time.fixedDeltaTime = 0.02f * Time.timeScale;
-
-			paused = true;
-
 		}
 		else
 		{
-			// Try unpause
-			if (!Paused)
-			{
-				Debug.LogWarning("GameManager:SetPaused : game was already Unpaused. Doing nothing");
-				return;
-			}
-
-			// unpause
-			Time.timeScale = 1.0f;
-			// update the physics timestep as well
-			// otherwhise, moving objects with colliders (all our Buttons) wouldn't update collision correctly!
-			Time.fixedDeltaTime = 0.02f * Time.timeScale;
-
-			paused = false;
+			Debug.LogError("FroggerGameManager: Invalid level data!");
 		}
 	}
 
-	// Use this for initialization
+	public override void StopGame()
+	{
+		gameRunning = false;
+	}
+
+
+
+
+//	public void SetPaused(bool pause)
+//	{
+//		Debug.Log("GameManager : setPaused : " + pause);
+//		if (pause)
+//		{
+//			// Try pause
+//			if (Paused)
+//			{
+//				Debug.LogError(transform.Path() + " : IGameManager:SetPaused : game was already paused. Doing nothing");
+//				return;
+//			}
+//
+//			// pause
+//			Time.timeScale = 0.0001f;
+//			// update the physics timestep as well
+//			// otherwhise, moving objects with colliders (all our Buttons) wouldn't update collision correctly!
+//			Time.fixedDeltaTime = 0.02f * Time.timeScale;
+//
+//			paused = true;
+//
+//		}
+//		else
+//		{
+//			// Try unpause
+//			if (!Paused)
+//			{
+//				Debug.LogWarning("GameManager:SetPaused : game was already Unpaused. Doing nothing");
+//				return;
+//			}
+//
+//			// unpause
+//			Time.timeScale = 1.0f;
+//			// update the physics timestep as well
+//			// otherwhise, moving objects with colliders (all our Buttons) wouldn't update collision correctly!
+//			Time.fixedDeltaTime = 0.02f * Time.timeScale;
+//
+//			paused = false;
+//		}
+//	}
+
+
 	void Start()
 	{
-		StartGame();
+		CatchingMiceLevelManager.use.ClearLevel();
+		
+		levelLoader.FindLevels();
+		
+		if (CatchingMiceCrossSceneInfo.use.GetLevelIndex() < 0)
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
+		}
+		else
+		{
+			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
+			StartGame();
+		}
 	}
 	
 	// Update is called once per frame
@@ -334,45 +324,40 @@ public class CatchingMiceGameManagerDefault : MonoBehaviour
 
 	protected void OnGUI()
 	{
-		// Display available levels
-		if (levelLoader == null)
-		{
-			levelLoader = new CatchingMiceLevelLoader();
-			levelLoader.FindLevels();
-		}
+//		// Display available levels
+//		if (levelLoader == null)
+//		{
+//			levelLoader = new LevelLoaderDefault();
+//			levelLoader.FindLevels();
+//		}
 
-		GUILayout.BeginArea(new Rect(10, 10, 150, 25 * (levelLoader.levelIndices.Count + 2)));
+		if (!LugusDebug.debug)
+			return;
+
+
 		GUILayout.BeginVertical();
 
-		GUILayout.Label("Catching Mice Levels:");
-
-		if (GUILayout.Button("Refresh List"))
+		foreach(int index in levelLoader.levelIndices)
 		{
-			levelLoader.FindLevels();
-		}
-
-		for (int i = 0; i < levelLoader.levelIndices.Count; ++i)
-		{
-			if (GUILayout.Button("Level " + levelLoader.levelIndices[i]))
+			if (GUILayout.Button("Load level: " + index))
 			{
-				CatchingMiceCrossSceneInfo.use.LevelToLoad = levelLoader.levelIndices[i];
-				Application.LoadLevel(Application.loadedLevelName);
+				levelLoader.LoadLevel(index);
 			}
-		}
+		}	
 
 		GUILayout.EndVertical();
-		GUILayout.EndArea();
 
-		// Display level information
-		GUILayout.BeginArea(new Rect(Screen.width - 210, 10, 150, 100));
-		GUILayout.BeginVertical();
 
-		GUILayout.Label("Current phase: " + state);
-		GUILayout.Label("Mice alive: " + enemiesAlive);
-		GUILayout.Label("Cookies found: " + pickupCount);
-		GUILayout.Label("Cheeses left: " + CatchingMiceLevelManager.use.CheeseTiles.Count);
-
-		GUILayout.EndVertical();
-		GUILayout.EndArea();
+//		// Display level information
+//		GUILayout.BeginArea(new Rect(Screen.width - 210, 10, 150, 100));
+//		GUILayout.BeginVertical();
+//
+//		GUILayout.Label("Current phase: " + state);
+//		GUILayout.Label("Mice alive: " + enemiesAlive);
+//		GUILayout.Label("Cookies found: " + pickupCount);
+//		GUILayout.Label("Cheeses left: " + CatchingMiceLevelManager.use.CheeseTiles.Count);
+//
+//		GUILayout.EndVertical();
+//		GUILayout.EndArea();
 	}
 }

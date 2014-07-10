@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CatchingMiceTrapSelector : MonoBehaviour 
+public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapSelector>
 {
 	public float itemScale = 0.7f;
+	public float scrollSpeed = 0.5f;
+	public bool dragging = false;
+
 	protected Transform itemsParent = null;
+	protected Transform itemsEnd = null;
 	protected CatchingMiceTrap currentSelectedTrap = null;
 	protected Vector3 itemOffset = new Vector3(0, -2, 0);
 	protected List<TrapSelectorItem> items = new List<TrapSelectorItem>();
@@ -13,6 +17,15 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 	protected SpriteRenderer dragSprite = null;
 	protected SpriteRenderer dragSpriteArrow = null;
 	protected CatchingMiceTile currentHoverTile = null;
+	protected Button buttonUp = null;
+	protected Button buttonDown = null;
+	protected Vector2 maxScroll = Vector2.zero;
+	protected Vector2 currentScroll = Vector2.zero;
+	protected int currentTopTrap = 0;
+	protected Vector3 startPosition = Vector3.zero;
+	protected Transform background = null;
+	protected bool scrollNecessary = false;
+
 
 	protected struct TrapSelectorItem
 	{
@@ -42,6 +55,16 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 		{
 			Debug.LogError("CatchingMiceTrapSelector: Missing mouse dragger.");
 		}
+
+		if (itemsEnd == null)
+		{
+			itemsEnd = this.transform.FindChild("ItemsEnd");
+		}
+		
+		if (itemsEnd == null)
+		{
+			Debug.LogError("CatchingMiceTrapSelector: Missing items end transform.");
+		}
 		
 		
 		if (dragSprite == null)
@@ -68,14 +91,45 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 			dragSpriteArrow.gameObject.MoveTo(dragSpriteArrow.transform.localPosition + new Vector3(0, 0.5f, 0)).IsLocal(true).Time(0.5f).Looptype(iTween.LoopType.pingPong).Execute();
 		}
 
-		CatchingMiceGameManager.use.onPickupCountChanged += CreateTrapList;
+		if (buttonUp == null)
+		{
+			buttonUp = transform.FindChild("ButtonUp").GetComponent<Button>();
+		}
+
+		if (buttonUp == null)
+		{
+			Debug.LogError("CatchingMiceTrapSelector: Missing up button.");
+		}
+
+		if (buttonDown == null)
+		{
+			buttonDown = transform.FindChild("ButtonDown").GetComponent<Button>();
+		}
+		
+		if (buttonDown == null)
+		{
+			Debug.LogError("CatchingMiceTrapSelector: Missing down button.");
+		}
+
+		if (background == null)
+		{
+			background = transform.FindChild("Background");
+		}
+		
+		if (background == null)
+		{
+			Debug.LogError("CatchingMiceTrapSelector: Missing background.");
+		}
+
+		startPosition = itemsParent.transform.localPosition;
 	}
 
 
 
 	public void SetupGlobal()
 	{
-		CreateTrapList(CatchingMiceGameManager.use.PickupCount);
+		CatchingMiceGameManager.use.onPickupCountChanged += CreateTrapList;
+
 		ResetDrag();
 	}
 	
@@ -101,8 +155,28 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 		int offsetCounter = 1;
 		Vector3 currentOffset = Vector3.zero;
 
+		if (CatchingMiceLevelManager.use.CurrentLevel == null)
+		{
+			return;
+		}
+
 		foreach(CatchingMiceTrap trap in CatchingMiceLevelManager.use.trapPrefabs)
 		{
+	
+			bool availableTrap = false;
+
+			foreach(string s in CatchingMiceLevelManager.use.CurrentLevel.availableTraps)
+			{
+				if (s == trap.name)
+				{
+					availableTrap = true;
+					break;
+				}
+			}
+
+			if (!availableTrap)
+				continue;
+
 			SpriteRenderer spriteRenderer = trap.GetComponentsInChildren<SpriteRenderer>(true)[0];
 			
 			if (spriteRenderer == null)
@@ -138,16 +212,61 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 			
 			items.Add(newSelectorItem);
 		}
+
+		maxScroll = currentOffset;
+
+		if (maxScroll.x <= Vector3.Distance(startPosition, itemsEnd.position))
+			scrollNecessary = false;
+		else
+			scrollNecessary = true;
+
+		if (scrollNecessary)
+		{
+			buttonUp.gameObject.SetActive(true);
+			buttonDown.gameObject.SetActive(true);
+		}
+		else
+		{
+			buttonUp.gameObject.SetActive(false);
+			buttonDown.gameObject.SetActive(false);
+		}
 	}
 
-	
+	protected bool visible = true;
 	protected void Update () 
 	{
+		if (!CatchingMiceGameManager.use.GameRunning)
+		{
+			if (visible)
+			{
+				foreach(Transform t in this.transform)
+				{
+					t.gameObject.SetActive(false);
+				}
+
+				visible = false;
+			}
+		}
+		else
+		{
+			if (!visible)
+			{
+				foreach(Transform t in this.transform)
+				{
+					t.gameObject.SetActive(true);
+				}
+				
+				visible = true;
+			}
+		}
+
+		dragging = false;
+
 		if (LugusInput.use.down)
 		{
 			currentHoverTile = null;
 
-			Transform hit = LugusInput.use.RayCastFromMouseDown();
+			Transform hit = LugusInput.use.RayCastFromMouseDown(LugusCamera.ui);
 
 			foreach(TrapSelectorItem item in items)
 			{
@@ -160,6 +279,8 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 					break;
 				}
 			}
+
+
 		}
 		else if (LugusInput.use.up)
 		{
@@ -179,8 +300,39 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 
 		if (LugusInput.use.dragging)
 		{
+			if (currentSelectedTrap != null)
+				dragging = true;
+
 			DragSprite();
 		}
+
+		// selector scroll
+		if (LugusInput.use.down || LugusInput.use.dragging)
+		{
+			Transform hit = LugusInput.use.RayCastFromMouse();
+
+			if (hit == buttonUp.transform)
+			{
+				itemsParent.localPosition = itemsParent.localPosition.yAdd(-scrollSpeed * Time.timeScale);
+			}
+			else if (hit == buttonDown.transform)
+			{
+				itemsParent.localPosition = itemsParent.localPosition.yAdd(scrollSpeed * Time.timeScale);
+			}
+
+			ClampScroll();
+		}
+	}
+	
+	protected void ClampScroll()
+	{
+		if (!scrollNecessary)
+			return;
+
+		itemsParent.transform.localPosition = new Vector3(
+			itemsParent.transform.localPosition.x,
+			Mathf.Clamp(itemsParent.transform.localPosition.y, startPosition.y, (maxScroll.y - Mathf.Abs(itemsEnd.localPosition.y))),
+			itemsParent.transform.localPosition.z);
 	}
 
 	protected void ResetDrag()
@@ -191,54 +343,7 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 		currentSelectedTrap = null;
 		currentHoverTile = null;
 	}
-	
-//	protected void PlaceTrap(CatchingMiceTile tile)
-//	{
-//		if (tile == null)
-//			return;
-//
-//		if (currentSelectedTrap == null)
-//		{
-//			Debug.LogError("CatchingMiceTrapSelector: Selected trap was null. This shouldn't happen!");
-//			return;
-//		}
-//
-//
-//		// Create the trap item
-//		GameObject tileItem = (GameObject)Instantiate(currentSelectedTrap.gameObject);
-//		tileItem.transform.parent = CatchingMiceLevelManager.use.ObjectParent;
-//		tileItem.transform.name += " " + targetTile.gridIndices;
-//		tileItem.transform.localPosition = targetTile.location;
-//		
-//		CatchingMiceTrap trap = tileItem.GetComponent<CatchingMiceTrap>();
-//		if (trap != null)
-//		{
-//			if (trap.CalculateColliders())
-//			{
-//				trap.parentTile = targetTile;
-//				
-//				if ((targetTile.tileType & CatchingMiceTile.TileType.Trap) != CatchingMiceTile.TileType.Trap)
-//				{
-//					CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no trap flag set!");
-//				}
-//				
-//				trapTiles.Add(targetTile);
-//				trap.Stacks = definition.stacks;
-//			}
-//			else
-//			{
-//				CatchingMiceLogVisualizer.use.LogError("The trap " + trap.name + " could not be placed on the grid.");
-//				DestroyGameObject(trap.gameObject);
-//			}
-//		}
-//		else
-//		{
-//			CatchingMiceLogVisualizer.use.LogError("The trap prefab " + trapPrefab.name + " does not have a Trap component attached.");
-//			DestroyGameObject(tileItem);
-//		}
-//
-//
-//	}
+
 
 	protected void DragSprite()
 	{
@@ -247,14 +352,31 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 
 		Vector3 clampPosition = LugusCamera.ui.ScreenToWorldPoint(LugusInput.use.lastPoint).z(-1);
 		
-		currentHoverTile = CatchingMiceLevelManager.use.GetTileFromMousePosition(false);
+		currentHoverTile = CatchingMiceLevelManager.use.GetTileFromMousePosition(LugusCamera.game, false);
+
+
+		// check if hovering over trap selector
+		// if so, make it invalid to place a trap
+		//RaycastHit[] hits = Physics.RaycastAll(LugusCamera.ui.ScreenPointToRay(LugusInput.use.lastPoint));
+
+		RaycastHit2D[] hits = Physics2D.RaycastAll(LugusCamera.ui.ScreenToWorldPoint(LugusInput.use.lastPoint), Vector3.forward);
+		
+		foreach (RaycastHit2D hit in hits)
+		{
+			if (hit.collider != null && hit.collider.transform == background)
+			{
+				currentHoverTile = null;
+				break;
+			}
+		}
+
 		
 		if (currentHoverTile != null && currentSelectedTrap.ValidateTile(currentHoverTile))
 		{
 			if (dragSpriteArrow.enabled == false)
 				dragSpriteArrow.enabled = true;
 			
-			clampPosition = currentHoverTile.waypoint.transform.position.z(clampPosition.z);
+		//	clampPosition = currentHoverTile.waypoint.transform.position.z(clampPosition.z);
 			dragSprite.transform.localPosition = new Vector3(0, 1.5f, 0);
 
 			dragSprite.color = Color.white;
@@ -271,12 +393,6 @@ public class CatchingMiceTrapSelector : MonoBehaviour
 		
 		mouseDragger.transform.position = clampPosition;
 	}
-
-
-	
-	
-	
-	
 }
 
 

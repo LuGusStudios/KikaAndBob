@@ -1,21 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CatchingMiceCrossSceneInfo : MonoBehaviour {
-
-	public int LevelToLoad
-	{
-		get
-		{
-			return levelToLoad;
-		}
-
-		set
-		{
-			levelToLoad = value;
-		}
-	}
-
+public class CatchingMiceCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo {
+	
 	protected int levelToLoad = -1;
 
 	public static CatchingMiceCrossSceneInfo use
@@ -38,5 +25,15 @@ public class CatchingMiceCrossSceneInfo : MonoBehaviour {
 	public void Destroy()
 	{
 		GameObject.Destroy(this.gameObject);
+	}
+
+	public void SetLevelIndex(int index)
+	{
+		levelToLoad = index;
+	}
+	
+	public int GetLevelIndex()
+	{
+		return levelToLoad;
 	}
 }

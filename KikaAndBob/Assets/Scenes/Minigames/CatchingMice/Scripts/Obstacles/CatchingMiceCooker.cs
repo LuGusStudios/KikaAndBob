@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,8 +18,8 @@ public class CatchingMiceCooker : CatchingMiceObstacle
 	{
 		base.SetupGlobal();
 
-		CatchingMiceGameManager.use.WaveStarted += OnWaveStarted;
-		CatchingMiceGameManager.use.WaveEnded += OnWaveEnded;
+		CatchingMiceGameManager.use.onWaveStarted += OnWaveStarted;
+		CatchingMiceGameManager.use.onWaveEnded += OnWaveEnded;
 
 		cookingHandle = LugusCoroutines.use.GetHandle();
 		cookingHandle.Claim();
@@ -112,7 +112,7 @@ public class CatchingMiceCooker : CatchingMiceObstacle
 		List<CatchingMiceCharacterMouse> tempImmunityList = new List<CatchingMiceCharacterMouse>();
 		List<float> tempImmunityTime = new List<float>();
 
-		while (CatchingMiceGameManager.use.gameRunning)
+		while (CatchingMiceGameManager.use.GameRunning)
 		{
 			List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
 			Collider2D[] colliders = Physics2D.OverlapAreaAll(min, max);

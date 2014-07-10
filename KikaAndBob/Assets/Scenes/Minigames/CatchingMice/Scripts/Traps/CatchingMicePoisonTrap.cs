@@ -76,7 +76,7 @@ public class CatchingMicePoisonTrap : CatchingMiceWorldObjectTrapFurniture {
 
 		// The trap is limited in time (the interval)
 		// After the timer expires, the acid objects should disappear again
-		while (CatchingMiceGameManager.use.gameRunning
+		while (CatchingMiceGameManager.use.GameRunning
 			&& (health > 0)
 			&& (intervalTime > 0))
 		{
