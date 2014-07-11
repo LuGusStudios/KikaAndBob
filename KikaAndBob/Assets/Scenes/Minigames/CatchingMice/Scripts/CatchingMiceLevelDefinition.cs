@@ -151,73 +151,104 @@ public class CatchingMiceLevelDefinition : ScriptableObject
 		}
 		rawdata += "\t</Layout>\r\n";
 
+	
 		rawdata += "\t<Furnitures>\r\n";
-		foreach (CatchingMiceFurnitureDefinition furniture in level.furniture)
+		if (level.furniture != null)
 		{
-			rawdata += CatchingMiceFurnitureDefinition.ToXML(furniture, 2);
+			foreach (CatchingMiceFurnitureDefinition furniture in level.furniture)
+			{
+				rawdata += CatchingMiceFurnitureDefinition.ToXML(furniture, 2);
+			}
 		}
 		rawdata += "\t</Furnitures>\r\n";
 
 		rawdata += "\t<Obstacles>\r\n";
-		foreach (CatchingMiceObstacleDefinition obstacle in level.obstacles)
+		if (level.obstacles != null)
 		{
-			rawdata += CatchingMiceObstacleDefinition.ToXML(obstacle, 2);
+			foreach (CatchingMiceObstacleDefinition obstacle in level.obstacles)
+			{
+				rawdata += CatchingMiceObstacleDefinition.ToXML(obstacle, 2);
+			}
 		}
 		rawdata += "\t</Obstacles>\r\n";
 
         rawdata += "\t<Cheeses>\r\n";
-        foreach (CatchingMiceCheeseDefinition cheese in level.cheeses)
-        {
-            rawdata += CatchingMiceCheeseDefinition.ToXML(cheese, 2);
-        }
+		if (level.cheeses != null)
+		{
+	        foreach (CatchingMiceCheeseDefinition cheese in level.cheeses)
+	        {
+	            rawdata += CatchingMiceCheeseDefinition.ToXML(cheese, 2);
+	        }
+		}
         rawdata += "\t</Cheeses>\r\n";
 
         rawdata += "\t<HoleItems>\r\n";
-        foreach (CatchingMiceHoleDefinition holeItem in level.holeItems)
-        {
-            rawdata += CatchingMiceHoleDefinition.ToXML(holeItem, 2);
-        }
+		if (level.holeItems != null)
+		{
+	        foreach (CatchingMiceHoleDefinition holeItem in level.holeItems)
+	        {
+	            rawdata += CatchingMiceHoleDefinition.ToXML(holeItem, 2);
+	        }
+		}
         rawdata += "\t</HoleItems>\r\n";
 
 		rawdata += "\t<Traps>\r\n";
-		foreach (CatchingMiceTrapDefinition trap in level.traps)
+		if (level.traps != null)
 		{
-			rawdata += CatchingMiceTrapDefinition.ToXML(trap, 2);
+			foreach (CatchingMiceTrapDefinition trap in level.traps)
+			{
+				rawdata += CatchingMiceTrapDefinition.ToXML(trap, 2);
+			}
 		}
 		rawdata += "\t</Traps>\r\n";
 
         rawdata += "\t<Characters>\r\n";
-        foreach (CatchingMiceCharacterDefinition character in level.characters)
-        {
-            rawdata += CatchingMiceCharacterDefinition.ToXML(character, 2);
-        }
+		if (level.characters != null)
+		{
+	        foreach (CatchingMiceCharacterDefinition character in level.characters)
+	        {
+	            rawdata += CatchingMiceCharacterDefinition.ToXML(character, 2);
+	        }
+		}
 		rawdata += "\t</Characters>\r\n";
 
 		rawdata += "\t<Patrols>\r\n";
-		foreach (CatchingMicePatrolDefinition patrol in level.patrols)
+		if (level.patrols != null)
 		{
-			rawdata += CatchingMicePatrolDefinition.ToXML(patrol, 2);
+			foreach (CatchingMicePatrolDefinition patrol in level.patrols)
+			{
+				rawdata += CatchingMicePatrolDefinition.ToXML(patrol, 2);
+			}
 		}
 		rawdata += "\t</Patrols>\r\n";
 
         rawdata += "\t<Waves>\r\n";
-        foreach (CatchingMiceWaveDefinition wave in level.waves)
-        {
-            rawdata += CatchingMiceWaveDefinition.ToXML(wave, 2);
-        }
+		if (level.waves != null)
+		{
+	        foreach (CatchingMiceWaveDefinition wave in level.waves)
+	        {
+	            rawdata += CatchingMiceWaveDefinition.ToXML(wave, 2);
+	        }
+		}
         rawdata += "\t</Waves>\r\n";
 
 		rawdata += "\t<WallPieces>\r\n";
-		foreach (CatchingMiceWallPieceDefinition wallPiece in level.wallPieces)
+		if (level.wallPieces != null)
 		{
-			rawdata += CatchingMiceWallPieceDefinition.ToXML(wallPiece, 2);
+			foreach (CatchingMiceWallPieceDefinition wallPiece in level.wallPieces)
+			{
+				rawdata += CatchingMiceWallPieceDefinition.ToXML(wallPiece, 2);
+			}
 		}
 		rawdata += "\t</WallPieces>\r\n";
 
 		rawdata += "\t<AvailableTraps>\r\n";
-		foreach (string availableTrap in level.availableTraps)
+		if (level.availableTraps != null)
 		{
-			rawdata += "\t\t<AvailableTrap>" + availableTrap + "</AvailableTrap>\r\n";
+			foreach (string availableTrap in level.availableTraps)
+			{
+				rawdata += "\t\t<AvailableTrap>" + availableTrap + "</AvailableTrap>\r\n";
+			}
 		}
 		rawdata += "\t</AvailableTraps>\r\n";
 

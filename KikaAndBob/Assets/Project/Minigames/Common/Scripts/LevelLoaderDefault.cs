@@ -145,7 +145,7 @@ public class LevelLoaderDefault
 		{
 			return DinnerDashCrossSceneInfo.use;
 		}
-		else if (Application.loadedLevelName == "TechnicalBuilder") // TODO: Add proper level name here.
+		else if (Application.loadedLevelName == "TechnicalBuilder" || Application.loadedLevelName == "catchingmice") // TODO: Add proper level name here.
 		{
 			return CatchingMiceCrossSceneInfo.use;
 		}

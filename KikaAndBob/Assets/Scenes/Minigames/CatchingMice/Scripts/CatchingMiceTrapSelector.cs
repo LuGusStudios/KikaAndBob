@@ -160,6 +160,17 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 			return;
 		}
 
+		if (CatchingMiceLevelManager.use.CurrentLevel.availableTraps.Length <= 0)
+		{
+			Debug.Log("CatchingMiceTrapSelector: Disabled trap selector because there aren't any traps available.");
+			SetVisible(false);
+			return;
+		}
+		else
+		{
+			SetVisible(true);
+		}
+
 		foreach(CatchingMiceTrap trap in CatchingMiceLevelManager.use.trapPrefabs)
 		{
 	
@@ -232,6 +243,16 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		}
 	}
 
+	protected void SetVisible(bool enabled)
+	{
+		foreach(Transform t in this.transform)
+		{
+			t.gameObject.SetActive(enabled);
+		}
+
+		visible = enabled;
+	}
+
 	protected bool visible = true;
 	protected void Update () 
 	{
@@ -239,24 +260,14 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		{
 			if (visible)
 			{
-				foreach(Transform t in this.transform)
-				{
-					t.gameObject.SetActive(false);
-				}
-
-				visible = false;
+				SetVisible(false);
 			}
 		}
 		else
 		{
-			if (!visible)
+			if (!visible && CatchingMiceLevelManager.use.CurrentLevel != null && CatchingMiceLevelManager.use.CurrentLevel.availableTraps.Length > 0)
 			{
-				foreach(Transform t in this.transform)
-				{
-					t.gameObject.SetActive(true);
-				}
-				
-				visible = true;
+				SetVisible(true);
 			}
 		}
 

@@ -186,14 +186,17 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		}
 
 		//check if start next wave (preWavePhase), cheese has been eaten or waves has been iterated
-		if (currentWave + 1 >= CatchingMiceLevelManager.use.Waves.Count)
+		if (CatchingMiceLevelManager.use.CheeseTiles.Count <= 0)
 		{
+			Debug.Log("CatchingMiceGameManager: Cheese tiles gone.");
+			SetState(State.Lost);
+		}
+		else if (currentWave + 1 >= CatchingMiceLevelManager.use.Waves.Count)
+		{
+			Debug.Log("CatchingMiceGameManager: All waves are done and some cheese tiles survive.");
+
 			//can be changed so when you want infinite levels
 			SetState(State.Won);
-		}
-		else if (CatchingMiceLevelManager.use.CheeseTiles.Count <= 0)
-		{
-			SetState(State.Lost);
 		}
 		else
 		{
@@ -206,13 +209,13 @@ public class CatchingMiceGameManagerDefault : IGameManager
 	public void WinState()
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: won");
-		HUDManager.use.LevelEndScreen.Show(true);
+		HUDManager.use.LevelEndScreen.Show(true, 1f);
 	}
 
 	public void LoseState()
 	{
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: lost");
-		HUDManager.use.LevelEndScreen.Show(false);
+		HUDManager.use.LevelEndScreen.Show(false, 1f);
 	}
 	
 	public override void StartGame()
@@ -239,11 +242,16 @@ public class CatchingMiceGameManagerDefault : IGameManager
 				CatchingMiceGUI.use.ResetGUI();
 
 				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
+
+				if (CatchingMiceLevelManager.use.Players.Count > 0)
+				{
+					CatchingMiceCameraMover.use.FocusOnPlayer(CatchingMiceLevelManager.use.Players[0], false);
+				}
 			}
 		}
 		else
 		{
-			Debug.LogError("FroggerGameManager: Invalid level data!");
+			Debug.LogError("CatchingGameManager: Invalid level data!");
 		}
 	}
 

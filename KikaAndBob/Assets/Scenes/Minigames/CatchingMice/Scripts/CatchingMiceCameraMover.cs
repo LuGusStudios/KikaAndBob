@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CatchingMiceCameraMover : MonoBehaviour 
+public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCameraMover> 
 {
 	public float scrollScreenArea = 0.1f;
 	public float maxSpeed = 1.0f;
 	public float swipeMomentumDecay = 0.9f;
 	protected Vector2 levelBoundsMin = Vector2.zero;
 	protected Vector2 levelBoundsMax = Vector2.zero;
+	protected bool movingToPlayer = false;
 
 	public void SetupLocal()
 	{
@@ -20,6 +21,47 @@ public class CatchingMiceCameraMover : MonoBehaviour
 		UpdateLevelBounds();
 		CatchingMiceLevelManager.use.OnLevelBuilt += UpdateLevelBounds;
 	}
+
+	public void FocusOnPlayer(CatchingMiceCharacterPlayer player, bool animate = true)
+	{
+		if (player != null)
+		{
+			FocusOnPoint(player.transform.position, animate);
+		}
+		else
+		{
+			Debug.LogError("CatchingMiceCameraMover: Player to focus on was null!");
+		}
+	}
+
+	public void FocusOnPoint(Vector3 point, bool animate = true)
+	{
+		if (animate == false)
+		{
+			transform.position = point.z(transform.position.z);
+		}
+		else
+		{
+			LugusCoroutines.use.StartRoutine(MoveRoutine(point.z(transform.position.z)));
+		}
+	}
+
+	protected IEnumerator MoveRoutine(Vector3 point)
+	{
+		movingToPlayer = true;
+
+		iTween.Stop(gameObject);
+
+		yield return null;
+
+		gameObject.MoveTo(point).Time(1).EaseType(iTween.EaseType.easeInOutExpo).Execute();
+
+		yield return new WaitForSeconds(3);
+
+		movingToPlayer = false;
+		yield break;
+	}
+
 	
 	protected void Awake()
 	{
@@ -33,6 +75,9 @@ public class CatchingMiceCameraMover : MonoBehaviour
 	
 	protected void Update () 
 	{
+		if (movingToPlayer)
+			return;
+
 		CheckScrollingTouch();
 		CheckScrollingArrows();
 

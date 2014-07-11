@@ -107,6 +107,7 @@ public class DebugByTaps : MonoBehaviour
 		levels.Add("e24_japan");
 		levels.Add("e25_sicily");
 		levels.Add("e26_belgium");
+		levels.Add("e26_belgium");
 
 
 		foreach( string level in levels )

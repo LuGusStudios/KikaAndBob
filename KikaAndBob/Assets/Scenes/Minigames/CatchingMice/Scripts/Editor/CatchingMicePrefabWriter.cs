@@ -35,6 +35,14 @@ public class CatchingMicePrefabWriter : Editor
 		writer.WriteLine("Available prefabs for scene " + Path.GetFileNameWithoutExtension(EditorApplication.currentScene));
 		writer.WriteLine();
 
+		// Character
+		writer.WriteLine("Characters:");
+		foreach (CatchingMiceCharacterPlayer player in manager.characterPrefabs)
+		{
+			writer.WriteLine("\t- " + player.name);
+		}
+		writer.WriteLine();
+
 		// Enemies - mice
 		writer.WriteLine("Enemies (mice):");
 		foreach (CatchingMiceCharacterMouse enemy in manager.enemyPrefabs)
@@ -91,7 +99,17 @@ public class CatchingMicePrefabWriter : Editor
 		}
 		writer.WriteLine();
 
+		// Wall pieces
+		writer.WriteLine("Wall pieces:");
+		foreach (GameObject wallPiece in manager.wallPieces)
+		{
+			writer.WriteLine("\t- " + wallPiece.name);
+		}
+		writer.WriteLine();
+
 		writer.Close();
+
+		Debug.Log("CatchingMicePrefabWriter: Saved prefab list to " + saveLocation + Path.GetFileNameWithoutExtension(EditorApplication.currentScene) + "_prefabs.txt");
 	}
 }
 #endif

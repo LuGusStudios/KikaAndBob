@@ -118,6 +118,7 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 
 	protected void DestroySelf()
 	{
+		Debug.Log("CatchingMiceCheese: Removing cheese.");
 		CatchingMiceLevelManager.use.RemoveCheeseFromTile(parentTile);
 		gameObject.SetActive(false);
 	}
