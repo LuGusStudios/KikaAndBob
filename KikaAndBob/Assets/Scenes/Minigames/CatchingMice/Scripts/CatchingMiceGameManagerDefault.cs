@@ -239,17 +239,17 @@ public class CatchingMiceGameManagerDefault : IGameManager
 					SetState(State.PreWave);
 				}
 
-				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
-
 				if (CatchingMiceLevelManager.use.Players.Count > 0)
 				{
 					CatchingMiceCameraMover.use.FocusOnPlayer(CatchingMiceLevelManager.use.Players[0], false);
 				}
 
 				CatchingMiceGUI.use.ResetHUD();
+
+				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
 			}
 		}
-		else
+		else 
 		{
 			Debug.LogError("CatchingGameManager: Invalid level data!");
 		}

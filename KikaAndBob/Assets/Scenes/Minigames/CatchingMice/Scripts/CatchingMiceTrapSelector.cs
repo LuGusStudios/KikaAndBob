@@ -282,6 +282,17 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		}
 
 		visible = enabled;
+
+		if (visible)
+		{
+			print ("center");
+			HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.Top);
+		}
+		else
+		{
+			print ("right");
+			HUDManager.use.RepositionPauseButton(KikaAndBob.ScreenAnchor.TopRight, KikaAndBob.ScreenAnchor.TopRight);
+		}
 	}
 
 

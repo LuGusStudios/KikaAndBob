@@ -35,6 +35,9 @@ public class CatchingMiceGUI : LugusSingletonExisting<CatchingMiceGUI>
 		HUDManager.use.CounterLargeBottomLeft1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.CounterLargeBottomLeft1.suffix = "/1";
 		HUDManager.use.CounterLargeBottomLeft1.SetValue(1, false);
+
+		HUDManager.use.PauseButton.gameObject.SetActive(true);
+		// Positioning of pause button is set in TrapSelector. If there is no trap selector, we can place the button top-right. Else, move it more towards the center.
 		
 		
 		CatchingMiceLevelManager.use.OnCheeseRemoved += UpdateCheeseCount;
