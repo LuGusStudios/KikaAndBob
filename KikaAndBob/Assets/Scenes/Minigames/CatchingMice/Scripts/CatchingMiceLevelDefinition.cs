@@ -692,8 +692,8 @@ public class CatchingMiceCheeseDefinition
                         }
                         cheese.position = coordinates;
                         break;
-                    case "Stacks":
-                        cheese.stacks = int.Parse(parser.content);
+					case "Health":
+                        cheese.health = int.Parse(parser.content);
                         break;
                 }
             }
@@ -724,7 +724,7 @@ public class CatchingMiceCheeseDefinition
         rawdata += tabs + "\t\t<X>" + tileitem.position.x.ToString() + "</X>\r\n";
         rawdata += tabs + "\t\t<Y>" + tileitem.position.y.ToString() + "</Y>\r\n";
         rawdata += tabs + "\t</Position>\r\n";
-        rawdata += tabs + "\t<Stacks>" + tileitem.stacks + "</Stacks>\r\n";
+		rawdata += tabs + "\t<Health>" + tileitem.health + "</Health>\r\n";
         rawdata += tabs + "</Cheese>\r\n";
 
         return rawdata;
@@ -732,7 +732,7 @@ public class CatchingMiceCheeseDefinition
 
     public string prefabName;
     public Vector2 position;
-    public int stacks = 3;
+    public int health = 3;
 }
 
 [System.Serializable]
@@ -1039,8 +1039,8 @@ public class CatchingMiceTrapDefinition
 						}
 						trap.position = coordinates;
 						break;
-					case "Stacks":
-						trap.stacks = int.Parse(parser.content);
+					case "Ammo":
+						trap.ammo = int.Parse(parser.content);
 						break;
 				}
 			}
@@ -1072,7 +1072,7 @@ public class CatchingMiceTrapDefinition
 		rawdata += tabs + "\t\t<X>" + trap.position.x.ToString() + "</X>\r\n";
 		rawdata += tabs + "\t\t<Y>" + trap.position.y.ToString() + "</Y>\r\n";
 		rawdata += tabs + "\t</Position>\r\n";
-		rawdata += tabs + "\t<Stacks>" + trap.stacks + "</Stacks>\r\n";
+		rawdata += tabs + "\t<Ammo>" + trap.ammo + "</Ammo>\r\n";
 
 		rawdata += tabs + "</Trap>\r\n";
 
@@ -1081,7 +1081,7 @@ public class CatchingMiceTrapDefinition
 
 	public string prefabName = "";
 	public Vector2 position = Vector2.zero;
-	public int stacks = 1;
+	public int ammo = 1;
 }
 
 [System.Serializable]

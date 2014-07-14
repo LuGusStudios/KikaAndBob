@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -25,6 +25,8 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 	protected Vector3 startPosition = Vector3.zero;
 	protected Transform background = null;
 	protected bool scrollNecessary = false;
+	protected TextMeshWrapper costDisplay = null;
+	protected bool visible = true;
 
 
 	protected struct TrapSelectorItem
@@ -121,6 +123,17 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 			Debug.LogError("CatchingMiceTrapSelector: Missing background.");
 		}
 
+		if (costDisplay == null)
+		{
+			costDisplay = transform.FindChild("Cost").GetComponent<TextMeshWrapper>();
+		}
+
+		if (costDisplay == null)
+		{
+			Debug.LogError("CatchingMiceTrapSelector: Missing cost display text mesh.");
+		}
+
+
 		startPosition = itemsParent.transform.localPosition;
 	}
 
@@ -207,14 +220,28 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 			trapButton.transform.localPosition = new Vector3(0, -currentOffset.y, 0);	// change this to x (or z) for a menu in a different direction
 			currentOffset += icon.bounds.extents;	// then increase it again for the other half
 
+			TextMeshWrapper newCostDisplay = (TextMeshWrapper) Instantiate(costDisplay);
+			newCostDisplay.SetText(trap.Cost.ToString());
+
+			newCostDisplay.transform.parent = trapButton.transform;
+			newCostDisplay.transform.localPosition = new Vector3(2, 0, -1);
+
+			// using icon.bounds.extents.y messes up when newCostDisplay is already parent to a scaled object - use world position instead
+			// Then, also subtract a bit because the text mesh's pivot doesn't exactly line up with the text bottom...
+			newCostDisplay.transform.position = newCostDisplay.transform.position.y(icon.bounds.min.y - 0.2f);
+		
+
+			// grey out trap icon and do not add collider if necessary
 			if (trap.Cost > newAmount)
 			{
 				icon.color = icon.color.a(0.4f);
+				newCostDisplay.textMesh.color = newCostDisplay.textMesh.color.a(0.4f);
 			}
 			else
 			{
 				BoxCollider2D buttonCollider = trapButton.AddComponent<BoxCollider2D>();
 			}
+
 
 			TrapSelectorItem newSelectorItem = new TrapSelectorItem();
 			newSelectorItem.button = trapButton.transform;
@@ -224,13 +251,16 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 			items.Add(newSelectorItem);
 		}
 
+		// update max scroll length
 		maxScroll = currentOffset;
 
+		// is the list of trap icons longer than the window?
 		if (maxScroll.x <= Vector3.Distance(startPosition, itemsEnd.position))
 			scrollNecessary = false;
 		else
 			scrollNecessary = true;
 
+		// if so, display scroll arrows; if not, hide them
 		if (scrollNecessary)
 		{
 			buttonUp.gameObject.SetActive(true);
@@ -243,6 +273,7 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		}
 	}
 
+	// makes the whole trap selector bar visibile/invisible
 	protected void SetVisible(bool enabled)
 	{
 		foreach(Transform t in this.transform)
@@ -253,9 +284,10 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		visible = enabled;
 	}
 
-	protected bool visible = true;
+
 	protected void Update () 
 	{
+		// hide in menus or when there are no traps available
 		if (!CatchingMiceGameManager.use.GameRunning)
 		{
 			if (visible)

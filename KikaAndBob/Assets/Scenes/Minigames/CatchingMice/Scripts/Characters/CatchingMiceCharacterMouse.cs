@@ -139,10 +139,10 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 
         while((health > 0)
 			&& (cheeseTile.cheese != null)
-			&& (cheeseTile.cheese.Stacks > 0)
+			&& (cheeseTile.cheese.Health > 0)
 			&& (attacked < cheeseBites))
         {
-            cheeseTile.cheese.Stacks -= (int)damage;
+            cheeseTile.cheese.Health -= (int)damage;
             attacked++;
 
             yield return new WaitForSeconds(attackInterval);
@@ -150,7 +150,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 
         attacking = false;
 
-        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese.Stacks <= 0))
+        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese.Health <= 0))
         {
             CatchingMiceLogVisualizer.use.Log("getting new target");
             GetTarget();

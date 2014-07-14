@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public interface ICatchingMiceWorldObjectTrap
 {
     float Health { get; set; }
-    int Stacks { get; set; }
+    int Ammo { get; set; }
     float Cost { get; set; }
     float Damage { get; set; }
 	float Interval { get; set; }

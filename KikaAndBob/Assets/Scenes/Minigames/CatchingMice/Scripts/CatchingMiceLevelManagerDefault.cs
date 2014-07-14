@@ -703,7 +703,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 					}
 
 					cheeseTiles.Add(targetTile);
-					cheese.Stacks = definition.stacks;
+					cheese.Health = definition.health;
 				}
 				else
 				{
@@ -740,7 +740,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				}
 				
 				trapTiles.Add(tile);
-				instantiatedTrap.Stacks = trap.Stacks;
+				instantiatedTrap.Ammo = trap.Ammo;
 			}
 			else
 			{

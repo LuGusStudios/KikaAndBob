@@ -56,6 +56,9 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 	
 	protected void Update () 
 	{
+		if (!CatchingMiceGameManager.use.GameRunning)
+			return;
+
 		CatPathInput();
 		VisualizePaths();
 	}

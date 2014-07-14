@@ -23,18 +23,18 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 			}
 		}
 	}
-	public int Stacks
+	public int Ammo
 	{
 		get
 		{
-			return stacks;
+			return ammo;
 		}
 		set
 		{
-			stacks = value;
-			if (stacks <= 0)
+			ammo = value;
+			if (ammo <= 0)
 			{
-				OnEmptyStacks();
+				OnEmptyAmmo();
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 	[SerializeField]
 	protected float health = 100.0f;
 	[SerializeField]
-	protected int stacks = 3;
+	protected int ammo = 3;
 	[SerializeField]
 	protected float cost = 1.0f;
 	[SerializeField]
@@ -115,7 +115,7 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 
 		if (spriteRenderer != null)
 		{
-			if (stacks > 0)
+			if (ammo > 0)
 			{
 				spriteRenderer.sprite = activeSprite;
 			}
@@ -205,7 +205,7 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 		CalculateTrapBounds(out min, out max);
 
 		while (CatchingMiceGameManager.use.GameRunning
-			&& (stacks > 0)
+			&& (ammo > 0)
 			&& (health > 0))
 		{
 			// Check whether an enemy is near
@@ -214,7 +214,12 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 
 			foreach (Collider2D coll2D in colliders)
 			{
-				CatchingMiceCharacterMouse enemy = coll2D.transform.parent.GetComponent<CatchingMiceCharacterMouse>();
+				CatchingMiceCharacterMouse enemy = null;
+
+				// colliders are often parented to the object with the character script
+				// Still: should do a null check on parent to prevent exceptions.
+				if (coll2D.transform.parent != null)
+					enemy = coll2D.transform.parent.GetComponent<CatchingMiceCharacterMouse>();
 
 				if (enemy != null)
 				{
@@ -230,7 +235,7 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 					OnHit(enemy);
 				}
 
-				Stacks = Stacks - 1;
+				Ammo = Ammo - 1;
 
 				yield return new WaitForSeconds(Interval);
 			}
@@ -250,11 +255,11 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 		DestroySelf();
 	}
 
-	// The basic action for when a trap's stacks drops
+	// The basic action for when a trap's ammo drops
 	// to 0. The default behavior is to destroy the trap.
 	// When a different behavior is necessary,
 	// then it should be overridden in the sub-class.
-	protected virtual void OnEmptyStacks()
+	protected virtual void OnEmptyAmmo()
 	{
 		if (spriteRenderer != null)
 		{
@@ -264,7 +269,7 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 
 	protected virtual void OnPlayerInteract()
 	{
-		if (stacks <= 0)
+		if (ammo <= 0)
 		{
 			CatchingMiceLogVisualizer.use.LogError("Refilling stacks");
 		}

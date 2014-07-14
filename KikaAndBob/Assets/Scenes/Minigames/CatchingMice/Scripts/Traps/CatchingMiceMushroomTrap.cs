@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ public class CatchingMiceMushroomTrap : CatchingMiceWorldObjectTrapFurniture {
 		CalculateTrapBounds(out min, out max);
 
 		while (CatchingMiceGameManager.use.GameRunning
-			&& (stacks > 0)
+			&& (ammo > 0)
 			&& (health > 0))
 		{
 			// Check whether an enemy is near
@@ -61,7 +61,7 @@ public class CatchingMiceMushroomTrap : CatchingMiceWorldObjectTrapFurniture {
 					yield return new WaitForEndOfFrame();
 				}
 
-				Stacks = Stacks - 1;
+				Ammo = Ammo - 1;
 
 				yield return new WaitForSeconds(interval);
 			}

@@ -6,26 +6,26 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 
 	public List<Sprite> cheeseVisuals = new List<Sprite>();
 
-	public int Stacks
+	public int Health
 	{
 		get
 		{
-			return stacks;
+			return health;
 		}
 
 		set
 		{
-			stacks = value;
+			health = value;
 
 			// Destroy the cheese if 0 stacks are left,
 			// change sprite otherwise
-			if (stacks <= 0)
+			if (health <= 0)
 			{
 				DestroySelf();
 			}
 			else
 			{
-				int visualIndex = Mathf.FloorToInt(((float)stacks / (float)initialStacks) * (float)cheeseVisuals.Count);
+				int visualIndex = Mathf.FloorToInt(((float)health / (float)initialStacks) * (float)cheeseVisuals.Count);
 				visualIndex = Mathf.Max(Mathf.Min(visualIndex, cheeseVisuals.Count - 1), 0);
 
 				if (cheeseRenderer != null)
@@ -36,14 +36,14 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 		}
 	}
 
-	protected int stacks;
+	protected int health;
 	protected int initialStacks;
 
 	protected SpriteRenderer cheeseRenderer = null;
 
 	public void SetupGlobal()
 	{
-		initialStacks = stacks;
+		initialStacks = health;
 
 		if (cheeseRenderer == null)
 		{
