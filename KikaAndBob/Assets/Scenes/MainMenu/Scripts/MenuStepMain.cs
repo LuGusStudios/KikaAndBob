@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 public class MenuStepMain : IMenuStep 
 {
-	Button settingsButton = null;
-	Button playButton = null;
-	Button avatarButton = null;
+	protected Button settingsButton = null;
+	protected Button playButton = null;
+	protected Button avatarButton = null;
+	protected Button catchingMiceButton = null;
+	protected Button playRoomButton = null;
+	protected bool leavingMenu = false;	// set to true when transitioning to mouse hunt game - disables further input
 
 	public void SetupLocal()
 	{
@@ -27,6 +30,19 @@ public class MenuStepMain : IMenuStep
 		
 		if (avatarButton == null)
 			Debug.LogError("MenuStepMain: Missing avatar button.");
+
+		if (catchingMiceButton == null)
+			catchingMiceButton = transform.FindChild("ButtonCatchingMice").GetComponent<Button>();
+
+		if (catchingMiceButton == null)
+			Debug.LogError("MenuStepMain: Missing catching mice button.");
+
+		if (playRoomButton == null)
+			playRoomButton = transform.FindChild("ButtonPlayRoom").GetComponent<Button>();
+		
+		if (playRoomButton == null)
+			Debug.LogError("MenuStepMain: Missing play room button.");
+	
 	}
 
 	public void SetupGlobal()
@@ -46,23 +62,44 @@ public class MenuStepMain : IMenuStep
 	
 	protected void Update () 
 	{
-		if (!activated)
+		if (!activated || leavingMenu)
 			return;
 
 		if (playButton.pressed)
 		{
 
 		}
-
-		if (settingsButton.pressed)
+		else if (settingsButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Settings);
 		}
-	
-		if (avatarButton.pressed)
+		else if (avatarButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Avatar);
 		}
+		else if (catchingMiceButton.pressed)
+		{
+			LugusCoroutines.use.StartRoutine(LeavingMainMenu());
+		}
+		else if (playRoomButton.pressed)
+		{
+
+		}
+	}
+
+
+
+	protected IEnumerator LeavingMainMenu()
+	{
+		leavingMenu = true;
+
+		ScreenFader.use.FadeOut(0.5f);
+
+		yield return new WaitForSeconds(0.5f);
+
+		Application.LoadLevel("catchingmice");
+
+		yield break;
 	}
 
 	public override void Activate (bool animate)
