@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SmoothMoves;
 
 public class MenuStepMain : IMenuStep 
 {
@@ -10,6 +11,8 @@ public class MenuStepMain : IMenuStep
 	protected Button catchingMiceButton = null;
 	protected Button playRoomButton = null;
 	protected bool leavingMenu = false;	// set to true when transitioning to mouse hunt game - disables further input
+	protected BoneAnimation character = null;
+
 
 	public void SetupLocal()
 	{
@@ -42,7 +45,12 @@ public class MenuStepMain : IMenuStep
 		
 		if (playRoomButton == null)
 			Debug.LogError("MenuStepMain: Missing play room button.");
-	
+
+		if (character == null)
+			character = GetComponentInChildren<BoneAnimation>();
+		
+		if (character == null)
+			Debug.LogError("MenuStepAvatar: Missing character.");
 	}
 
 	public void SetupGlobal()
@@ -59,7 +67,12 @@ public class MenuStepMain : IMenuStep
 	{
 		SetupGlobal();
 	}
-	
+
+	protected void PlayIdleAnim(int index)
+	{
+		character.Play("Cat0" + index.ToString() + "Side_Idle");
+	}
+
 	protected void Update () 
 	{
 		if (!activated || leavingMenu)
@@ -106,6 +119,14 @@ public class MenuStepMain : IMenuStep
 	{
 		activated = true;
 		this.gameObject.SetActive(true);
+
+		int currentCatIndex = LugusConfig.use.User.GetInt("CatIndex", 1);
+		
+		Debug.Log("MenuStepMain: Current cat index = " + currentCatIndex.ToString());
+		
+		string catName = LugusConfig.use.User.GetString("CatName", "");
+		
+		PlayIdleAnim(currentCatIndex);
 	}
 
 	public override void Deactivate (bool animate)

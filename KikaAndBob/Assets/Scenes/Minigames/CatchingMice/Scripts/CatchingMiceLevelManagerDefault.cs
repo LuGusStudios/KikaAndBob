@@ -944,7 +944,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				continue;
 			}
 
-			// Get the tile where the trap supposed to be placed
+		
 			CatchingMiceTile targetTile = GetTile(characterDefinition.position, false);
 			if (targetTile == null)
 			{
@@ -968,6 +968,11 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			{
 				characterSpawned.tileTraversalTime = characterDefinition.speed;
 			}
+
+			// set character type - TODO: Add functionality to make one of the cats fixed. Now they will all have the same color.
+
+			characterSpawned.GetComponent<CatchingMiceCharacterAnimation>().characterNameAnimation = "Cat0" + LugusConfig.use.User.GetInt("CatIndex", 1).ToString();
+
 
 			playerList.Add(characterSpawned);
 		}
