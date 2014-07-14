@@ -725,7 +725,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		GameObject tileItem = (GameObject)Instantiate(trap.gameObject);
 		tileItem.transform.parent = objectParent;
 		tileItem.transform.name += " " + tile.gridIndices;
-		tileItem.transform.localPosition = tile.location;
+		tileItem.transform.localPosition = tile.location.zAdd(-0.2f);
 		CatchingMiceTrap instantiatedTrap = tileItem.GetComponent<CatchingMiceTrap>();
 
 		if (instantiatedTrap != null)

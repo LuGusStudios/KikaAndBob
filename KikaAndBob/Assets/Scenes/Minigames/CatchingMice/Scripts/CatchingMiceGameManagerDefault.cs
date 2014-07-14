@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -239,14 +239,14 @@ public class CatchingMiceGameManagerDefault : IGameManager
 					SetState(State.PreWave);
 				}
 
-				CatchingMiceGUI.use.ResetGUI();
-
 				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
 
 				if (CatchingMiceLevelManager.use.Players.Count > 0)
 				{
 					CatchingMiceCameraMover.use.FocusOnPlayer(CatchingMiceLevelManager.use.Players[0], false);
 				}
+
+				CatchingMiceGUI.use.ResetHUD();
 			}
 		}
 		else

@@ -11,11 +11,12 @@ public class CatchingMiceGUI : LugusSingletonExisting<CatchingMiceGUI>
 	
 	public void SetupGlobal()
 	{ 
-		HUDManager.use.DisableAll();
 	}
 
-	public void ResetGUI()
+	public void ResetHUD()
 	{
+		Debug.Log("CatchingMiceGUI: Resetting HUD.");
+
 		HUDManager.use.DisableAll();
 
 		HUDManager.use.CounterSmallLeft1.gameObject.SetActive(true);

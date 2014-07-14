@@ -8,6 +8,9 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 	public Sprite inactiveSprite = null;
 	public SpriteRenderer spriteRenderer = null;
 
+	protected int originalAmmoCount = 1;
+	protected Vector3 originalScale = Vector3.zero;
+
 	public float Health
 	{
 		get
@@ -128,6 +131,9 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 		{
 			CatchingMiceLogVisualizer.use.LogError("Could not find the sprite renderer for the trap.");
 		}
+
+		originalAmmoCount = ammo;
+		originalScale = transform.localScale;
 	}
 
 	protected void Awake()
@@ -235,6 +241,8 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 					OnHit(enemy);
 				}
 
+				AttackEffect();
+
 				Ammo = Ammo - 1;
 
 				yield return new WaitForSeconds(Interval);
@@ -244,6 +252,16 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 				yield return new WaitForFixedUpdate();
 			}
 		}
+	}
+
+	protected virtual void AttackEffect()
+	{
+		iTween.Stop(gameObject);
+		transform.localScale = originalScale;
+
+		iTween.PunchScale(gameObject, iTween.Hash(
+			"amount", Vector3.one * 0.1f,
+			"time", 0.5f));
 	}
 
 	// The basic action for when a trap's health drops
@@ -271,7 +289,23 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 	{
 		if (ammo <= 0)
 		{
-			CatchingMiceLogVisualizer.use.LogError("Refilling stacks");
+			if (CatchingMiceGameManager.use.PickupCount >= this.Cost)
+			{
+				if (spriteRenderer != null)
+				{
+					spriteRenderer.sprite = activeSprite;
+				}
+
+				CatchingMiceGameManager.use.PickupCount -= (int) this.Cost;
+
+				Ammo = originalAmmoCount;
+
+				CatchingMiceLogVisualizer.use.LogError("Refilling ammo on trap: " + transform.Path());
+			}
+		}
+		else
+		{
+			CatchingMiceLogVisualizer.use.LogError("No interaction options for trap: " + transform.Path());
 		}
 	}
 
