@@ -61,9 +61,9 @@ public class CountdownScreen : MonoBehaviour
 	{
 		this.transform.localPosition = Vector3.zero;
 
-#if UNITY_IOS
+#if UNITY_IPHONE
 		controlsHint.color = controlsHint.color.a(0.0f);
-#elif
+#else
 		controlsHint.color = Color.white;
 #endif
 

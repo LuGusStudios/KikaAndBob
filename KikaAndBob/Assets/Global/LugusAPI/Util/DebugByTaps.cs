@@ -12,7 +12,9 @@ public class DebugByTaps : MonoBehaviour
 	public bool bottomLeft = false;
 	
 	protected float resetFutureTime = 0.0f;
-	
+
+	protected List<string> levels = new List<string>();  
+
 	protected bool HasTouch( Rect screenArea )
 	{
 		if( LugusInput.use.down && screenArea.Contains(LugusInput.use.lastPoint) )
@@ -20,8 +22,7 @@ public class DebugByTaps : MonoBehaviour
 		
 		return false;
 	}
-
-
+	
 	void Update () 
 	{
 		// Touchpoints are bottom left based...
@@ -73,6 +74,8 @@ public class DebugByTaps : MonoBehaviour
 		CalculateFPS();
 	}
 
+	protected Vector2 scroll = Vector2.zero;
+
 	public void OnGUI()
 	{
 		if( !LugusDebug.debug )
@@ -80,39 +83,11 @@ public class DebugByTaps : MonoBehaviour
 
 		GUILayout.BeginArea( new Rect(Screen.width - 200, 0, 200, Screen.height) );
 
-		List<string> levels = new List<string>();  
-		levels.Add("e01_kenia");
-		levels.Add("e02_argentina");
-		levels.Add("e03_china");
-		levels.Add("e04_tasmania");
-		levels.Add("e05_Mexico");
-		levels.Add("e06_egypt");
-		levels.Add("e07_france");
-		levels.Add("e08_texas");
-		levels.Add("e09_Brazil");
-		levels.Add("e10_Swiss");
-		levels.Add("e11_vatican");
-		levels.Add("e12_newyork");
-		levels.Add("e13_pacific");
-		levels.Add("e14_buthan");
-		levels.Add("e15_india");
-		levels.Add("e16_israel");
-		levels.Add("e17_greenland");
-		levels.Add("e18_amsterdam");
-		levels.Add("e19_illinois");
-		levels.Add("e20_morocco");
-		levels.Add("e21_cuba");
-		levels.Add("e22_russia");
-		levels.Add("e23_england");
-		levels.Add("e24_japan");
-		levels.Add("e25_sicily");
-		levels.Add("e26_belgium");
-		levels.Add("e26_belgium");
-
+		scroll = GUILayout.BeginScrollView(scroll);
 
 		foreach( string level in levels )
 		{
-			if( GUILayout.Button( "" + level) )
+			if( GUILayout.Button( "" + level, new GUILayoutOption[]{GUILayout.MinWidth(100), GUILayout.MinHeight(50)} ) )
 			{
 				Application.LoadLevel( level );
 			}
@@ -122,6 +97,8 @@ public class DebugByTaps : MonoBehaviour
 				GUILayout.Space( 20 );
 			}
 		}
+
+		GUILayout.EndScrollView();
 
 		GUILayout.EndArea();
 
@@ -160,6 +137,35 @@ public class DebugByTaps : MonoBehaviour
 
 
 		timeleft = updateInterval;  
+
+		levels.Add("e01_kenia");
+		levels.Add("e02_argentina");
+		levels.Add("e03_china");
+		levels.Add("e04_tasmania");
+		levels.Add("e05_Mexico");
+		levels.Add("e06_egypt");
+		levels.Add("e07_france");
+		levels.Add("e08_texas");
+		levels.Add("e09_Brazil");
+		levels.Add("e10_Swiss");
+		levels.Add("e11_vatican");
+		levels.Add("e12_newyork");
+		levels.Add("e13_pacific");
+		levels.Add("e14_buthan");
+		levels.Add("e15_india");
+		levels.Add("e16_israel");
+		levels.Add("e17_greenland");
+		levels.Add("e18_amsterdam");
+		levels.Add("e19_illinois");
+		levels.Add("e20_morocco");
+		levels.Add("e21_cuba");
+		levels.Add("e22_russia");
+		levels.Add("e23_england");
+		levels.Add("e24_japan");
+		levels.Add("e25_sicily");
+		levels.Add("e26_belgium");
+		levels.Add("e26_belgium");
+		levels.Add("catchingmice");
 	}
 	
 	void CalculateFPS()

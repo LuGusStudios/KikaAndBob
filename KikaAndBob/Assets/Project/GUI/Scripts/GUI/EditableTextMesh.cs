@@ -12,7 +12,11 @@ public class EditableTextMesh : MonoBehaviour {
 	protected bool editing = false;
 	protected string editedString = "";
 	protected bool useScreenKeyboard = false;
+
+#if UNITY_IPHONE || UNITY_ANDROID
 	protected TouchScreenKeyboard keyBoard;
+#endif
+
 	protected TextMeshWrapper wrapper = null;
 	protected string defaultText = "";
 	
@@ -31,8 +35,10 @@ public class EditableTextMesh : MonoBehaviour {
 		useScreenKeyboard = false;
 #endif
 
+		#if UNITY_IPHONE || UNITY_ANDROID
 		if (useScreenKeyboard)
 			TouchScreenKeyboard.hideInput = false;
+#endif
 
 		if (boxCollider == null)
 		{
@@ -119,6 +125,7 @@ public class EditableTextMesh : MonoBehaviour {
 		{
 			if (useScreenKeyboard)
 			{
+#if UNITY_IPHONE || UNITY_ANDROID
 				editedString = keyBoard.text;
 				textMesh.text = editedString;
 
@@ -135,6 +142,7 @@ public class EditableTextMesh : MonoBehaviour {
 					if (string.IsNullOrEmpty(editedString))
 						Reset();
 				}
+#endif
 			}
 			else
 			{
@@ -164,7 +172,9 @@ public class EditableTextMesh : MonoBehaviour {
 
 			if (useScreenKeyboard)
 			{
+#if UNITY_IPHONE || UNITY_ANDROID
 				keyBoard = TouchScreenKeyboard.Open(editedString, TouchScreenKeyboardType.Default, false, false, false);
+#endif
 			}
 		}
 	

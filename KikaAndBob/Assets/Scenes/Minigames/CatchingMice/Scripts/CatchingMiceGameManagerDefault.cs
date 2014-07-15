@@ -208,14 +208,26 @@ public class CatchingMiceGameManagerDefault : IGameManager
 
 	public void WinState()
 	{
+		gameRunning = false;
+
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: won");
+
+		string saveKey = Application.loadedLevelName + "_level_" + CatchingMiceCrossSceneInfo.use.GetLevelIndex();
+		LugusConfig.use.User.SetBool(saveKey, true, true);
+		LugusConfig.use.SaveProfiles();
+
+		CatchingMiceTrapSelector.use.SetVisible(false);
+
 		HUDManager.use.LevelEndScreen.Show(true, 1f);
 	}
 
 	public void LoseState()
 	{
+		gameRunning = false;
+
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: lost");
 		HUDManager.use.LevelEndScreen.Show(false, 1f);
+		CatchingMiceTrapSelector.use.SetVisible(false);
 	}
 	
 	public override void StartGame()

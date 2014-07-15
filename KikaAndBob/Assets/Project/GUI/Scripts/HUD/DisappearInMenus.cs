@@ -22,20 +22,20 @@ public class DisappearInMenus : MonoBehaviour
 			gameManager = (IGameManager) FindObjectOfType(typeof(IGameManager));
 		}
 		
-		if (gameManager == null)
+		if (gameManager == null) 
 		{
 			Debug.Log("DisappearInMenus: No game manager in this scene! Disabling.");
-			this.enabled = false;
+			this.enabled = false;  
 		}
 
 		// hide everything in non-mobile platforms, but keep in editor for testing
-		#if ((UNITY_WEBPLAYER || UNITY_STANDALONE) && !UNITY_EDITOR)
+		#if ((UNITY_WEBPLAYER || UNITY_STANDALONE) && !UNITY_EDITOR && !FORCE_MOBILE_CONTROLS)
 		SetEnabled(false);
 		this.enabled = false;
 		#endif
 	}
 
-	protected void SetEnabled(bool enabled)
+	protected void SetEnabled(bool enabled) 
 	{
 		isBeingUsed = enabled;
 		

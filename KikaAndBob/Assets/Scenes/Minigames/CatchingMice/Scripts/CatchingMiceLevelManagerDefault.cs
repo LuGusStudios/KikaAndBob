@@ -1575,15 +1575,22 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	protected void DestroyGameObject(GameObject obj)
 	{
 #if UNITY_EDITOR
-		if (Application.isPlaying)
-		{
-			obj.SetActive(false);
-			Destroy(obj);
-		}
-		else
-		{
-			DestroyImmediate(obj);
-		}
+		DestroyImmediate(obj);
+#else
+		obj.SetActive(false);
+		Destroy(obj);
 #endif
+
+//#if UNITY_EDITOR
+//		if (Application.isPlaying)
+//		{
+//			obj.SetActive(false);
+//			Destroy(obj);
+//		}
+//		else
+//		{
+//			DestroyImmediate(obj);
+//		}
+//#endif
 	}
 }

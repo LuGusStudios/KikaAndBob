@@ -76,7 +76,7 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
         }
         else if (movementDirection.y < -0.3f)
         {
-            quadrant = quadrant | (int)KikaAndBob.CMMovementQuadrant.DOWN;
+            quadrant = quadrant | (int)KikaAndBob.CMMovementQuadrant.DOWN; 
         }
 
         KikaAndBob.CMMovementQuadrant quadrantReal = (KikaAndBob.CMMovementQuadrant)Enum.ToObject(typeof(KikaAndBob.CMMovementQuadrant), quadrant);
@@ -93,9 +93,28 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-	 
+		InitializeAnimations();
 	}
-	
+
+	// EXPERIMENTAL: SmoothMoves seems to sometimes build/cache something when an animation is played the first time
+	// This means the correct animation/texture can sometimes be delayed quite a bit. Hopefully, calling all the right animations once at Start helps with this.
+	protected void InitializeAnimations()
+	{
+		foreach(BoneAnimation ba in GetComponentsInChildren<BoneAnimation>(true)) 
+		{
+			string currentAnimation = ba.animation.name;
+
+			foreach(SmoothMoves.AnimationClipSM_Lite clip in ba.mAnimationClips)
+			{
+				if (clip.animationName.Contains(characterNameAnimation))
+				{
+					ba.Play(clip.animationName);
+				}
+			}
+
+		}
+	}
+
 	// Update is called once per frame
 	void Update () 
     {

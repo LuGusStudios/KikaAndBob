@@ -55,7 +55,7 @@ public class MenuStepMain : IMenuStep
 
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
+		SetCat();
 	}
 	
 	protected void Awake()
@@ -80,7 +80,7 @@ public class MenuStepMain : IMenuStep
 
 		if (playButton.pressed)
 		{
-
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Games);
 		}
 		else if (settingsButton.pressed)
 		{
@@ -119,7 +119,11 @@ public class MenuStepMain : IMenuStep
 	{
 		activated = true;
 		this.gameObject.SetActive(true);
+		SetCat();
+	}
 
+	protected void SetCat()
+	{
 		int currentCatIndex = LugusConfig.use.User.GetInt("CatIndex", 1);
 		
 		Debug.Log("MenuStepMain: Current cat index = " + currentCatIndex.ToString());

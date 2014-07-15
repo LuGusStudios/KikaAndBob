@@ -274,7 +274,7 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 	}
 
 	// makes the whole trap selector bar visibile/invisible
-	protected void SetVisible(bool enabled)
+	public void SetVisible(bool enabled)
 	{
 		foreach(Transform t in this.transform)
 		{
