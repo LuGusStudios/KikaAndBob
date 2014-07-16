@@ -93,10 +93,9 @@ public class LugusInputDefault : MonoBehaviour
 	
 	public Transform RaycastFromScreenPoint(Camera camera, Vector3 screenPoint)
 	{
-		
 		//if( inputPoints.Count == 0 ) 
 		//	return null;
-		
+
 		Ray ray = camera.ScreenPointToRay( screenPoint );
 		RaycastHit hit;
 		if ( Physics.Raycast(ray, out hit) )
@@ -296,10 +295,10 @@ public class LugusInputDefault : MonoBehaviour
 		ProcessMouse();
 
 
-		//if( Input.GetKeyDown(KeyCode.Tab) )   
-		//{
-		//	LugusDebug.debug = !LugusDebug.debug;
-		//}
+		if( Input.GetKeyDown(KeyCode.Tab) )   
+		{
+			LugusDebug.debug = !LugusDebug.debug;
+		}
 
 	}
 	

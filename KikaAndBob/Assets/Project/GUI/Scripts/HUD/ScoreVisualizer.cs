@@ -18,7 +18,9 @@ namespace KikaAndBob
 		Key01 = 8,
 		Key02 = 9,
 		Dynamite = 10,
-		Cigar = 11
+		Cigar = 11,
+		Cookie = 12,
+		Cheese = 13
 	}
 }
 

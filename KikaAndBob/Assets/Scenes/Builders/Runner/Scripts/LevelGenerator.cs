@@ -1,12 +1,13 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class LevelGenerator : MonoBehaviour 
 {
-
+#if UNITY_EDITOR
 	public int sectionCount = 50;
 	//public bool transitionThemes = true;
 
@@ -175,5 +176,7 @@ public class LevelGenerator : MonoBehaviour
 	{
 
 	}
-}
+
 #endif
+}
+

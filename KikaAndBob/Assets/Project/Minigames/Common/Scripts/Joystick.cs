@@ -404,7 +404,7 @@ public class Joystick : MonoBehaviour
 		}
 		else if (angle < -90 && angle > -180)
 		{
-			currentDirection = JoystickDirection.Down;
+			currentDirection = JoystickDirection.Down; 
 		}
 		else if (angle > 0 && angle < 90)
 		{

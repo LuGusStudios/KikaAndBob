@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cd115ca249659d4da097d990587c6d8, type: 3}
+  m_Name: CatchingMiceLevel01
+  m_EditorClassIdentifier: 
+  width: 9
+  height: 9
+  layout: ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+  furniture:
+  - prefabName: FurnitureTable_2x2_01
+    position: {x: 0, y: 7}
+  - prefabName: FurnitureFridge_1x1_01
+    position: {x: 8, y: 6}
+  - prefabName: FurnitureTable_1x2_01
+    position: {x: 4, y: 4}
+  - prefabName: FurnitureCloset_3x1_01
+    position: {x: 1, y: 1}
+  obstacles: []
+  cheeses:
+  - prefabName: Cheese_1x1_01
+    position: {x: 2, y: 4}
+    health: 50
+  - prefabName: Cheese_1x1_01
+    position: {x: 6, y: 4}
+    health: 50
+  holeItems:
+  - prefabName: Hole_1x1_01
+    holeId: Hole1
+    position: {x: 4, y: 8}
+    startDirection: 4
+  - prefabName: Hole_1x1_01
+    holeId: Hole2
+    position: {x: 4, y: 0}
+    startDirection: 1
+  - prefabName: Hole_1x1_01
+    holeId: Hole3
+    position: {x: 0, y: 4}
+    startDirection: 2
+  - prefabName: Hole_1x1_01
+    holeId: Hole4
+    position: {x: 8, y: 4}
+    startDirection: 8
+  traps: []
+  characters:
+  - prefabName: Cat_01
+    speed: .699999988
+    position: {x: 4, y: 3}
+  patrols: []
+  waves:
+  - enemies:
+    - prefabName: Mouse_Normal_01
+      holeId: Hole1
+      amount: 5
+      spawnTimeInterval: 2
+      spawnDelay: 1
+  - enemies:
+    - prefabName: Mouse_Normal_01
+      holeId: Hole2
+      amount: 5
+      spawnTimeInterval: 2
+      spawnDelay: 1
+  - enemies:
+    - prefabName: Mouse_Normal_01
+      holeId: Hole3
+      amount: 5
+      spawnTimeInterval: 2
+      spawnDelay: 1
+  - enemies:
+    - prefabName: Mouse_Normal_01
+      holeId: Hole4
+      amount: 5
+      spawnTimeInterval: 2
+      spawnDelay: 1
+  wallPieces:
+  - prefabName: WallCornerLL
+    position: {x: -1, y: -1}
+  - prefabName: WallCornerLR
+    position: {x: 9, y: -1}
+  - prefabName: WallCornerUR
+    position: {x: 9, y: 9}
+  - prefabName: WallCornerUL
+    position: {x: -1, y: 9}
+  - prefabName: WallLeft
+    position: {x: -1, y: 0}
+  - prefabName: WallLeft
+    position: {x: -1, y: 1}
+  - prefabName: WallLeft
+    position: {x: -1, y: 2}
+  - prefabName: WallLeft
+    position: {x: -1, y: 3}
+  - prefabName: WallLeft
+    position: {x: -1, y: 4}
+  - prefabName: WallLeft
+    position: {x: -1, y: 5}
+  - prefabName: WallLeft
+    position: {x: -1, y: 6}
+  - prefabName: WallLeft
+    position: {x: -1, y: 7}
+  - prefabName: WallLeft
+    position: {x: -1, y: 8}
+  - prefabName: WallTop
+    position: {x: 0, y: 9}
+  - prefabName: WallTop
+    position: {x: 1, y: 9}
+  - prefabName: WallTop
+    position: {x: 2, y: 9}
+  - prefabName: WallTop
+    position: {x: 3, y: 9}
+  - prefabName: WallTop
+    position: {x: 4, y: 9}
+  - prefabName: WallTop
+    position: {x: 5, y: 9}
+  - prefabName: WallTop
+    position: {x: 6, y: 9}
+  - prefabName: WallTop
+    position: {x: 7, y: 9}
+  - prefabName: WallTop
+    position: {x: 8, y: 9}
+  - prefabName: WallRight
+    position: {x: 9, y: 8}
+  - prefabName: WallRight
+    position: {x: 9, y: 7}
+  - prefabName: WallRight
+    position: {x: 9, y: 6}
+  - prefabName: WallRight
+    position: {x: 9, y: 5}
+  - prefabName: WallRight
+    position: {x: 9, y: 4}
+  - prefabName: WallRight
+    position: {x: 9, y: 3}
+  - prefabName: WallRight
+    position: {x: 9, y: 2}
+  - prefabName: WallRight
+    position: {x: 9, y: 1}
+  - prefabName: WallRight
+    position: {x: 9, y: 0}
+  - prefabName: WallBottom
+    position: {x: 8, y: -1}
+  - prefabName: WallBottom
+    position: {x: 7, y: -1}
+  - prefabName: WallBottom
+    position: {x: 6, y: -1}
+  - prefabName: WallBottom
+    position: {x: 5, y: -1}
+  - prefabName: WallBottom
+    position: {x: 4, y: -1}
+  - prefabName: WallBottom
+    position: {x: 3, y: -1}
+  - prefabName: WallBottom
+    position: {x: 2, y: -1}
+  - prefabName: WallBottom
+    position: {x: 1, y: -1}
+  - prefabName: WallBottom
+    position: {x: 0, y: -1}
+  availableTraps:
+  - TrapMouseTrap_1x1_01
+  - TrapBearTrap_1x1_01

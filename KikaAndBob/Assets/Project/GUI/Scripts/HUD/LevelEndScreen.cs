@@ -37,7 +37,7 @@ public class LevelEndScreen : MonoBehaviour
 		return null;
 	}
 
-	public void Show(bool success) 
+	public void Show(bool success, float delay = 0) 
 	{
 		HUDManager.use.DisableAll();
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
@@ -64,7 +64,7 @@ public class LevelEndScreen : MonoBehaviour
 
 		transform.position = originalPosition + new Vector3(30, 0, 0);	// first put menu closer to the edge of the screen; otherwise it'll jerk into view
 
-		gameObject.MoveTo(originalPosition).Time(0.5f).EaseType(iTween.EaseType.easeOutBack).Execute();
+		gameObject.MoveTo(originalPosition).Time(0.5f).Delay(delay).EaseType(iTween.EaseType.easeOutBack).Execute();
 
 		//transform.position = originalPosition; 
 	}

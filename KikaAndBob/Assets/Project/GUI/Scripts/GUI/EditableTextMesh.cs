@@ -4,15 +4,21 @@ using System.Collections;
 [RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(TextMesh))]
 public class EditableTextMesh : MonoBehaviour {
-	
-	public string defaultText = "";
-	BoxCollider boxCollider;
-	TextMesh textMesh;
-	bool editing = false;
-	string editedString = "";
-	bool useScreenKeyboard = false;
-	TouchScreenKeyboard keyBoard;
-	TextMeshWrapper wrapper = null;
+
+	public string defaultTextKey = "";
+
+	protected BoxCollider boxCollider;
+	protected TextMesh textMesh;
+	protected bool editing = false;
+	protected string editedString = "";
+	protected bool useScreenKeyboard = false;
+
+#if UNITY_IPHONE || UNITY_ANDROID
+	protected TouchScreenKeyboard keyBoard;
+#endif
+
+	protected TextMeshWrapper wrapper = null;
+	protected string defaultText = "";
 	
 	protected void Awake () 
 	{
@@ -29,8 +35,10 @@ public class EditableTextMesh : MonoBehaviour {
 		useScreenKeyboard = false;
 #endif
 
+		#if UNITY_IPHONE || UNITY_ANDROID
 		if (useScreenKeyboard)
 			TouchScreenKeyboard.hideInput = false;
+#endif
 
 		if (boxCollider == null)
 		{
@@ -56,9 +64,24 @@ public class EditableTextMesh : MonoBehaviour {
 		{
 			wrapper = GetComponent<TextMeshWrapper>();
 		}
+	}
 
+	protected void Start () 
+	{
+		SetupGlobal();
+	}
+
+	public void SetupGlobal()
+	{
+		LugusResources.use.Localized.onResourcesReloaded += UpdateDefaultText;
+		defaultText = LugusResources.use.GetText(defaultTextKey);
 		Reset();
 		AlterTransparency();
+	}
+
+	protected void UpdateDefaultText()
+	{
+		defaultText = LugusResources.use.GetText(defaultTextKey);
 	}
 	
 	public void Reset()
@@ -66,10 +89,34 @@ public class EditableTextMesh : MonoBehaviour {
 		editedString = "";
 		textMesh.text = defaultText;
 	}
+
+	public bool IsDefaultValue()
+	{
+		return editedString == defaultText;
+	}
 	
 	public string GetEnteredString()
 	{
 		return editedString;
+	}
+
+	public void SetEnteredString(string newContent)
+	{
+		if (string.IsNullOrEmpty(newContent))
+		{
+			Debug.LogError("EditableTextMesh: Cannot set entered string to empty. Resetting instead.");
+			Reset();
+			return;
+		}
+
+		editedString = newContent;
+
+		textMesh.text = editedString;   
+		
+		if (wrapper != null)
+		{
+			wrapper.UpdateWrapping();
+		}
 	}
 
 	void Update () 
@@ -78,6 +125,7 @@ public class EditableTextMesh : MonoBehaviour {
 		{
 			if (useScreenKeyboard)
 			{
+#if UNITY_IPHONE || UNITY_ANDROID
 				editedString = keyBoard.text;
 				textMesh.text = editedString;
 
@@ -94,6 +142,7 @@ public class EditableTextMesh : MonoBehaviour {
 					if (string.IsNullOrEmpty(editedString))
 						Reset();
 				}
+#endif
 			}
 			else
 			{
@@ -123,7 +172,9 @@ public class EditableTextMesh : MonoBehaviour {
 
 			if (useScreenKeyboard)
 			{
+#if UNITY_IPHONE || UNITY_ANDROID
 				keyBoard = TouchScreenKeyboard.Open(editedString, TouchScreenKeyboardType.Default, false, false, false);
+#endif
 			}
 		}
 	
@@ -141,8 +192,8 @@ public class EditableTextMesh : MonoBehaviour {
 	{
 		if (!useScreenKeyboard && editing)
 		{
-			GUI.SetNextControlName ("hiddenTextField"); //Prepare a Control Name so we can focus the TextField
-			GUI.FocusControl ("hiddenTextField");       //Focus the TextField
+			GUI.SetNextControlName ("HiddenTextField"); //Prepare a Control Name so we can focus the TextField
+			GUI.FocusControl ("HiddenTextField");       //Focus the TextField
 			editedString = GUI.TextField (new Rect (90, -100, 200, 25), editedString, 32);    //Display a TextField outside the Screen Rect
 		}
 	}

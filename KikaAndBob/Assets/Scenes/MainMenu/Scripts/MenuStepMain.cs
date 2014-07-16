@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SmoothMoves;
 
 public class MenuStepMain : IMenuStep 
 {
-	Button settingsButton = null;
-	Button playButton = null;
-	Button avatarButton = null;
+	protected Button settingsButton = null;
+	protected Button playButton = null;
+	protected Button avatarButton = null;
+	protected Button catchingMiceButton = null;
+	protected Button playRoomButton = null;
+	protected bool leavingMenu = false;	// set to true when transitioning to mouse hunt game - disables further input
+	protected BoneAnimation character = null;
+
 
 	public void SetupLocal()
 	{
@@ -27,11 +33,29 @@ public class MenuStepMain : IMenuStep
 		
 		if (avatarButton == null)
 			Debug.LogError("MenuStepMain: Missing avatar button.");
+
+		if (catchingMiceButton == null)
+			catchingMiceButton = transform.FindChild("ButtonCatchingMice").GetComponent<Button>();
+
+		if (catchingMiceButton == null)
+			Debug.LogError("MenuStepMain: Missing catching mice button.");
+
+		if (playRoomButton == null)
+			playRoomButton = transform.FindChild("ButtonPlayRoom").GetComponent<Button>();
+		
+		if (playRoomButton == null)
+			Debug.LogError("MenuStepMain: Missing play room button.");
+
+		if (character == null)
+			character = GetComponentInChildren<BoneAnimation>();
+		
+		if (character == null)
+			Debug.LogError("MenuStepAvatar: Missing character.");
 	}
 
 	public void SetupGlobal()
 	{
-		// lookup references to objects / scripts outside of this script
+		SetCat();
 	}
 	
 	protected void Awake()
@@ -43,32 +67,70 @@ public class MenuStepMain : IMenuStep
 	{
 		SetupGlobal();
 	}
-	
+
+	protected void PlayIdleAnim(int index)
+	{
+		character.Play("Cat0" + index.ToString() + "Side_Idle");
+	}
+
 	protected void Update () 
 	{
-		if (!activated)
+		if (!activated || leavingMenu)
 			return;
 
 		if (playButton.pressed)
 		{
-
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Games);
 		}
-
-		if (settingsButton.pressed)
+		else if (settingsButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Settings);
 		}
-	
-		if (avatarButton.pressed)
+		else if (avatarButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Avatar);
 		}
+		else if (catchingMiceButton.pressed)
+		{
+			LugusCoroutines.use.StartRoutine(LeavingMainMenu());
+		}
+		else if (playRoomButton.pressed)
+		{
+
+		}
+	}
+
+
+
+	protected IEnumerator LeavingMainMenu()
+	{
+		leavingMenu = true;
+
+		ScreenFader.use.FadeOut(0.5f);
+
+		yield return new WaitForSeconds(0.5f);
+
+		Application.LoadLevel("catchingmice");
+
+		yield break;
 	}
 
 	public override void Activate (bool animate)
 	{
 		activated = true;
 		this.gameObject.SetActive(true);
+		SetCat();
+	}
+
+	protected void SetCat()
+	{
+		int currentCatIndex = LugusConfig.use.User.GetInt("CatIndex", 1);
+		
+		Debug.Log("MenuStepMain: Current cat index = " + currentCatIndex.ToString());
+		
+		string catName = LugusConfig.use.User.GetString("CatName", "");
+		
+		PlayIdleAnim(currentCatIndex);
 	}
 
 	public override void Deactivate (bool animate)
