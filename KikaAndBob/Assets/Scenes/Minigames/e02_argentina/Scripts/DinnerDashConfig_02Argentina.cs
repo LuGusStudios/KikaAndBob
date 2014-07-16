@@ -53,7 +53,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	// Use this for initialization
 	protected void Start () 
 	{
-		LugusResources.use.ChangeLanguage("nl");
+		//LugusResources.use.ChangeLanguage("nl");
 
 		//LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
 	}
