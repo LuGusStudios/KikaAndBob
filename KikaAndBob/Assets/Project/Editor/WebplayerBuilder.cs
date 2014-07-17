@@ -353,8 +353,8 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity"); 
 		
 		// 1.8
-		levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
-		levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
+	//	levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
+	//	levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
 
 		/*
 		levels.Add("Assets/Scenes/Minigames/e14_buthan/e14_buthan.unity");
@@ -371,6 +371,18 @@ public class WebplayerBuilder : MonoBehaviour
 		levels.Add("Assets/Scenes/Minigames/e25_sicily/e25_sicily.unity");
 		levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
 		*/
+
+		// English webbuilds Submarine
+		levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity"); 
+		levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
+		levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
+
+
+
+
+
+
+
 
 		string levelListOutput = "";
 		foreach( string levelName in levels ) 
