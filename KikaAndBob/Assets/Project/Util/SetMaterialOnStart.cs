@@ -29,18 +29,18 @@ public class SetMaterialOnStart : MonoBehaviour
 	
 	protected void Update () 
 	{
-
+		if (firstFrame)
+		{
 			firstFrame = false;
 
 			Renderer renderer = GetComponent<Renderer>();
 
 			if (renderer != null && replaceMaterial != null)
 			{
-				print (renderer.material);
 				renderer.material = replaceMaterial;
 			}
 
-			//this.enabled = false;
-
+			this.enabled = false;
+		}
 	}
 }

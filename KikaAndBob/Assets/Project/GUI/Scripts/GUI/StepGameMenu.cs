@@ -11,6 +11,7 @@ public class StepGameMenu : IMenuStep
 	protected SpriteRenderer image = null;
 	protected Vector3 originalPosition = Vector3.zero;
 	protected LugusAudioTrackSettings musicTrackSettings;
+	protected Button leaveButton = null;
 	
 	public void SetupLocal()
 	{
@@ -59,6 +60,15 @@ public class StepGameMenu : IMenuStep
 			Debug.Log("StepGameMenu: Missing image sprite renderer!");
 		}
 
+		if (leaveButton == null)
+		{
+			leaveButton = transform.FindChild("LeaveButton").GetComponent<Button>();
+		}
+		if (leaveButton == null)
+		{
+			Debug.Log("StepHelpMenu: Missing leave button.");
+		}
+
 		originalPosition = transform.position;
 
 
@@ -92,6 +102,23 @@ public class StepGameMenu : IMenuStep
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.HelpMenu);
 		}
+		else if (leaveButton.pressed)
+		{
+			LugusCoroutines.use.StartRoutine(LeaveRoutine());
+		}
+	}
+
+	protected IEnumerator LeaveRoutine()
+	{
+		activated = false; // this handily blocks input before leaving
+
+		ScreenFader.use.FadeOut(0.25f);
+
+		yield return new WaitForSeconds(0.5f);
+
+		Application.LoadLevel("MainMenu");
+
+		yield break;
 	}
 
 	protected void LoadLevelData()
