@@ -48,7 +48,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 
 			List<CatchingMiceWaypoint> path = CatchingMiceUtil.FindPath(graph, currentWaypoint, targetWaypoint, out fullPath, walkable);
 
-            yield return walkHandle.StartRoutine(MoveToDestination(path));
+            yield return walkHandle.StartRoutine(MoveToDestinationRoutine(path));
         }
     }
 

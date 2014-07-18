@@ -124,12 +124,24 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
     }
     
-	public override IEnumerator MoveToDestination(List<CatchingMiceWaypoint> path)
-    {
-        yield return new WaitForSeconds(LugusRandom.use.Uniform.Next(0,0.5f));
-        yield return StartCoroutine(base.MoveToDestination(path));
-    }
-    
+//	public override IEnumerator MoveToDestination(List<CatchingMiceWaypoint> path)
+//    {
+//        yield return new WaitForSeconds(LugusRandom.use.Uniform.Next(0,0.5f));
+//        yield return StartCoroutine(base.MoveToDestination(path));
+//    }
+//    
+
+	public override void MoveToDestination (List<CatchingMiceWaypoint> path)
+	{
+		StartCoroutine( MoveDelayRoutine(path));
+	}
+
+	protected IEnumerator MoveDelayRoutine(List<CatchingMiceWaypoint> path)
+	{
+		yield return new WaitForSeconds(LugusRandom.use.Uniform.Next(0,0.5f));
+		yield return StartCoroutine(MoveToDestinationRoutine(path));
+	}
+
 	public override IEnumerator Attack()
     {
         attacking = true;

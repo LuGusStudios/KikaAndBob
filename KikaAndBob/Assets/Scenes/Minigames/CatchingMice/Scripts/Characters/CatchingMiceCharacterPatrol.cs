@@ -76,7 +76,7 @@ public class CatchingMiceCharacterPatrol : ICatchingMiceCharacter {
 
 			if (fullPath)
 			{
-				walkHandle.StartRoutine(MoveToDestination(path));
+				walkHandle.StartRoutine(MoveToDestinationRoutine(path));
 
 				while (walkHandle.Running)
 				{
@@ -101,11 +101,16 @@ public class CatchingMiceCharacterPatrol : ICatchingMiceCharacter {
 		
 	}
 
+	public override void MoveToDestination (List<CatchingMiceWaypoint> path)
+	{
+		StartCoroutine( MoveAndCheckForEnemiesRoutine(path));
+	}
+
 	// This method is essentially the same as the one in the super class,
 	// but it will check for a player in the line of sight every fixed
 	// frame update instead of when arriving on a tile
 	// Jumping is also removed here
-	public override IEnumerator MoveToDestination(List<CatchingMiceWaypoint> path)
+	public IEnumerator MoveAndCheckForEnemiesRoutine(List<CatchingMiceWaypoint> path)
 	{
 		int pathIndex = path.Count - 1;
 
