@@ -6,12 +6,24 @@ using System.IO;
 
 public class WebplayerBuilder : MonoBehaviour 
 {
+
+	//public static string sep = "/"; // mac
+	public static string sep = "\\"; // windows
+
+	public static string dataPath 
+	{ 
+		get
+		{
+			return Application.dataPath.Replace("/", sep); // dataPath is always mac-style (forward slash) fuck you unity
+		}
+	}
+
 	[MenuItem("KikaAndBob/Log scene list")]
 	public static void SceneList ()
 	{
 		//EditorUtility.DisplayDialog("Scene list", "SCENE LIST", "ok");
 
-		DirectoryInfo toplevel = new DirectoryInfo( Application.dataPath + "/Scenes/" );
+		DirectoryInfo toplevel = new DirectoryInfo( WebplayerBuilder.dataPath + sep + "Scenes" + sep );
 
 		string output = "";
 		//output += Application.dataPath;
@@ -25,7 +37,7 @@ public class WebplayerBuilder : MonoBehaviour
 				FileInfo[] scenes = sceneFolder.GetFiles("*.unity");
 				foreach(FileInfo scene in scenes )
 				{
-					string name = scene.FullName.Replace( Application.dataPath, "Assets");
+					string name = scene.FullName.Replace( WebplayerBuilder.dataPath, "Assets");
 
 					output += "levels.Add(\"" + name + "\");\n"; 
 				}
@@ -38,7 +50,7 @@ public class WebplayerBuilder : MonoBehaviour
 	[MenuItem("KikaAndBob/Test Asset Moves")]
 	public static void AssetMoveTest ()
 	{
-		MoveSceneSpecificAssets( "/Resources", "/ResourcesTemp", "e03_china" );
+		MoveSceneSpecificAssets( sep + "Resources", sep + "ResourcesTemp", "e03_china" );
 
 
 		/*
@@ -72,7 +84,7 @@ public class WebplayerBuilder : MonoBehaviour
 	[MenuItem("KikaAndBob/Test Asset Moves Back")]
 	public static void AssetMoveTestBack () 
 	{
-		MoveSceneSpecificAssets( "/ResourcesTemp", "/Resources", "e03_china" );
+		MoveSceneSpecificAssets( sep + "ResourcesTemp", sep + "Resources", "e03_china" );
 		
 		EditorUtility.DisplayDialog("Moving assets back", "Done", "ok"); 
 	}
@@ -95,17 +107,17 @@ public class WebplayerBuilder : MonoBehaviour
 
 		depth = 0;
 		
-		DirectoryInfo source = new DirectoryInfo( Application.dataPath + sourceFolder );
+		DirectoryInfo source = new DirectoryInfo( WebplayerBuilder.dataPath + sourceFolder );
 		
 		if( source == null )
 		{
-			UnityEngine.Debug.LogError("Source folder does not exist! " + (Application.dataPath + sourceFolder) );
+			UnityEngine.Debug.LogError("Source folder does not exist! " + (WebplayerBuilder.dataPath + sourceFolder) );
 			return;
 		}
 		
-		if( !Directory.Exists( Application.dataPath + targetFolder ) )
+		if( !Directory.Exists( WebplayerBuilder.dataPath + targetFolder ) )
 		{
-			Directory.CreateDirectory(Application.dataPath + targetFolder);
+			Directory.CreateDirectory(WebplayerBuilder.dataPath + targetFolder);
 		}
 		
 		
@@ -122,15 +134,15 @@ public class WebplayerBuilder : MonoBehaviour
 		DirectoryInfo[] dirs = parent.GetDirectories();
 		foreach( DirectoryInfo dir in dirs )
 		{
-			if( !Directory.Exists( Application.dataPath + basePath + "/" + dir.Name ) )
+			if( !Directory.Exists( WebplayerBuilder.dataPath + basePath + sep + dir.Name ) )
 			{
-				Directory.CreateDirectory( Application.dataPath + basePath + "/" + dir.Name);
+				Directory.CreateDirectory( WebplayerBuilder.dataPath + basePath + sep + dir.Name);
 			}
 
 			++depth;
 
-			UnityEngine.Debug.Log("MoveAssets: Recursiving " + (basePath + "/" + dir.Name) ); 
-			AssetMoveRecursive( dir, basePath + "/" + dir.Name, excludePrefixes );
+			UnityEngine.Debug.Log("MoveAssets: Recursiving " + (basePath + sep + dir.Name) ); 
+			AssetMoveRecursive( dir, basePath + sep + dir.Name, excludePrefixes );
 
 			/*
 			DirectoryInfo[] sceneFolders = category.GetDirectories();
@@ -153,9 +165,12 @@ public class WebplayerBuilder : MonoBehaviour
 			// for MOveAssets, we need the path relative to the PROJECT folder of unity...
 			// we don't have that readily available, so force it out of file.FullName
 			// App.DataPath is everything up and including Assets, so we need to prepend assets ourselves
-			string oldPath = "Assets" + (file.FullName.Replace(Application.dataPath, ""));
+			string oldPath = "Assets" + (file.FullName.Replace(WebplayerBuilder.dataPath, ""));
 
-			string newPath = "Assets" + basePath + "/" + file.Name;
+		//	UnityEngine.Debug.LogWarning("datapath " + WebplayerBuilder.dataPath);
+		//	UnityEngine.Debug.LogWarning("fullPath " + file.FullName);
+
+			string newPath = "Assets" + basePath + sep + file.Name;
 
 			if( file.Name.Contains(".meta") )
 			{
@@ -353,8 +368,8 @@ public class WebplayerBuilder : MonoBehaviour
 		//levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity"); 
 		
 		// 1.8
-		levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
-		levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
+	//	levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
+	//	levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
 
 		/*
 		levels.Add("Assets/Scenes/Minigames/e14_buthan/e14_buthan.unity");
@@ -372,10 +387,45 @@ public class WebplayerBuilder : MonoBehaviour
 		levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
 		*/
 
+		// English webbuilds Submarine
+
+//		levels.Add("Assets/Scenes/Minigames/e01_kenia/e01_kenia.unity"); 
+//		levels.Add("Assets/Scenes/Minigames/e02_argentina/e02_argentina.unity");
+//		levels.Add("Assets/Scenes/Minigames/e03_china/e03_china.unity");
+//		levels.Add("Assets/Scenes/Minigames/e04_tasmania/e04_tasmania.unity");
+//		levels.Add("Assets/Scenes/Minigames/e05_Mexico/e05_Mexico.unity");
+//		levels.Add("Assets/Scenes/Minigames/e06_egypt/e06_egypt.unity");
+
+//		levels.Add("Assets/Scenes/Minigames/e07_france/e07_france.unity");
+//		levels.Add("Assets/Scenes/Minigames/e08_texas/e08_texas.unity");
+//		levels.Add("Assets/Scenes/Minigames/e09_Brazil/e09_Brazil.unity");
+//		levels.Add("Assets/Scenes/Minigames/e10_Swiss/e10_Swiss.unity"); 
+//		levels.Add("Assets/Scenes/Minigames/e11_vatican/e11_vatican.unity");
+//		levels.Add("Assets/Scenes/Minigames/e12_newyork/e12_newyork.unity");
+
+//		levels.Add("Assets/Scenes/Minigames/e13_pacific/e13_pacific.unity");
+//		levels.Add("Assets/Scenes/Minigames/e14_buthan/e14_buthan.unity");
+//		levels.Add("Assets/Scenes/Minigames/e15_india/e15_india.unity");
+//		levels.Add("Assets/Scenes/Minigames/e16_israel/e16_israel.unity");
+//		levels.Add("Assets/Scenes/Minigames/e17_greenland/e17_greenland.unity");
+//		levels.Add("Assets/Scenes/Minigames/e18_amsterdam/e18_amsterdam.unity");
+
+		levels.Add("Assets/Scenes/Minigames/e19_illinois/e19_illinois.unity");
+		levels.Add("Assets/Scenes/Minigames/e20_morocco/e20_morocco.unity");
+		levels.Add("Assets/Scenes/Minigames/e21_cuba/e21_cuba.unity");
+		levels.Add("Assets/Scenes/Minigames/e22_russia/e22_russia.unity");
+		levels.Add("Assets/Scenes/Minigames/e23_england/e23_england.unity");
+		levels.Add("Assets/Scenes/Minigames/e24_japan/e24_japan.unity");
+		levels.Add("Assets/Scenes/Minigames/e25_sicily/e25_sicily.unity");
+		levels.Add("Assets/Scenes/Minigames/e26_belgium/e26_belgium.unity");
+
+
+
+
 		string levelListOutput = "";
 		foreach( string levelName in levels ) 
 		{
-			levelListOutput += "" + levelName + "\n";
+			levelListOutput += "" + levelName.Replace("/", sep) + "\n";
 		}
 		
 		EditorUtility.DisplayDialog("Scene list", levelListOutput, "ok");
@@ -384,27 +434,27 @@ public class WebplayerBuilder : MonoBehaviour
 		string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "KikaAndBob");
 		
 		// Application.datapath is /Assets in the editor
-		File.Copy(Application.dataPath + "/Project/Editor/index.php", path + "/index.php");
+		File.Copy(WebplayerBuilder.dataPath + sep + "Project" + sep + "Editor" + sep + "index.php", path + sep + "index.php");
 
-		Directory.CreateDirectory( path + "/images" );
-		File.Copy(Application.dataPath + "/Project/Editor/images/LoadBar01.png", path + "/images/LoadBar01.png");
-		File.Copy(Application.dataPath + "/Project/Editor/images/LogoKB02.png",  path + "/images/LogoKB02.png");
+		Directory.CreateDirectory( path + sep + "images" );
+		File.Copy(WebplayerBuilder.dataPath + sep + "Project" + sep + "Editor" + sep + "images" + sep + "LoadBar01.png", path + sep + "images" + sep + "LoadBar01.png");
+		File.Copy(WebplayerBuilder.dataPath + sep + "Project" + sep + "Editor" + sep + "images" + sep + "LogoKB02.png", path + sep + "images" + sep + "LogoKB02.png");
 
 
 		foreach( string currentLevel in levels ) 
 		{
-			string level = currentLevel;
-			level = level.Substring(level.LastIndexOf("/") + 1);
+			string level = currentLevel.Replace("/", sep);
+			level = level.Substring(level.LastIndexOf(sep) + 1);
 			level = level.Replace(".unity", "");
 
 
-			MoveSceneSpecificAssets( "/Resources", "/ResourcesTemp", level );
+			MoveSceneSpecificAssets( sep + "Resources", sep + "ResourcesTemp", level );
 
 			string[] lvl = new string[1]; 
 			lvl[0] = currentLevel;
-			BuildPipeline.BuildPlayer(lvl, path + "/" + level, BuildTarget.WebPlayer, BuildOptions.None);
+			BuildPipeline.BuildPlayer(lvl, path + sep + level, BuildTarget.WebPlayer, BuildOptions.None);
 			
-			MoveSceneSpecificAssets( "/ResourcesTemp", "/Resources", level );
+			MoveSceneSpecificAssets( sep + "ResourcesTemp", sep + "Resources", level );
 		}
 
 

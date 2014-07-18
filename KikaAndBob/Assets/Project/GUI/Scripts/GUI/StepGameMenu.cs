@@ -96,9 +96,7 @@ public class StepGameMenu : IMenuStep
 
 	protected void LoadLevelData()
 	{
-		LugusResources.use.ChangeLanguage("nl");
-
-		// TO DO: Set data about levels here (name, description, etc.)
+		// TO DO: Set data about levels here (name, description, etc.) 
 		string key = Application.loadedLevelName + ".main.";
 	
 		title.SetText(LugusResources.use.Levels.GetText(key + "title"));

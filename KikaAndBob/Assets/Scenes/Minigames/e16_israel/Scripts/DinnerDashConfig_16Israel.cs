@@ -85,7 +85,7 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 	// Use this for initialization
 	protected void Start () 
 	{
-		LugusResources.use.ChangeLanguage("nl");
+		//LugusResources.use.ChangeLanguage("nl");
 	}
 
 	public override void LoadLevel(int index)

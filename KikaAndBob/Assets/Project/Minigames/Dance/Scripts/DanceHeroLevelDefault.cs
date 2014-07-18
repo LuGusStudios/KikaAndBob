@@ -228,18 +228,44 @@ public class DanceHeroLevelDefault : IGameManager
 		for (levelRepeatIndex = 0; levelRepeatIndex < levelRepeatAmount; levelRepeatIndex++) 
 		{
 			musicTrack = LugusAudio.use.Music().Play(musicClip); // replace with call to LugusResources
-			
+
+			// wait until track is playing - can sometimes be delayed a tiny bit
 			while(musicTrack.Playing == false)
 			{
 				yield return null;
 			}
 
+			// start lanes
 			foreach( DanceHeroLane lane in lanes )
 			{
 				lane.Begin();
 			}
 
-			yield return new WaitForSeconds(levelDuration);
+		//	yield return new WaitForSeconds(levelDuration);
+
+			// instead of WaitForSeconds, use while loop so we can check if the game is paused
+			// if it is, also pause the music, or it will get out of sync
+			float timer = 0;
+			while (timer < levelDuration)
+			{
+				if (Paused)
+				{
+					if (!musicTrack.Paused)
+						musicTrack.Pause();
+
+					yield return null;
+				}
+				else
+				{
+					if (musicTrack.Paused)
+						musicTrack.UnPause();
+				}
+
+				timer += Time.deltaTime;
+
+				yield return null;
+			}
+
 
 			if (levelRepeatIndex < levelRepeatAmount - 1)	// only want to call this if it will actually repeat
 			{

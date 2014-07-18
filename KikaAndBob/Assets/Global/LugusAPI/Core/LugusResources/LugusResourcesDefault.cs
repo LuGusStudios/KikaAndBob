@@ -55,6 +55,8 @@ public class LugusResourcesDefault : MonoBehaviour
 	public AudioClip errorAudio = null;
 	public Sprite errorSprite = null;
 	public TextAsset errorTextAsset = null;
+
+	protected string languageTemp = ""; 
 	
 	protected void LoadDefaultCollections()
 	{ 
@@ -84,10 +86,22 @@ public class LugusResourcesDefault : MonoBehaviour
 		
 		if( errorTextAsset == null )
 			errorTextAsset = Shared.GetTextAsset("error");
+
+		if( !string.IsNullOrEmpty(languageTemp) )
+			ChangeLanguage( languageTemp );
 	}
 
 	public void ChangeLanguage(string langKey)
 	{
+		// Quick and dirty fix. We want to set the language key as soon as possible, but this means Awake()s on other objects might run before
+		// the collections below have been initialized. If this is the case, the setting of the langID on the collections is delayed until
+		// LoadDefaultCollections().
+		if(collections == null || collections.Count == 0)
+		{
+			languageTemp = langKey;
+			return;
+		}
+	
 		foreach( ILugusResourceCollection collection in collections )
 		{
 			if( collection is LugusResourceCollectionLocalized )
