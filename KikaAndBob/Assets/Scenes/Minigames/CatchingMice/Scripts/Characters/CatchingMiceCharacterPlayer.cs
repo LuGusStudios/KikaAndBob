@@ -55,12 +55,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 	// TODO: Add the cookies to the game manager when picked up
     public override void DoCurrentTileBehaviour(int pathIndex)
     {
-		// As a player, pick up the cookies on a tile
-		if (currentTile.Cookies > 0)
-		{
-			int takencookies = currentTile.TakeCookies(currentTile.Cookies);
-			CatchingMiceGameManager.use.PickupCount += takencookies;
-		}
+		CheckCookies();
     }
     
 	public override IEnumerator Attack()
@@ -71,6 +66,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
             attacking = true;
             _enemy.GetHit(damage);
             _canAttack = false;
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("e00_Attack01"));
             OnHitEvent();
             yield return new WaitForSeconds(attackInterval);
             _canAttack = true;
@@ -156,5 +152,18 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
         {
             CheckForAttack();
         }
+
+		CheckCookies();
+	}
+
+	protected void CheckCookies()
+	{
+		// As a player, pick up the cookies on a tile
+		if (currentTile != null && currentTile.Cookies > 0)
+		{
+			int takencookies = currentTile.TakeCookies(currentTile.Cookies);
+			CatchingMiceGameManager.use.PickupCount += takencookies;
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("e00_CookieEat01"));
+		}
 	}
 }

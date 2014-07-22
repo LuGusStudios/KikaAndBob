@@ -60,6 +60,8 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
 
         List<CatchingMiceTile> tiles = new List<CatchingMiceTile>(CatchingMiceLevelManager.use.CheeseTiles);
+		tiles.AddRange(CatchingMiceLevelManager.use.FakeCheeseTiles);
+
         targetWaypoint = GetTargetWaypoint(tiles);
 
         if (targetWaypoint != null)

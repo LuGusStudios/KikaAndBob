@@ -9,14 +9,25 @@ public class CatchingMicePoisonTrap : CatchingMiceWorldObjectTrapFurniture {
 
 	protected List<CatchingMiceTile> acidTiles = new List<CatchingMiceTile>();
 	protected List<GameObject> acidObjects = new List<GameObject>();
+	protected ParticleSystem splotchParticles = null;
 
-	public override void SetupGlobal()
+	// This trap is not activated automatically
+	// It is only activated through player interaction
+	// and stays active for a certain time
+
+	public override void SetupGlobal ()
 	{
-
-		// This trap is not activated automatically
-		// It is only activated through player interaction
-		// and stays active for a certain time
 		base.SetupGlobal();
+
+		if (splotchParticles == null)
+		{
+			splotchParticles = transform.FindChild("TrapPoison_1x1_01/ParticleSplotch").GetComponent<ParticleSystem>();
+		}
+
+		if (splotchParticles == null)
+		{
+			Debug.LogError("CatchingMicePoisonTrap: Missing poison splotch particles!");
+		}
 	}
 
 	protected override void OnPlayerInteract()
@@ -29,6 +40,8 @@ public class CatchingMicePoisonTrap : CatchingMiceWorldObjectTrapFurniture {
 		{
 			StartCoroutine(RemoveAcidObjectRoutine(i));
 		}
+
+		splotchParticles.Play();
 
 		acidTiles.Clear();
 		acidObjects.Clear();
