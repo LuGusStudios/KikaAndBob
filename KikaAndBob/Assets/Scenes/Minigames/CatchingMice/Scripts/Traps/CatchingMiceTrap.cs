@@ -7,6 +7,8 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 	public Sprite activeSprite = null;
 	public Sprite inactiveSprite = null;
 	public SpriteRenderer spriteRenderer = null;
+	public string attackSoundKey = null;
+
 
 	protected int originalAmmoCount = 1;
 	protected Vector3 originalScale = Vector3.zero;
@@ -300,12 +302,23 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 
 				Ammo = originalAmmoCount;
 
-				CatchingMiceLogVisualizer.use.LogError("Refilling ammo on trap: " + transform.Path());
+				// this will not be running it anymore - it terminates itself the frame that ammo goes 0
+				StartCoroutine(TrapRoutine());
+
+				CatchingMiceLogVisualizer.use.LogError("Refilling ammo on trap: " + transform.Path() + " to " + originalAmmoCount);
 			}
 		}
 		else
 		{
 			CatchingMiceLogVisualizer.use.LogError("No interaction options for trap: " + transform.Path());
+		}
+	}
+
+	protected void PlayAttackSound()
+	{
+		if (!string.IsNullOrEmpty(attackSoundKey))
+		{
+			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(attackSoundKey));
 		}
 	}
 

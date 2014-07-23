@@ -79,13 +79,22 @@ public class CatchingMiceSprayTrap : CatchingMiceWorldObjectTrapFurniture {
 		}
 
 		// Create a copy of the splash and fire it at the target
-		float z = Mathf.Max(transform.position.z, target.transform.position.z);
+		float z = Mathf.Min(transform.position.z, target.transform.position.z);
 		GameObject spraySplashCopy = (GameObject)GameObject.Instantiate(spraySplashPrefab);
 		spraySplashCopy.transform.position = transform.position.z(z);
 
 		// Rotate the splash so that it points to the target
-		float angle = Vector2.Dot(Vector2.up, (target.transform.position.v2() - transform.position.v2()).normalized);
-		spraySplashCopy.transform.Rotate(0f, 0f, angle * Mathf.Rad2Deg);
+
+//		Vector2 direction = (target.transform.position.v2() - transform.position.v2()).normalized;
+//
+//
+//
+//
+//		float angle = Vector2.Dot(Vector2.up, direction);
+//		spraySplashCopy.transform.Rotate(0f, 0f, angle * Mathf.Rad2Deg);
+
+		spraySplashCopy.transform.LookAt(target.transform.position);
+		spraySplashCopy.transform.Rotate(new Vector3(-90, 180, 0));
 
 		Vector3 originalScale = spraySplashCopy.transform.localScale;
 		//spraySplashCopy.transform.localScale = originalScale * 0.1f;

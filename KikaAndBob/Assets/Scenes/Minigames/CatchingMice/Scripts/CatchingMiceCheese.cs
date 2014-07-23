@@ -25,6 +25,11 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 			}
 			else
 			{
+				if (cheeseVisuals.Count <= 0)
+				{
+					return;
+				}
+
 				int visualIndex = Mathf.FloorToInt(((float)health / (float)initialStacks) * (float)cheeseVisuals.Count);
 				visualIndex = Mathf.Max(Mathf.Min(visualIndex, cheeseVisuals.Count - 1), 0);
 
@@ -54,7 +59,8 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 			}
 			else
 			{
-				cheeseRenderer.sprite = cheeseVisuals[cheeseVisuals.Count - 1];
+				if (cheeseVisuals.Count > 0)
+					cheeseRenderer.sprite = cheeseVisuals[cheeseVisuals.Count - 1];
 			}
 		}
 	}

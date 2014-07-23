@@ -93,7 +93,7 @@ public class CatchingMiceTile
 	{
 		if (value < 0)
 		{
-			CatchingMiceLogVisualizer.use.LogWarning("Taking a negative amount of cookies should not be done.");
+			CatchingMiceLogVisualizer.use.LogWarning("Taking a negative amount of cookies shouldn't happen.");
 			return 0;
 		}
 

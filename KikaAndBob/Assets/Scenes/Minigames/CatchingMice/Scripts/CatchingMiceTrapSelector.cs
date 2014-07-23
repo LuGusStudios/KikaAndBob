@@ -252,10 +252,10 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 		}
 
 		// update max scroll length
-		maxScroll = currentOffset;
+		maxScroll = currentOffset.yAdd(0.2f);	// add a little buffer at the bottom for the number - eyeballing
 
 		// is the list of trap icons longer than the window?
-		if (maxScroll.x <= Vector3.Distance(startPosition, itemsEnd.position))
+		if (maxScroll.y <= Vector3.Distance(startPosition, itemsEnd.position))
 			scrollNecessary = false;
 		else
 			scrollNecessary = true;

@@ -99,6 +99,13 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			return cheeseTiles;
 		}
 	}
+	public List<CatchingMiceTile> FakeCheeseTiles
+	{
+		get
+		{
+			return fakeCheeseTiles;
+		}
+	}
 	public List<CatchingMiceCharacterMouse> Enemies
 	{
 		get
@@ -175,6 +182,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	protected List<CatchingMiceTile> holeTiles = new List<CatchingMiceTile>();
 	protected List<CatchingMiceTile> trapTiles = new List<CatchingMiceTile>();
 	protected List<CatchingMiceTile> cheeseTiles = new List<CatchingMiceTile>();
+	protected List<CatchingMiceTile> fakeCheeseTiles = new List<CatchingMiceTile>();
 	protected List<CatchingMiceHole> miceHoles = new List<CatchingMiceHole>();
 	protected List<CatchingMiceCharacterPlayer> playerList = new List<CatchingMiceCharacterPlayer>();
 	protected List<CatchingMiceCharacterPatrol> patrols = new List<CatchingMiceCharacterPatrol>();
@@ -1502,23 +1510,55 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 	public CatchingMiceTile[] GetTileAround(CatchingMiceTile tile)
 	{
-		List<CatchingMiceTile> tiles = new List<CatchingMiceTile>();
+//		List<CatchingMiceTile> tiles = new List<CatchingMiceTile>();
+//
+//		for (int x = -1; x <= 1; x++)
+//		{
+//			for (int y = -1; y <= 1; y++)
+//			{
+//				//don't add your own tile
+//				if (x == 0 && y == 0)
+//					continue;
+//				CatchingMiceTile inspectedTile = GetTile(tile.gridIndices.v3().xAdd(x).yAdd(y));
+//				if (inspectedTile != null)
+//					tiles.Add(inspectedTile);
+//			}
+//		}
+//
+//		return tiles.ToArray();
 
-		for (int x = -1; x <= 1; x++)
+		return GetTilesAround(tile, 1);
+	}
+
+	public CatchingMiceTile[] GetTilesAround(CatchingMiceTile tile, int radius)
+	{
+		List<CatchingMiceTile> tiles = new List<CatchingMiceTile>();
+	
+		if (radius <= 0)
 		{
-			for (int y = -1; y <= 1; y++)
+			Debug.LogError("Cannot return tiles with a radius smaller than or equal to 0.");
+			return null;
+		}
+
+		for (int x = -radius; x <= radius; x++)
+		{
+			for (int y = -radius; y <= radius; y++)
 			{
 				//don't add your own tile
 				if (x == 0 && y == 0)
 					continue;
-				CatchingMiceTile inspectedTile = GetTile(tile.gridIndices.v3().xAdd(x).yAdd(y));
+
+				CatchingMiceTile inspectedTile = GetTile(tile.gridIndices.v3().xAdd(x).yAdd(y), false);
+
 				if (inspectedTile != null)
 					tiles.Add(inspectedTile);
 			}
 		}
-
+		
 		return tiles.ToArray();
 	}
+
+
 
 	public void RemoveTrapFromTile(CatchingMiceTile tile)
 	{
@@ -1561,15 +1601,34 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		}
 
 		// Remove the references of the trap
-		cheeseTiles.Remove(tile);
+
+		if (cheeseTiles.Contains(tile))
+		{
+			cheeseTiles.Remove(tile);
+
+			if (!fakeCheeseTiles.Contains(tile))
+			{
+				tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
+				tile.cheese = null;
+			}
+		}
+
+		if (fakeCheeseTiles.Contains(tile))
+		{
+			fakeCheeseTiles.Remove(tile);
+
+			if (!cheeseTiles.Contains(tile))
+			{
+				tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
+				tile.cheese = null;
+			}
+		}
+
 
 		if ((tile.cheese != null) && (OnCheeseRemoved != null))
 		{
 			OnCheeseRemoved(tile);
 		}
-
-		tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
-		tile.cheese = null;
 	}
 
 	protected void DestroyGameObject(GameObject obj)

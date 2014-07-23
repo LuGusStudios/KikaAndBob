@@ -53,7 +53,7 @@ public abstract class ICatchingMiceCharacter : MonoBehaviour
 
 			if (fullPath)
 			{
-				StartCoroutine(MoveToDestination(path));
+				MoveToDestination(path);
 			}
 		}
 	}
@@ -88,7 +88,12 @@ public abstract class ICatchingMiceCharacter : MonoBehaviour
 		}
 	}
 
-	public virtual IEnumerator MoveToDestination(List<CatchingMiceWaypoint> path)
+	public virtual void MoveToDestination(List<CatchingMiceWaypoint> path)
+	{
+		StartCoroutine(MoveToDestinationRoutine(path));
+	}
+
+	public IEnumerator MoveToDestinationRoutine(List<CatchingMiceWaypoint> path)
 	{
 		int pathIndex = path.Count - 1;
 

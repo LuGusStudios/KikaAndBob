@@ -79,9 +79,9 @@ public class CatchingMiceWineTrap : CatchingMiceWorldObjectTrapFurniture {
 		}
 
 		// Create a copy of the splash and fire it at the target
-		float z = Mathf.Max(transform.position.z, target.transform.position.z);
+		float z = Mathf.Min(transform.position.z, target.transform.position.z);
 		GameObject spraySplashCopy = (GameObject)GameObject.Instantiate(corkPrefab);
-		spraySplashCopy.transform.position = transform.position.z(z);
+		spraySplashCopy.transform.position = transform.position.z(z).yAdd(0.5f);	// 0.5f offset so cork leaves from top of bottle
 
 		// Rotate the splash so that it points to the target
 		float angle = Vector2.Dot(Vector2.up, (target.transform.position.v2() - transform.position.v2()).normalized);
@@ -92,6 +92,8 @@ public class CatchingMiceWineTrap : CatchingMiceWorldObjectTrapFurniture {
 
 		float time = Vector2.Distance(transform.position.v2(), target.transform.position.v2()) * 0.25f;
 		spraySplashCopy.MoveTo(target.transform.position.z(z)).Time(time).Execute();
+	
+
 		//spraySplashCopy.ScaleTo(originalScale).Time(0.1f).Execute();
 
 		yield return new WaitForSeconds(Mathf.Max(0.1f, time));
