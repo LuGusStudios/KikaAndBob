@@ -13,6 +13,9 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 		// TODO: make this more official or provide prefabs for ActionPoint visualizers
 		GameObject actionIndicatorPrefab = lane.transform.FindChild("LaneItemPrefab").gameObject;
 
+		// this will hide it on mobile platforms - we could have done this manually on the scene prefab, but we'd have to hope we didn't miss one somewhere in all the scenes...
+		actionIndicatorPrefab.transform.FindChild("Icon").gameObject.AddComponent<HideOnMobile>();
+
 		GameObject container = new GameObject("Item");
 		container.transform.parent = lane.transform;
 		container.transform.position = lane.transform.position;
