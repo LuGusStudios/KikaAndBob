@@ -95,6 +95,9 @@ public class PacmanInput : LugusSingletonRuntime<PacmanInput>
 		if (LugusInput.use.KeyDown(KeyCode.Space))
 			return true;
 
+		if (directionPad != null && directionPad.IsButtonDown(Joystick.JoystickDirection.Button1))
+			return true;
+
 		return false;
 	}
 }

@@ -5,10 +5,11 @@ using System.Collections.Generic;
 public class DirectionPadButton : MonoBehaviour 
 {
 	public Joystick.JoystickDirection direction = Joystick.JoystickDirection.None;
-
 	public float transparency = 0.7f;
+	public bool animate = false;
 
 	protected SpriteRenderer buttonRenderer = null;
+	protected Vector3 originalScale = Vector3.zero;
 
 	public virtual void SetupLocal()
 	{
@@ -20,6 +21,11 @@ public class DirectionPadButton : MonoBehaviour
 		if (buttonRenderer == null)
 		{
 			Debug.LogError("DirectionPadButton: Missing sprite renderer!");
+		}
+
+		if (originalScale == Vector3.zero)
+		{
+			originalScale = transform.localScale;
 		}
 	}
 	
@@ -49,8 +55,21 @@ public class DirectionPadButton : MonoBehaviour
 		}
 
 		if (pressed)
+		{
 			buttonRenderer.color = buttonRenderer.color.a(1.0f);
+
+			if (animate)
+			{
+				iTween.Stop();
+				transform.localScale = originalScale;
+				gameObject.ScaleTo(originalScale * 0.8f).Time(0.25f).Execute();
+			}
+
+		}
 		else
+		{
+			transform.localScale = originalScale;
 			buttonRenderer.color = buttonRenderer.color.a(transparency);
+		}
 	}
 }

@@ -21,7 +21,8 @@ public class Joystick : MonoBehaviour
 		Up = 1,
 		Right = 2,
 		Down = 3,
-		Left = 4
+		Left = 4,
+		Button1 = 5
 	}
 
 	public float joystickRadius = 50f;
