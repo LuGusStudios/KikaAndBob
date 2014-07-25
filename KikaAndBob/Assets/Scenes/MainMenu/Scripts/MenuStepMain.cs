@@ -110,7 +110,7 @@ public class MenuStepMain : IMenuStep
 
 		yield return new WaitForSeconds(0.5f);
 
-		Application.LoadLevel("catchingmice");
+		Application.LoadLevel("e00_catchingmice");
 
 		yield break;
 	}
