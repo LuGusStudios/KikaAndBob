@@ -39,6 +39,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			actionPoint.transform.position = container.transform.position + new Vector3(0, 0, -1);
 
 			renderer.actionPoints.Add( actionPoint.transform );
+
+
+			// hide this on mobile platforms - could add on scene prefab too - but we might forget that somewhere easily
+			actionPoint.transform.FindChild("Icon").gameObject.AddComponent<HideOnMobile>();
 		}
 		else
 		{
@@ -61,6 +65,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 			// we have the duration of the section in seconds + how many units it's going to move per SECOND (item.speed) : easy
 			float units = item.duration * item.speed;
 
+
+			// hide this on mobile platforms - could add on scene prefab too - but we might forget that somewhere easily
+			actionPoint.transform.FindChild("Icon").gameObject.AddComponent<HideOnMobile>();
+
 			// point 2
 			actionPoint = (GameObject) GameObject.Instantiate( actionIndicatorPrefab );
 			
@@ -79,6 +87,10 @@ public class DanceHeroLaneItemRenderer : MonoBehaviour
 
 			
 			renderer.actionPoints.Add( actionPoint.transform );
+
+
+			// hide this on mobile platforms - could add on scene prefab too - but we might forget that somewhere easily
+			actionPoint.transform.FindChild("Icon").gameObject.AddComponent<HideOnMobile>();
 
 		}
 

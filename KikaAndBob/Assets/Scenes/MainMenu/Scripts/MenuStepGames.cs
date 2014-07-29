@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MenuStepGames : IMenuStep 
 {
 	protected Button exitButton = null;
+	protected Transform locationParent = null;
 
 	public void SetupLocal()
 	{
@@ -13,6 +14,12 @@ public class MenuStepGames : IMenuStep
 		
 		if (exitButton == null)
 			Debug.LogError("MenuStepGames: Missing exit button.");
+
+		if (locationParent == null)
+			locationParent = transform.FindChild("LocationParent")
+
+		if (locationParent == null)
+			Debug.LogError("MenuStepGames: Missing location parent.");
 	}
 	
 	public void SetupGlobal()

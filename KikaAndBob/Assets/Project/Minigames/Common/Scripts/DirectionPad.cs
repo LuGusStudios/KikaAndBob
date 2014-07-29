@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DirectionPad : MonoBehaviour 
 {
-	protected Joystick.JoystickDirection currentDirection = Joystick.JoystickDirection.None;
+	protected Joystick.JoystickDirection currentInput = Joystick.JoystickDirection.None;
 	protected DirectionPadButton lastButtonUsed = null;
 	protected List<DirectionPadButton> directionPadButtons = new List<DirectionPadButton>();
 
@@ -91,14 +91,14 @@ public class DirectionPad : MonoBehaviour
 		}
 		else
 		{
-			currentDirection = Joystick.JoystickDirection.None;
+			currentInput = Joystick.JoystickDirection.None;
 		}
 
 		if (currentButton != lastButtonUsed)
 		{
 			if (currentButton != null)
 			{
-				currentDirection = currentButton.direction;
+				currentInput = currentButton.direction;
 				currentButton.SetPressed(true);
 			}
 
@@ -113,16 +113,25 @@ public class DirectionPad : MonoBehaviour
 
 	public bool IsDirection(Joystick.JoystickDirection direction)
 	{
-		return currentDirection == direction;
+		return currentInput == direction;
 	}
 
 	public bool IsDirectionDown(Joystick.JoystickDirection direction)
 	{
-		return currentDirection == direction && LugusInput.use.down;
+		return currentInput == direction && LugusInput.use.down;
 	}
 
 	public bool IsDirectionUp(Joystick.JoystickDirection direction)
 	{
-		return currentDirection == direction && LugusInput.use.up;
+		return currentInput == direction && LugusInput.use.up;
 	}
+
+	// this really does the same as the above functions, but is just a way more readable name and we don't want to refactor the name everywhere
+	// Direction pad can also be used for some other button functions (currently only used in 
+	public bool IsButtonDown(Joystick.JoystickDirection button)
+	{
+		return currentInput == button && LugusInput.use.down;
+	}
+
+
 }
