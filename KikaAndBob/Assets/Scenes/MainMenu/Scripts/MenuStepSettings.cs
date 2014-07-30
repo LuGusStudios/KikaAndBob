@@ -108,12 +108,12 @@ public class MenuStepSettings : IMenuStep
 		if (mute)
 		{
 			alpha = 0.6f;
-			LugusAudio.use.Music().VolumePercentage = 0;
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
 			textKey = "global.settings.off";
 		}
 		else
 		{
-			LugusAudio.use.Music().VolumePercentage = 1;
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
 			textKey = "global.settings.on";
 		}
 
@@ -130,12 +130,12 @@ public class MenuStepSettings : IMenuStep
 		if (mute)
 		{
 			alpha = 0.6f;
-			LugusAudio.use.Music().VolumePercentage = 0;
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
 			textKey = "global.settings.off";
 		}
 		else
 		{
-			LugusAudio.use.Music().VolumePercentage = 1;
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
 			textKey = "global.settings.on";
 		}
 

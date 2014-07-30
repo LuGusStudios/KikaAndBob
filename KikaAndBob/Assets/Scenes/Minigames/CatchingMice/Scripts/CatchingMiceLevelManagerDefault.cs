@@ -474,7 +474,11 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		{
 			for (int x = 0; x < width; ++x)
 			{
-				switch (layout[y * _width + x])
+				//int index = y * _width + x;			// OLD VERSION: Forces level designer to enter string upside down, which is difficult.
+	
+				int index = (((height-1)-y)*width) + x; // e.g. tile at row 2, column 4 in a grid of 5*5 has index (((5-1)-2)*5) + 4 = 14
+
+				switch (layout[index])
 				{
 					case 'x':
 						tiles[x, y] = null;

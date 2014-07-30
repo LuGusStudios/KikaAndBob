@@ -12,6 +12,9 @@ public class MenuStepMain : IMenuStep
 	protected Button playRoomButton = null;
 	protected bool leavingMenu = false;	// set to true when transitioning to mouse hunt game - disables further input
 	protected BoneAnimation character = null;
+	protected LugusAudioTrackSettings musicTrackSettings = null;
+	protected ILugusCoroutineHandle musicLoopHandle = null;
+
 
 
 	public void SetupLocal()
@@ -56,6 +59,29 @@ public class MenuStepMain : IMenuStep
 	public void SetupGlobal()
 	{
 		SetCat();
+
+		musicTrackSettings = new LugusAudioTrackSettings().Loop(true);
+
+		if (musicLoopHandle != null && musicLoopHandle.Running)
+			musicLoopHandle.StopRoutine();
+		
+		musicLoopHandle = LugusCoroutines.use.StartRoutine(MusicLoop());
+	}
+
+	
+	protected IEnumerator MusicLoop()
+	{
+		LugusAudio.use.Music().StopAll();
+		
+		ILugusAudioTrack startTrack = 
+			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuIntro01"));
+		
+		while ( startTrack.Playing )
+		{
+			yield return new WaitForEndOfFrame();
+		}
+		
+		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuLoop01"), true, musicTrackSettings);
 	}
 	
 	protected void Awake()

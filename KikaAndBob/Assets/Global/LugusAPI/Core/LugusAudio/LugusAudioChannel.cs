@@ -45,14 +45,33 @@ public class LugusAudioChannel
 	// possible fix: tracks should keep original volume at start and re-use that in subsequent calculations
 	protected void UpdateVolume(float newValue)
 	{
+		Debug.Log(newValue);
+		Debug.Log(_volume);
+
 		float changeFactor = newValue / _volume;
 		_volume = newValue;
-		
+
 		foreach( ILugusAudioTrack track in _tracks )
 		{
 			track.Source.volume *= changeFactor; 
 		}
 	}
+
+	// This method circumvents the problem above. HOWEVER - it's pretty complex to make sure this works in all cases.
+	// Therefore, this currently exists as a directly accessible public method. Ideally, this method should later be linked to the Volume property and made protected, replacing UpdateVolume.
+	// For now, the UpdateVolume method remains as-is, without reference to track.OriginalVolume. 
+	public void UpdateVolumeFromOriginal(float newValue)
+	{
+		float changeFactor = newValue / _volume;
+		_volume = newValue;
+		
+		foreach( ILugusAudioTrack track in _tracks )
+		{
+			track.Source.volume = track.OriginalVolume * changeFactor; 
+		}
+	}
+
+
 	
 	public LugusAudioChannel(Lugus.AudioChannelType type)
 	{
