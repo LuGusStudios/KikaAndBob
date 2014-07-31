@@ -79,8 +79,7 @@ public class MenuStepAvatar : IMenuStep
 			Debug.Log("MenuStepAvatar: Setting player name: " + catName);
 			characterNameField.SetEnteredString(catName);
 		}
-		
-		
+
 		PlayIdleAnim(currentCatIndex);
 	}
 	
@@ -162,6 +161,10 @@ public class MenuStepAvatar : IMenuStep
 		{
 			Debug.Log("MenuStepAvatar: Setting player name: " + catName);
 			characterNameField.SetEnteredString(catName);
+		}
+		else
+		{
+			characterNameField.Reset();
 		}
 		
 		

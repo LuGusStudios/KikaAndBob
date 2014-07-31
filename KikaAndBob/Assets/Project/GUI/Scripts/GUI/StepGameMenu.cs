@@ -73,6 +73,36 @@ public class StepGameMenu : IMenuStep
 
 
 		musicTrackSettings = new LugusAudioTrackSettings().Loop(true);
+
+		LoadConfig();
+	}
+
+	protected void LoadConfig()
+	{
+		// read if music and SFX need to be muted
+		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
+		}
+		
+		if (LugusConfig.use.User.GetBool("main.settings.soundmute", false) == true)
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
+		}
+		
+		// load language
+		
+		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+		
+		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 	
 	public void SetupGlobal()

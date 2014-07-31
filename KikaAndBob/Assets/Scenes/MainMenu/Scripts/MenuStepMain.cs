@@ -14,9 +14,7 @@ public class MenuStepMain : IMenuStep
 	protected BoneAnimation character = null;
 	protected LugusAudioTrackSettings musicTrackSettings = null;
 	protected ILugusCoroutineHandle musicLoopHandle = null;
-
-
-
+	
 	public void SetupLocal()
 	{
 		if (settingsButton == null)
@@ -66,9 +64,38 @@ public class MenuStepMain : IMenuStep
 			musicLoopHandle.StopRoutine();
 		
 		musicLoopHandle = LugusCoroutines.use.StartRoutine(MusicLoop());
+
+		LoadConfig();
 	}
 
-	
+	protected void LoadConfig()
+	{
+		// read if music and SFX need to be muted
+		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
+		}
+		
+		if (LugusConfig.use.User.GetBool("main.settings.soundmute", false) == true)
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
+		}
+
+		// load language
+
+		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+
+		LugusResources.use.ChangeLanguage(pickedLanguage);
+	}
+
 	protected IEnumerator MusicLoop()
 	{
 		LugusAudio.use.Music().StopAll();
