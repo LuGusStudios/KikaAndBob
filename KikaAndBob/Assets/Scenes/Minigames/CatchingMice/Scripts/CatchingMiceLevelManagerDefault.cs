@@ -1187,7 +1187,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 
 			if (spawnHole != null)
 			{
-				spawnHole.VisualizePath(Waypoints, CatchingMiceGameManager.use.preWaveTime);
+				spawnHole.CalculateAndVisualizePath(Waypoints, CatchingMiceGameManager.use.preWaveTime);
 			}
 		}
 
@@ -1308,6 +1308,10 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				child.transform.parent = enemyParent;
 				child.transform.position = spawnTile.spawnPoint.zAdd(-mouseScript.zOffset);
 				mouseScript.currentTile = spawnTile.parentTile;
+
+				// EXPERIMENTAL
+				mouseScript.targetWaypoint = spawnTile.target;
+	
 				mouseScript.GetTarget();
 
 				// Add the enemy to the list
