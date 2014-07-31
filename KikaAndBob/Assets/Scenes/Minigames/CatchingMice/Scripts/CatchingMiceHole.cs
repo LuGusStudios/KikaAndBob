@@ -80,13 +80,15 @@ public class CatchingMiceHole : CatchingMiceWorldObject
 		return true;
 	}
 
-	public void VisualizePath(List<CatchingMiceWaypoint> graph, float visualiseTime)
+	public CatchingMiceWaypoint target = null;
+
+	public void CalculateAndVisualizePath(List<CatchingMiceWaypoint> graph, float visualiseTime)
 	{
 		// Make a copy of the graph
 		List<CatchingMiceWaypoint> graphCopy = new List<CatchingMiceWaypoint>(graph);
 		
 		// Find the closest cheese tile
-		CatchingMiceWaypoint target = null;
+		target = null;
 		float distance = float.MaxValue;
 
 		foreach(CatchingMiceTile tile in CatchingMiceLevelManager.use.CheeseTiles)

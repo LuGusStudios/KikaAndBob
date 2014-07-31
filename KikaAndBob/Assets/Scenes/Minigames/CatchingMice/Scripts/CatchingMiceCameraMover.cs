@@ -251,8 +251,29 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 		if ( CatchingMiceLevelManager.use.Tiles == null)
 			return;
 
-		levelBoundsMin = CatchingMiceLevelManager.use.Tiles[0, 0].location.v2();
+		CatchingMiceTile begin = CatchingMiceLevelManager.use.Tiles[0, 0];
 
-		levelBoundsMax = CatchingMiceLevelManager.use.Tiles[CatchingMiceLevelManager.use.Tiles.GetLength(0) - 1, CatchingMiceLevelManager.use.Tiles.GetLength(1) - 1].location.v2();
+		if (begin == null)
+		{
+			levelBoundsMin = new Vector2(CatchingMiceLevelManager.use.Width * CatchingMiceLevelManager.use.scale,
+			                             CatchingMiceLevelManager.use.Height * CatchingMiceLevelManager.use.scale);
+		}
+		else
+		{
+			levelBoundsMin = begin.location.v2();
+		}	
+
+
+		CatchingMiceTile end = CatchingMiceLevelManager.use.Tiles[CatchingMiceLevelManager.use.Tiles.GetLength(0) - 1, CatchingMiceLevelManager.use.Tiles.GetLength(1) - 1];
+
+		if (end == null)
+		{
+			levelBoundsMax = new Vector2(CatchingMiceLevelManager.use.Width * CatchingMiceLevelManager.use.scale,
+			                             CatchingMiceLevelManager.use.Height * CatchingMiceLevelManager.use.scale);
+		}
+		else
+		{
+			levelBoundsMax = end.location.v2();
+		}		
 	}
 }

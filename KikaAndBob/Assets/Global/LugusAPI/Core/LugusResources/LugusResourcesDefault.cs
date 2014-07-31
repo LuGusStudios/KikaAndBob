@@ -110,7 +110,47 @@ public class LugusResourcesDefault : MonoBehaviour
 			}
 		}
 	}
-	
+
+	public string GetLocalizedLangID()
+	{
+		if(collections == null || collections.Count == 0)
+		{
+			Debug.LogError("LugusResources: Localized resources collected has not yet been initialized.");
+			return "";
+		}
+
+		foreach( ILugusResourceCollection collection in collections )
+		{
+			if( collection is LugusResourceCollectionLocalized )
+			{
+				return ( (LugusResourceCollectionLocalized) collection).LangID;
+			}
+		}
+
+		Debug.LogError("LugusResources: No localized resource collection available.");
+		return "";
+	}
+
+	// Translates system language string to two-character language id.
+	// System language can for instance be used as fallback language setting if no language setting has been saved yet.
+	public string GetSystemLanguageID()
+	{
+		switch ( Application.systemLanguage )
+		{
+			case SystemLanguage.Dutch:
+				return "nl";
+				break;
+				
+			case SystemLanguage.English:
+				return "en";
+				break;
+
+			default:			// English seems like a sensible pick for a potential international product if the system language isn't supported.
+				return "en";
+				break;
+		}
+	}
+
 	protected void CollectionReloaded()
 	{
 		if( onResourcesReloaded != null )

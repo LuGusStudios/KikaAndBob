@@ -10,6 +10,7 @@ public class CatchingMicePoisonTrap : CatchingMiceWorldObjectTrapFurniture {
 	protected List<CatchingMiceTile> acidTiles = new List<CatchingMiceTile>();
 	protected List<GameObject> acidObjects = new List<GameObject>();
 	protected ParticleSystem splotchParticles = null;
+	protected float lastUseTime = 0;
 
 	// This trap is not activated automatically
 	// It is only activated through player interaction
@@ -35,11 +36,20 @@ public class CatchingMicePoisonTrap : CatchingMiceWorldObjectTrapFurniture {
 		// When the player interacts with the poison trap,
 		// it spawns acid spots
 
+		if ( (Time.time - lastUseTime < interval) && lastUseTime > 0)
+		{
+			return;
+		}
+
+		lastUseTime = Time.time;
+		
 		// Remove the current acid tiles and objects
 		for (int i = acidTiles.Count - 1; i >= 0; --i)
 		{
 			StartCoroutine(RemoveAcidObjectRoutine(i));
 		}
+
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("e00_Poison01"));
 
 		splotchParticles.Play();
 

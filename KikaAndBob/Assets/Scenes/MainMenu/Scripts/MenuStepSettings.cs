@@ -7,10 +7,11 @@ public class MenuStepSettings : IMenuStep
 	protected Button exitButton = null;
 	protected Button musicButton = null;
 	protected Button soundButton = null;
+	protected Button langButton = null;
 
 	protected TextMeshWrapper soundOnOffText = null;
 	protected TextMeshWrapper musicOnOffText = null;
-
+	protected TextMeshWrapper langNameText = null;
 
 	public void SetupLocal()
 	{
@@ -45,6 +46,19 @@ public class MenuStepSettings : IMenuStep
 
 		if (musicOnOffText == null)
 			Debug.LogError("MenuStepSettings: Missing music on/off text.");
+
+		if (langNameText == null)
+			langNameText = transform.FindChild("TextLanguageSelected").GetComponent<TextMeshWrapper>();
+		
+		if (langNameText == null)
+			Debug.LogError("MenuStepSettings: Missing language name text.");
+
+		
+		if (langButton == null)
+			langButton = transform.FindChild("ButtonLanguage").GetComponent<Button>();
+		
+		if (langButton == null)
+			Debug.LogError("MenuStepSettings: Missing language button.");
 	}
 	
 	public void SetupGlobal()
@@ -82,8 +96,13 @@ public class MenuStepSettings : IMenuStep
 			bool soundMute = LugusConfig.use.User.GetBool("main.settings.soundmute", false);
 			soundMute = !soundMute;
 			LugusConfig.use.User.SetBool("main.settings.soundmute", soundMute, true);
-			
+
 			SetSoundMute(soundMute);
+		}
+
+		if (langButton.pressed)
+		{
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Language);
 		}
 
 	}
@@ -92,12 +111,32 @@ public class MenuStepSettings : IMenuStep
 	{
 		activated = true;
 		this.gameObject.SetActive(true);
+
+		// make sure buttons are already properly displaying mute/unmute state
+		SetMusicMute(LugusConfig.use.User.GetBool("main.settings.musicmute", false));
+		SetSoundMute(LugusConfig.use.User.GetBool("main.settings.soundmute", false));
+
+		// give language display proper language
+		string currentLangId  = LugusResources.use.GetLocalizedLangID();
+		for (int i = 1; i <= 32; i++) 
+		{
+			if (currentLangId == LugusResources.use.Shared.GetText("lang.lang" + i + ".id"))
+			{
+				langNameText.SetText(LugusResources.use.Shared.GetText("lang.lang" + i + ".name"));
+				break;
+			}
+		}
+
+
 	}
 	
 	public override void Deactivate (bool animate)
 	{
 		activated = false;
 		this.gameObject.SetActive(false);
+
+		// save settings
+		LugusConfig.use.SaveProfiles();
 	}
 
 	protected void SetMusicMute(bool mute)
@@ -108,12 +147,12 @@ public class MenuStepSettings : IMenuStep
 		if (mute)
 		{
 			alpha = 0.6f;
-			LugusAudio.use.Music().VolumePercentage = 0;
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
 			textKey = "global.settings.off";
 		}
 		else
 		{
-			LugusAudio.use.Music().VolumePercentage = 1;
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
 			textKey = "global.settings.on";
 		}
 
@@ -130,12 +169,12 @@ public class MenuStepSettings : IMenuStep
 		if (mute)
 		{
 			alpha = 0.6f;
-			LugusAudio.use.Music().VolumePercentage = 0;
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
 			textKey = "global.settings.off";
 		}
 		else
 		{
-			LugusAudio.use.Music().VolumePercentage = 1;
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
 			textKey = "global.settings.on";
 		}
 

@@ -12,8 +12,9 @@ public class MenuStepMain : IMenuStep
 	protected Button playRoomButton = null;
 	protected bool leavingMenu = false;	// set to true when transitioning to mouse hunt game - disables further input
 	protected BoneAnimation character = null;
-
-
+	protected LugusAudioTrackSettings musicTrackSettings = null;
+	protected ILugusCoroutineHandle musicLoopHandle = null;
+	
 	public void SetupLocal()
 	{
 		if (settingsButton == null)
@@ -56,6 +57,58 @@ public class MenuStepMain : IMenuStep
 	public void SetupGlobal()
 	{
 		SetCat();
+
+		musicTrackSettings = new LugusAudioTrackSettings().Loop(true);
+
+		if (musicLoopHandle != null && musicLoopHandle.Running)
+			musicLoopHandle.StopRoutine();
+		
+		musicLoopHandle = LugusCoroutines.use.StartRoutine(MusicLoop());
+
+		LoadConfig();
+	}
+
+	protected void LoadConfig()
+	{
+		// read if music and SFX need to be muted
+		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
+		}
+		
+		if (LugusConfig.use.User.GetBool("main.settings.soundmute", false) == true)
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
+		}
+		else
+		{
+			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
+		}
+
+		// load language
+
+		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+
+		LugusResources.use.ChangeLanguage(pickedLanguage);
+	}
+
+	protected IEnumerator MusicLoop()
+	{
+		LugusAudio.use.Music().StopAll();
+		
+		ILugusAudioTrack startTrack = 
+			LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuIntro01"));
+		
+		while ( startTrack.Playing )
+		{
+			yield return new WaitForEndOfFrame();
+		}
+		
+		LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuLoop01"), true, musicTrackSettings);
 	}
 	
 	protected void Awake()

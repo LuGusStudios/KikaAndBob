@@ -59,10 +59,9 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
             return;
         }
 
-        List<CatchingMiceTile> tiles = new List<CatchingMiceTile>(CatchingMiceLevelManager.use.CheeseTiles);
-		tiles.AddRange(CatchingMiceLevelManager.use.FakeCheeseTiles);
-
-        targetWaypoint = GetTargetWaypoint(tiles);
+		// normally, this will be identical to the mouse hole's calculated target unless, by this point, the cheese has been eaten
+		if (targetWaypoint == null || targetWaypoint.parentTile.tileType != CatchingMiceTile.TileType.Cheese)
+			targetWaypoint = GetTargetWaypoint( CatchingMiceLevelManager.use.CheeseTiles);
 
         if (targetWaypoint != null)
         {
@@ -74,12 +73,13 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
     }
    
+	// picks the tile closest to the player from a list of tiles
     protected CatchingMiceWaypoint GetTargetWaypoint(List<CatchingMiceTile> tileList)
     {
         CatchingMiceWaypoint target = null;
 
         float smallestDistance = float.MaxValue;
-        //Check which cheese tile is the closest
+ 
         foreach (CatchingMiceTile tile in tileList)
         {
             float distance = Vector2.Distance(transform.position.v2(), tile.location.v2());
