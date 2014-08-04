@@ -2275,18 +2275,21 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &694505317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 694505316}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abf5a17bf07a34b3da5a86c082af9aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneCycleTime: 5
+  automate: 0
+  scenes: []
 --- !u!4 &694505318
 Transform:
   m_ObjectHideFlags: 0
@@ -62719,7 +62722,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 2066257285}
   - 114: {fileID: 2066257284}
-  - 114: {fileID: 2066257282}
   - 114: {fileID: 2066257286}
   - 114: {fileID: 2066257283}
   m_Layer: 0
@@ -62729,44 +62731,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2066257282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2066257281}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4ad1915d4c803b4bbc2bd00b8624c07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelNames:
-  - e01_kenia
-  - e02_argentina
-  - e03_china
-  - e04_tasmania
-  - e05_Mexico
-  - e06_egypt
-  - e07_france
-  - e08_texas
-  - e09_Brazil
-  - e10_Swiss
-  - e11_vatican
-  - e12_newyork
-  - e13_pacific
-  - e14_buthan
-  - e15_india
-  - e16_israel
-  - e17_greenland
-  - e18_amsterdam
-  - e19_illinois
-  - e20_morocco
-  - e21_cuba
-  - e22_russia
-  - e23_england
-  - e24_japan
-  - e25_sicily
-  - e26_belgium
 --- !u!114 &2066257283
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,8 @@ public class DebugByTaps : MonoBehaviour
 	void Update () 
 	{
 		// COMMENT THIS TO ENABLE DEBUG BY TAPS
-		return;
+
+		//return;
 
 		// Touchpoints are bottom left based...
 		// so top left is x = 0, y = max 
@@ -83,6 +84,26 @@ public class DebugByTaps : MonoBehaviour
 	{
 		if( !LugusDebug.debug )
 			return;
+
+		GUILayout.BeginHorizontal();
+
+		GUILayout.Space(100);
+
+		if (GUILayout.Button("Toggle random scene loader", GUILayout.MinHeight(60))) 
+		{
+			SceneLoaderTest sceneLoader = (SceneLoaderTest) FindObjectOfType(typeof(SceneLoaderTest));
+
+			if (sceneLoader == null)
+			{
+				sceneLoader = new GameObject("SceneCycler").AddComponent<SceneLoaderTest>();
+				sceneLoader.enabled = false;
+			}
+
+			sceneLoader.enabled = !sceneLoader.enabled;
+			Debug.Log("Set scene cycling: " + sceneLoader.enabled);
+		}
+
+		GUILayout.EndHorizontal();
 
 		GUILayout.BeginArea( new Rect(Screen.width - 200, 0, 200, Screen.height) );
 
@@ -167,8 +188,7 @@ public class DebugByTaps : MonoBehaviour
 		levels.Add("e24_japan");
 		levels.Add("e25_sicily");
 		levels.Add("e26_belgium");
-		levels.Add("e26_belgium");
-		levels.Add("catchingmice");
+		levels.Add("e00_catchingmice");
 	}
 	
 	void CalculateFPS()
