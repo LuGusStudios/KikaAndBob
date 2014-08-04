@@ -100,6 +100,7 @@ public class LevelLoaderDefault
 		if (crossSceneInfo != null)
 		{
 			crossSceneInfo.SetLevelIndex(index);
+			Resources.UnloadUnusedAssets();
 			Application.LoadLevel(Application.loadedLevel);
 		}
 	}

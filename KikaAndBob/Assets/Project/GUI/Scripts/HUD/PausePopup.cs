@@ -78,7 +78,9 @@ public class PausePopup : MonoBehaviour
 		
 		IMinigameCrossSceneInfo info = LevelLoaderDefault.GetCrossSceneInfo();
 		info.SetLevelIndex(-1);
-		
+
+		Resources.UnloadUnusedAssets();
+
 		Application.LoadLevel( Application.loadedLevelName );
 	}
 

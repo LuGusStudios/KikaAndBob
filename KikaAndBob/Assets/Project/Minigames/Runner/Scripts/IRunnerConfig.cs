@@ -298,6 +298,8 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 			RunnerCrossSceneInfo.use.levelToLoad = 667;
 			LugusCoroutines.use.StopAllRoutines();
+
+			Resources.UnloadUnusedAssets();
 			Application.LoadLevel( Application.loadedLevelName );
 		}
 
@@ -321,6 +323,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 			{
 				RunnerCrossSceneInfo.use.levelToLoad = i + 1;
 				LugusCoroutines.use.StopAllRoutines();
+				Resources.UnloadUnusedAssets();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
 		}
@@ -329,6 +332,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		{
 			RunnerCrossSceneInfo.use.levelToLoad = 667;
 			LugusCoroutines.use.StopAllRoutines();
+			Resources.UnloadUnusedAssets();
 			Application.LoadLevel( Application.loadedLevelName );
 		}
 		GUILayout.EndArea();

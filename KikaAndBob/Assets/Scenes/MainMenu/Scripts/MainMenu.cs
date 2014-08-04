@@ -64,6 +64,8 @@ public class MainMenu : MonoBehaviour
 
 		yield return new WaitForSeconds(0.5f);
 
+		Resources.UnloadUnusedAssets();
+
 		Application.LoadLevel(levelName);
 
 		yield break;

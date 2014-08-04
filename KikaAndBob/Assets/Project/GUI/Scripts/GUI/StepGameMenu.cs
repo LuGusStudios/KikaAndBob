@@ -146,6 +146,8 @@ public class StepGameMenu : IMenuStep
 
 		yield return new WaitForSeconds(0.5f);
 
+		Resources.UnloadUnusedAssets();
+
 		Application.LoadLevel("MainMenu");
 
 		yield break;

@@ -113,6 +113,7 @@ public class DebugByTaps : MonoBehaviour
 		{
 			if( GUILayout.Button( "" + level, new GUILayoutOption[]{GUILayout.MinWidth(100), GUILayout.MinHeight(50)} ) )
 			{
+				Resources.UnloadUnusedAssets();
 				Application.LoadLevel( level );
 			}
 

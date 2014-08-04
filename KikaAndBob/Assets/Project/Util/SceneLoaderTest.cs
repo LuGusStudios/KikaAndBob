@@ -86,6 +86,7 @@ public class SceneLoaderTest : MonoBehaviour {
 	{
 		ScreenFader.use.FadeOut(0.5f);
 		yield return new WaitForSeconds(0.5f);
+		Resources.UnloadUnusedAssets();
 		Application.LoadLevel(scenes[index]);
 	}
 
