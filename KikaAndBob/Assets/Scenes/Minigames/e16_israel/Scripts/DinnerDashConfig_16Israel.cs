@@ -299,6 +299,8 @@ public class DinnerDashConfig_16Israel : IDinnerDashConfig
 			{
 				DinnerDashCrossSceneInfo.use.levelToLoad = (i + 1);
 				LugusCoroutines.use.StopAllRoutines();
+
+				Resources.UnloadUnusedAssets();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
 		}

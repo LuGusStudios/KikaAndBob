@@ -9,6 +9,8 @@ public abstract class IGameManager : MonoBehaviour
 	
 	public virtual void ReloadLevel()
 	{
+		Resources.UnloadUnusedAssets();
+
 		Application.LoadLevel( Application.loadedLevelName );
 	}
 	

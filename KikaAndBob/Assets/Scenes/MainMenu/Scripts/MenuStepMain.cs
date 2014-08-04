@@ -163,6 +163,8 @@ public class MenuStepMain : IMenuStep
 
 		yield return new WaitForSeconds(0.5f);
 
+		Resources.UnloadUnusedAssets();
+
 		Application.LoadLevel("e00_catchingmice");
 
 		yield break;

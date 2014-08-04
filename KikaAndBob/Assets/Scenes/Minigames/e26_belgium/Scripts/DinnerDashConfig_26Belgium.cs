@@ -281,6 +281,8 @@ public class DinnerDashConfig_26Belgium : IDinnerDashConfig
 			{
 				DinnerDashCrossSceneInfo.use.levelToLoad = (i + 1);
 				LugusCoroutines.use.StopAllRoutines();
+
+				Resources.UnloadUnusedAssets();
 				Application.LoadLevel( Application.loadedLevelName );
 			}
 		}
