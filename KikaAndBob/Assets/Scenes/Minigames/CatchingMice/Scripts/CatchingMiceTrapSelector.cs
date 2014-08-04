@@ -331,18 +331,17 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 					break;
 				}
 			}
-
-
 		}
 		else if (LugusInput.use.up)
 		{
 			DragSprite();
 
-			if (currentSelectedTrap != null && currentHoverTile != null)
+			if (currentSelectedTrap != null && currentHoverTile != null && currentSelectedTrap.ValidateTile(currentHoverTile))
 			{
 				if (CatchingMiceGameManager.use.PickupCount >= currentSelectedTrap.Cost)
 				{
 					CatchingMiceGameManager.use.PickupCount -= Mathf.RoundToInt(currentSelectedTrap.Cost);
+					ScoreVisualizer.use.NewScore(KikaAndBob.CommodityType.Cookie, -currentSelectedTrap.Cost).Animate(false).Execute();
 					CatchingMiceLevelManager.use.InstantiateTrap(currentSelectedTrap, currentHoverTile);			
 				}
 			}

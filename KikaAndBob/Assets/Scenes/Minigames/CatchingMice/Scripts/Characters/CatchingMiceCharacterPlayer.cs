@@ -162,8 +162,10 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 		if (currentTile != null && currentTile.Cookies > 0)
 		{
 			int takencookies = currentTile.TakeCookies(currentTile.Cookies);
+
 			CatchingMiceGameManager.use.PickupCount += takencookies;
-			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("e00_CookieEat01"));
+
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Cookie, takencookies).Audio("e00_CookieEat01").Position(currentTile.waypoint.transform.position).Execute();
 		}
 	}
 }

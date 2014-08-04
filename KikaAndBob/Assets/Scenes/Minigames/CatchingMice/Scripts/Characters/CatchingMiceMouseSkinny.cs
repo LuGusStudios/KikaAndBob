@@ -32,9 +32,7 @@ public class CatchingMiceMouseSkinny : CatchingMiceCharacterMouse
             CatchingMiceLogVisualizer.use.LogError("No target found");
             //try go for cheese instead
             base.GetTarget();
-        }
-        
-        
+        } 
     }
     
 	public override void DoCurrentTileBehaviour(int pathIndex)
@@ -74,7 +72,7 @@ public class CatchingMiceMouseSkinny : CatchingMiceCharacterMouse
         attacking = false;
 
 		// Get the next target when the trap has been destroyed
-        GetTarget();
+   		GetTarget();
     }
     
 	protected override void OnEnable()

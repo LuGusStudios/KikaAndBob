@@ -375,6 +375,13 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		}
 	}
 
+	// Disable colliders that don't serve a purpose anymore once the level has been built. 
+	// This might help performance somewhat, but mostly it makes it easier to not hit something functional with the camera scroller.
+	public void DisableUnnecessaryColliders()
+	{
+
+	}
+
 	public void CreateGrid()
 	{
 		// iterate over entire grid
@@ -571,7 +578,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			tileItem.transform.name += " " + targetTile.gridIndices;
 			tileItem.transform.localPosition = targetTile.location;
 
-			// When placing the furniture, check if the it has the object script, so it can set the right tiles to furniture type
+			// When placing the furniture, check if it has the object script, so it can set the right tiles to furniture type
 			CatchingMiceFurniture furniture = tileItem.GetComponent<CatchingMiceFurniture>();
 			if (furniture != null)
 			{
@@ -594,6 +601,13 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			{
 				CatchingMiceLogVisualizer.use.LogError("The furniture prefab " + furniturePrefab.name + " does not have a WorldObject component attached to it.");
 				DestroyGameObject(tileItem);
+			}
+
+			BoxCollider2D[] colliders = tileItem.GetComponentsInChildren<BoxCollider2D>(true);
+
+			foreach(BoxCollider2D boxCollider in colliders)
+			{
+					boxCollider.enabled = false;
 			}
 		}
 	}
@@ -1609,29 +1623,9 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 		}
 
 		// Remove the references of the trap
-
-		if (cheeseTiles.Contains(tile))
-		{
-			cheeseTiles.Remove(tile);
-
-			if (!fakeCheeseTiles.Contains(tile))
-			{
-				tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
-				tile.cheese = null;
-			}
-		}
-
-		if (fakeCheeseTiles.Contains(tile))
-		{
-			fakeCheeseTiles.Remove(tile);
-
-			if (!cheeseTiles.Contains(tile))
-			{
-				tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
-				tile.cheese = null;
-			}
-		}
-
+		cheeseTiles.Remove(tile);
+		tile.tileType = tile.tileType ^ CatchingMiceTile.TileType.Cheese;
+		tile.cheese = null;
 
 		if ((tile.cheese != null) && (OnCheeseRemoved != null))
 		{
