@@ -41,7 +41,6 @@ public class CatchingMiceGUI : LugusSingletonExisting<CatchingMiceGUI>
 		
 		
 		CatchingMiceLevelManager.use.OnCheeseRemoved += UpdateCheeseCount;
-		CatchingMiceGameManager.use.onPickupCountChanged += UpdateCookieCount;
 		CatchingMiceGameManager.use.onWaveStarted += SetWaveCounter;
 		CatchingMiceGameManager.use.onWaveEnded += SetWaveCounter;
 		
@@ -63,11 +62,6 @@ public class CatchingMiceGUI : LugusSingletonExisting<CatchingMiceGUI>
 	protected void Update () 
 	{
 	
-	}
-
-	protected void UpdateCookieCount(int newCount)
-	{
-		HUDManager.use.CounterSmallLeft2.SetValue(newCount);
 	}
 
 	protected void UpdateCheeseCount(CatchingMiceTile tile)

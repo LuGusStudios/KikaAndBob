@@ -51,6 +51,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         //CatchingMiceLevelManager.use.CheeseRemoved -= TargetRemoved;
     }
     
+
 	public virtual void GetTarget()
     {
         if (CatchingMiceLevelManager.use.CheeseTiles.Count <= 0)
@@ -69,7 +70,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
         else
         {
-            CatchingMiceLogVisualizer.use.LogError("No target found");
+            CatchingMiceLogVisualizer.use.LogError(gameObject.name + ": No target found!");
         }
     }
    
@@ -142,6 +143,10 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 	{
 		yield return new WaitForSeconds(LugusRandom.use.Uniform.Next(0,0.5f));
 		yield return StartCoroutine(MoveToDestinationRoutine(path));
+
+		targetWaypoint = null;
+
+		GetTarget();
 	}
 
 	public override IEnumerator Attack()
@@ -164,16 +169,16 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 
         attacking = false;
 
-        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese.Health <= 0))
-        {
-            CatchingMiceLogVisualizer.use.Log("getting new target");
-            GetTarget();
-        }
-        else
-        {
-
-            DieRoutine();
-        }
+		// if there is still cheese around, but this one is gone, find new target
+//        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese == null || cheeseTile.cheese.Health <= 0))
+//        {
+//            CatchingMiceLogVisualizer.use.Log(gameObject.name + ": Acquiring new target.");
+//            GetTarget();
+//        }
+//        else
+//        {
+//            DieRoutine();
+//        }
     }
 
 	protected IEnumerator FindNewTarget()
@@ -185,7 +190,31 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 	//TODO: Play Death animation (cloud particle)
 	public virtual void DieRoutine()
     {
-		currentTile.AddCookies(cookieDrops);
+		CatchingMiceTile dropTile = null;
+
+		// ideally, we'd like the cookies to be dropped on the cat, rather than in front of it
+		// unfortunately, we have no elegant way of saying who is the 'attacker' responsible for this mouse's death
+		// instead, we just have to check around this the current tile to see if any cats are around
+		// if so, place the cookies there
+		// if not, place on current tile
+		foreach(CatchingMiceCharacterPlayer player in CatchingMiceLevelManager.use.Players)
+		{
+			foreach(CatchingMiceTile tile in CatchingMiceLevelManager.use.GetTilesAround(currentTile, 1))
+			{
+				if (tile == player.currentTile)
+				{
+					dropTile = tile;
+					break;
+				}
+			}
+		}
+
+		if (dropTile == null)
+			dropTile = currentTile;
+
+		dropTile.AddCookies(cookieDrops);
+
+
         CatchingMiceLevelManager.use.OnCheeseRemoved -= TargetRemoved;
 		CatchingMiceLevelManager.use.EnemyDied(this);
 		CatchingMiceGameManager.use.EnemiesAlive -= 1;
@@ -198,6 +227,6 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
     {
         Health -= damage;
         if (onGetHit != null)
-            onGetHit();
+			onGetHit();
     }
 }
