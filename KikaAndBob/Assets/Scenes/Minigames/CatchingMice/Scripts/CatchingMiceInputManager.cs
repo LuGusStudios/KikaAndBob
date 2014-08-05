@@ -160,11 +160,31 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 		}
 	}
 
+	public void ClearAllPaths()
+	{
+		// this is the path being drawn by the player
+		if (currentDrawingPath != null)
+		{
+			currentDrawingPath.RemovePathSections();
+			currentDrawingPath = null;
+		}
+
+		// these are paths currently being walked by the cats, which also require updating
+		foreach(CatchingMicePathVisualization pathVisualization in pathVisualizations)
+		{
+			pathVisualization.RemovePathSections();
+		}
+
+		pathVisualizations.Clear();
+	}
+
 	protected void VisualizePaths()
 	{
+		// this is the path being drawn by the player
 		if (currentDrawingPath != null)
 			DrawPath(currentDrawingPath);
 
+		// these are paths currently being walked by the cats, which also require updating
 		foreach(CatchingMicePathVisualization pathVisualization in pathVisualizations)
 		{
 			DrawPath(pathVisualization);

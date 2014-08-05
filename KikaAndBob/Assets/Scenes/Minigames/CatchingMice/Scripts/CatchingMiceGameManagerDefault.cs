@@ -219,6 +219,8 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		CatchingMiceTrapSelector.use.SetVisible(false);
 
 		HUDManager.use.LevelEndScreen.Show(true, 1f);
+
+		CatchingMiceInputManager.use.ClearAllPaths();
 	}
 
 	public void LoseState()
@@ -228,6 +230,8 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: lost");
 		HUDManager.use.LevelEndScreen.Show(false, 1f);
 		CatchingMiceTrapSelector.use.SetVisible(false);
+
+		CatchingMiceInputManager.use.ClearAllPaths();
 	}
 	
 	public override void StartGame()

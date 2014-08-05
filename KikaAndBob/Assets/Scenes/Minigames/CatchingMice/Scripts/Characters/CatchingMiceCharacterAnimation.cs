@@ -157,7 +157,7 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 
 		if (currentAnimationClip != targetAnimation)
         {
-			PlayAnimation(heading.ToString() + "/" + targetAnimation, !mirror, 1f);
+			PlayAnimation(heading.ToString() + "/" + targetAnimation, !mirror);
 			_currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE; 
 
 //			if (mirror) // mirror for facing right
@@ -369,22 +369,8 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
     
 	public virtual void OnHit()
     {
-
-//        if (currentAnimationClip != characterNameAnimation + _frontAnimationClip + eatingAnimationClip)
-//        {
-//            PlayAnimation("DOWN/" + characterNameAnimation + _frontAnimationClip + eatingAnimationClip);
-//            _currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE;
-//        }
-//
-
-
-
 		bool mirror = false;
-		
 		KikaAndBob.CMMovementQuadrant heading = DirectionToQuadrant(character.movementDirection);
-
-
-
 
 		// there is no idle animation for the cat facing away from the camera, so we just use the idle animation
 		// the side attack animations are named differently, but even though they look cool they don't loop well and don't align with the idle animation, so we decided to not use them
@@ -395,9 +381,6 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 		}
 
 		string facing = CheckFacing(heading);
-
-		print (facing);
-
 		string targetAnimation = characterNameAnimation + facing;
 
 		if (heading == KikaAndBob.CMMovementQuadrant.UP)
@@ -405,35 +388,10 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 		else
 			targetAnimation += eatingAnimationClip;
 
-
-
 		if (currentAnimationClip != targetAnimation)
 		{
 			PlayAnimation(heading.ToString() + "/" + targetAnimation, !mirror);
 		}
-
-
-//		string targetAnim = characterNameAnimation + CheckFacing(_currentMovementQuadrant);
-//		
-//
-//
-//		// names of attack animations are not consistent so we have to do a little extra forking
-//		if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.RIGHT || _currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.LEFT)
-//		{
-//			targetAnim += "_Pounce";
-//		}
-//		else if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.DOWN)
-//		{
-//			targetAnim += eatingAnimationClip;
-//		}
-//		else if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.UP)
-//		{
-//			targetAnim += "_Idle";
-//		}
-//
-//
-//		if (currentAnimationClip != targetAnim)
-//			PlayAnimation(targetAnim);
     }
 
     protected void Awake()
