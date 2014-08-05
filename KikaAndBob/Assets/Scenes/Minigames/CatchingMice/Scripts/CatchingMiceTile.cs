@@ -15,6 +15,7 @@ public class CatchingMiceTile
         Hole  = 16,
         Cheese = 32,
 		Obstacle = 64,
+		Decoration = 128,
 
         Both = 3,
         GroundTrap = 9,

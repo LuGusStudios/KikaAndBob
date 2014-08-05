@@ -141,13 +141,34 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 
     protected virtual void IdleLoop()
     {
-        if (currentAnimationClip != characterNameAnimation + _frontAnimationClip + idleAnimationClip)
+		bool mirror = false;
+
+		KikaAndBob.CMMovementQuadrant heading = DirectionToQuadrant(character.movementDirection);
+
+		if (heading == KikaAndBob.CMMovementQuadrant.RIGHT)
+		{
+			mirror = true;
+			heading = KikaAndBob.CMMovementQuadrant.LEFT;
+		}
+
+		string facing = CheckFacing(heading);
+		string targetAnimation = characterNameAnimation + facing + idleAnimationClip;
+
+
+		if (currentAnimationClip != targetAnimation)
         {
-            //CatchingMiceLogVisualizer.use.LogError("Loading Idle Animation Clip");
-            PlayAnimation("DOWN/" + characterNameAnimation + _frontAnimationClip + idleAnimationClip);
-            _currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE; 
-        }
-           
+			PlayAnimation(heading.ToString() + "/" + targetAnimation, !mirror, 1f);
+			_currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE; 
+
+//			if (mirror) // mirror for facing right
+//			{
+//				transform.localScale = transform.localScale.x( - Mathf.Abs(transform.localScale.x));
+//			}
+//			else  // dont forget to always reset the scale in case we were facing right earlier
+//			{
+//				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+//			}
+		}
     }
     
 	protected void LoadQuadrantAnimation(KikaAndBob.CMMovementQuadrant quadrantReal, string animationType)
@@ -189,7 +210,7 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
         PlayAnimation(animationClipName, !movingRight);
     }
     
-	public virtual void PlayAnimation(string animationPath, bool moveRight = true)
+	public virtual void PlayAnimation(string animationPath, bool moveRight = true, float fadeTime = 0.3f)
     {
 
         string[] parts = animationPath.Split('/');
@@ -242,11 +263,12 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
         {
             currentAnimationContainer.Stop();
             currentAnimationContainer.Play(clipName);
+
             //CatchingMiceLogVisualizer.use.LogError("PLAYING CLIP " + clipName);
         }
         else
         {
-            currentAnimationContainer.CrossFade(clipName,0.3f); 
+			currentAnimationContainer.CrossFade(clipName,fadeTime); 
         }
 
 
@@ -297,7 +319,7 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
                 facing =_sideAnimationClip;
                 break;
             default:
-                CatchingMiceLogVisualizer.use.LogError("no correct movement quadrant had been chosen");
+                CatchingMiceLogVisualizer.use.LogError("No correct movement quadrant was chosen.");
                 break;
         }
         return facing;
@@ -348,12 +370,70 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 	public virtual void OnHit()
     {
 
-        if (currentAnimationClip != characterNameAnimation + _frontAnimationClip + eatingAnimationClip)
-        {
-            PlayAnimation("DOWN/" + characterNameAnimation + _frontAnimationClip + eatingAnimationClip);
-            _currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE;
-        }
-        
+//        if (currentAnimationClip != characterNameAnimation + _frontAnimationClip + eatingAnimationClip)
+//        {
+//            PlayAnimation("DOWN/" + characterNameAnimation + _frontAnimationClip + eatingAnimationClip);
+//            _currentMovementQuadrant = KikaAndBob.CMMovementQuadrant.NONE;
+//        }
+//
+
+
+
+		bool mirror = false;
+		
+		KikaAndBob.CMMovementQuadrant heading = DirectionToQuadrant(character.movementDirection);
+
+
+
+
+		// there is no idle animation for the cat facing away from the camera, so we just use the idle animation
+		// the side attack animations are named differently, but even though they look cool they don't loop well and don't align with the idle animation, so we decided to not use them
+		// final result UP = back idle, everything else = front attack
+		if (heading != KikaAndBob.CMMovementQuadrant.UP)
+		{
+			heading = KikaAndBob.CMMovementQuadrant.DOWN;
+		}
+
+		string facing = CheckFacing(heading);
+
+		print (facing);
+
+		string targetAnimation = characterNameAnimation + facing;
+
+		if (heading == KikaAndBob.CMMovementQuadrant.UP)
+			targetAnimation += idleAnimationClip;
+		else
+			targetAnimation += eatingAnimationClip;
+
+
+
+		if (currentAnimationClip != targetAnimation)
+		{
+			PlayAnimation(heading.ToString() + "/" + targetAnimation, !mirror);
+		}
+
+
+//		string targetAnim = characterNameAnimation + CheckFacing(_currentMovementQuadrant);
+//		
+//
+//
+//		// names of attack animations are not consistent so we have to do a little extra forking
+//		if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.RIGHT || _currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.LEFT)
+//		{
+//			targetAnim += "_Pounce";
+//		}
+//		else if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.DOWN)
+//		{
+//			targetAnim += eatingAnimationClip;
+//		}
+//		else if (_currentMovementQuadrant == KikaAndBob.CMMovementQuadrant.UP)
+//		{
+//			targetAnim += "_Idle";
+//		}
+//
+//
+//		if (currentAnimationClip != targetAnim)
+//			PlayAnimation(targetAnim);
     }
 
     protected void Awake()

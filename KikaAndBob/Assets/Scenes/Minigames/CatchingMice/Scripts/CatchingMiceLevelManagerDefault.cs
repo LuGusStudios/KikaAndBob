@@ -586,15 +586,22 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				{
 					furniture.parentTile = targetTile;
 
-					if ((targetTile.tileType & CatchingMiceTile.TileType.Furniture) != CatchingMiceTile.TileType.Furniture)
+					if ((targetTile.tileType & CatchingMiceTile.TileType.Furniture) != CatchingMiceTile.TileType.Furniture &&
+					    (targetTile.tileType & CatchingMiceTile.TileType.Decoration) != CatchingMiceTile.TileType.Decoration)
 					{
-						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no furniture flag set!");
+						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no furniture or decoration flag set!");
 					}
 				}
 				else
 				{
 					CatchingMiceLogVisualizer.use.LogError("The furniture " + furniture.name + " could not be placed on the grid.");
 					DestroyGameObject(furniture.gameObject);
+				}
+
+				// if type is not decoration, raise object slightly e.g. tables should render above carpets
+				if (furniture.tileType == CatchingMiceTile.TileType.Furniture)
+				{
+					furniture.transform.position = 	furniture.transform.position.zAdd(-0.1f);
 				}
 			}
 			else
@@ -603,11 +610,14 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				DestroyGameObject(tileItem);
 			}
 
-			BoxCollider2D[] colliders = tileItem.GetComponentsInChildren<BoxCollider2D>(true);
-
-			foreach(BoxCollider2D boxCollider in colliders)
+			if (tileItem != null)
 			{
-					boxCollider.enabled = false;
+				BoxCollider2D[] colliders = tileItem.GetComponentsInChildren<BoxCollider2D>(true);
+
+				foreach(BoxCollider2D boxCollider in colliders)
+				{
+						boxCollider.enabled = false;
+				}
 			}
 		}
 	}
@@ -714,7 +724,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			GameObject tileItem = (GameObject)Instantiate(cheesePrefab);
 			tileItem.transform.parent = objectParent;
 			tileItem.transform.name += " " + targetTile.gridIndices;
-			tileItem.transform.localPosition = targetTile.location;
+			tileItem.transform.localPosition = targetTile.location.zAdd(-0.1f);
 
 			CatchingMiceCheese cheese = tileItem.GetComponent<CatchingMiceCheese>();
 			if (cheese != null)

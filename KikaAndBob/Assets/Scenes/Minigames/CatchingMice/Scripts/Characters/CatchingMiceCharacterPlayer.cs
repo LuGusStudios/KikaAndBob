@@ -67,7 +67,10 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
             _enemy.GetHit(damage);
             _canAttack = false;
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio("e00_Attack01"));
-            OnHitEvent();
+
+			if (!moving)
+            	OnHitEvent();	// this event will play the attack animation
+
             yield return new WaitForSeconds(attackInterval);
             _canAttack = true;
             attacking = false; 
@@ -148,7 +151,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 	// Update is called once per frame
 	protected void Update () 
     {
-	    if(!moving && _canAttack)
+	    if(_canAttack)
         {
             CheckForAttack();
         }
@@ -165,7 +168,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 
 			CatchingMiceGameManager.use.PickupCount += takencookies;
 
-			ScoreVisualizer.Score(KikaAndBob.CommodityType.Cookie, takencookies).Audio("e00_CookieEat01").Position(currentTile.waypoint.transform.position).Execute();
+			ScoreVisualizer.Score(KikaAndBob.CommodityType.Cookie, takencookies).Audio("e00_CookieEat01").Color(Color.gray).Position(currentTile.waypoint.transform.position).Execute();
 		}
 	}
 }

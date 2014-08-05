@@ -34,6 +34,8 @@ public class CatchingMiceWorldObject : MonoBehaviour
 		{
 			foreach (BoxCollider2D col2D in boxColliders2D)
 			{
+
+				// old version -----------------------
 				float xTiles = Mathf.Ceil(col2D.size.x / CatchingMiceLevelManager.use.scale);
 				float yTiles = Mathf.Ceil(col2D.size.y / CatchingMiceLevelManager.use.scale);
 
@@ -102,7 +104,7 @@ public class CatchingMiceWorldObject : MonoBehaviour
 		}
 		else if ((tileType & tile.tileType) == tileType)
 		{
-			CatchingMiceLogVisualizer.use.LogError("The tile already contains an item of the same type as " + transform.name + ".");
+			CatchingMiceLogVisualizer.use.LogError("The tile already contains an item of the same type as " + transform.name + ": " + tileType.ToString());
 			return false;
 		}
 
