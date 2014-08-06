@@ -115,4 +115,23 @@ public class CatchingMiceTile
 	{
 		return "GameTile: " + gridIndices;
 	}
+
+	public GameObject ReleaseCookies()
+	{
+		if (cookies <= 0) 
+		{
+			Debug.Log("There are no cookies on this tile: " + this.ToString());
+		}
+
+		if (cookieObject == null)
+		{
+			Debug.Log("There is no cookie object on this tile: " + this.ToString());
+		}
+
+		cookies = 0;
+
+		cookieObject.transform.parent = null;
+
+		return cookieObject;
+	}
 }

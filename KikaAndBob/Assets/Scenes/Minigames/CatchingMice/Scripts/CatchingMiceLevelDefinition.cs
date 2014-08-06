@@ -612,6 +612,9 @@ public class CatchingMiceFurnitureDefinition
                         }
                         furniture.position = coordinates;
                         break;
+					case "ZOffset":
+						furniture.zOffset = float.Parse(parser.content);
+						break;
                 }
             }
         }
@@ -641,6 +644,7 @@ public class CatchingMiceFurnitureDefinition
         rawdata += tabs + "\t\t<X>" + furniture.position.x.ToString() + "</X>\r\n";
         rawdata += tabs + "\t\t<Y>" + furniture.position.y.ToString() + "</Y>\r\n";
         rawdata += tabs + "\t</Position>\r\n";
+		rawdata += tabs + "\t<ZOffset>" + furniture.zOffset + "</ZOffset>\r\n";
 		rawdata += tabs + "</Furniture>\r\n";
 
         return rawdata;
@@ -648,6 +652,7 @@ public class CatchingMiceFurnitureDefinition
 
     public string prefabName;
     public Vector2 position;
+	public float zOffset = 0;
 }
 
 [System.Serializable]

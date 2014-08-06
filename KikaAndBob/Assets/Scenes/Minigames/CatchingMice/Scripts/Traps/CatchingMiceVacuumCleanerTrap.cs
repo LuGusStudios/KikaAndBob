@@ -16,6 +16,7 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 
 	protected ILugusCoroutineHandle routineHandle = null;
 	protected ParticleSystem dustParticles = null;
+	protected List<CatchingMiceTile> surroundingTiles = new List<CatchingMiceTile>();
 
 	public override void SetupGlobal()
 	{
@@ -26,6 +27,11 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 
 		routineHandle = LugusCoroutines.use.GetHandle();
 		routineHandle.Claim();
+
+		if (surroundingTiles.Count <= 0)
+		{
+			surroundingTiles.AddRange(CatchingMiceLevelManager.use.GetTilesAround(parentTile, tileRange));
+		}
 
 		StartCoroutine(TrapRoutine());
 	}
@@ -39,33 +45,47 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 			&& (ammo > 0)
 			&& (health > 0))
 		{
-			// Check whether an enemy is near
-			List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
-			Collider2D[] colliders = Physics2D.OverlapAreaAll(min, max);
+//			// Check whether an enemy is near
+//			List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
+//			Collider2D[] colliders = Physics2D.OverlapAreaAll(min, max);
+//
+//			foreach (Collider2D coll2D in colliders)
+//			{
+//				CatchingMiceCharacterMouse enemy = null;
+//
+//				if (coll2D.transform.parent != null)
+//					enemy = coll2D.transform.parent.GetComponent<CatchingMiceCharacterMouse>();
+//
+//				if (enemy != null)
+//				{
+//					enemies.Add(enemy);
+//				}
+//			}
 
-			foreach (Collider2D coll2D in colliders)
+			bool enemyFound = false;
+
+			foreach(CatchingMiceCharacterMouse enemy in CatchingMiceLevelManager.use.Enemies)
 			{
-				CatchingMiceCharacterMouse enemy = coll2D.transform.parent.GetComponent<CatchingMiceCharacterMouse>();
-
-				if (enemy != null)
+				if (surroundingTiles.Contains(enemy.currentTile))
 				{
-					enemies.Add(enemy);
+					enemyFound = true;
+					break;
 				}
 			}
-
+			
 			// If there are enemies in the neighborhood
 			// then start the vacuum routine
-			if ((enemies.Count > 0) && (!routineHandle.Running))
+			if (enemyFound && (routineHandle != null && !routineHandle.Running))
 			{
-				routineHandle.StartRoutine(VacuumRoutine());
+				yield return routineHandle.StartRoutine(VacuumRoutine());
 
 				// Wait until the vacuum routine is done
 				// and then wait another interval time
 				// to start again
-				while (routineHandle.Running)
-				{
-					yield return new WaitForEndOfFrame();
-				}
+//				while (routineHandle.Running)
+//				{
+//					yield return new WaitForEndOfFrame();
+//				}
 
 				Ammo = Ammo - 1;
 
@@ -80,93 +100,83 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 
 	protected IEnumerator VacuumRoutine()
 	{
-		Vector2 min, max;
-		CalculateTrapBounds(out min, out max);
-
-		List<CatchingMiceCharacterMouse> caughtInSuction = new List<CatchingMiceCharacterMouse>();
-		List<float> enemyHitTimes = new List<float>();
-
-		float timeLeft = suctionTime;
-
 		if (dustParticles != null)
 		{
 			dustParticles.Play();
 		}
 
-		while(CatchingMiceGameManager.use.GameRunning
-			&& (timeLeft > 0)
-			&& (health > 0))
+		LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(attackSoundKey));
+
+		float activationTimer = 0;
+		List<CatchingMiceCharacterMouse> caughtMice = new List<CatchingMiceCharacterMouse>();
+		List<GameObject> caughtCookies = new List<GameObject>();
+
+		while(activationTimer < suctionTime || caughtMice.Count > 0)
 		{
-			timeLeft -= Time.fixedDeltaTime;
+			activationTimer += Time.deltaTime;
 
-			// Check whether a new enemy is near
-			Collider2D[] colliders = Physics2D.OverlapAreaAll(min, max);
-
-			foreach (Collider2D coll2D in colliders)
+			if (activationTimer < suctionTime)	// only add mice if activation time isn't over
 			{
-				CatchingMiceCharacterMouse enemy = coll2D.transform.parent.GetComponent<CatchingMiceCharacterMouse>();
-
-				if (enemy == null)
+				foreach(CatchingMiceCharacterMouse enemy in CatchingMiceLevelManager.use.Enemies)
 				{
-					continue;
-				}
-
-				if (!caughtInSuction.Contains(enemy))
-				{
-					caughtInSuction.Add(enemy);
-					enemyHitTimes.Add(1f);
-
-					enemy.StopCurrentBehaviour();
-
-					// Set the target position of the enemy
-					// to be the center of the vacuum cleaner
-					Vector3 targetPosition = transform.position;
-					targetPosition = targetPosition.z(Mathf.Min(transform.position.z, enemy.transform.position.z));
-
-					enemy.transform.position = enemy.transform.position.z(targetPosition.z);
-
-					float distance = Vector2.Distance(targetPosition.v2(), enemy.transform.position.v2());
-					float time = Mathf.Min(timeLeft, distance / suctionSpeed);
-
-					enemy.gameObject.MoveTo(targetPosition).Time(time).Execute();
-				}
-			}
-
-			// Go over all of the registered enemies, and update their times
-			for (int i = caughtInSuction.Count - 1; i >= 0 ; --i)
-			{
-				enemyHitTimes[i] -= Time.fixedDeltaTime;
-
-				if (enemyHitTimes[i] < 0)
-				{
-					OnHit(caughtInSuction[i]);
-					enemyHitTimes[i] = 1f;
-
-					if (caughtInSuction[i].Health <= 0)
+					if (caughtMice.Contains(enemy))
 					{
-						caughtInSuction.RemoveAt(i);
-						enemyHitTimes.RemoveAt(i);
+						continue;
 					}
 
+					if (surroundingTiles.Contains(enemy.currentTile))
+					{
+						caughtMice.Add(enemy);
+						enemy.StopCurrentBehaviour();
+						enemy.gameObject.MoveTo(transform.position).Speed(2).EaseType(iTween.EaseType.easeInBack).Execute();
+					}
 				}
 			}
 
-			yield return new WaitForFixedUpdate();
+			for (int i = caughtMice.Count - 1; i >= 0; i--) 
+			{
+				if (Vector2.Distance(caughtMice[i].transform.position, this.transform.position) < 0.1f)
+				{
+					caughtMice[i].Health = 0;
+					caughtMice.Remove(caughtMice[i]);
+				}
+			}
+
+			foreach(CatchingMiceTile tile in surroundingTiles)
+			{
+				if (tile.Cookies > 0)
+				{
+					AttractCookies(tile);
+				}
+			}
+
+			yield return null;
 		}
 
+		// check for cookies one more time - the last mouse might have drop some
+		foreach(CatchingMiceTile tile in surroundingTiles)
+		{
+			if (tile.Cookies > 0)
+			{
+				AttractCookies(tile);
+			}
+		}
+
+
+		
 		if (dustParticles != null)
 		{
 			dustParticles.Stop();
 		}
 
-		// For each enemy caught in the suction
-		// re-assign their parent tile, and reactivate
-		// them by letting them search for a new target
-		foreach(CatchingMiceCharacterMouse enemy in caughtInSuction)
-		{
-			CatchingMiceTile tile = CatchingMiceLevelManager.use.GetTileByLocation(enemy.transform.position.x, enemy.transform.position.y);
-			enemy.currentTile = tile;
-			enemy.GetTarget();
-		}
+		yield break;
+	}
+
+	protected void AttractCookies(CatchingMiceTile tile)
+	{
+		GameObject cookieObject = tile.ReleaseCookies();
+		cookieObject.transform.position = cookieObject.transform.position.z(transform.position.z);
+		cookieObject.MoveTo(transform.position).Time(1f).EaseType(iTween.EaseType.easeInBack).Execute();
+		Destroy(cookieObject, 1f);
 	}
 }

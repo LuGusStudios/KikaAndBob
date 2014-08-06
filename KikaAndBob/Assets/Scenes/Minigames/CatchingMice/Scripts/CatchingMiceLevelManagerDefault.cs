@@ -582,6 +582,20 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			CatchingMiceFurniture furniture = tileItem.GetComponent<CatchingMiceFurniture>();
 			if (furniture != null)
 			{
+				// we want to be sure furniture shadow etc is rendered above the tile below.
+				// move all items forwards by one tile depth, plus a tiny bit extra so they render above the tile above
+				if (furniture.tileType == CatchingMiceTile.TileType.Furniture)
+				{
+					if (furniture.transform.localPosition.z > 0)
+						furniture.zOffset += (scale + 0.1f);	// The zOffset value is always applied negatively! If you want to bring things forward, ADD to the value.
+					else
+						furniture.zOffset += (0.1f);
+				}
+
+				// for tricky depth situations, also allow manual offset alterations for both furniture and decorations
+
+				furniture.zOffset += definition.zOffset;	// unless it was explicitly defined in the level XML file, this value will be 0
+
 				if (furniture.CalculateColliders())
 				{
 					furniture.parentTile = targetTile;
@@ -597,12 +611,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 					CatchingMiceLogVisualizer.use.LogError("The furniture " + furniture.name + " could not be placed on the grid.");
 					DestroyGameObject(furniture.gameObject);
 				}
-
-				// if type is not decoration, raise object slightly e.g. tables should render above carpets
-				if (furniture.tileType == CatchingMiceTile.TileType.Furniture)
-				{
-					furniture.transform.position = 	furniture.transform.position.zAdd(-0.1f);
-				}
+	
 			}
 			else
 			{

@@ -146,9 +146,6 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 					// coincidentally, this also checks if it's not the cat's current tile
 					if (currentSelectedPlayer.currentTile.waypoint.neighbours.Contains(tile.waypoint))
 					{
-						print (currentSelectedPlayer.currentTile);
-						print (tile);
-
 						currentDrawingPath.wayPoints.Add(currentSelectedPlayer.currentTile.waypoint);
 
 						currentDrawingPath.wayPoints.Add(tile.waypoint);
