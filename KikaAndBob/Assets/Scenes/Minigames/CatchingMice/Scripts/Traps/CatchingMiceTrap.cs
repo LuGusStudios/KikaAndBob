@@ -162,7 +162,8 @@ public class CatchingMiceTrap : CatchingMiceWorldObject, ICatchingMiceWorldObjec
 
 	public void PlayerInteraction()
 	{
-		OnPlayerInteract();
+		// for the the time being, this has been disabled -  traps cannot be reset right now
+		//OnPlayerInteract();
 	}
 
 	public void CalculateTrapBounds(out Vector2 min, out Vector2 max)

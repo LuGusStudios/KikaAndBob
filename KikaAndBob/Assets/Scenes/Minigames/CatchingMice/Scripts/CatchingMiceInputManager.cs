@@ -141,14 +141,29 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 			{
 				if (currentDrawingPath.wayPoints.Count == 0)
 				{
-					currentDrawingPath.wayPoints.Add(tile.waypoint);
-					currentDrawingPath.drawn = false;	// setting this false will redraw path 
+					// this check is necessary - in rare cases the cursor might already be over a diagonally neighboring tile the first frame after the down event
+					// the neighbors list only contains direct (orthogonal) neighbors
+					// coincidentally, this also checks if it's not the cat's current tile
+					if (currentSelectedPlayer.currentTile.waypoint.neighbours.Contains(tile.waypoint))
+					{
+						print (currentSelectedPlayer.currentTile);
+						print (tile);
+
+						currentDrawingPath.wayPoints.Add(currentSelectedPlayer.currentTile.waypoint);
+
+						currentDrawingPath.wayPoints.Add(tile.waypoint);
+						currentDrawingPath.drawn = false;	// setting this false will redraw path 
+					}
 				}
-				else if (currentDrawingPath.wayPoints[currentDrawingPath.wayPoints.Count-1] != tile.waypoint && 		// if not on same tile and on tile bordering on last once
-				         currentDrawingPath.wayPoints[currentDrawingPath.wayPoints.Count-1].neighbours.Contains(tile.waypoint))
+				else
 				{
-					currentDrawingPath.wayPoints.Add(tile.waypoint);
-					currentDrawingPath.drawn = false;	// setting this false will redraw path 
+					CatchingMiceWaypoint previousPoint = currentDrawingPath.wayPoints[currentDrawingPath.wayPoints.Count-1] ;
+
+					if (previousPoint != tile.waypoint && previousPoint.neighbours.Contains(tile.waypoint))
+					{
+						currentDrawingPath.wayPoints.Add(tile.waypoint);
+						currentDrawingPath.drawn = false;	// setting this false will redraw path 
+					}
 				}
 			}
 		}
