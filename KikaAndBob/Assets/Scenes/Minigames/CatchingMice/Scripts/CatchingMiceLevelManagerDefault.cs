@@ -189,6 +189,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	protected List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
 	protected List<GameObject> enemyParentList = new List<GameObject>();
 	protected float maxDepth = 0;
+	protected int originalCheeseTileCount = 0;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	#endregion
@@ -762,6 +763,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				DestroyGameObject(tileItem);
 			}
 		}
+
+		originalCheeseTileCount = cheeseTiles.Count;
 	}
 
 	public void InstantiateTrap(CatchingMiceTrap trap, CatchingMiceTile tile)

@@ -135,6 +135,13 @@ public class CatchingMiceVacuumCleanerTrap : CatchingMiceWorldObjectTrapGround {
 
 			for (int i = caughtMice.Count - 1; i >= 0; i--) 
 			{
+				// this can be the case if the cat is standing on the vacuum cleaner
+				if (caughtMice[i] == null)
+				{
+					caughtMice.Remove(caughtMice[i]);
+					continue;
+				}
+
 				if (Vector2.Distance(caughtMice[i].transform.position, this.transform.position) < 0.1f)
 				{
 					caughtMice[i].Health = 0;

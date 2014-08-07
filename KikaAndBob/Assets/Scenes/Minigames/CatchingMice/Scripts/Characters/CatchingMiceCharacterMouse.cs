@@ -173,17 +173,6 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
 
         attacking = false;
-
-		// if there is still cheese around, but this one is gone, find new target
-//        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese == null || cheeseTile.cheese.Health <= 0))
-//        {
-//            CatchingMiceLogVisualizer.use.Log(gameObject.name + ": Acquiring new target.");
-//            GetTarget();
-//        }
-//        else
-//        {
-//            DieRoutine();
-//        }
     }
 
 	protected IEnumerator FindNewTarget()

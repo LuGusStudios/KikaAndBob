@@ -9,6 +9,7 @@ public class CatchingMiceGameManagerDefault : IGameManager
 {
 	protected bool gameRunning = false;
 	public float preWaveTime = 30.0f;
+	public int collectedPickups = 0;
 
 	#region Accessors
 	public int EnemiesAlive
@@ -218,7 +219,22 @@ public class CatchingMiceGameManagerDefault : IGameManager
 
 		CatchingMiceTrapSelector.use.SetVisible(false);
 
+		HUDManager.use.StopAll();
+
 		HUDManager.use.LevelEndScreen.Show(true, 1f);
+
+		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Cheese;
+		HUDManager.use.LevelEndScreen.Counter1.SetValue(GetCheeseScore());
+
+		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Cookie;
+		HUDManager.use.LevelEndScreen.Counter2.SetValue(collectedPickups);
+
+
+		HUDManager.use.LevelEndScreen.Counter4.gameObject.SetActive(true);
+		HUDManager.use.LevelEndScreen.Counter4.commodity = KikaAndBob.CommodityType.Score;
+		HUDManager.use.LevelEndScreen.Counter4.SetValue(GetCheeseScore() + collectedPickups);
 
 		CatchingMiceInputManager.use.ClearAllPaths();
 	}
@@ -228,14 +244,38 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		gameRunning = false;
 
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: lost");
+
+		HUDManager.use.StopAll();
 		HUDManager.use.LevelEndScreen.Show(false, 1f);
+
 		CatchingMiceTrapSelector.use.SetVisible(false);
 
 		CatchingMiceInputManager.use.ClearAllPaths();
 	}
+
+	public int GetCheeseScore()
+	{
+		int score = 0;
+		
+		foreach(CatchingMiceTile tile in CatchingMiceLevelManager.use.CheeseTiles)
+		{
+			score += Mathf.FloorToInt(tile.cheese.GetHealthPercentage() * 1000);
+		}
+		
+		return score;
+	}
+	
+	public int GetCookieScore()
+	{
+		int score = 0;
+		
+		return score;
+	}
 	
 	public override void StartGame()
 	{
+		collectedPickups = 0;
+
 		string levelData = levelLoader.GetLevelData(CatchingMiceCrossSceneInfo.use.GetLevelIndex());
 		
 		if (!string.IsNullOrEmpty(levelData))
@@ -343,6 +383,11 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		if (gameRunning)
 		{
 			timer += Time.deltaTime;
+		}
+
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			WinState();
 		}
 	}
 

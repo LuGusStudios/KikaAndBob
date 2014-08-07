@@ -167,6 +167,7 @@ public class CatchingMiceCharacterPlayer : ICatchingMiceCharacter
 			int takencookies = currentTile.TakeCookies(currentTile.Cookies);
 
 			CatchingMiceGameManager.use.PickupCount += takencookies;
+			CatchingMiceGameManager.use.collectedPickups += takencookies;
 
 			ScoreVisualizer.Score(KikaAndBob.CommodityType.Cookie, takencookies).Audio("e00_CookieEat01").Color(Color.gray).Position(currentTile.waypoint.transform.position).Execute();
 		}

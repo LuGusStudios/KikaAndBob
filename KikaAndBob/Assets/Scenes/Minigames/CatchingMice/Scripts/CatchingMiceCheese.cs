@@ -30,7 +30,7 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 					return;
 				}
 
-				int visualIndex = Mathf.FloorToInt(((float)health / (float)initialStacks) * (float)cheeseVisuals.Count);
+				int visualIndex = Mathf.FloorToInt(((float)health / (float)initialHealth) * (float)cheeseVisuals.Count);
 				visualIndex = Mathf.Max(Mathf.Min(visualIndex, cheeseVisuals.Count - 1), 0);
 
 				if (cheeseRenderer != null)
@@ -42,13 +42,13 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 	}
 
 	protected int health;
-	protected int initialStacks;
+	protected int initialHealth;
 
 	protected SpriteRenderer cheeseRenderer = null;
 
 	public void SetupGlobal()
 	{
-		initialStacks = health;
+		initialHealth = health;
 
 		if (cheeseRenderer == null)
 		{
@@ -120,6 +120,11 @@ public class CatchingMiceCheese : CatchingMiceWorldObject {
 		}
 
 		return true;
+	}
+
+	public float GetHealthPercentage()
+	{
+		return (float) health / (float) initialHealth;
 	}
 
 	protected void DestroySelf()
