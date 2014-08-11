@@ -20,7 +20,6 @@ public class LugusAudioSource : MonoBehaviour
 					key = this.audio.clip.name;
 				}
 			}
-			
 			Debug.LogWarning(name + " : key was empty! using material.mainTexture name : " + key );
 		}
 	}

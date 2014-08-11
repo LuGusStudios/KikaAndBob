@@ -24,7 +24,8 @@ Shader "Sprites/Zwrite"
 		Lighting Off
 		ZWrite On
 		Fog { Mode Off }
-		Blend SrcAlpha OneMinusSrcAlpha
+		//Blend SrcAlpha OneMinusSrcAlpha
+		Blend One OneMinusSrcAlpha
 
 		Pass
 		{
@@ -65,9 +66,13 @@ Shader "Sprites/Zwrite"
 
 			sampler2D _MainTex;
 
-			fixed4 frag(v2f IN) : COLOR
+			fixed4 frag(v2f IN) : SV_Target//COLOR
 			{
-				return tex2D(_MainTex, IN.texcoord) * IN.color;
+			
+				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
+				c.rgb *= c.a;
+				return c;
+				//return tex2D(_MainTex, IN.texcoord) * IN.color;
 			}
 		ENDCG
 		}
