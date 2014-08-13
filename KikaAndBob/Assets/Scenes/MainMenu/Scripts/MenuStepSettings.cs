@@ -84,18 +84,18 @@ public class MenuStepSettings : IMenuStep
 
 		if (musicButton.pressed)
 		{
-			bool musicMute = LugusConfig.use.User.GetBool("main.settings.musicmute", false);
+			bool musicMute = LugusConfig.use.System.GetBool("main.settings.musicmute", false);
 			musicMute = !musicMute;
-			LugusConfig.use.User.SetBool("main.settings.musicmute", musicMute, true);
+			LugusConfig.use.System.SetBool("main.settings.musicmute", musicMute, true);
 
 			SetMusicMute(musicMute);
 		}
 
 		if (soundButton.pressed)
 		{
-			bool soundMute = LugusConfig.use.User.GetBool("main.settings.soundmute", false);
+			bool soundMute = LugusConfig.use.System.GetBool("main.settings.soundmute", false);
 			soundMute = !soundMute;
-			LugusConfig.use.User.SetBool("main.settings.soundmute", soundMute, true);
+			LugusConfig.use.System.SetBool("main.settings.soundmute", soundMute, true);
 
 			SetSoundMute(soundMute);
 		}
@@ -113,8 +113,8 @@ public class MenuStepSettings : IMenuStep
 		this.gameObject.SetActive(true);
 
 		// make sure buttons are already properly displaying mute/unmute state
-		SetMusicMute(LugusConfig.use.User.GetBool("main.settings.musicmute", false));
-		SetSoundMute(LugusConfig.use.User.GetBool("main.settings.soundmute", false));
+		SetMusicMute(LugusConfig.use.System.GetBool("main.settings.musicmute", false));
+		SetSoundMute(LugusConfig.use.System.GetBool("main.settings.soundmute", false));
 
 		// give language display proper language
 		string currentLangId  = LugusResources.use.GetLocalizedLangID();

@@ -237,6 +237,12 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		HUDManager.use.LevelEndScreen.Counter4.SetValue(GetCheeseScore() + collectedPickups);
 
 		CatchingMiceInputManager.use.ClearAllPaths();
+
+		if (CatchingMiceCrossSceneInfo.use.GetLevelIndex() >= 4)
+		{
+			LugusConfig.use.User.SetBool("playroom" + "_unlock_" + CatchingMiceCrossSceneInfo.use.GetLevelIndex(), true, true);
+			LugusConfig.use.SaveProfiles();
+		}
 	}
 
 	public void LoseState()
