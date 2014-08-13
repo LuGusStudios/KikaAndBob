@@ -11,6 +11,7 @@ public class DartsPuddingThrower : MonoBehaviour
 	public DataRange bulletTravelTimeRange = new DataRange(0.1f, 0.2f);
 	
 	protected GameObject bulletHitParticles = null;
+	protected DartsRotateToMouse rotator = null;
 	
 	protected bool shooting = false;
 	
@@ -30,9 +31,20 @@ public class DartsPuddingThrower : MonoBehaviour
 		{
 			bulletHitParticles = GameObject.Find("HitParticles");
 		}
+
 		if (bulletHitParticles == null)
 		{
 			Debug.LogError(name + " : No hit particles found for this shooter!");
+		}
+
+		if (rotator == null)
+		{
+			rotator = GetComponent<DartsRotateToMouse>();
+		}
+
+		if (rotator == null)
+		{
+			Debug.LogError(name + " : No rotator found for this shooter!");
 		}
 	}
 	
@@ -78,6 +90,9 @@ public class DartsPuddingThrower : MonoBehaviour
 			string key = shootSoundKeys[Random.Range(0, shootSoundKeys.Length)];
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(key));
 		}
+
+		if (rotator != null)	// this is necessary on mobile devices, where LugusInput.use.lastPoint is not constantly updated
+			rotator.UpdateRotation();
 		
 		//Vector3 screenPoint = LugusInput.use.lastPoint;
 		Vector3 worldTarget = LugusInput.use.ScreenTo3DPoint(LugusInput.use.lastPoint, this.transform.position, LugusCamera.game);
