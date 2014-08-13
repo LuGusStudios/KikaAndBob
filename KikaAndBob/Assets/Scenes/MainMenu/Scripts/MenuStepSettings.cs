@@ -8,6 +8,7 @@ public class MenuStepSettings : IMenuStep
 	protected Button musicButton = null;
 	protected Button soundButton = null;
 	protected Button langButton = null;
+	protected Button resetButton = null;
 
 	protected TextMeshWrapper soundOnOffText = null;
 	protected TextMeshWrapper musicOnOffText = null;
@@ -53,12 +54,17 @@ public class MenuStepSettings : IMenuStep
 		if (langNameText == null)
 			Debug.LogError("MenuStepSettings: Missing language name text.");
 
-		
 		if (langButton == null)
 			langButton = transform.FindChild("ButtonLanguage").GetComponent<Button>();
 		
 		if (langButton == null)
 			Debug.LogError("MenuStepSettings: Missing language button.");
+
+		if (resetButton == null)
+			resetButton = transform.FindChild("ButtonReset").GetComponent<Button>();
+		
+		if (resetButton == null)
+			Debug.LogError("MenuStepSettings: Missing reset button.");
 	}
 	
 	public void SetupGlobal()
@@ -81,8 +87,7 @@ public class MenuStepSettings : IMenuStep
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
-
-		if (musicButton.pressed)
+		else if (musicButton.pressed)
 		{
 			bool musicMute = LugusConfig.use.System.GetBool("main.settings.musicmute", false);
 			musicMute = !musicMute;
@@ -90,8 +95,7 @@ public class MenuStepSettings : IMenuStep
 
 			SetMusicMute(musicMute);
 		}
-
-		if (soundButton.pressed)
+		else if (soundButton.pressed)
 		{
 			bool soundMute = LugusConfig.use.System.GetBool("main.settings.soundmute", false);
 			soundMute = !soundMute;
@@ -99,10 +103,14 @@ public class MenuStepSettings : IMenuStep
 
 			SetSoundMute(soundMute);
 		}
-
-		if (langButton.pressed)
+		else if (langButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Language);
+		}
+
+		else if (resetButton.pressed)
+		{
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Reset);
 		}
 
 	}

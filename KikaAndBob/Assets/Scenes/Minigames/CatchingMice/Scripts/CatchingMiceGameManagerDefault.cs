@@ -369,7 +369,8 @@ public class CatchingMiceGameManagerDefault : IGameManager
 	void Start()
 	{
 		CatchingMiceLevelManager.use.ClearLevel();
-		
+
+		levelLoader.SetLevelLoadCountCap(30);	// the standard cap is 20, but this requires more
 		levelLoader.FindLevels();
 		
 		if (CatchingMiceCrossSceneInfo.use.GetLevelIndex() < 0)

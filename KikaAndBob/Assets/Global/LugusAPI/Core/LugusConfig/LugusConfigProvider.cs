@@ -237,6 +237,5 @@ public class LugusConfigProviderPlayerPrefs : ILugusConfigProvider
 	{
 		Debug.LogWarning("PlayerPrefs : storing " + key + " as " + _parsers[0].ParseTo(data) );
 		PlayerPrefs.SetString(URL, _parsers[0].ParseTo(data) );
-	}
-	
+	}	
 }

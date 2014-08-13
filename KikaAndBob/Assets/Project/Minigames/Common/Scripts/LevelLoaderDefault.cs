@@ -91,6 +91,17 @@ public class LevelLoaderDefault
 		return levelData;
 	}
 
+	public void SetLevelLoadCountCap(int newValue)
+	{
+		if (newValue < 1)
+		{
+			Debug.LogError("LevelLoader: Cannot set level load count cap to a number smaller than 1.");
+			return;
+		}
+
+		configLoadingHardCap = newValue;
+	}
+
 	public void LoadLevel(int index)
 	{
 		Debug.Log("LevelLoaderDefault: Attempting to load level: " + index);

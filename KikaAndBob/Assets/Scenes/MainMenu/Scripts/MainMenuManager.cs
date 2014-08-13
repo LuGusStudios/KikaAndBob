@@ -13,7 +13,8 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		Settings = 1,
 		Avatar = 2,
 		Games = 3,
-		Language = 4
+		Language = 4,
+		Reset = 5
 	}
 
 	public void SetupLocal()
@@ -29,9 +30,9 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		else
 			Debug.LogError("MainMenuManager: Missing main menu!");
 
-		MenuStepSettings helpMenu = transform.FindChild("Settings").GetComponent<MenuStepSettings>();
-		if (helpMenu != null)
-			menus.Add(MainMenuTypes.Settings, helpMenu);
+		MenuStepSettings settingsMenu = transform.FindChild("Settings").GetComponent<MenuStepSettings>();
+		if (settingsMenu != null)
+			menus.Add(MainMenuTypes.Settings, settingsMenu);
 		else
 			Debug.LogError("MainMenuManager: Missing setting menu!");
 
@@ -52,6 +53,12 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 			menus.Add(MainMenuTypes.Language, languageMenu);
 		else
 			Debug.LogError("MainMenuManager: Missing language menu!");
+
+		MenuStepReset resetMenu = transform.FindChild("Reset").GetComponent<MenuStepReset>();
+		if (resetMenu != null)
+			menus.Add(MainMenuTypes.Reset, resetMenu);
+		else
+			Debug.LogError("MainMenuManager: Missing reset menu!");
 
 		ShowMenu(MainMenuTypes.Main);
 	}

@@ -127,6 +127,22 @@ public class DebugByTaps : MonoBehaviour
 
 		GUILayout.EndArea();
 
+		GUILayout.BeginHorizontal();
+
+		GUILayout.Space( 200 );
+
+		if (GUILayout.Button("Clear ALL game progress", GUILayout.MinHeight(60))) 
+		{
+			LugusConfig.use.User.ClearAllData();
+		}
+
+		if (GUILayout.Button("Clear ALL other settings", GUILayout.MinHeight(60))) 
+		{
+			LugusConfig.use.System.ClearAllData();
+		}
+
+		GUILayout.EndHorizontal();
+
 		DrawFPS();
 	}
 

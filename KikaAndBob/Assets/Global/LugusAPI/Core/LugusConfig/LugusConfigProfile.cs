@@ -18,6 +18,8 @@ public interface ILugusConfigProfile
 
 	void Remove(string key);
 
+	void ClearAllData();
+
 	#region Getters
 	bool GetBool(string key, bool defaultValue);
 
@@ -177,6 +179,16 @@ public class LugusConfigProfileDefault : ILugusConfigProfile
 		_changed = false;
 	}
 
+	public void ClearAllData()
+	{
+		Debug.Log("LugusConfigProfile: Now deleting all saved data for config profile: " + Name);
+
+		Data.Clear();
+
+		foreach (ILugusConfigProvider provider in _providers)
+			provider.Store(Data, Name);
+	}
+
 	public bool Exists(string key)
 	{
 		return _data.ContainsKey(key);
@@ -312,5 +324,4 @@ public class LugusConfigProfileDefault : ILugusConfigProfile
 
 		return result;
 	}
-
 }

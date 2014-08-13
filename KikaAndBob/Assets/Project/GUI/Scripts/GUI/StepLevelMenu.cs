@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class StepLevelMenu : IMenuStep 
 {
+	public int customLevelLoad = 0;	// Dirty fix. CAUTION - dont apply this value to the prefab if changed
+
 	protected Transform levelBarsParent = null;
 	protected List<Transform> levelBars = new List<Transform>();
 	protected List<Button> levelButtons = new List<Button>();
@@ -78,6 +80,9 @@ public class StepLevelMenu : IMenuStep
 	{
 		if( levelIndices == null || levelIndices.Count == 0 )
 		{
+			if (customLevelLoad > 0)
+				levelLoader.SetLevelLoadCountCap(customLevelLoad);
+
 			levelIndices = levelLoader.FindLevels(); 
 		}
 	}
