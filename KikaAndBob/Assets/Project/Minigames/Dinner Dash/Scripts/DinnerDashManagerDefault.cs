@@ -180,6 +180,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		if( success )
 		{
+			CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
 
 			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad) );
 			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad, true, true );

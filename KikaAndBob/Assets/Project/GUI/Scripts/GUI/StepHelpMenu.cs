@@ -145,6 +145,8 @@ public class StepHelpMenu : IMenuStep
 
 			description.SetText(LugusResources.use.Levels.GetText(key + ".text"));
 
+			print (key + ".image");
+
 			Sprite newImage = LugusResources.use.Shared.GetSprite(LugusResources.use.Levels.GetText(key + ".image"));
 
 			if (newImage != null && newImage != LugusResources.use.errorSprite)

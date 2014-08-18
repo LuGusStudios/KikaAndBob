@@ -562,6 +562,9 @@ public class RunnerManagerDefault : IGameManager
 		
 		if( success )
 		{
+			CatchingMiceUnlockManager.use.CheckUnlockRunner(IRunnerConfig.use, RunnerCrossSceneInfo.use);
+
+			//CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
 			
 			Debug.Log ("Runner : set level success : " + (Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad) );
 			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad, true, true );

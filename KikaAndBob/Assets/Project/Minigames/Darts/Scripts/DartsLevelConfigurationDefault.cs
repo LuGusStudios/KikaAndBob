@@ -140,6 +140,8 @@ public class DartsLevelConfigurationDefault :  IGameManager
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DartsScoreManager.use.totalScore, true);
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
 
+		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, DartsCrossSceneInfo.use);
+
 		LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
 		LugusConfig.use.SaveProfiles();
 	}

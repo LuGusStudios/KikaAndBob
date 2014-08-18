@@ -44,11 +44,13 @@ public class FroggerGameManagerDefault : IGameManager
 		Debug.Log("FroggerGameManager: Won game!");
 		
 		gameRunning = false;
+
+		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, FroggerCrossSceneInfo.use);
+
 		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
-		
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
-		
+
 		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
 		//TO DO: STORE SCORE TOTAL HERE!
 		

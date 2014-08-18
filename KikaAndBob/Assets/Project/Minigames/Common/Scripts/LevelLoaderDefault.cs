@@ -19,6 +19,7 @@ public class LevelLoaderDefault
 	public List<int> levelIndices = new List<int>();
 
 	protected int configLoadingHardCap = 20;
+	protected int currentHighestLevel = 0;
 
 	public List<int> FindLevels()
 	{
@@ -36,6 +37,7 @@ public class LevelLoaderDefault
 					if (File.Exists(Application.dataPath + "/Config/Levels/" + levelName + ".xml"))
 					{
 						levelIndices.Add(i + 1);
+						currentHighestLevel = i + 1;
 					}
 #else
 					Debug.LogError("Cannot find configs using System.IO while using a web player.");
@@ -47,6 +49,7 @@ public class LevelLoaderDefault
 					if (asset != LugusResources.use.errorTextAsset)
 					{
 						levelIndices.Add(i + 1);
+						currentHighestLevel = i + 1;
 					}
 
 					break;
@@ -54,6 +57,17 @@ public class LevelLoaderDefault
 		}
 
 		return levelIndices;
+	}
+
+	public bool IsHighestLevel(int levelIndex)
+	{
+		if (currentHighestLevel <= 0)
+		{
+			Debug.LogError("LevelLoaderDefault: FindLevels hasn't run before! Returning false.");
+			return false;
+		}
+
+		return levelIndex >= currentHighestLevel;
 	}
 
 	public string GetLevelData(int levelIndex)

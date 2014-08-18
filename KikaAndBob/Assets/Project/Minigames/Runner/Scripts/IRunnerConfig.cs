@@ -9,6 +9,13 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
+	// ideally this should be implemented individually,
+	// but this is late in the project and all the runners have 3 levels right now...
+	public virtual bool IsLastLevel(int levelIndex)
+	{
+		return levelIndex >= 2;
+	}
+
 	public virtual void OnGameStopped()
 	{
 
