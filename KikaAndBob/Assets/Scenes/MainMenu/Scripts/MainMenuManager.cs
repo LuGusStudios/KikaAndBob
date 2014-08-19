@@ -14,7 +14,9 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		Avatar = 2,
 		Games = 3,
 		Language = 4,
-		Reset = 5
+		Reset = 5,
+		Login = 6,
+		Register = 7
 	}
 
 	public void SetupLocal()
@@ -60,6 +62,18 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		else
 			Debug.LogError("MainMenuManager: Missing reset menu!");
 
+		MenuStepLogin loginMenu = transform.FindChild("Login").GetComponent<MenuStepLogin>();
+		if (loginMenu != null)
+			menus.Add(MainMenuTypes.Login, loginMenu);
+		else
+			Debug.LogError("MainMenuManager: Missing login menu!");
+
+		MenuStepRegister registerMenu = transform.FindChild("Register").GetComponent<MenuStepRegister>();
+		if (registerMenu != null)
+			menus.Add(MainMenuTypes.Register, registerMenu);
+		else
+			Debug.LogError("MainMenuManager: Missing register menu!");
+
 		ShowMenu(MainMenuTypes.Main);
 	}
 	
@@ -75,7 +89,10 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 	
 	protected void Update () 
 	{
-	
+		if (Input.GetKeyDown(KeyCode.L))
+		{
+			ShowMenu(MainMenuTypes.Login);
+		}
 	}
 
 	protected void DeactivateAll()

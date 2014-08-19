@@ -70,8 +70,6 @@ public class MenuStepMain : IMenuStep
 
 	protected void LoadConfig()
 	{
-		print ("fdjdkgf");
-
 		// read if music and SFX need to be muted
 		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
 		{

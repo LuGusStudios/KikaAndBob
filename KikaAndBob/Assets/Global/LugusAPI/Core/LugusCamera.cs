@@ -15,7 +15,7 @@ public class LugusCamera
 			
 			if( _frontCamera == null )
 				_frontCamera = game;
-			
+
 			return _frontCamera; 
 		}
 	}

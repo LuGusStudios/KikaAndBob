@@ -9,7 +9,6 @@ public class MenuStepReset : IMenuStep
 
 	public void SetupLocal()
 	{
-		// assign variables that have to do with this class only
 	}
 	
 	public void SetupGlobal()

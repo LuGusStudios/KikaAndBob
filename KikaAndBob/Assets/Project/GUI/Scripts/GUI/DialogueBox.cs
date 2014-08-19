@@ -10,6 +10,7 @@ public class DialogueBox : MonoBehaviour
 
 		Notification = 1, // no buttons, auto-hide or hidden by script
 		Continue = 2, // just an OK button
+		ConfirmCancel = 3
 	}
 
 	public bool available = true;
@@ -24,6 +25,8 @@ public class DialogueBox : MonoBehaviour
 	protected KikaAndBob.ScreenAnchor mainAnchor = KikaAndBob.ScreenAnchor.NONE;
 	protected KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.NONE;
 
+	protected BoxCollider inputBlockCollider = null;
+
 	protected Vector3 targetPosition = Vector3.zero;
 
 	public Vector2 margin = new Vector2(50.0f, 50.0f); // in PIXELS
@@ -31,9 +34,19 @@ public class DialogueBox : MonoBehaviour
 
 	public BoxType boxType = BoxType.Notification;
 	public Button ContinueButton = null;
+	public Button confirmButton = null;
+	public Button cancelButton = null;
 
 	public delegate void OnContinueButtonClicked(DialogueBox box);
 	public OnContinueButtonClicked onContinueButtonClicked;
+
+	public delegate void OnConfirmButtonClicked(DialogueBox box);
+	public OnConfirmButtonClicked onConfirmButtonClicked;
+
+	public delegate void OnCancelButtonClicked(DialogueBox box);
+	public OnCancelButtonClicked onCancelButtonClicked;
+
+	public bool blockInput = false;
 
 	public void Reposition( KikaAndBob.ScreenAnchor mainAnchor = KikaAndBob.ScreenAnchor.Center, KikaAndBob.ScreenAnchor subAnchor = KikaAndBob.ScreenAnchor.Center )
 	{
@@ -92,6 +105,8 @@ public class DialogueBox : MonoBehaviour
 
 	public void Reset()
 	{
+		inputBlockCollider.gameObject.SetActive(false);
+
 		mainAnchor = KikaAndBob.ScreenAnchor.NONE;
 		subAnchor = KikaAndBob.ScreenAnchor.NONE;
 		targetPosition = Vector3.zero; 
@@ -102,6 +117,8 @@ public class DialogueBox : MonoBehaviour
 	protected void RepositionButtons()
 	{
 		//Debug.LogError("RepositionButtons " + boxType);
+
+		confirmButton.transform.parent.gameObject.SetActive(false);
 
 		if( boxType == BoxType.NONE )
 		{
@@ -127,6 +144,18 @@ public class DialogueBox : MonoBehaviour
 			
 			//Debug.LogError("REpositioning buttonz " + backgroundBottom + " // " + background.renderer.bounds.center + " vs " + background.localPosition);
 		}
+		else if ( boxType == BoxType.ConfirmCancel )
+		{
+			ContinueButton.transform.parent.gameObject.SetActive(false);
+			confirmButton.transform.parent.gameObject.SetActive(true);
+
+
+			Transform confirmButtonContainer = confirmButton.transform.parent;
+
+			// find out the bottom of the background
+			float backgroundBottom = background.renderer.bounds.center.y - background.renderer.bounds.extents.y;
+			confirmButtonContainer.position = confirmButtonContainer.position.y( backgroundBottom );
+		}
 	}
 
 
@@ -151,6 +180,8 @@ public class DialogueBox : MonoBehaviour
 			DialogueManager.use.HideOthers(this);
 		}
 				
+		inputBlockCollider.gameObject.SetActive(blockInput);
+
 		available = false;
 
 		if( mainAnchor == KikaAndBob.ScreenAnchor.NONE )
@@ -244,13 +275,40 @@ public class DialogueBox : MonoBehaviour
 		
 		if( ContinueButton == null )
 		{
-			ContinueButton = this.transform.GetComponentInChildren<Button>();
+			ContinueButton = this.transform.FindChild("ContinueButtonContainer").GetComponentInChildren<Button>();
 		}
 		if( ContinueButton == null )
 		{
 			Debug.LogError( transform.Path () + " : No ContinueButton found!" );
 		}
 
+		if( confirmButton == null )
+		{
+			confirmButton = this.transform.FindChild("ConfirmButtonContainer/ButtonConfirm").GetComponent<Button>();
+		}
+		if( confirmButton == null )
+		{
+			Debug.LogError( transform.Path () + " : No confirm button found!" );
+		}
+
+		if( cancelButton == null )
+		{
+			cancelButton = this.transform.FindChild("ConfirmButtonContainer/ButtonCancel").GetComponent<Button>();
+		}
+		if( cancelButton == null )
+		{
+			Debug.LogError( transform.Path () + " : No cancel button found!" );
+		}
+
+		if (inputBlockCollider == null)
+		{
+			inputBlockCollider = this.transform.FindChild("InputBlock").GetComponent<BoxCollider>();
+		}
+
+		if (inputBlockCollider == null)
+		{
+			Debug.LogError( transform.Path () + " : No input blocker found!" );
+		}
 	}
 	
 	public void SetupGlobal()
@@ -277,6 +335,18 @@ public class DialogueBox : MonoBehaviour
 		{
 			if( onContinueButtonClicked != null )
 				onContinueButtonClicked(this);
+		}
+
+		if (confirmButton.pressed)
+		{
+			if( onConfirmButtonClicked != null )
+				onConfirmButtonClicked(this);
+		}
+
+		if (cancelButton.pressed)
+		{
+			if( onCancelButtonClicked != null )
+				onCancelButtonClicked(this);
 		}
 	}
 }
