@@ -9,6 +9,7 @@ public class StepLevelMenu : IMenuStep
 	protected Transform levelBarsParent = null;
 	protected List<Transform> levelBars = new List<Transform>();
 	protected List<Button> levelButtons = new List<Button>();
+	protected List<Button> highScoreButtons = new List<Button>();
 	protected Button buttonRight = null;
 	protected Button buttonLeft = null;
 	protected Button buttonLeave = null;
@@ -42,6 +43,7 @@ public class StepLevelMenu : IMenuStep
 				{
 					levelBars.Add(t);
 					levelButtons.Add(t.FindChild("ButtonPlay").GetComponent<Button>());
+					highScoreButtons.Add(t.FindChild("Icon").GetComponent<Button>());
 				}
 			}
 		}
@@ -128,8 +130,26 @@ public class StepLevelMenu : IMenuStep
 				}
 
 				int returnedLevel = levelIndices[selectedButton];
-
+	
 				LugusCoroutines.use.StartRoutine(ScreenHideRoutine(returnedLevel));
+			}
+		}
+
+		for (int i = 0; i < highScoreButtons.Count; i++) 
+		{
+			if (highScoreButtons[i].pressed)
+			{
+				int selectedButton = (pageCounter * 5) + i;
+				
+				if (selectedButton < 0 && selectedButton >= levelIndices.Count)
+				{
+					Debug.LogError("StepLevelMenu: Level index is out of bounds!");
+					return;
+				}
+				
+				MenuManager.use.currentSelectedLevel = levelIndices[selectedButton];
+
+				MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.HighScoreMenu);
 			}
 		}
 
@@ -367,6 +387,7 @@ public class StepLevelMenu : IMenuStep
 			}
 
 			bar.FindChild("ButtonPlay").gameObject.SetActive(unlocked);
+			bar.FindChild("Icon").gameObject.SetActive(unlocked);
 
 			foreach(SpriteRenderer sr in bar.GetComponentsInChildren<SpriteRenderer>(false))
 			{

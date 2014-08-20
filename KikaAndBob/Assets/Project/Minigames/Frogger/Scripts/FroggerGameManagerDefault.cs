@@ -110,11 +110,11 @@ public class FroggerGameManagerDefault : IGameManager
 
 	protected IEnumerator EndGameRoutine(float timer, int pickupCount, int scoreTotal)
 	{
-		//FroggerLevelManager.use.
-
 		HUDManager.use.StopAll();
 
 		yield return new WaitForSeconds(1.0f);
+
+		yield return StartCoroutine(StoreScore(FroggerCrossSceneInfo.use.GetLevelIndex(), scoreTotal));
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}

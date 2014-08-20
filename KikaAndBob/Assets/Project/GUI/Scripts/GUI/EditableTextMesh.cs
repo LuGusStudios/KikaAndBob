@@ -75,7 +75,7 @@ public class EditableTextMesh : MonoBehaviour {
 	public void SetupGlobal()
 	{
 		LugusResources.use.Localized.onResourcesReloaded += UpdateDefaultText;
-		defaultText = LugusResources.use.GetText(defaultTextKey);
+		UpdateDefaultText();
 		Reset();
 		AlterTransparency();
 	}
@@ -93,9 +93,14 @@ public class EditableTextMesh : MonoBehaviour {
 
 	public bool IsDefaultValue()
 	{
-		return editedString == defaultText;
+		return textMesh.text == defaultText;
 	}
-	
+
+	public bool IsEmpty()
+	{
+		return string.IsNullOrEmpty(editedString);
+	}
+
 	public string GetEnteredString()
 	{
 		return editedString;

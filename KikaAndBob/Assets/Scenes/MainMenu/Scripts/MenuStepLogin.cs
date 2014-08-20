@@ -7,16 +7,18 @@ public class MenuStepLogin : MenuStepMain
 	protected EditableTextMesh usernameField = null;
 	protected EditableTextMesh passwordField = null;
 	protected Button confirmButton = null;
+	protected SpriteRenderer confirmSprite = null;
 	protected Button registerButton = null;
 	protected Button exitButton = null;
+	protected bool locked = false;
 
 	public void SetupLocal()
 	{
-		if (exitButton == null)
-			exitButton = transform.FindChild("ButtonExit").GetComponent<Button>();
-		
-		if (exitButton == null)
-			Debug.LogError("MenuStepSettings: Missing exit button.");
+//		if (exitButton == null)
+//			exitButton = transform.FindChild("ButtonExit").GetComponent<Button>();
+//		
+//		if (exitButton == null)
+//			Debug.LogError("MenuStepSettings: Missing exit button.");
 
 		if (usernameField == null)
 		{
@@ -36,6 +38,10 @@ public class MenuStepLogin : MenuStepMain
 		if (confirmButton == null)
 		{
 			Debug.LogError(transform.Path() + " missing confirm button");
+		}
+		else
+		{
+			confirmSprite = confirmButton.GetComponent<SpriteRenderer>();
 		}
 
 		if (registerButton == null)
@@ -67,21 +73,72 @@ public class MenuStepLogin : MenuStepMain
 	
 	protected void Update() 
 	{
+		if (locked)
+			return;
+
+		if (usernameField.IsEmpty() || passwordField.IsEmpty())
+		{
+			if (confirmSprite.collider.enabled)
+			{
+				confirmSprite.color = confirmSprite.color.a (0.5f);
+				confirmSprite.collider.enabled = false;
+			}
+		}
+		else
+		{
+			if (!confirmSprite.collider.enabled)
+			{
+				confirmSprite.color = confirmSprite.color.a (1f);
+				confirmSprite.collider.enabled = true;
+			}
+		}
+
 		if (confirmButton.pressed)
 		{
-			// authenticate, then decide if authentication was succesful
-			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
+		 	LugusCoroutines.use.StartRoutine(Login());
 		}
 		else if (registerButton.pressed)
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Register);
 		}
-		else if (exitButton.pressed)
-		{
-			DialogueBox confirmExitBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.GetText("global.connection.playoffline"));
-			// CONTINUE HERE
-		}
 	}
+
+	protected IEnumerator Login()
+	{
+		if (KBAPIConnection.use.loggingIn)
+			yield break;
+
+		locked = true;
+
+		KBAPIConnection.use.Login(usernameField.GetEnteredString(), passwordField.GetEnteredString());
+
+		while(KBAPIConnection.use.loggingIn)
+			yield return new WaitForEndOfFrame();
+
+		if (KBAPIConnection.use.errorMessage != "")
+		{
+			DialogueBox errorBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, KBAPIConnection.use.errorMessage);
+			errorBox.blockInput = true;
+			errorBox.boxType = DialogueBox.BoxType.Continue;
+			errorBox.onContinueButtonClicked += OnContinueButtonClicked;
+			errorBox.Show();
+		}
+		else
+		{
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
+		}
+
+		locked = false;
+	}
+
+
+
+	public void OnContinueButtonClicked(DialogueBox box)
+	{
+		box.onContinueButtonClicked += OnContinueButtonClicked;
+		box.Hide();
+	}
+
 
 	public override void Activate (bool animate)
 	{
