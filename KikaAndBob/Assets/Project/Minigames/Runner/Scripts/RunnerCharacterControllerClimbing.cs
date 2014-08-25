@@ -5,8 +5,8 @@ using KikaAndBob.Runner;
 
 public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCharacterControllerClimbing>, IRunnerCharacterController, IRunnerCharacterController_FasterSlower
 {
-
-
+	
+	
 	public int direction = -1; // -1 is down, 1 is up
 	public DataRange speedRange = new DataRange(13.0f, 26.0f);
 	public DataRange SpeedRange(){ return speedRange; }
@@ -14,12 +14,12 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	public DataRange speedModifiers = new DataRange(0.5f, 1.5f);
 	public float timeToMaxSpeed = 60.0f;
 	public float horizontalSpeed = 4.0f; 
-
+	
 	protected Vector3 originalScale = Vector3.zero;
 	protected Joystick joystick = null;
-
+	
 	public DataRange xEdges = new DataRange(-6.192653f, 8.181341f);
-
+	
 	// speedRange.from is speedScale 1 (normal speed)
 	// if higher or lower, this returns a modifier (typically in [0,2]) to indicate the relative speed to the normal speed
 	// especially handy in things like ParallaxMover
@@ -33,61 +33,61 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		
 		return modifier;
 		*/
-
+		
 		return RunnerCameraPuller.use.SpeedScale(); // so ParallaxMover gets the right data
 	}
-
+	
 	[HideInInspector]
 	public float speedPercentage = 0.0f;
 	[HideInInspector] 
 	public float speedModifierPercentage = 0.5f;
-
+	
 	public float SpeedPercentage(){ return speedPercentage; }
 	public float SpeedModifierPercentage(){ return speedModifierPercentage; }
-
+	
 	protected float startTime = -1.0f;
-
+	
 	public event KikaAndBob.Runner.OnHit onHit;
 	public event KikaAndBob.Runner.OnSpeedTypeChange onSpeedTypeChange;
-
-
+	
+	
 	public KikaAndBob.Runner.SpeedType currentSpeedType = KikaAndBob.Runner.SpeedType.NORMAL;
-
-
+	
+	
 	public void OnPickupHit(RunnerPickup pickup)
 	{
 		RunnerScoreManager.use.ProcessPickup(pickup);
-
+		
 		if( !pickup.positive )
 		{
 			LugusCoroutines.use.StartRoutine( OnHitRoutine() );
 		}
-
+		
 		if( onHit != null )
 			onHit( pickup );
 	}
-
+	
 	protected IEnumerator OnHitRoutine()
 	{
 		upDisabled = true;
 		leftDisabled = true;
 		rightDisabled = true;
 		downDisabled = true;
-
+		
 		up = false;
 		left = false;
 		down = false;
 		right = false;
-
+		
 		yield return new WaitForSeconds(0.3f);
-
+		
 		upDisabled = false;
 		leftDisabled = false;
 		downDisabled = false;
 		rightDisabled = false;
 	}
-
-
+	
+	
 	public void SetupLocal()
 	{
 		// assign variables that have to do with this class only
@@ -98,12 +98,12 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		// lookup references to objects / scripts outside of this script
 		startTime = Time.time;
-
+		
 		if (joystick == null)
 		{
 			joystick = GameObject.FindObjectOfType<Joystick>();
 		}
-
+		
 		if (joystick == null)
 		{
 			Debug.LogError("RunnerCharacterControllerClimbing: Missing joystick. Continuing without.");
@@ -114,7 +114,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 	{
 		SetupLocal();
 	}
-
+	
 	protected void Start () 
 	{
 		SetupGlobal(); 
@@ -125,37 +125,49 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		if( !this.enabled )
 			return;
 
-		float speed = RunnerCameraPuller.use.currentSpeed + 1.0f; //* 1.2f; // 20% faster than camera
+		// NOTE FROM KASPER: Originally the line below read:
+		// float speed = RunnerCameraPuller.use.currentSpeed + 1.0f; //* 1.2f; // 20% faster than camera
+		// However, this does not seem to work anymore... when this stopped working is unknown.
+		// Investigation turns up no sensible cause...
+		// SO: We multiply by 2. This seems to replicate the original behavior rather well.
+		// This is dirty and I will probably go to hell for this.
+
+
+		float speed = RunnerCameraPuller.use.currentSpeed *2; //* 1.2f; // 20% faster than camera
 		
 		this.rigidbody2D.velocity = new Vector2( 0.0f, 0.0f );
-
-
-//			if( up )
-//			{
-//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( speed * 1.2f );
-//				this.transform.localScale = originalScale;
-//			}
-//			else if( down )
-//			{
-//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * speed * 0.8f );
-//				this.transform.localScale = originalScale.xMul(-1.0f);
-//			}
-//
-//			if( right )
-//			{
-//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
-//				this.transform.localScale = originalScale.xMul(-1.0f);
-//			}
-//			else if( left )
-//			{
-//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
-//				this.transform.localScale = originalScale; 
-//			}
-	
+		
+		
+		//			if( up )
+		//			{
+		//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( speed * 1.2f );
+		//				this.transform.localScale = originalScale;
+		//			}
+		//			else if( down )
+		//			{
+		//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.y( -1.0f * speed * 0.8f );
+		//				this.transform.localScale = originalScale.xMul(-1.0f);
+		//			}
+		//
+		//			if( right )
+		//			{
+		//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( speed * horizontalSpeedBoost );
+		//				this.transform.localScale = originalScale.xMul(-1.0f);
+		//			}
+		//			else if( left )
+		//			{
+		//				this.rigidbody2D.velocity = this.rigidbody2D.velocity.x( -1.0f * speed * horizontalSpeedBoost );
+		//				this.transform.localScale = originalScale; 
+		//			}
+		
+		#if UNITY_IPHONE || UNITY_ANDROID || UNITY_EDITOR
 		bool checkJoystick = joystick != null && joystick.enabled && !joystick.IsInDirection(Joystick.JoystickDirection.None);
-
+		#else
+		bool checkJoystick = false;
+		#endif
+		
 		Vector2 finalVelocity = Vector2.zero;
-
+		
 		if( up )
 		{
 			if (checkJoystick && !upDisabled)
@@ -163,9 +175,10 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 				finalVelocity = finalVelocity.y(joystick.position.y * speed * 1.2f);
 			}
 			else
+			{
 				finalVelocity = finalVelocity.y( speed * 1.2f );
-
-
+			}
+			
 			this.transform.localScale = originalScale;
 		}
 		else if( down )
@@ -176,10 +189,10 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			}
 			else
 				finalVelocity = finalVelocity.y( -1.0f * speed * 0.8f );
-
+			
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
-
+		
 		if( right )
 		{
 			if (checkJoystick && !rightDisabled)
@@ -188,7 +201,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			}
 			else
 				finalVelocity = finalVelocity.x( speed * horizontalSpeedBoost );
-
+			
 			this.transform.localScale = originalScale.xMul(-1.0f);
 		}
 		else if( left )
@@ -199,18 +212,18 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			}
 			else
 				finalVelocity = finalVelocity.x( -1.0f * speed * horizontalSpeedBoost );
-
+			
 			this.transform.localScale = originalScale; 
 		}
-
-
-
+		
+		
+		
 		this.rigidbody2D.velocity = finalVelocity;
-
-
-
+		
+		
+		
 		horizontalSpeedBoost = 1.0f;
-
+		
 		// make sure the character doesn't leave the gameplay area
 		// normally, we would do this with colliders
 		// but sometimes we disable the collider of the character... so we have to resort to these foul methods
@@ -222,8 +235,8 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		{
 			this.transform.position = this.transform.position.x ( xEdges.to );
 		}
-
-
+		
+		
 		/*
 		float timeDiff = Time.time - startTime;
 		if( timeDiff > timeToMaxSpeed )
@@ -262,41 +275,41 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 		}
 		*/
 	}
-
+	
 	protected bool checkBottomBoundary = true;
 	protected void CheckBoundaries()
 	{
 		Vector2 screenPos = LugusCamera.game.WorldToScreenPoint( this.transform.position );
-
+		
 		if( checkBottomBoundary && screenPos.y < -50 )
 		{
 			LugusCoroutines.use.StartRoutine( BottomBoundaryCross() );
 		}
-
+		
 		if( screenPos.y >= (Screen.height - 100) )
 		{
 			this.transform.position = this.transform.position.y( LugusCamera.game.ScreenToWorldPoint( screenPos.y( (float) Screen.height - 101) ).y );
 		}
 	}
-
+	
 	protected IEnumerator BottomBoundaryCross()
 	{
 		checkBottomBoundary = false;
-
+		
 		RunnerManager.use.AddTime( 10.0f );
 		ScoreVisualizer.Score(KikaAndBob.CommodityType.Time, 10.0f).Time (1.0f).Position( this.transform.position ).Audio("Collide01").Color(Color.red).Execute();
-
-
+		
+		
 		if( onHit != null )
 			onHit( null );
-
+		
 		downDisabled = true;
 		upDisabled = true;
 		down = false;
 		up = true;
-
+		
 		this.collider2D.enabled = false;
-
+		
 		/*
 		// disable all blocking stones (under halfway?)
 		RunnerBlockingStone[] stones = LayerManager.use.groundLayer.transform.GetComponentsInChildren<RunnerBlockingStone>();
@@ -311,90 +324,94 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 				stone.collider2D.enabled = false;
 		}
 		*/
-
-
+		
+		
 		yield return new WaitForSeconds( 1.5f );
-
+		
 		
 		this.collider2D.enabled = true;
-
+		
 		// we can't just re-enable the character
 		// chances are we would land on top of another blocking collider and we would be stuck
 		// so: check around for other colliders that are too close and just disable them 
 		// this is not 100% "physically correct" but makes possible gameplay bugs a lot less likely
-
+		
 		Collider2D[] stucks = Physics2D.OverlapCircleAll( this.transform.position.v2 (), 4 ); // character is about 2 units wide, so use double that as radius
 		foreach( Collider2D stuck in stucks )
 		{
 			if( stuck == this.collider2D )
 				continue;
-
+			
 			//Debug.LogError("We got stuck in " + stuck.transform.Path() +  " so we disabled it");
-
+			
 			// keep the positive pickups (feathers) enabled
 			// changed: makes no difference... our collider was disabled for 1.5s anyway, so we didn't pick it up anyhow... hmz
 			//RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
 			//if( pickup == null || pickup.positive == false )
-				stuck.enabled = false;
-
+			stuck.enabled = false;
+			
 			// disable the feathers -> we cannot pick them up anyway, would only confuse the player
 			RunnerPickup pickup = stuck.GetComponent<RunnerPickup>();
 			if( pickup != null && pickup.positive  )
 			{
-
+				
 			}
-
+			
 			// DEBUG, TODO: remove!
 			//if( stuck.GetComponent<SpriteRenderer>() )
 			//{
 			//	stuck.GetComponent<SpriteRenderer>().enabled = false;
 			//}
 		}
-
+		
 		downDisabled = false;
 		upDisabled = false;
-
+		
 		checkBottomBoundary = true;
 	}
-
-
+	
+	
 	public bool left = false;
 	public bool right = false;
 	public bool up = false;
 	public bool down = false;
-
+	
 	public bool leftDisabled = false;
 	public bool rightDisabled = false;
 	public bool upDisabled = false;
 	public bool downDisabled = false;
-
+	
 	public float horizontalSpeedBoost = 1.0f;
 	public float leftStartTime = -1.0f; 
 	public float rightStartTime = -1.0f; 
-
+	
 	public void Update()
 	{
+		#if UNITY_IPHONE || UNITY_ANDROID || UNITY_EDITOR
 		bool checkJoystick = joystick != null && joystick.enabled && !joystick.IsInDirection(Joystick.JoystickDirection.None);
-
+		#else
+		bool checkJoystick = false;
+		#endif
+		
 		if( !leftDisabled )
 		{
 			if( LugusInput.use.Key(KeyCode.LeftArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Left) ))
 			{
 				//if( !left && (Time.time - leftStartTime < 0.3f) )
 				//{
-					// dash to the left
-					//Debug.LogWarning("DASH LEFT");
-					//horizontalSpeedBoost = 500.0f;
+				// dash to the left
+				//Debug.LogWarning("DASH LEFT");
+				//horizontalSpeedBoost = 500.0f;
 				//}
-
+				
 				//leftStartTime = Time.time;
-
+				
 				left = true;
 			}
 			else
 			{
 				//leftStartTime = -1.0f;
-
+				
 				left = false;
 			}
 		}
@@ -405,13 +422,13 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 			{
 				//if( !right && (Time.time - rightStartTime < 0.3f) )
 				//{
-					// dash to the right
-					//Debug.LogWarning("DASH RIGHT");
-					//horizontalSpeedBoost = 500.0f;
+				// dash to the right
+				//Debug.LogWarning("DASH RIGHT");
+				//horizontalSpeedBoost = 500.0f;
 				//}
 				
 				//rightStartTime = Time.time;
-
+				
 				right = true;
 			}
 			else
@@ -419,10 +436,12 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 				right = false;
 			}
 		}
-
+		
 		if( !upDisabled )
 		{
-				if( LugusInput.use.Key(KeyCode.UpArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Up) ))
+			
+			
+			if( LugusInput.use.Key(KeyCode.UpArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Up) ))
 			{
 				up = true;
 			}
@@ -431,7 +450,7 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 				up = false;
 			}
 		}
-
+		
 		if( !downDisabled )
 		{
 			if( LugusInput.use.Key(KeyCode.DownArrow) || (checkJoystick && joystick.IsInDirection(Joystick.JoystickDirection.Down) ))
@@ -443,35 +462,35 @@ public class RunnerCharacterControllerClimbing : LugusSingletonExisting<RunnerCh
 				down = false;
 			}
 		}
-
+		
 		CheckSpeedType();
 		CheckBoundaries();
 	}
-
-
+	
+	
 	protected void CheckSpeedType()
 	{
 		SpeedType targetType = SpeedType.STILL;
-
+		
 		if( left || right || up || down )
 		{
 			targetType = SpeedType.NORMAL;
 		}
-
-
+		
+		
 		if( currentSpeedType != targetType )
 		{
 			SetSpeedType( targetType );
 		}
 	}
-
+	
 	public void SetSpeedType(SpeedType type)
 	{
 		SpeedType oldType = currentSpeedType;
 		currentSpeedType = type;
-
+		
 		if( onSpeedTypeChange != null )
 			onSpeedTypeChange(oldType, type);
 	}
-
+	
 }

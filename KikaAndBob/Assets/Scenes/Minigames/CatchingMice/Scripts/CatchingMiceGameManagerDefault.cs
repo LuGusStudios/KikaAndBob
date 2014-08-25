@@ -209,41 +209,59 @@ public class CatchingMiceGameManagerDefault : IGameManager
 
 	public void WinState()
 	{
+		LugusCoroutines.use.StartRoutine(WinGameRoutine());
+	}
+
+	protected IEnumerator WinGameRoutine()
+	{
 		gameRunning = false;
-
+		
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: won");
-
+		
 		string saveKey = Application.loadedLevelName + "_level_" + CatchingMiceCrossSceneInfo.use.GetLevelIndex();
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
-
+		
 		CatchingMiceTrapSelector.use.SetVisible(false);
-
+		
 		HUDManager.use.StopAll();
-
+		
 		HUDManager.use.LevelEndScreen.Show(true, 1f);
 
+		int cookieScore = 10;
+		
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Cheese;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(GetCheeseScore());
-
+		
 		HUDManager.use.LevelEndScreen.Counter2.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter2.commodity = KikaAndBob.CommodityType.Cookie;
 		HUDManager.use.LevelEndScreen.Counter2.SetValue(collectedPickups);
 
-
 		HUDManager.use.LevelEndScreen.Counter4.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter4.commodity = KikaAndBob.CommodityType.Score;
-		HUDManager.use.LevelEndScreen.Counter4.SetValue(GetCheeseScore() + collectedPickups);
+		HUDManager.use.LevelEndScreen.Counter4.SetValue(GetCheeseScore() + (collectedPickups * cookieScore) );
+
+
+		yield return StartCoroutine(StoreScore(CatchingMiceCrossSceneInfo.use.GetLevelIndex(), GetCheeseScore() + (collectedPickups * cookieScore) ));
+
 
 		CatchingMiceInputManager.use.ClearAllPaths();
-
+		
 		if (CatchingMiceCrossSceneInfo.use.GetLevelIndex() >= 4)
 		{
 			LugusConfig.use.User.SetBool("playroom" + "_unlock_" + CatchingMiceCrossSceneInfo.use.GetLevelIndex(), true, true);
 			LugusConfig.use.SaveProfiles();
 		}
+
+		yield break;
 	}
+
+
+
+
+
+
 
 	public void LoseState()
 	{
