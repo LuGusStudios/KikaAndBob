@@ -88,11 +88,21 @@ public abstract class IGameManager : MonoBehaviour
 
 	public IEnumerator StoreScore(int levelIndex, int score)
 	{
+		yield return LugusCoroutines.use.StartRoutine(StoreScore(levelIndex, (float)score));
+	}
+
+	public IEnumerator StoreScore(int levelIndex, float score)
+	{
+		if (!PlayerAuthCrossSceneInfo.use.loggedIn)
+		{
+			Debug.Log("GameManager: Player not logged in. Not storing score.");
+			yield break;
+		}
+
 		yield return StartCoroutine(KBAPIConnection.use.CheckConnectionRoutine());
 		
 		if (!KBAPIConnection.use.hasConnection)
 			yield break;
-
 
 		List<int> foundGameIDs = new List<int>();
 		

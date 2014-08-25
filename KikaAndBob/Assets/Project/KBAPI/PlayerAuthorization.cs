@@ -65,7 +65,7 @@ public class PlayerAuthorization : LugusSingletonRuntime<PlayerAuthorization>
 
 		//PlayerAuthCrossSceneInfo.use.playerAuthenticated = LugusConfig.use.System.GetBool("KikaAndBob.player.authenticated", false);
 		
-		if (!PlayerAuthCrossSceneInfo.use.playerAuthenticated)
+		if (!PlayerAuthCrossSceneInfo.use.loggedIn)
 		{
 			DialogueBox authorizeBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.GetText("global.authmessage"));
 			authorizeBox.boxType = DialogueBox.BoxType.ConfirmCancel;

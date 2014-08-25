@@ -158,6 +158,8 @@ public class DanceHeroFeedbackHandlerChina : MonoBehaviour
 	{
 		yield return new WaitForSeconds(2.0f);
 
+		yield return StartCoroutine(DanceHeroLevel.use.StoreScore(DanceHeroCrossSceneInfo.use.GetLevelIndex(), DanceHeroFeedback.use.GetScore()));
+
 		HUDManager.use.DisableAll();
 		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);

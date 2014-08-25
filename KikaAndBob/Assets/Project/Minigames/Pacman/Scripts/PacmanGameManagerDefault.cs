@@ -276,30 +276,39 @@ public class PacmanGameManagerDefault : IGameManager {
 	
 	public void WinGame()
 	{
+		LugusCoroutines.use.StartRoutine(WinGameRoutine());
+	}
+
+	protected IEnumerator WinGameRoutine()
+	{
 		Debug.Log("You win!");
 		gameRunning = false;
-
+		
 		PacmanPlayerCharacter activePlayer = GetActivePlayer();
 		activePlayer.characterAnimator.PlayAnimation(activePlayer.characterAnimator.victory);
-
+		
 		foreach (PacmanLevelUpdater updater in (PacmanLevelUpdater[]) FindObjectsOfType(typeof(PacmanLevelUpdater)))
 		{
 			updater.Deactivate();
 		}
-
+		
 		if (currentLevelIndex < PacmanLevelManager.use.levels.Length - 1)
 		{
 			currentLevelIndex ++;
 		}
 
-		PacmanGUIManager.use.ShowWinMessage(timer);
-
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, PacmanCrossSceneInfo.use);
-		
+
 		Debug.Log ("Pacman : set level success : " + (Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad) );
 		LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad, true, true );
 		LugusConfig.use.SaveProfiles();
+
+
+		PacmanGUIManager.use.ShowWinMessage(timer, this);
+
+		yield break;
 	}
+
 
 	protected void OnGUI()
 	{

@@ -132,7 +132,7 @@ public class DanceHeroLevelDefault : IGameManager
 		
 		LugusConfig.use.User.SetBool(saveKey, true, true); 
 		LugusConfig.use.SaveProfiles();
-
+		
 		// let custom functionality be handled elsewhere
 		if (onLevelFinished != null)
 		{
@@ -141,6 +141,7 @@ public class DanceHeroLevelDefault : IGameManager
 		
 		Debug.Log("Level finished!");
 	}
+
 
 	public override bool GameRunning {
 		get 

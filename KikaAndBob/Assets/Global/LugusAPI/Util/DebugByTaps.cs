@@ -141,6 +141,11 @@ public class DebugByTaps : MonoBehaviour
 			LugusConfig.use.System.ClearAllData();
 		}
 
+		if (GUILayout.Button("Log in with test account", GUILayout.MinHeight(60))) 
+		{
+			LugusCoroutines.use.StartRoutine(KBAPIConnection.use.LoginRoutine("Test5", "Test5"));
+		}
+
 		GUILayout.EndHorizontal();
 
 		DrawFPS();

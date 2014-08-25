@@ -112,36 +112,44 @@ public class DartsLevelConfigurationDefault :  IGameManager
 	{
 		gameRunning = false;
 
-		Debug.Log("Darts level ended.");
+		LugusCoroutines.use.StartRoutine(StopGameRoutine());
+	}
 
+	protected IEnumerator StopGameRoutine()
+	{
+		Debug.Log("Darts level ended.");
+		
 		foreach (DartsFunctionalityGroup group in groups) 
 		{
 			group.SetEnabled(false);
 		}
 
+		// do this first before score window is displayed
+		yield return StartCoroutine(StoreScore(DartsCrossSceneInfo.use.GetLevelIndex(), DartsScoreManager.use.totalScore));
+		
 		// TO DO: Currently not using version with target score
-//		bool success = DartsScoreManager.use.totalScore >= minScore;
-//
-//		HUDManager.use.LevelEndScreen.Show( DartsScoreManager.use.totalScore >= minScore );
-//
-//		if (success)
-//		{
-//			LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
-//			LugusConfig.use.SaveProfiles();
-//		}
-
+		//		bool success = DartsScoreManager.use.totalScore >= minScore;
+		//
+		//		HUDManager.use.LevelEndScreen.Show( DartsScoreManager.use.totalScore >= minScore );
+		//
+		//		if (success)
+		//		{
+		//			LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
+		//			LugusConfig.use.SaveProfiles();
+		//		}
+		
 		HUDManager.use.DisableAll();
-
+		
 		HUDManager.use.LevelEndScreen.Show(true);
-
+		
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Score;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.Int;
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(DartsScoreManager.use.totalScore, true);
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
-
+		
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, DartsCrossSceneInfo.use);
-
+		
 		LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
 		LugusConfig.use.SaveProfiles();
 	}

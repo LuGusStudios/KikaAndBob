@@ -52,7 +52,7 @@ public class FroggerGameManagerDefault : IGameManager
 		LugusConfig.use.SaveProfiles();
 
 		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
-		//TO DO: STORE SCORE TOTAL HERE!
+	
 		
 		LugusCoroutines.use.StartRoutine(EndGameRoutine(timer, pickupCount, scoreTotal));
 	}
@@ -114,7 +114,9 @@ public class FroggerGameManagerDefault : IGameManager
 
 		yield return new WaitForSeconds(1.0f);
 
-		yield return StartCoroutine(StoreScore(FroggerCrossSceneInfo.use.GetLevelIndex(), scoreTotal));
+		// highscores are inverted!!!! - invert scores so they are ordered correctly in the database
+		// negative scores will be inverted again when they are displayed in the app
+		yield return StartCoroutine(StoreScore(FroggerCrossSceneInfo.use.GetLevelIndex(), -scoreTotal));
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}

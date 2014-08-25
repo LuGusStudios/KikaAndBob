@@ -6,13 +6,9 @@ using System;
 public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection> 
 {
 	public bool hasConnection = false;
-
-	public bool loggedIn = false;
 	public bool loggingIn = false;
 
-	public string userId = "";
-	public string userDataString = "";
-	public JSONObject userDataObj = null;
+
 
 	public string username = "";
 	public string password = "";
@@ -60,7 +56,7 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 			yield break;
 		}
 		
-		loggedIn = false;
+		PlayerAuthCrossSceneInfo.use.loggedIn = false;
 		loggingIn = true;
 		
 		errorMessage = "";
@@ -93,16 +89,15 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 
 		if( objects.HasField("result") && objects.GetString("result") == "success" )
 		{
-			loggedIn = true;
-
-			userId = objects.GetString("id");
-			userDataString = EncodingWrapper.Base64Decode( objects.GetString("userData") );
-
-			userDataObj = new JSONObject( userDataString );
+			PlayerAuthCrossSceneInfo.use.loggedIn = true;
+			PlayerAuthCrossSceneInfo.use.userId = objects.GetString("id");
+	
+			PlayerAuthCrossSceneInfo.use.userDataString = EncodingWrapper.Base64Decode( objects.GetString("userData") );
+			PlayerAuthCrossSceneInfo.use.userDataObj = new JSONObject( PlayerAuthCrossSceneInfo.use.userDataString );
 		}
 		else
 		{
-			loggedIn = false;
+			PlayerAuthCrossSceneInfo.use.loggedIn = false;
 
 			APILogError("KBAPIConnection:LoginRoutine: something went wrong... " + www.text + " // " + www.error);
 
@@ -172,18 +167,19 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 		
 		if( objects.HasField("result") && objects.GetString("result") == "success" )
 		{
-			loggedIn = true;
+			PlayerAuthCrossSceneInfo.use.loggedIn = true;
 			
-			userId = objects.GetString("id");
+			PlayerAuthCrossSceneInfo.use.userId = objects.GetString("id");
 
 			this.username = username;
 			this.password = password;
-			this.userDataString = userdata;
-			this.userDataObj = new JSONObject( userdata );
+			PlayerAuthCrossSceneInfo.use.userDataString = userdata;
+
+			PlayerAuthCrossSceneInfo.use.userDataObj = new JSONObject( userdata );
 		}
 		else
 		{
-			loggedIn = false;
+			PlayerAuthCrossSceneInfo.use.loggedIn = false;
 			// TODO: show proper error message to user!
 			
 			APILogError("KBAPIConnection:RegisterRoutine: something went wrong... " + www.text + " // " + www.error);
@@ -203,7 +199,7 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 		yield break;
 	}
 
-	public IEnumerator GetUserScoreRoutine(List<int> output, int gameId, int level, int userId)
+	public IEnumerator GetUserScoreRoutine(List<int> output, int gameId, int level, string userId)
 	{
 		errorMessage = "";
 
@@ -287,7 +283,7 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 			{
 				output.Add( score );
 
-				Debug.LogError("Score received : " + score.GetString("userName") + " @ " + score.GetString("score") );
+				Debug.Log("Score received : " + score.GetString("userName") + " @ " + score.GetString("score") );
 			}
 		}
 		else
@@ -315,6 +311,12 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 
 	public IEnumerator AddScoreRoutine(int gameId, int level, int score)
 	{
+		yield return LugusCoroutines.use.StartRoutine(AddScoreRoutine(gameId, level, (float) score));
+	}
+
+
+	public IEnumerator AddScoreRoutine(int gameId, int level, float score)
+	{
 		errorMessage = "";
 		
 		APILog("KBAPIConnection:AddScoreRoutine start : " + gameId + " @ " + level + " @ " + score);
@@ -322,13 +324,11 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 
 		string url = baseURL + "addScore"; // no trailing / !!!, otherwhise we get 404
 
-		userId = "1";
-
 		WWWForm form = new WWWForm();
 		form.AddField("gameId", gameId);
 		form.AddField("level", level);
-		form.AddField("score", score );
-		form.AddField("userId", userId );
+		form.AddField("score", score.ToString() );
+		form.AddField("userId", PlayerAuthCrossSceneInfo.use.userId);
 		
 		
 		APILog("KBAPIConnection:AddScoreRoutine start : " + url);
@@ -437,7 +437,7 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 		
 		WWWForm form = new WWWForm();
 		form.AddField("userData", EncodingWrapper.Base64Encode(userData) );
-		form.AddField("userId", userId );
+		form.AddField("userId", PlayerAuthCrossSceneInfo.use.userId );
 		
 		
 		APILog("KBAPIConnection:UpdateUserDataRoutine start : " + url);

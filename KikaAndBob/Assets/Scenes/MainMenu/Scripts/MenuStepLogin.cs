@@ -54,6 +54,12 @@ public class MenuStepLogin : MenuStepMain
 			Debug.LogError(transform.Path() + " missing register button");
 		}
 
+		if (exitButton == null)
+			exitButton = transform.FindChild("ButtonExit").GetComponent<Button>();
+		
+		if (exitButton == null)
+			Debug.LogError("MenuStepSettings: Missing exit button.");
+
 	}
 	
 	public void SetupGlobal()
@@ -101,6 +107,10 @@ public class MenuStepLogin : MenuStepMain
 		{
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Register);
 		}
+		else if (exitButton.pressed)
+		{
+			LugusConfig.use.System.SetBool("KBPlayOffline", true, true);
+		}
 	}
 
 	protected IEnumerator Login()
@@ -125,6 +135,9 @@ public class MenuStepLogin : MenuStepMain
 		}
 		else
 		{
+			LugusConfig.use.System.SetString("KBUsername", usernameField.GetEnteredString(), true);
+			LugusConfig.use.System.SetString("KBPassword", passwordField.GetEnteredString(), true);
+			
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
 

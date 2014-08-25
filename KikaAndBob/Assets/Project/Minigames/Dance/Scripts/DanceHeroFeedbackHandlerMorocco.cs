@@ -317,7 +317,9 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 	protected IEnumerator FinishRoutine()
 	{
 		yield return new WaitForSeconds(0.5f); // delay this just a bit, otherwise the last keypress might still turn on particles after they're turned on below
-		
+
+		yield return StartCoroutine(DanceHeroLevel.use.StoreScore(DanceHeroCrossSceneInfo.use.GetLevelIndex(), DanceHeroFeedback.use.GetScore()));
+
 		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.result"));	
 		
 		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())

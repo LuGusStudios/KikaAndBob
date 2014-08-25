@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 public class PlayerAuthCrossSceneInfo : MonoBehaviour
 {
-	public bool playerAuthenticated = false;
+	public bool loggedIn = false;
+	public string userId = "";
+	public JSONObject userDataObj = null;
+	public string userDataString = "";
+
 	public bool hasConnection = false;
 	public bool checkedAuthentication = false;
 

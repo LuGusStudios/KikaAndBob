@@ -28,7 +28,7 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 	
 	}
 
-	protected void ShowWinScreen(float timer)
+	protected void ShowWinScreen(float timer, PacmanGameManagerDefault manager)
 	{
 		Debug.Log("PacmanVaticanWinScreen: Showing custom win screen.");
 
@@ -36,15 +36,28 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 		
 		HUDManager.use.StopAll();
 
-		LugusCoroutines.use.StartRoutine(WinRoutine(timer));
+		LugusCoroutines.use.StartRoutine(WinRoutine(timer, manager));
 	}
 
-	protected IEnumerator WinRoutine(float timer)
+	protected IEnumerator WinRoutine(float timer, PacmanGameManagerDefault manager)
 	{
 		yield return new WaitForSeconds(1.0f);
 
 		HUDManager.use.LevelEndScreen.Show(true);
+
+		// first we save the score - people might be inclined to skip score screen quickly
+		float pickupValue = 80;
+		int pickUpCount = PacmanLevelManager.use.itemsPickedUp;
+		int step = 1;
 		
+		int timeScore = 15000 - ( Mathf.FloorToInt(timer) * 50 );
+		
+		int storedScore = timeScore + (int)(pickUpCount * pickupValue);
+		
+		// in non-standard pacman, scores are normal (highest value = highest score), so no inversion
+		yield return LugusCoroutines.use.StartRoutine(manager.StoreScore(PacmanCrossSceneInfo.use.GetLevelIndex(), storedScore));
+
+
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;
@@ -64,8 +77,6 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 
 		yield return new WaitForSeconds(0.1f);
 
-		int timeScore = 15000 - ( Mathf.FloorToInt(timer) * 50 );
-
 		ScoreVisualizer
 			.Score(KikaAndBob.CommodityType.Score, timeScore)
 				.Position(HUDManager.use.LevelEndScreen.Counter1.transform.position)
@@ -75,9 +86,7 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 
 		yield return new WaitForSeconds(2.0f);
 
-		int pickUpCount = PacmanLevelManager.use.itemsPickedUp;
-		int step = 1;
-		float pickupValue = 80;
+
 
 		if (pickUpCount > 20)
 		{
@@ -115,9 +124,6 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 			pickUpCount = 0;
 			HUDManager.use.LevelEndScreen.Counter2.SetValue(pickUpCount);
 		}
-
-
-
 
 //		int pickUpCount = PacmanLevelManager.use.itemsPickedUp;
 //		int step = 1;

@@ -172,23 +172,40 @@ public class StepHighscoreMenu : IMenuStep
 		{	
 			foreach( JSONObject score in scores )
 			{
-				namesOutput += (score.GetString("userName") + "\n");
-				scoresOutput += (score.GetString("score") + "\n");
+				int newValue = 0;
+
+				if (int.TryParse(score.GetString("score"), out newValue))
+				{
+					if (newValue < 0)
+					{
+						newValue = Mathf.Abs(newValue);	// some games have inverted highscores (smallest one first)
+					}
+
+					namesOutput += (score.GetString("userName") + "\n");
+					scoresOutput += (newValue.ToString() + "\n");
+				}
 			}
 		}
 
 		UpdateNamesAndScores(namesOutput, scoresOutput);
-		
+
+		if (PlayerAuthCrossSceneInfo.use.loggedIn == false)
+		{
+			Debug.Log("Player is not logged in. Not showing personal highscore.");
+			yield break;
+		}
 		
 		List<int> userScore = new List<int>();
 		string userScoreMessage = "";
 
-		yield return StartCoroutine(KBAPIConnection.use.GetUserScoreRoutine(userScore, gameID, levelIndex, 18));
+		yield return StartCoroutine(KBAPIConnection.use.GetUserScoreRoutine(userScore, gameID, levelIndex, PlayerAuthCrossSceneInfo.use.userId));
 
 
 		if( userScore.Count >= 1 )	// error or player doesn't have a score yet
 		{	
-			userScoreMessage += LugusResources.use.Localized.GetText("global.highscores.userscore") + "   " + userScore[0].ToString();
+
+
+			userScoreMessage += LugusResources.use.Localized.GetText("global.highscores.userscore") + "   " + Mathf.Abs(userScore[0]).ToString();
 		}
 
 		yourScoreDisplay.SetText(userScoreMessage);
