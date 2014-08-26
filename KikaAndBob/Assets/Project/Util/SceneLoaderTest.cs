@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SceneLoaderTest : MonoBehaviour {
 
-	public float sceneCycleTime = 5;
+	public float sceneCycleTime = 3;
 	public bool automate = false;
 	protected int currentIndex= 0;
 	public List<string> scenes = new List<string>();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayItemHider : MonoBehaviour 
 {
 	public int index = 0;
+	protected int offset = 3;	// there's fewer reward than mouse hunt levels - the first three levels don't give rewards
 
 	public void SetupLocal()
 	{
@@ -33,7 +34,7 @@ public class PlayItemHider : MonoBehaviour
 
 	public void Evaluate()
 	{
-		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + "_unlock_" + index, false))
+		if (LugusConfig.use.User.GetBool("e00_catchingmice_level_" + (index + offset), false))
 		{
 			Show();
 		}
@@ -46,19 +47,29 @@ public class PlayItemHider : MonoBehaviour
 	protected void Hide()
 	{
 		//gameObject.SetActive(false);
-//		foreach(SpriteRenderer sprite in GetComponentsInChildren<SpriteRenderer>())
-//		{
-//			sprite.color = sprite.color.a(0.3f);
-//		}
+		foreach(SpriteRenderer sprite in GetComponentsInChildren<SpriteRenderer>())
+		{
+			sprite.color = sprite.color.a(0.3f);
+		}
+
+		foreach(Collider coll in GetComponentsInChildren<Collider>())
+		{
+			coll.enabled = false;
+		}
 	}
 
 	protected void Show()
 	{
-		gameObject.SetActive(true);
-//		foreach(SpriteRenderer sprite in GetComponentsInChildren<SpriteRenderer>())
-//		{
-//			sprite.color = sprite.color.a(1);
-//		}
+		//gameObject.SetActive(true);
+		foreach(SpriteRenderer sprite in GetComponentsInChildren<SpriteRenderer>())
+		{
+			sprite.color = sprite.color.a(1);
+		}
+
+		foreach(Collider coll in GetComponentsInChildren<Collider>())
+		{
+			coll.enabled = true;
+		}
 	}
 
 }

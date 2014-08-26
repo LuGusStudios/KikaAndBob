@@ -89,7 +89,7 @@ public class DebugByTaps : MonoBehaviour
 
 		GUILayout.Space(100);
 
-		if (GUILayout.Button("Toggle random scene loader", GUILayout.MinHeight(60))) 
+		if (GUILayout.Button("Toggle random scene loader", new GUILayoutOption[]{GUILayout.MinHeight(60), GUILayout.MaxWidth(180)}   )) 
 		{
 			SceneLoaderTest sceneLoader = (SceneLoaderTest) FindObjectOfType(typeof(SceneLoaderTest));
 

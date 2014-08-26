@@ -1,84 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-	<Width>9</Width>
-	<Height>10</Height>
+	<Width>4</Width>
+	<Height>4</Height>
 	<Layout>
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
-		ooooooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
+		ooooo
 	</Layout>
 	<Furnitures>
-		<Furniture>
-			<PrefabName>FurnitureCloset_3x1-1x2_01</PrefabName>
-			<Position>
-				<X>8</X>
-				<Y>6</Y>
-			</Position>
-		</Furniture>
-		
-		<Furniture>
-			<PrefabName>FurnitureCloset_1x3_01</PrefabName>
-			<Position>
-				<X>8</X>
-				<Y>2</Y>
-			</Position>
-		</Furniture>
-		
-			<Furniture>
-			<PrefabName>FurnitureCarpet_01</PrefabName>
-			<Position>
-				<X>0</X>
-				<Y>4</Y>
-			</Position>
-		</Furniture>
-		
-		<Furniture>
-			<PrefabName>FurnitureSofa_1x2_01</PrefabName>
-			<Position>
-				<X>0</X>
-				<Y>4</Y>
-			</Position>
-		</Furniture>
-			<Furniture>
-			<PrefabName>FurnitureSofa_1x2_02</PrefabName>
-			<Position>
-				<X>4</X>
-				<Y>4</Y>
-			</Position>
-		</Furniture>
-			<Furniture>
-			<PrefabName>FurnitureCoffeetable_1x1_01</PrefabName>
-			<Position>
-				<X>2</X>
-				<Y>5</Y>
-			</Position>
-		</Furniture>
-	</Furnitures>
 	<Obstacles>
 	</Obstacles>
 	<Cheeses>
 		<Cheese>
 			<PrefabName>Cheese_1x1_01</PrefabName>
 			<Position>
-				<X>7</X>
-				<Y>5</Y>
+				<X>2</X>
+				<Y>2</Y>
 			</Position>
-			<Health>10</Health>
+			<Health>50</Health>
 		</Cheese>
 		<Cheese>
 			<PrefabName>Cheese_1x1_01</PrefabName>
 			<Position>
-				<X>7</X>
+				<X>1</X>
+				<Y>1</Y>
+			</Position>
+			<Health>50</Health>
+		</Cheese>
+		<Cheese>
+			<PrefabName>Cheese_1x1_01</PrefabName>
+			<Position>
+				<X>1</X>
 				<Y>2</Y>
 			</Position>
-			<Health>10</Health>
+			<Health>50</Health>
+		</Cheese>
+		<Cheese>
+			<PrefabName>Cheese_1x1_01</PrefabName>
+			<Position>
+				<X>2</X>
+				<Y>1</Y>
+			</Position>
+			<Health>50</Health>
 		</Cheese>
 	</Cheeses>
 	<HoleItems>
@@ -87,18 +57,72 @@
 			<HoleID>Hole1</HoleID>
 			<Position>
 				<X>1</X>
-				<Y>9</Y>
+				<Y>0</Y>
 			</Position>
-			<StartDirection>down</StartDirection>
+			<StartDirection>up</StartDirection>
 		</HoleItem>
 		<HoleItem>
 			<PrefabName>Hole_1x1_01</PrefabName>
 			<HoleID>Hole2</HoleID>
 			<Position>
+				<X>2</X>
+				<Y>0</Y>
+			</Position>
+			<StartDirection>up</StartDirection>
+		</HoleItem>
+		<HoleItem>
+			<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole3</HoleID>
+			<Position>
+				<X>0</X>
+				<Y>1</Y>
+			</Position>
+			<StartDirection>right</StartDirection>
+		</HoleItem>
+		<HoleItem>
+			<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole4</HoleID>
+			<Position>
 				<X>0</X>
 				<Y>2</Y>
 			</Position>
 			<StartDirection>right</StartDirection>
+		</HoleItem>
+		<HoleItem>
+		<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole5</HoleID>
+			<Position>
+				<X>1</X>
+				<Y>3</Y>
+			</Position>
+			<StartDirection>down</StartDirection>
+		</HoleItem>
+		<HoleItem>
+			<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole6</HoleID>
+			<Position>
+				<X>2</X>
+				<Y>3</Y>
+			</Position>
+			<StartDirection>down</StartDirection>
+		</HoleItem>
+			<HoleItem>
+		<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole7</HoleID>
+			<Position>
+				<X>3</X>
+				<Y>2</Y>
+			</Position>
+			<StartDirection>left</StartDirection>
+		</HoleItem>
+		<HoleItem>
+			<PrefabName>Hole_1x1_01</PrefabName>
+			<HoleID>Hole8</HoleID>
+			<Position>
+				<X>3</X>
+				<Y>1</Y>
+			</Position>
+			<StartDirection>left</StartDirection>
 		</HoleItem>
 	</HoleItems>
 	<Traps>
@@ -108,8 +132,8 @@
 			<PrefabName>Cat_01</PrefabName>
 			<Speed>0.7</Speed>
 			<Position>
-				<X>4</X>
-				<Y>3</Y>
+				<X>0</X>
+				<Y>1</Y>
 			</Position>
 		</Character>
 	</Characters>
@@ -119,47 +143,122 @@
 		<Wave>
 		<Enemy>
 			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole3</HoleID>
+			<Amount>1</Amount>
+			<SpawnTimeInterval>3</SpawnTimeInterval>
+			<SpawnDelay>5</SpawnDelay>
+		</Enemy>
+		</Wave>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Fat_01</PrefabName>
+			<HoleID>Hole5</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>3</SpawnTimeInterval>
+			<SpawnDelay>2</SpawnDelay>
+		</Enemy>
+		</Wave>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole2</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>2</SpawnDelay>
+		</Enemy>
+		</Wave>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
 			<HoleID>Hole1</HoleID>
-			<Amount>5</Amount>
-			<SpawnTimeInterval>2</SpawnTimeInterval>
+			<Amount>3</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>2</SpawnDelay>
+		</Enemy>
+		</Wave>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole8</HoleID>
+			<Amount>3</Amount>
+			<SpawnTimeInterval>3</SpawnTimeInterval>
+			<SpawnDelay>2</SpawnDelay>
+		</Enemy>
+		</Wave>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Fat_01</PrefabName>
+			<HoleID>Hole2</HoleID>
+			<Amount>3</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
 			<SpawnDelay>1</SpawnDelay>
 		</Enemy>
 		</Wave>
 		<Wave>
 		<Enemy>
 			<PrefabName>Mouse_Normal_01</PrefabName>
-			<HoleID>Hole2</HoleID>
-			<Amount>5</Amount>
-			<SpawnTimeInterval>2</SpawnTimeInterval>
+			<HoleID>Hole3</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
 			<SpawnDelay>1</SpawnDelay>
 		</Enemy>
 		</Wave>
 		<Wave>
 		<Enemy>
-			<PrefabName>Mouse_Normal_01</PrefabName>
-			<HoleID>Hole2</HoleID>
-			<Amount>5</Amount>
-			<SpawnTimeInterval>2</SpawnTimeInterval>
+			<PrefabName>Mouse_Skinny_01</PrefabName>
+			<HoleID>Hole5</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
 			<SpawnDelay>1</SpawnDelay>
+		</Enemy>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole6</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>6</SpawnDelay>
 		</Enemy>
 		</Wave>
 		<Wave>
 		<Enemy>
 			<PrefabName>Mouse_Normal_01</PrefabName>
-			<HoleID>Hole1</HoleID>
-			<Amount>5</Amount>
-			<SpawnTimeInterval>2</SpawnTimeInterval>
+			<HoleID>Hole3</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
 			<SpawnDelay>1</SpawnDelay>
 		</Enemy>
-				<Enemy>
+		<Enemy>
 			<PrefabName>Mouse_Normal_01</PrefabName>
-			<HoleID>Hole2</HoleID>
-			<Amount>5</Amount>
-			<SpawnTimeInterval>2</SpawnTimeInterval>
-			<SpawnDelay>1</SpawnDelay>
+			<HoleID>Hole4</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>6</SpawnDelay>
 		</Enemy>
 		</Wave>
-	</Waves>
+		<Wave>
+		<Enemy>
+			<PrefabName>Mouse_Fast_01</PrefabName>
+			<HoleID>Hole2</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>12</SpawnDelay>
+		</Enemy>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole5</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>18</SpawnDelay>
+		</Enemy>
+		<Enemy>
+			<PrefabName>Mouse_Normal_01</PrefabName>
+			<HoleID>Hole6</HoleID>
+			<Amount>2</Amount>
+			<SpawnTimeInterval>1</SpawnTimeInterval>
+			<SpawnDelay>24</SpawnDelay>
+		</Enemy>
+		</Wave>
+		</Waves>
 	<WallPieces>
 		<WallPiece>
 			<PrefabName>WallCornerLL</PrefabName>
@@ -171,22 +270,22 @@
 		<WallPiece>
 			<PrefabName>WallCornerLR</PrefabName>
 			<Position>
-				<X>9</X>
+				<X>4</X>
 				<Y>-1</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallCornerUR</PrefabName>
 			<Position>
-				<X>9</X>
-				<Y>10</Y>
+				<X>4</X>
+				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallCornerUL</PrefabName>
 			<Position>
 				<X>-1</X>
-				<Y>10</Y>
+				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
@@ -194,13 +293,6 @@
 			<Position>
 				<X>-1</X>
 				<Y>0</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>9</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
@@ -224,200 +316,60 @@
 				<Y>3</Y>
 			</Position>
 		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>4</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>5</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>6</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>7</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallLeft</PrefabName>
-			<Position>
-				<X>-1</X>
-				<Y>8</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallTop</PrefabName>
-			<Position>
-				<X>8</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
+			<WallPiece>
 			<PrefabName>WallTop</PrefabName>
 			<Position>
 				<X>0</X>
-				<Y>10</Y>
+				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallTop</PrefabName>
 			<Position>
 				<X>1</X>
-				<Y>10</Y>
+				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallTop</PrefabName>
 			<Position>
 				<X>2</X>
-				<Y>10</Y>
+				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallTop</PrefabName>
 			<Position>
 				<X>3</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallTop</PrefabName>
-			<Position>
-				<X>4</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallTop</PrefabName>
-			<Position>
-				<X>5</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallTop</PrefabName>
-			<Position>
-				<X>6</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallTop</PrefabName>
-			<Position>
-				<X>7</X>
-				<Y>10</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
-				<Y>8</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
-				<Y>9</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
-				<Y>7</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
-				<Y>6</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
-				<Y>5</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallRight</PrefabName>
-			<Position>
-				<X>9</X>
 				<Y>4</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallRight</PrefabName>
 			<Position>
-				<X>9</X>
+				<X>4</X>
 				<Y>3</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallRight</PrefabName>
 			<Position>
-				<X>9</X>
+				<X>4</X>
 				<Y>2</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallRight</PrefabName>
 			<Position>
-				<X>9</X>
+				<X>4</X>
 				<Y>1</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
 			<PrefabName>WallRight</PrefabName>
 			<Position>
-				<X>9</X>
-				<Y>0</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallBottom</PrefabName>
-			<Position>
-				<X>7</X>
-				<Y>-1</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallBottom</PrefabName>
-			<Position>
-				<X>6</X>
-				<Y>-1</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallBottom</PrefabName>
-			<Position>
-				<X>5</X>
-				<Y>-1</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallBottom</PrefabName>
-			<Position>
 				<X>4</X>
-				<Y>-1</Y>
+				<Y>0</Y>
 			</Position>
 		</WallPiece>
 		<WallPiece>
@@ -445,18 +397,10 @@
 			<PrefabName>WallBottom</PrefabName>
 			<Position>
 				<X>0</X>
-				<Y>-1</Y>
-			</Position>
-		</WallPiece>
-		<WallPiece>
-			<PrefabName>WallBottom</PrefabName>
-			<Position>
-				<X>8</X>
 				<Y>-1</Y>
 			</Position>
 		</WallPiece>
 	</WallPieces>
 	<AvailableTraps>
-		<AvailableTrap>TrapCasserole_1x1_01</AvailableTrap>
 	</AvailableTraps>
 </Level>
