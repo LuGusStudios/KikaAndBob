@@ -9,6 +9,17 @@ public class IDinnerDashConfig : LugusSingletonRuntime<IDinnerDashConfig>
 		Debug.LogError(transform.Path () + " : LoadLevel not implemented!");
 	}
 
+
+	// ideally this should be implemented in all the configs
+	// BUT this is a late in the project (unlikely levels will be added) and they all happen to have five levels anyway
+	public virtual bool IsLastLevel(int currentLevel)
+	{
+		if (currentLevel >= 4)
+			return true;
+		else
+			return false;
+	}
+
 	public void SetupHUDForTutorial()//int targetScore)
 	{
 		// top left is simple timer

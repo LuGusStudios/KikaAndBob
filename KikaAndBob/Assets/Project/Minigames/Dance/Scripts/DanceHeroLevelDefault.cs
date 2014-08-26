@@ -126,11 +126,13 @@ public class DanceHeroLevelDefault : IGameManager
 
 	public override void StopGame ()
 	{
+		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, DanceHeroCrossSceneInfo.use);
+
 		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
 		
 		LugusConfig.use.User.SetBool(saveKey, true, true); 
 		LugusConfig.use.SaveProfiles();
-
+		
 		// let custom functionality be handled elsewhere
 		if (onLevelFinished != null)
 		{
@@ -139,6 +141,7 @@ public class DanceHeroLevelDefault : IGameManager
 		
 		Debug.Log("Level finished!");
 	}
+
 
 	public override bool GameRunning {
 		get 

@@ -189,6 +189,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	protected List<CatchingMiceCharacterMouse> enemies = new List<CatchingMiceCharacterMouse>();
 	protected List<GameObject> enemyParentList = new List<GameObject>();
 	protected float maxDepth = 0;
+	protected int originalCheeseTileCount = 0;
 
 	protected ILugusCoroutineHandle spawnRoutine = null;
 	#endregion
@@ -582,13 +583,28 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			CatchingMiceFurniture furniture = tileItem.GetComponent<CatchingMiceFurniture>();
 			if (furniture != null)
 			{
+				// we want to be sure furniture shadow etc is rendered above the tile below.
+				// move all items forwards by one tile depth, plus a tiny bit extra so they render above the tile above
+				if (furniture.tileType == CatchingMiceTile.TileType.Furniture)
+				{
+					if (furniture.transform.localPosition.z > 0)
+						furniture.zOffset += (scale + 0.1f);	// The zOffset value is always applied negatively! If you want to bring things forward, ADD to the value.
+					else
+						furniture.zOffset += (0.1f);
+				}
+
+				// for tricky depth situations, also allow manual offset alterations for both furniture and decorations
+
+				furniture.zOffset += definition.zOffset;	// unless it was explicitly defined in the level XML file, this value will be 0
+
 				if (furniture.CalculateColliders())
 				{
 					furniture.parentTile = targetTile;
 
-					if ((targetTile.tileType & CatchingMiceTile.TileType.Furniture) != CatchingMiceTile.TileType.Furniture)
+					if ((targetTile.tileType & CatchingMiceTile.TileType.Furniture) != CatchingMiceTile.TileType.Furniture &&
+					    (targetTile.tileType & CatchingMiceTile.TileType.Decoration) != CatchingMiceTile.TileType.Decoration)
 					{
-						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no furniture flag set!");
+						CatchingMiceLogVisualizer.use.LogWarning("The tile type of the tile has no furniture or decoration flag set!");
 					}
 				}
 				else
@@ -596,6 +612,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 					CatchingMiceLogVisualizer.use.LogError("The furniture " + furniture.name + " could not be placed on the grid.");
 					DestroyGameObject(furniture.gameObject);
 				}
+	
 			}
 			else
 			{
@@ -603,11 +620,14 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				DestroyGameObject(tileItem);
 			}
 
-			BoxCollider2D[] colliders = tileItem.GetComponentsInChildren<BoxCollider2D>(true);
-
-			foreach(BoxCollider2D boxCollider in colliders)
+			if (tileItem != null)
 			{
-					boxCollider.enabled = false;
+				BoxCollider2D[] colliders = tileItem.GetComponentsInChildren<BoxCollider2D>(true);
+
+				foreach(BoxCollider2D boxCollider in colliders)
+				{
+						boxCollider.enabled = false;
+				}
 			}
 		}
 	}
@@ -714,7 +734,7 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 			GameObject tileItem = (GameObject)Instantiate(cheesePrefab);
 			tileItem.transform.parent = objectParent;
 			tileItem.transform.name += " " + targetTile.gridIndices;
-			tileItem.transform.localPosition = targetTile.location;
+			tileItem.transform.localPosition = targetTile.location.zAdd(-0.1f);
 
 			CatchingMiceCheese cheese = tileItem.GetComponent<CatchingMiceCheese>();
 			if (cheese != null)
@@ -743,6 +763,8 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 				DestroyGameObject(tileItem);
 			}
 		}
+
+		originalCheeseTileCount = cheeseTiles.Count;
 	}
 
 	public void InstantiateTrap(CatchingMiceTrap trap, CatchingMiceTile tile)

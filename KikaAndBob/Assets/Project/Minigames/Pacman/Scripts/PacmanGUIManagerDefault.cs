@@ -10,7 +10,7 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 {
 	protected Transform keysParent = null;
 	protected Dictionary<string, HUDCounter> guiKeyItems = new Dictionary<string, HUDCounter>();
-	public delegate void OnWinLevel(float timer);
+	public delegate void OnWinLevel(float timer, PacmanGameManagerDefault manager);
 	public OnWinLevel onWinLevel = null;
 
 	public void SetupLocal()
@@ -126,20 +126,27 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 		HUDManager.use.LevelEndScreen.Counter1.SetValue(timer);
 	}
 
-	public void ShowWinMessage(float timer)
+	public void ShowWinMessage(float timer, PacmanGameManagerDefault manager)
+	{
+		LugusCoroutines.use.StartRoutine(ShowWinMessageRoutine(timer, manager));
+	}
+
+	protected IEnumerator ShowWinMessageRoutine(float timer, PacmanGameManagerDefault manager)
 	{
 		// if we have a custon win screen handler, it will do the screen, if not, the default one below will be shown
 		if (onWinLevel != null)
 		{
-			onWinLevel(timer);
-			return;
+			onWinLevel(timer, manager);
+			yield break;
 		}
 
+		yield return LugusCoroutines.use.StartRoutine(manager.StoreScore(PacmanCrossSceneInfo.use.GetLevelIndex(), -timer));	// in standard pacman manager, scores are inverted
+		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);
-
+		
 		HUDManager.use.StopAll();
 		HUDManager.use.LevelEndScreen.Show(true);
-
+		
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Time;
 		HUDManager.use.LevelEndScreen.Counter1.formatting = HUDCounter.Formatting.TimeMS;

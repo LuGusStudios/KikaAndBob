@@ -92,7 +92,6 @@ public class MenuStepMain : IMenuStep
 		// load language
 
 		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
-
 		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 
@@ -145,17 +144,17 @@ public class MenuStepMain : IMenuStep
 		}
 		else if (catchingMiceButton.pressed)
 		{
-			LugusCoroutines.use.StartRoutine(LeavingMainMenu());
+			LugusCoroutines.use.StartRoutine(LeavingMainMenu("e00_catchingmice"));
 		}
 		else if (playRoomButton.pressed)
 		{
-
+			LugusCoroutines.use.StartRoutine(LeavingMainMenu("playroom"));
 		}
 	}
 
 
 
-	protected IEnumerator LeavingMainMenu()
+	protected IEnumerator LeavingMainMenu(string toScene)
 	{
 		leavingMenu = true;
 
@@ -165,7 +164,7 @@ public class MenuStepMain : IMenuStep
 
 		Resources.UnloadUnusedAssets();
 
-		Application.LoadLevel("e00_catchingmice");
+		Application.LoadLevel(toScene);
 
 		yield break;
 	}

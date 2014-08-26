@@ -89,7 +89,7 @@ public class DebugByTaps : MonoBehaviour
 
 		GUILayout.Space(100);
 
-		if (GUILayout.Button("Toggle random scene loader", GUILayout.MinHeight(60))) 
+		if (GUILayout.Button("Toggle random scene loader", new GUILayoutOption[]{GUILayout.MinHeight(60), GUILayout.MaxWidth(180)}   )) 
 		{
 			SceneLoaderTest sceneLoader = (SceneLoaderTest) FindObjectOfType(typeof(SceneLoaderTest));
 
@@ -126,6 +126,27 @@ public class DebugByTaps : MonoBehaviour
 		GUILayout.EndScrollView();
 
 		GUILayout.EndArea();
+
+		GUILayout.BeginHorizontal();
+
+		GUILayout.Space( 200 );
+
+		if (GUILayout.Button("Clear ALL game progress", GUILayout.MinHeight(60))) 
+		{
+			LugusConfig.use.User.ClearAllData();
+		}
+
+		if (GUILayout.Button("Clear ALL other settings", GUILayout.MinHeight(60))) 
+		{
+			LugusConfig.use.System.ClearAllData();
+		}
+
+		if (GUILayout.Button("Log in with test account", GUILayout.MinHeight(60))) 
+		{
+			LugusCoroutines.use.StartRoutine(KBAPIConnection.use.LoginRoutine("Test5", "Test5"));
+		}
+
+		GUILayout.EndHorizontal();
 
 		DrawFPS();
 	}

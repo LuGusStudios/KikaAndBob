@@ -44,13 +44,15 @@ public class FroggerGameManagerDefault : IGameManager
 		Debug.Log("FroggerGameManager: Won game!");
 		
 		gameRunning = false;
+
+		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, FroggerCrossSceneInfo.use);
+
 		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
-		
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
-		
+
 		int scoreTotal = Mathf.RoundToInt((timer - (pickupCount * pickupBoost)) * 100);
-		//TO DO: STORE SCORE TOTAL HERE!
+	
 		
 		LugusCoroutines.use.StartRoutine(EndGameRoutine(timer, pickupCount, scoreTotal));
 	}
@@ -108,11 +110,13 @@ public class FroggerGameManagerDefault : IGameManager
 
 	protected IEnumerator EndGameRoutine(float timer, int pickupCount, int scoreTotal)
 	{
-		//FroggerLevelManager.use.
-
 		HUDManager.use.StopAll();
 
 		yield return new WaitForSeconds(1.0f);
+
+		// highscores are inverted!!!! - invert scores so they are ordered correctly in the database
+		// negative scores will be inverted again when they are displayed in the app
+		yield return StartCoroutine(StoreScore(FroggerCrossSceneInfo.use.GetLevelIndex(), -scoreTotal));
 
 		FroggerGUIManager.use.GameWon(timer, pickupCount, scoreTotal);
 	}

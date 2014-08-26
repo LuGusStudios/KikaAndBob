@@ -86,4 +86,48 @@ public abstract class IGameManager : MonoBehaviour
 		}
 	}
 
+	public IEnumerator StoreScore(int levelIndex, int score)
+	{
+		yield return LugusCoroutines.use.StartRoutine(StoreScore(levelIndex, (float)score));
+	}
+
+	public IEnumerator StoreScore(int levelIndex, float score)
+	{
+		if (!PlayerAuthCrossSceneInfo.use.loggedIn)
+		{
+			Debug.Log("GameManager: Player not logged in. Not storing score.");
+			yield break;
+		}
+
+		yield return StartCoroutine(KBAPIConnection.use.CheckConnectionRoutine());
+		
+		if (!KBAPIConnection.use.hasConnection)
+			yield break;
+
+		List<int> foundGameIDs = new List<int>();
+		
+		yield return StartCoroutine(KBAPIConnection.use.GetGameIdRoutine(foundGameIDs, Application.loadedLevelName));
+		
+		if( foundGameIDs.Count >= 1 )
+		{
+			Debug.Log ("Received game-id " + foundGameIDs[0] + " for game " + Application.loadedLevelName);
+		}
+		else
+		{
+			Debug.LogError("No game id found for " + Application.loadedLevelName);
+
+			yield break;
+		}
+
+		int gameID = foundGameIDs[0];
+
+		yield return StartCoroutine(KBAPIConnection.use.AddScoreRoutine(gameID, levelIndex, score));
+
+		if (KBAPIConnection.use.errorMessage == "")	// if it is not a new high score, an error message is returned
+		{
+			Debug.Log("New highscore achieved!");
+		}
+
+
+	}
 }

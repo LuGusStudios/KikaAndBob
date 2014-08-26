@@ -5,6 +5,8 @@ using System;
 
 public class LugusResourceHelperText 
 {
+	protected string mobileSuffix = ".mobile";
+
 	public Dictionary<string, string> texts = new Dictionary<string, string>();
 	
 	public string delimiterLines = "\n";
@@ -16,6 +18,16 @@ public class LugusResourceHelperText
 			return false;
 		else
 		{
+#if UNITY_IPHONE || UNITY_ANDROID
+			bool containsMobileKey = false;
+			containsMobileKey = texts.ContainsKey(key + mobileSuffix);
+
+			// anything is better than not finding a key
+			// if we find the mobile key, wa-hey
+			// if not, we can still try the regular key
+			if (containsMobileKey == true)	//
+				return containsMobileKey;
+#endif
 			return texts.ContainsKey(key);
 		}
 	}
@@ -27,6 +39,17 @@ public class LugusResourceHelperText
 			Debug.LogError("No texts loaded! " + key);
 			return "[" + key + " // " + backupKey +"]";
 		}
+
+#if UNITY_IPHONE || UNITY_ANDROID
+		if( texts.ContainsKey(key + mobileSuffix) )
+		{
+			return texts[key + mobileSuffix];
+		}
+		else if( texts.ContainsKey(backupKey + mobileSuffix) )
+		{
+			return texts[backupKey + mobileSuffix];
+		}
+#endif
 		
 		if( texts.ContainsKey(key) )
 		{
@@ -53,6 +76,13 @@ public class LugusResourceHelperText
 			Debug.LogError("No texts loaded! " + key);
 			return "[" + key + "]";
 		}
+
+#if UNITY_IPHONE || UNITY_ANDROID
+		if( texts.ContainsKey(key + mobileSuffix) )
+		{
+			return texts[key + mobileSuffix];
+		}
+#endif
 		
 		if( texts.ContainsKey(key) )
 		{

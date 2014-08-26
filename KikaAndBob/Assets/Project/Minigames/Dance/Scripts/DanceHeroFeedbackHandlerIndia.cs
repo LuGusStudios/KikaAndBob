@@ -344,6 +344,8 @@ public class DanceHeroFeedbackHandlerIndia : MonoBehaviour
 	{
 		yield return new WaitForSeconds(1.0f);
 
+		yield return StartCoroutine(DanceHeroLevel.use.StoreScore(DanceHeroCrossSceneInfo.use.GetLevelIndex(), DanceHeroFeedback.use.GetScore()));
+
 		HUDManager.use.DisableAll();
 		
 		HUDManager.use.PauseButton.gameObject.SetActive(false);

@@ -562,6 +562,9 @@ public class RunnerManagerDefault : IGameManager
 		
 		if( success )
 		{
+			CatchingMiceUnlockManager.use.CheckUnlockRunner(IRunnerConfig.use, RunnerCrossSceneInfo.use);
+
+			//CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
 			
 			Debug.Log ("Runner : set level success : " + (Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad) );
 			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad, true, true );
@@ -597,8 +600,6 @@ public class RunnerManagerDefault : IGameManager
 		// there, we just take the time as score
 		float timeScore = Mathf.FloorToInt(timeSpent + (Time.time - startTime));
 
-
-
 		HUDManager.use.LevelEndScreen.Show(true);
 		HUDManager.use.LevelEndScreen.Counter1.SetValue( timeScore, true );
 		HUDManager.use.LevelEndScreen.Counter2.SetValue( pickupCount, true );
@@ -626,8 +627,33 @@ public class RunnerManagerDefault : IGameManager
 
 		timeScore = Mathf.Max (0.0f, timeScore); // prevent going under 0
 
-		yield return new WaitForSeconds( Mathf.Max(HUDManager.use.LevelEndScreen.Counter1.animationTime, HUDManager.use.LevelEndScreen.Counter2.animationTime) + 1.0f );
 
+		float tempScore = timeScore;
+
+		int mult = 1;
+
+		if( gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			mult = 50;
+		}
+
+		// we have to pre-calculate the score already !
+		// we could have the score window calculate it all and THEN store them
+		// but people tend to click out of windows quickly, so store it before score anims are done
+
+		//print (tempScore + (pickupCount * mult));
+		
+		if( gameType == KikaAndBob.RunnerGameType.Distance )
+		{
+			yield return StartCoroutine(StoreScore(RunnerCrossSceneInfo.use.GetLevelIndex(), tempScore + (pickupCount * mult)));
+		}
+		else
+		{
+			yield return StartCoroutine(StoreScore(RunnerCrossSceneInfo.use.GetLevelIndex(), tempScore + (pickupCount * mult) ));
+		}
+
+		yield return new WaitForSeconds( Mathf.Max(HUDManager.use.LevelEndScreen.Counter1.animationTime, HUDManager.use.LevelEndScreen.Counter2.animationTime) + 1.0f );
+	
 		ScoreVisualizer
 				.Score(KikaAndBob.CommodityType.Time, timeScore) 
 				.Position( HUDManager.use.LevelEndScreen.Counter1.transform.position )

@@ -9,6 +9,7 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
 
     public int cheeseBites = 3;
 	public int cookieDrops = 1;
+	public ParticleSystem disappearParticles = null;
 
 	public override float Health
     {
@@ -36,9 +37,13 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
     {
         base.SetupLocal();
 
-        zOffset = 0.75f;
-        
+		if (disappearParticles == null)
+			disappearParticles = transform.FindChild("DisappearParticles").GetComponent<ParticleSystem>();
 
+		if (disappearParticles == null)
+			Debug.LogError("CatchingMiceCharacterMouse: Missing disappear particles.");
+
+        zOffset = 0.75f;
     }
     
 	protected virtual void OnEnable() 
@@ -168,17 +173,6 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         }
 
         attacking = false;
-
-		// if there is still cheese around, but this one is gone, find new target
-//        if ((CatchingMiceLevelManager.use.CheeseTiles.Count > 0) && (cheeseTile.cheese == null || cheeseTile.cheese.Health <= 0))
-//        {
-//            CatchingMiceLogVisualizer.use.Log(gameObject.name + ": Acquiring new target.");
-//            GetTarget();
-//        }
-//        else
-//        {
-//            DieRoutine();
-//        }
     }
 
 	protected IEnumerator FindNewTarget()
@@ -218,6 +212,17 @@ public class CatchingMiceCharacterMouse : ICatchingMiceCharacter
         CatchingMiceLevelManager.use.OnCheeseRemoved -= TargetRemoved;
 		CatchingMiceLevelManager.use.EnemyDied(this);
 		CatchingMiceGameManager.use.EnemiesAlive -= 1;
+
+		// we want the mouse to disappear and the particles to spawn afterwards
+		// we'd have to find all bone animations / sprite renderers / other renderers in this object and then disable them
+		// or we could refactor this entire method into a coroutine, or just solve it in the following slightly weird way:
+		// unparent particle system and activate it, remove the rest of the game object and destroy the particles a little while later 
+
+		disappearParticles.transform.parent = null;
+		disappearParticles.Play();
+		disappearParticles.transform.position = disappearParticles.transform.position.zAdd(-3f); // make sure the cloud sits above the tile below this one 
+
+		Destroy(disappearParticles.gameObject, 3.0f);
 
         gameObject.SetActive(false);
 		GameObject.Destroy(this.gameObject);

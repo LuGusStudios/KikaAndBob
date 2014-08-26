@@ -8,6 +8,7 @@ public class DartsShooter : MonoBehaviour
 	protected DataRange bulletTravelTimeRange = new DataRange(0.2f, 0.4f);
 
 	protected bool shooting = false;
+	protected DartsRotateToMouse rotator = null;
 
 	public void SetupLocal()
 	{
@@ -19,6 +20,16 @@ public class DartsShooter : MonoBehaviour
 		if( bulletPrefab == null )
 		{
 			Debug.LogError(name + " : No bulletPrefab found for this shooter!");
+		}
+
+		if (rotator == null)
+		{
+			rotator = GetComponent<DartsRotateToMouse>();
+		}
+		
+		if (rotator == null)
+		{
+			Debug.LogError(name + " : No rotator found for this shooter!");
 		}
 	}
 	
@@ -58,6 +69,9 @@ public class DartsShooter : MonoBehaviour
 		// This coroutine does 2 things:
 		// - control the shooter itself (bool shooting on/off) and graphical updates
 		// - control the bullet : graphical movement, but also resolution of the hit
+
+		if (rotator != null)	// this is necessary on mobile devices, where LugusInput.use.lastPoint is not constantly updated
+			rotator.UpdateRotation();
 
 		//Vector3 screenPoint = LugusInput.use.lastPoint;
 		Vector3 worldTarget = LugusInput.use.ScreenTo3DPoint(LugusInput.use.lastPoint, this.transform.position, LugusCamera.game);

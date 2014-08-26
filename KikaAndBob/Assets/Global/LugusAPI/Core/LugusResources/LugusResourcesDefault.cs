@@ -139,15 +139,12 @@ public class LugusResourcesDefault : MonoBehaviour
 		{
 			case SystemLanguage.Dutch:
 				return "nl";
-				break;
-				
+		
 			case SystemLanguage.English:
 				return "en";
-				break;
 
 			default:			// English seems like a sensible pick for a potential international product if the system language isn't supported.
 				return "en";
-				break;
 		}
 	}
 

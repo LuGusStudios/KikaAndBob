@@ -92,25 +92,40 @@ public class MenuStepAvatar : IMenuStep
 	{
 		SetupGlobal();
 	}
-	
+
+	protected void SaveLocalData()
+	{
+		LugusConfig.use.User.SetInt("CatIndex", currentCatIndex, true);
+		Debug.Log("MenuStepAvatar: Saved cat index: " + currentCatIndex.ToString());
+		
+		if (!string.IsNullOrEmpty(characterNameField.GetEnteredString()) && !characterNameField.IsDefaultValue())
+		{
+			LugusConfig.use.User.SetString("CatName", characterNameField.GetEnteredString(), true);
+			Debug.Log("MenuStepAvatar: Saved cat name: " + characterNameField.GetEnteredString());
+		}
+		else
+		{
+			Debug.Log("MenuStepAvatar: Cat name was not yet entered. Not saving it.");
+		}
+		
+		LugusConfig.use.SaveProfiles();
+	}
+
+	protected void SaveRemoteData()
+	{
+		if (PlayerAuthCrossSceneInfo.use.hasConnection)
+		{
+			// access Submarine API here
+		}
+	}
+
 	protected void Update () 
 	{
 		if (exitButton.pressed)
 		{
-			LugusConfig.use.User.SetInt("CatIndex", currentCatIndex, true);
-			Debug.Log("MenuStepAvatar: Saved cat index: " + currentCatIndex.ToString());
+			SaveLocalData();
 
-			if (!string.IsNullOrEmpty(characterNameField.GetEnteredString()) && !characterNameField.IsDefaultValue())
-			{
-				LugusConfig.use.User.SetString("CatName", characterNameField.GetEnteredString(), true);
-				Debug.Log("MenuStepAvatar: Saved cat name: " + characterNameField.GetEnteredString());
-			}
-			else
-			{
-				Debug.Log("MenuStepAvatar: Cat name was not yet entered. Not saving it.");
-			}
-
-			LugusConfig.use.SaveProfiles();
+			SaveRemoteData();
 
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}

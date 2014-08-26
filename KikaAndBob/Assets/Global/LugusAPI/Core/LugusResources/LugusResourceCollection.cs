@@ -22,13 +22,14 @@ public interface ILugusResourceCollection
 
 // just loads an asset from Resources folder using BaseURL, easy peasy
 public class LugusResourceCollectionDefault : ILugusResourceCollection
-{
-	
+{	
+	protected string mobileSuffix = ".mobile";	// added to keys to check if a mobile alternate version exists (e.g. different text for different input methods)
+
 	public List<ILugusResourceProvider> providers = null;
 	
 	protected LugusResourceHelperText textHelper = null;
 	public event Lugus.OnResourcesReloaded onResourcesReloaded;
-	
+		
 	// Constructor
 	public LugusResourceCollectionDefault(string url)
 	{
@@ -73,6 +74,13 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
+#if UNITY_IPHONE || UNITY_ANDROID
+			output = provider.GetTexture(_URL, key + mobileSuffix);
+			
+			if( output != null )
+				break;
+#endif
+
 			output = provider.GetTexture(_URL, key);
 			if( output != null )
 				break;
@@ -93,6 +101,12 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
+#if UNITY_IPHONE || UNITY_ANDROID
+			output = provider.GetSprite(_URL, key + mobileSuffix);
+
+			if( output != null )
+				break;
+#endif
 			output = provider.GetSprite(_URL, key);
 			if( output != null )
 				break;
@@ -114,6 +128,12 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
+#if UNITY_IPHONE || UNITY_ANDROID
+			output = provider.GetAudio(_URL, key + mobileSuffix);
+			
+			if( output != null )
+				break;
+#endif
 			output = provider.GetAudio(_URL, key);
 			if( output != null )
 				break;
@@ -163,6 +183,13 @@ public class LugusResourceCollectionDefault : ILugusResourceCollection
 		
 		foreach( ILugusResourceProvider provider in providers )
 		{
+#if UNITY_IPHONE || UNITY_ANDROID
+			output = provider.GetText(_URL, key + mobileSuffix);
+			
+			if( output != null )
+				break;
+#endif
+
 			output = provider.GetText(_URL, key);
 			if( output != null )
 				break;

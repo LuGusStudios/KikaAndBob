@@ -76,6 +76,7 @@ Transform:
   m_LocalScale: {x: .400000006, y: .400000006, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
+  m_RootOrder: 2
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 1
@@ -90,6 +91,7 @@ Transform:
   - {fileID: 400006}
   - {fileID: 400000}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!4 &400004
 Transform:
   m_ObjectHideFlags: 1
@@ -101,6 +103,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
+  m_RootOrder: 0
 --- !u!4 &400006
 Transform:
   m_ObjectHideFlags: 1
@@ -112,6 +115,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
+  m_RootOrder: 1
 --- !u!61 &6100000
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -140,12 +144,13 @@ MonoBehaviour:
   activeSprite: {fileID: 21300000, guid: 6742f35639a5eab4abcb3a69d6236d15, type: 3}
   inactiveSprite: {fileID: 21300000, guid: 6742f35639a5eab4abcb3a69d6236d15, type: 3}
   spriteRenderer: {fileID: 0}
+  attackSoundKey: e00_VacuumCleaner01
   health: 100
-  stacks: 3
-  cost: 1
+  ammo: 1
+  cost: 5
   damage: 1
   interval: 1
-  tileRange: 2
+  tileRange: 1
   suctionTime: 3
   suctionSpeed: 5
   particles: ParticleDust_01
@@ -1159,9 +1164,8 @@ ParticleSystemRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_RenderMode: 0
   m_MaxParticleSize: 1
   m_CameraVelocityScale: 0
@@ -1192,9 +1196,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 6742f35639a5eab4abcb3a69d6236d15, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000

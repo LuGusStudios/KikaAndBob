@@ -147,11 +147,18 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 	public override void StopGame() 
 	{
-		_gameRunning = false;
+		LugusCoroutines.use.StartRoutine(StopGameRoutine());
+	}
 
+	protected IEnumerator StopGameRoutine()
+	{
+		_gameRunning = false;
+		
 		HUDManager.use.StopAll();
 		DialogueManager.use.HideAll();
+		
 
+		yield return StartCoroutine(StoreScore(DinnerDashCrossSceneInfo.use.GetLevelIndex(), moneyScore));
 
 		/*
 		DialogueBox outroBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad + 1) + ".outro") );  
@@ -159,42 +166,43 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		outroBox.onContinueButtonClicked += BackToMenu; 
 		outroBox.Show(); 
 		*/
-
+		
 		HUDManager.use.LevelEndScreen.Counter1.gameObject.SetActive(true);
-
+		
 		//float moneyScore = ((HUDCounter)HUDManager.use.GetElementForCommodity(KikaAndBob.CommodityType.Money)).currentValue;
 		bool success = true;
 		if( targetMoneyScore > 0.0f )
 		{
 			HUDManager.use.LevelEndScreen.Counter1.suffix = " / " + targetMoneyScore;
-
+			
 			if( moneyScore < targetMoneyScore )
 			{
 				success = false;
 			}
 		}
-
+		
 		HUDManager.use.LevelEndScreen.Counter1.commodity = KikaAndBob.CommodityType.Money;
 		HUDManager.use.LevelEndScreen.Show(success);
 		HUDManager.use.LevelEndScreen.Counter1.SetValue( moneyScore, true );
-
+		
 		if( success )
 		{
-
+			CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
+			
 			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad) );
 			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad, true, true );
 			LugusConfig.use.SaveProfiles();
 		}
-
-
+		
+		
 		Debug.Log ("Stopping dinner dash " + moneyScore + " >= " + targetMoneyScore);
-
+		
 		if( queueRoutineHandle != null )
 		{
 			queueRoutineHandle.StopRoutine();
 			queueRoutineHandle = null;
 		}
-
+		
 		if( consumerManager != null )
 		{
 			consumerManager.StopConsumerGeneration();

@@ -16,6 +16,7 @@ public class DartsBeanShooter : MonoBehaviour
 	protected BoneAnimation bobAnimation = null;
 	protected Transform spitStart = null;
 	protected GameObject bulletHitParticles = null;
+	protected DartsRotateToMouse rotator = null;
 	
 	protected bool shooting = false;
 	
@@ -61,10 +62,22 @@ public class DartsBeanShooter : MonoBehaviour
 		{
 			bulletHitParticles = transform.FindChild("HitParticles").gameObject;
 		}
+
 		if (bulletHitParticles == null)
 		{
 			Debug.LogError(name + " : No hit particles found for this shooter!");
 		}
+
+		if (rotator == null)
+		{
+			rotator = GetComponentInChildren<DartsRotateToMouse>();
+		}
+		
+		if (rotator == null)
+		{
+			Debug.LogError(name + " : No rotator found for this shooter!");
+		}
+
 	}
 	
 	public void SetupGlobal()
@@ -115,6 +128,9 @@ public class DartsBeanShooter : MonoBehaviour
 			string key = shootSoundKeys[Random.Range(0, shootSoundKeys.Length)];
 			LugusAudio.use.SFX().Play(LugusResources.use.Shared.GetAudio(key));
 		}
+
+		if (rotator != null)	// this is necessary on mobile devices, where LugusInput.use.lastPoint is not constantly updated
+			rotator.UpdateRotation();
 		
 		//Vector3 screenPoint = LugusInput.use.lastPoint;
 		Vector3 worldTarget = LugusInput.use.ScreenTo3DPoint(LugusInput.use.lastPoint, this.transform.position, LugusCamera.game);

@@ -10,6 +10,7 @@ public class MenuManagerDefault: MonoBehaviour
 {
 	public Dictionary<MenuTypes, IMenuStep> menus = new Dictionary<MenuTypes, IMenuStep>();
 	public Sprite backgroundSprite = null;
+	public int currentSelectedLevel = 1;
 
 	protected Transform background = null;
 	protected bool firstFrame = true;
@@ -19,7 +20,8 @@ public class MenuManagerDefault: MonoBehaviour
 		NONE = -1,
 		GameMenu = 1,
 		LevelMenu = 2,
-		HelpMenu = 3
+		HelpMenu = 3,
+		HighScoreMenu = 4
 	}
 
 	public MenuTypes startMenu = MenuTypes.GameMenu;
@@ -43,6 +45,12 @@ public class MenuManagerDefault: MonoBehaviour
 			menus.Add(MenuTypes.HelpMenu, helpMenu);
 		else
 			Debug.LogError("MenuManager: Missing help menu!");
+
+		StepHighscoreMenu highScoreMenu = transform.FindChild("HighScoreMenu").GetComponent<StepHighscoreMenu>();
+		if (highScoreMenu != null)
+			menus.Add(MenuTypes.HighScoreMenu, highScoreMenu);
+		else
+			Debug.LogError("MenuManager: Missing high score menu!");
 
 		if (background == null)
 			background = transform.FindChild("Background");

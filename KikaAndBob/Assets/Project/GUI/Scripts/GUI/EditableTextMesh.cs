@@ -6,6 +6,7 @@ using System.Collections;
 public class EditableTextMesh : MonoBehaviour {
 
 	public string defaultTextKey = "";
+	public int maxCharacterCount = 64;
 
 	protected BoxCollider boxCollider;
 	protected TextMesh textMesh;
@@ -13,9 +14,9 @@ public class EditableTextMesh : MonoBehaviour {
 	protected string editedString = "";
 	protected bool useScreenKeyboard = false;
 
-#if UNITY_IPHONE || UNITY_ANDROID
+//#if UNITY_IPHONE || UNITY_ANDROID
 	protected TouchScreenKeyboard keyBoard;
-#endif
+//endif
 
 	protected TextMeshWrapper wrapper = null;
 	protected string defaultText = "";
@@ -74,7 +75,7 @@ public class EditableTextMesh : MonoBehaviour {
 	public void SetupGlobal()
 	{
 		LugusResources.use.Localized.onResourcesReloaded += UpdateDefaultText;
-		defaultText = LugusResources.use.GetText(defaultTextKey);
+		UpdateDefaultText();
 		Reset();
 		AlterTransparency();
 	}
@@ -92,9 +93,14 @@ public class EditableTextMesh : MonoBehaviour {
 
 	public bool IsDefaultValue()
 	{
-		return editedString == defaultText;
+		return textMesh.text == defaultText;
 	}
-	
+
+	public bool IsEmpty()
+	{
+		return string.IsNullOrEmpty(editedString);
+	}
+
 	public string GetEnteredString()
 	{
 		return editedString;
@@ -126,6 +132,12 @@ public class EditableTextMesh : MonoBehaviour {
 			if (useScreenKeyboard)
 			{
 #if UNITY_IPHONE || UNITY_ANDROID
+
+				if (keyBoard.text.Length > maxCharacterCount)
+				{
+					keyBoard.text = keyBoard.text.Substring(0, maxCharacterCount);
+				}
+
 				editedString = keyBoard.text;
 				textMesh.text = editedString;
 
@@ -194,7 +206,7 @@ public class EditableTextMesh : MonoBehaviour {
 		{
 			GUI.SetNextControlName ("HiddenTextField"); //Prepare a Control Name so we can focus the TextField
 			GUI.FocusControl ("HiddenTextField");       //Focus the TextField
-			editedString = GUI.TextField (new Rect (90, -100, 200, 25), editedString, 32);    //Display a TextField outside the Screen Rect
+			editedString = GUI.TextField (new Rect (90, -100, 200, 25), editedString, maxCharacterCount);    //Display a TextField outside the Screen Rect
 		}
 	}
 }
