@@ -56,8 +56,6 @@ public class MenuManagerDefault: MonoBehaviour
 			background = transform.FindChild("Background");
 		if (background == null)
 			Debug.LogError("MenuManager: Missing background!");
-
-		LugusResources.use.ChangeLanguage("en");
 	}
 	
 	public void SetupGlobal()
@@ -95,6 +93,10 @@ public class MenuManagerDefault: MonoBehaviour
 				backgroundRenderer.enabled = false;
 			}
 		}
+
+		// load language
+		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 	
 	protected void Awake()

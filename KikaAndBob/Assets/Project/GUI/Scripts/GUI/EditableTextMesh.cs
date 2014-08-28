@@ -14,9 +14,9 @@ public class EditableTextMesh : MonoBehaviour {
 	protected string editedString = "";
 	protected bool useScreenKeyboard = false;
 
-//#if UNITY_IPHONE || UNITY_ANDROID
+#if UNITY_IPHONE || UNITY_ANDROID
 	protected TouchScreenKeyboard keyBoard;
-//endif
+#endif
 
 	protected TextMeshWrapper wrapper = null;
 	protected string defaultText = "";
@@ -30,13 +30,13 @@ public class EditableTextMesh : MonoBehaviour {
 	{
 #if UNITY_EDITOR
 		useScreenKeyboard = false;
-#elif UNITY_ANDROID || UNITY_IOS
+#elif UNITY_ANDROID || UNITY_IPHONE
 		useScreenKeyboard = true;
 #else
 		useScreenKeyboard = false;
 #endif
 
-		#if UNITY_IPHONE || UNITY_ANDROID
+#if UNITY_IPHONE || UNITY_ANDROID
 		if (useScreenKeyboard)
 			TouchScreenKeyboard.hideInput = false;
 #endif
@@ -145,8 +145,8 @@ public class EditableTextMesh : MonoBehaviour {
 				{
 					wrapper.UpdateWrapping();
 				}
-				
-				if (keyBoard.wasCanceled || keyBoard.done)
+
+				if (keyBoard.wasCanceled || keyBoard.done || (LugusInput.use.down == true && LugusInput.use.RayCastFromMouseDown(LugusCamera.ui) != transform) )
 				{
 					editing = false;
 					AlterTransparency();	
@@ -177,19 +177,21 @@ public class EditableTextMesh : MonoBehaviour {
 				}
 			}
 		}
-		else if (editing == false && LugusInput.use.RayCastFromMouseDown(LugusCamera.ui) == transform)
+		else
 		{
-			editing = true;
-			AlterTransparency();
-
-			if (useScreenKeyboard)
+			if (LugusInput.use.RayCastFromMouseDown(LugusCamera.ui) == transform)
 			{
-#if UNITY_IPHONE || UNITY_ANDROID
-				keyBoard = TouchScreenKeyboard.Open(editedString, TouchScreenKeyboardType.Default, false, false, false);
-#endif
+				editing = true;
+				AlterTransparency();
+				
+				if (useScreenKeyboard)
+				{
+					#if UNITY_IPHONE || UNITY_ANDROID
+					keyBoard = TouchScreenKeyboard.Open(editedString, TouchScreenKeyboardType.Default, false, false, false);
+					#endif
+				}
 			}
 		}
-	
 	}
 	
 	void AlterTransparency()

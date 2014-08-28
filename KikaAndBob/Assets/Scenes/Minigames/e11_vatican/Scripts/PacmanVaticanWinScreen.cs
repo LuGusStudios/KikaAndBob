@@ -52,7 +52,7 @@ public class PacmanVaticanWinScreen : MonoBehaviour
 		
 		int timeScore = 15000 - ( Mathf.FloorToInt(timer) * 50 );
 		
-		int storedScore = timeScore + (int)(pickUpCount * pickupValue);
+		int storedScore = timeScore + (int)((pickUpCount + 1) * pickupValue);
 		
 		// in non-standard pacman, scores are normal (highest value = highest score), so no inversion
 		yield return LugusCoroutines.use.StartRoutine(manager.StoreScore(PacmanCrossSceneInfo.use.GetLevelIndex(), storedScore));

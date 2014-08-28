@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class StepLevelMenu : IMenuStep 
 {
 	public int customLevelLoad = 0;	// Dirty fix. CAUTION - dont apply this value to the prefab if changed
+	public bool levelsUnlockedElsewhere = false;
+
 
 	protected Transform levelBarsParent = null;
 	protected List<Transform> levelBars = new List<Transform>();
@@ -377,13 +379,20 @@ public class StepLevelMenu : IMenuStep
 
 			bool unlocked = false;
 
-			if (i == 0)	// first item is always unlocked
+			if (levelsUnlockedElsewhere)
 			{
-				unlocked = true;
+				unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i], false);
 			}
-			else // subsequent items are unlocked if previous one has been won
+			else
 			{
-				unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i-1], false);
+				if (i == 0)	// first item is always unlocked
+				{
+					unlocked = true;
+				}
+				else // subsequent items are unlocked if previous one has been won
+				{
+					unlocked = LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i-1], false);
+				}
 			}
 
 			bar.FindChild("ButtonPlay").gameObject.SetActive(unlocked);

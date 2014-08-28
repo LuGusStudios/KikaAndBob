@@ -103,12 +103,20 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.NONE);
 
-			DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad) + ".intro") );  
-			introBox.boxType = DialogueBox.BoxType.Continue;
-			introBox.onContinueButtonClicked += OnStartButtonClicked;
-			introBox.Show(); 
+			LugusCoroutines.use.StartRoutine(StartGameDelay());
 		}
 	}
+
+	protected IEnumerator StartGameDelay()
+	{
+		yield return null;	// allow localization to take effect first
+
+		DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad) + ".intro") );  
+		introBox.boxType = DialogueBox.BoxType.Continue;
+		introBox.onContinueButtonClicked += OnStartButtonClicked;
+		introBox.Show(); 
+	}
+
 
 	protected void OnStartButtonClicked(DialogueBox box)
 	{

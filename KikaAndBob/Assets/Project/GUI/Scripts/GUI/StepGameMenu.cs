@@ -97,12 +97,6 @@ public class StepGameMenu : IMenuStep
 		{
 			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
 		}
-		
-		// load language
-		
-		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
-		
-		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 	
 	public void SetupGlobal()
@@ -153,8 +147,10 @@ public class StepGameMenu : IMenuStep
 		yield break;
 	}
 
-	protected void LoadLevelData()
+	protected IEnumerator LoadLevelData()
 	{
+		yield return null;	// delay this by one frame - other games might call this from start() - language settings might not have been applied yet
+
 		// TO DO: Set data about levels here (name, description, etc.) 
 		string key = Application.loadedLevelName + ".main.";
 	
@@ -188,7 +184,7 @@ public class StepGameMenu : IMenuStep
 	{
 		activated = true;
 		gameObject.SetActive(true);
-		LoadLevelData();
+		LugusCoroutines.use.StartRoutine(LoadLevelData());
 
 		iTween.Stop(gameObject);
 
