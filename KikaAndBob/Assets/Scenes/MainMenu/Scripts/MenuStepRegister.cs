@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MenuStepRegister : MenuStepMain 
+public class MenuStepRegister : IMenuStep 
 {
 	protected EditableTextMesh usernameField = null;
 	protected EditableTextMesh passwordField = null;

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PlayerLogin : MonoBehaviour 
 {
+
+
 	public void SetupLocal()
 	{
 
@@ -34,6 +36,7 @@ public class PlayerLogin : MonoBehaviour
 	{				
 		if (PlayerAuthCrossSceneInfo.use.loggedIn == true)
 		{
+			DisplayOnline();
 			Debug.Log("Already logged in.");
 			yield break;
 		}
@@ -65,6 +68,7 @@ public class PlayerLogin : MonoBehaviour
 
 			if (KBAPIConnection.use.errorMessage != "")
 			{ 
+				DisplayOffline();
 				yield break;
 			}
 
@@ -93,6 +97,9 @@ public class PlayerLogin : MonoBehaviour
 
 	protected IEnumerator AskForAuthRoutine()
 	{
+		yield return StartCoroutine(SetLanguageRoutine());
+
+
 		DialogueBox authorizeBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.GetText("global.authmessage"));
 		authorizeBox.boxType = DialogueBox.BoxType.ConfirmCancel;
 		authorizeBox.onConfirmButtonClicked += OnAuthConfirmButtonClicked;
@@ -104,14 +111,61 @@ public class PlayerLogin : MonoBehaviour
 		yield break;
 	}
 
+	protected IEnumerator SetLanguageRoutine()
+	{
+		MainMenuManager.MainMenuTypes previousMenu = MainMenuManager.use.currentMenu;
+
+		MenuStepLanguage langMenu = MainMenuManager.use.transform.FindChild("Language").GetComponent<MenuStepLanguage>();
+		langMenu.doNotHighlightCurrent = true;
+
+		GameObject exitButton = langMenu.transform.FindChild("ButtonExit").gameObject;
+		exitButton.SetActive(false);
+
+		languageChanged = false;
+
+		MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Language);
+
+		LugusResources.use.Localized.onResourcesReloaded += LanguageChanged;
+
+
+		while (!languageChanged)
+			yield return null;
+
+
+		LugusResources.use.Localized.onResourcesReloaded -= LanguageChanged;
+
+
+		exitButton.SetActive(true);
+		langMenu.doNotHighlightCurrent = false;
+
+		MainMenuManager.use.ShowMenu(previousMenu);
+		
+		yield break;
+	}
+
+	protected bool languageChanged = false;
+	protected void LanguageChanged()
+	{
+		languageChanged = true;
+	}
+
+
 	protected void DisplayOffline()
 	{
-
+		MainMenuManager.use.SetLoginMessage(LugusResources.use.Localized.GetText("global.connection.offline"));
 	}
 
 	protected void DisplayOnline()
 	{
-		
+		string message = LugusConfig.use.System.GetString("KBUsername", "");
+
+		if (string.IsNullOrEmpty(message))
+		{
+			Debug.LogError("Trying to display account name, but none was stored locally! This should not happen. Displaying offline text instead.");
+			message = LugusResources.use.Localized.GetText("global.connection.offline");
+		}
+
+		MainMenuManager.use.SetLoginMessage(message);
 	}
 
 	protected void OnContinueButtonClicked(DialogueBox box)
@@ -134,6 +188,8 @@ public class PlayerLogin : MonoBehaviour
 		Debug.Log("Skipping authentication."); // TODO: add warning
 		box.onCancelButtonClicked -= OnAuthCancelButtonClicked;
 		box.Hide();
+
+		DisplayOffline();
 
 		LugusConfig.use.System.SetBool("KBPlayOffline", true, true);	// this will prevent the game from asking if you want to log in next time
 	}

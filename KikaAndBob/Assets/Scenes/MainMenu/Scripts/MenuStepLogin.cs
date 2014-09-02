@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MenuStepLogin : MenuStepMain 
+public class MenuStepLogin : IMenuStep 
 {
 	protected EditableTextMesh usernameField = null;
 	protected EditableTextMesh passwordField = null;
+	protected TextMeshWrapper usernameDisplay = null;
 	protected Button confirmButton = null;
 	protected SpriteRenderer confirmSprite = null;
 	protected Button registerButton = null;
 	protected Button exitButton = null;
+	protected Button changeAccountButton = null;
 	protected bool locked = false;
 
 	public void SetupLocal()
@@ -54,11 +56,32 @@ public class MenuStepLogin : MenuStepMain
 			Debug.LogError(transform.Path() + " missing register button");
 		}
 
+		if (usernameDisplay == null)
+		{
+			usernameDisplay = transform.FindChild("AccountDisplayName").GetComponent<TextMeshWrapper>();
+		}
+
+		if (usernameDisplay == null)
+		{
+			Debug.LogError(transform.Path() + " missing user name display.");
+		}
+
 		if (exitButton == null)
 			exitButton = transform.FindChild("ButtonExit").GetComponent<Button>();
 		
 		if (exitButton == null)
-			Debug.LogError("MenuStepSettings: Missing exit button.");
+			Debug.LogError("MenuStepSettings: Missing exit button."); 
+
+
+		if (changeAccountButton == null)
+		{
+			changeAccountButton = transform.FindChild("ButtonChangeAccount").GetComponent<Button>();
+		}
+		
+		if (changeAccountButton == null)
+		{
+			Debug.LogError(transform.Path() + " missing change account");
+		}
 
 	}
 	
@@ -109,7 +132,23 @@ public class MenuStepLogin : MenuStepMain
 		}
 		else if (exitButton.pressed)
 		{
-			LugusConfig.use.System.SetBool("KBPlayOffline", true, true);
+			if (string.IsNullOrEmpty(LugusConfig.use.System.GetString("KBUsername", "")))
+				LugusConfig.use.System.SetBool("KBPlayOffline", true, true);
+
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
+		}
+		else if (changeAccountButton.pressed)		
+		{
+			LugusConfig.use.System.SetBool("KBPlayOffline", false, true);
+
+			LugusConfig.use.System.SetString("KBUsername", "", true);
+			LugusConfig.use.System.SetString("KBPassword", "", true);
+
+			PlayerAuthCrossSceneInfo.use.loggedIn = false;
+
+			MainMenuManager.use.SetLoginMessage(LugusResources.use.Localized.GetText("global.connection.offline"));
+
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Login);
 		}
 	}
 
@@ -135,10 +174,16 @@ public class MenuStepLogin : MenuStepMain
 		}
 		else
 		{
+			PlayerAuthCrossSceneInfo.use.loggedIn = true;
+
+			LugusConfig.use.System.SetBool("KBPlayOffline", false, true);
+
 			LugusConfig.use.System.SetString("KBUsername", usernameField.GetEnteredString(), true);
 			LugusConfig.use.System.SetString("KBPassword", passwordField.GetEnteredString(), true);
 			
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
+
+			MainMenuManager.use.SetLoginMessage(usernameField.GetEnteredString());
 		}
 
 		locked = false;
@@ -158,8 +203,35 @@ public class MenuStepLogin : MenuStepMain
 		activated = true;
 		this.gameObject.SetActive(true);
 
-		// TODO: add check for already authenticated (hide register button etc. maybe add log out button)
-		
+
+		if (PlayerAuthCrossSceneInfo.use.loggedIn)
+		{
+			usernameField.gameObject.SetActive(false);
+			passwordField.gameObject.SetActive(false);
+			confirmButton.gameObject.SetActive(false);
+			registerButton.gameObject.SetActive(false);
+
+			usernameDisplay.gameObject.SetActive(true);
+			changeAccountButton.gameObject.SetActive(true);
+
+			transform.FindChild("Title").gameObject.SetActive(false);
+			transform.FindChild("TitleLoggedIn").gameObject.SetActive(true);
+
+			usernameDisplay.SetText(LugusConfig.use.System.GetString("KBUsername", ""));
+		}
+		else
+		{
+			usernameField.gameObject.SetActive(true);
+			passwordField.gameObject.SetActive(true);
+			confirmButton.gameObject.SetActive(true);
+			registerButton.gameObject.SetActive(true);
+
+			usernameDisplay.gameObject.SetActive(false);
+			changeAccountButton.gameObject.SetActive(false);
+
+			transform.FindChild("Title").gameObject.SetActive(true);
+			transform.FindChild("TitleLoggedIn").gameObject.SetActive(false);
+		}
 	}
 	
 	public override void Deactivate (bool animate)

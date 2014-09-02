@@ -23,6 +23,16 @@ public abstract class FroggerLane : FroggerSurface
 	protected Transform scrollingBackground = null;
 	protected Vector2 scrollingOffset = Vector2.zero;
 
+//	protected void OnDestroy()
+//	{
+//		print ("destroying");
+//		surfaceCollider = null;
+//		dynamicSpawnItems = null;
+//		staticSpawnItems = null;
+//		dynamicSpawnedItems = null;
+//		staticSpawnedItems = null;
+//	}
+
 	public override void SetUpLocal()
 	{
 		base.SetUpLocal();
@@ -270,4 +280,5 @@ public abstract class FroggerLane : FroggerSurface
 			scrollingBackground.localPosition = scrollingOffset;
 		}
 	}
+
 }

@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 public class MainMenuManager : LugusSingletonExisting<MainMenuManager> 
 {
+	public MainMenuTypes currentMenu
+	{
+		get	
+		{
+			return _currentMenu;
+		}
+	}
+	protected MainMenuTypes _currentMenu = MainMenuTypes.NONE;
+
 	public Dictionary<MainMenuTypes, IMenuStep> menus = new Dictionary<MainMenuTypes, IMenuStep>();
 
 	public enum MainMenuTypes
@@ -19,9 +28,19 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		Register = 7
 	}
 
+	protected TextMeshWrapper loginMessage = null;
+
 	public void SetupLocal()
 	{
-		// assign variables that have to do with this class only
+		if (loginMessage == null)
+		{
+			loginMessage = transform.FindChild("Main/Message").GetComponent<TextMeshWrapper>();
+		}
+		
+		if (loginMessage == null)
+		{
+			Debug.LogError("MainMenuManager: Missing log in message.");
+		}
 	}
 	
 	public void SetupGlobal()
@@ -89,10 +108,10 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 	
 	protected void Update () 
 	{
-		if (Input.GetKeyDown(KeyCode.L))
-		{
-			ShowMenu(MainMenuTypes.Login);
-		}
+//		if (Input.GetKeyDown(KeyCode.L))
+//		{
+//			ShowMenu(MainMenuTypes.Login);
+//		}
 	}
 
 	protected void DeactivateAll()
@@ -108,6 +127,7 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		if (menus.ContainsKey(type))
 		{
 			DeactivateAll();
+			_currentMenu = type;
 			menus[type].Activate();
 		}
 		else
@@ -115,5 +135,10 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 			Debug.LogError("MainMenuManager: Turned on menu: " + type.ToString());
 		}
 
+	}
+
+	public void SetLoginMessage(string message)
+	{
+		loginMessage.SetText(message);
 	}
 }

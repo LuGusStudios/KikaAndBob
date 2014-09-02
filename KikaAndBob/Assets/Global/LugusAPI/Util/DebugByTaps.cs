@@ -114,6 +114,7 @@ public class DebugByTaps : MonoBehaviour
 			if( GUILayout.Button( "" + level, new GUILayoutOption[]{GUILayout.MinWidth(100), GUILayout.MinHeight(50)} ) )
 			{
 				Resources.UnloadUnusedAssets();
+				ClearSingletons();
 				Application.LoadLevel( level );
 			}
 
@@ -146,11 +147,24 @@ public class DebugByTaps : MonoBehaviour
 			LugusCoroutines.use.StartRoutine(KBAPIConnection.use.LoginRoutine("Test5", "Test5"));
 		}
 
+		if (GUILayout.Button("Clear singletons", GUILayout.MinHeight(60))) 
+		{
+			ClearSingletons();
+		}
+
 		GUILayout.EndHorizontal();
 
 		DrawFPS();
 	}
 
+
+	protected void ClearSingletons()
+	{
+		GarbageCollectionForce gc = (GarbageCollectionForce) FindObjectOfType(typeof(GarbageCollectionForce));
+		
+		if (gc != null)
+			gc.ClearSingletons();
+	}
 
 	// It calculates frames/second over each updateInterval,
 	// so the display does not keep changing wildly.

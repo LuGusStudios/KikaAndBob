@@ -14,6 +14,7 @@ public class MenuStepMain : IMenuStep
 	protected BoneAnimation character = null;
 	protected LugusAudioTrackSettings musicTrackSettings = null;
 	protected ILugusCoroutineHandle musicLoopHandle = null;
+	protected Button accountButton = null;
 	
 	public void SetupLocal()
 	{
@@ -52,6 +53,12 @@ public class MenuStepMain : IMenuStep
 		
 		if (character == null)
 			Debug.LogError("MenuStepAvatar: Missing character.");
+
+		if (accountButton == null)
+			accountButton = transform.FindChild("Message").GetComponent<Button>();
+		
+		if (accountButton == null)
+			Debug.LogError("MenuStepMain: Missing account button.");
 	}
 
 	public void SetupGlobal()
@@ -149,6 +156,10 @@ public class MenuStepMain : IMenuStep
 		else if (playRoomButton.pressed)
 		{
 			LugusCoroutines.use.StartRoutine(LeavingMainMenu("playroom"));
+		}
+		else if (accountButton.pressed)
+		{
+			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Login);
 		}
 	}
 

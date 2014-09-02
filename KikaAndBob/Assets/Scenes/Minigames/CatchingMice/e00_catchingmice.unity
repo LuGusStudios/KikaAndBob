@@ -5062,27 +5062,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f8541fa21bf52e1478d2d1d89551d11b, type: 2}
   - {fileID: 11400000, guid: eec1e146200c06f4893a03883b3e489d, type: 2}
   - {fileID: 11400000, guid: d715940250e85c9419b7c5125aaedc4a, type: 2}
-  obstaclePrefabs:
-  - {fileID: 11400000, guid: e7cb707eafad857449c2175e6246e1d7, type: 2}
-  - {fileID: 11400000, guid: 22044f1fa40418d40a3ebb32530e0759, type: 2}
+  obstaclePrefabs: []
   cheesePrefabs:
   - {fileID: 11400002, guid: f55b0d76be49f6e4d98cb3927b5af338, type: 2}
   trapPrefabs:
   - {fileID: 11400000, guid: 562a1bec473acd5469d685d0f09252f5, type: 2}
   - {fileID: 11400000, guid: a4f2248133c52d846afc43ad85b9ea87, type: 2}
-  - {fileID: 11400000, guid: 7f37c9308feeeab45af9b5d88de1cba7, type: 2}
   - {fileID: 11400000, guid: 68b714737e35f8040bc4208e20ffba4d, type: 2}
-  - {fileID: 11400000, guid: fee588d06ee563e468e14f7027218321, type: 2}
-  - {fileID: 11400000, guid: ac7b379d411e9b048ac81b872f9c57c1, type: 2}
-  - {fileID: 11400000, guid: 85671cc754acc6c4a8e8c5f80bf061a7, type: 2}
   - {fileID: 11400000, guid: b199d88c19ca32944a650db47d21bc6f, type: 2}
-  - {fileID: 11400000, guid: 08206c85ebc67fe43a43bc3089363ea4, type: 2}
   holePrefabs:
   - {fileID: 11400000, guid: 447cd1e24ad0c0c41bfe7bef7cf39825, type: 2}
   characterPrefabs:
   - {fileID: 11400008, guid: a01b88762ce211a4e8f9a5d429daa459, type: 2}
-  patrolPrefabs:
-  - {fileID: 11400008, guid: 81560bab5ac62984e90307b02f569b96, type: 2}
+  patrolPrefabs: []
   enemyPrefabs:
   - {fileID: 11400006, guid: aaf3ef6d4b0b4784780437dcd58c74bb, type: 2}
   - {fileID: 11400006, guid: dcd408b4fa56057488c211a9eef08cb3, type: 2}
@@ -44435,6 +44427,7 @@ GameObject:
   - 4: {fileID: 2111946153}
   - 114: {fileID: 2111946155}
   - 114: {fileID: 2111946154}
+  - 114: {fileID: 2111946156}
   m_Layer: 20
   m_Name: GUI
   m_TagString: Untagged
@@ -44485,6 +44478,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxPrefab: {fileID: 0}
   boxes: []
+--- !u!114 &2111946156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400114, guid: 7660359396c9c4552a649f739da6eb8b,
+    type: 2}
+  m_PrefabInternal: {fileID: 2141767146}
+  m_GameObject: {fileID: 2111946152}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da24792a171442778128512a88acfca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2113130987
 GameObject:
   m_ObjectHideFlags: 0
@@ -45035,6 +45040,10 @@ Prefab:
     - target: {fileID: 11400020, guid: 7660359396c9c4552a649f739da6eb8b, type: 2}
       propertyPath: levelsUnlockedElsewhere
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400114, guid: 7660359396c9c4552a649f739da6eb8b, type: 2}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7660359396c9c4552a649f739da6eb8b, type: 2}

@@ -46,7 +46,7 @@ public class LugusSingletonExisting<T> : MonoBehaviour where T : MonoBehaviour
 		return true;
 	}
 	
-	public void Change(T newInstance)
+	public static void Change(T newInstance)
 	{
 		_instance = newInstance;
 	}
@@ -124,7 +124,7 @@ public class LugusSingletonRuntime<T> : MonoBehaviour where T : MonoBehaviour
 	}
 	
 	
-	public void Change(T newInstance)
+	public static void Change(T newInstance)
 	{
 		_instance = newInstance;
 	}

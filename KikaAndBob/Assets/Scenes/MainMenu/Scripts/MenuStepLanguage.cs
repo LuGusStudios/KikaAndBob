@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class MenuStepLanguage : IMenuStep 
 {
+	public bool doNotHighlightCurrent = false;	// if true, upon rebuilding, current language will not be unclickable - basically only useful for the first run of the game, when the player hasn't selected a language yet
+
 	protected Button exitButton = null;
 	protected TextMeshWrapper langNameText = null;
 	protected Transform languageSelectorParent = null;
@@ -93,9 +95,11 @@ public class MenuStepLanguage : IMenuStep
 		// save settings
 		LugusConfig.use.SaveProfiles();
 	}
-
+	
 	protected void BuildLanguageSelector()
 	{
+		print ("jpfjciojio");
+
 		foreach(KeyValuePair<Button, string> button in buttons)
 		{
 			Destroy(button.Key.gameObject);
@@ -126,7 +130,7 @@ public class MenuStepLanguage : IMenuStep
 
 			yOffset -= 1.3f;
 
-			if ( id == LugusResources.use.GetLocalizedLangID())
+			if (id == LugusResources.use.GetLocalizedLangID() && doNotHighlightCurrent == false)		// disable current language button
 			{
 				newButton.GetComponent<Collider>().enabled = false;
 				newButton.transform.localScale = newButton.transform.localScale * 1.1f;
