@@ -225,7 +225,8 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		UpdateSculptures(sculptureIndex, true);
 
 		// Display the amount of levels need to be played
-		string message = LugusResources.use.GetText("dance.level.start.pre") + " " + DanceHeroLevel.use.LevelRepeatAmount + " " + LugusResources.use.GetText("dance.level.start.post");
+		string message = LugusResources.use.Localized.GetText("dance.level.start.pre") + " " + DanceHeroLevel.use.LevelRepeatAmount + " " + LugusResources.use.Localized.GetText("dance.level.start.post");
+
 		DanceHeroFeedback.use.DisplayMessage(message, 1f);
 	}
 
@@ -261,14 +262,14 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 				bobAnim.Play("BobSculpting_IdleHappy");
 			}
 
-			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.positive"));
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.Localized.GetText("dance.feedback.positive"));
 		}
 		else
 		{
 //			if (sculptureIndex > 0)
 //				sculptureIndex--;
 			
-			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.negative"));
+			DanceHeroFeedback.use.DisplayMessage(LugusResources.use.Localized.GetText("dance.feedback.negative"));
 
 			bobAnim.Play("BobSculpting_IdleSad");
 		}
@@ -292,11 +293,11 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 		string message = string.Empty;
 		if (remainingLevels > 1)
 		{
-			message = LugusResources.use.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.GetText("dance.level.restart.pre") + " " + remainingLevels + " " + LugusResources.use.GetText("dance.level.restart.post");
+			message = LugusResources.use.Localized.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.Localized.GetText("dance.level.restart.pre") + " " + remainingLevels + " " + LugusResources.use.Localized.GetText("dance.level.restart.post");
 		}
 		else
 		{
-			message = LugusResources.use.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.GetText("dance.level.last.pre") + " " + remainingLevels + " " + LugusResources.use.GetText("dance.level.last.post");
+			message = LugusResources.use.Localized.GetText("dance.feedback.repeat") + "\n" + LugusResources.use.Localized.GetText("dance.level.last.pre") + " " + remainingLevels + " " + LugusResources.use.Localized.GetText("dance.level.last.post");
 		}
 		DanceHeroFeedback.use.DisplayMessage(message, 2f);
 
@@ -320,7 +321,7 @@ public class DanceHeroFeedbackHandlerMorocco : MonoBehaviour
 
 		yield return StartCoroutine(DanceHeroLevel.use.StoreScore(DanceHeroCrossSceneInfo.use.GetLevelIndex(), DanceHeroFeedback.use.GetScore()));
 
-		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.GetText("dance.feedback.result"));	
+		DanceHeroFeedback.use.DisplayMessage(LugusResources.use.Localized.GetText("dance.feedback.result"));	
 		
 		if (DanceHeroFeedback.use.GetScore() - previousBatchScore >= DanceHeroLevel.use.GetTargetBatchScore())
 		{

@@ -257,6 +257,8 @@ public class StepHelpMenu : IMenuStep
 	{
 		activated = true;
 		gameObject.SetActive(true);
+
+		page = 1;
 	
 		iTween.Stop(gameObject);
 		transform.position = originalPosition + new Vector3(30, 0, 0);

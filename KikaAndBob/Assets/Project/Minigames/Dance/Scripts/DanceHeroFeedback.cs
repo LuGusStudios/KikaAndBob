@@ -76,15 +76,20 @@ public class DanceHeroFeedback : LugusSingletonRuntime<DanceHeroFeedback> {
 		{
 			message.gameObject.SetActive(false);
 		}
+	}
+
+	public void LoadFeedback()
+	{
+		messages.Clear();
 
 		// read language specific feedback text
-
+		
 		for (int i = 1; i <= 6; i++) 
 		{
-			messages.Add(LugusResources.use.GetText("dance.feedback.good."+ i.ToString()));
+			messages.Add(LugusResources.use.Localized.GetText("dance.feedback.good."+ i.ToString()));
 		}
-
-		missedMessage = LugusResources.use.GetText("dance.feedback.bad.1");
+		
+		missedMessage = LugusResources.use.Localized.GetText("dance.feedback.bad.1");
 	}
 
 	public void ResetGUI()

@@ -122,8 +122,8 @@ public class FroggerCharacter : MonoBehaviour {
 		{
 			characterAnimator.PlayAnimation(characterAnimator.walkSide);
 
-			if (transform.localScale.x > 0)
-				transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x));
+			//if (transform.localScale.x > 0)
+				transform.localScale = transform.localScale.x(-1 * Mathf.Abs(transform.localScale.x) * Mathf.Sign(transform.parent.localScale.x) );
 
 			if (GetCollisionHorizontal(right))
 				return;
@@ -134,8 +134,10 @@ public class FroggerCharacter : MonoBehaviour {
 		{
 			characterAnimator.PlayAnimation(characterAnimator.walkSide);
 
-			if (transform.localScale.x < 0)
-				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x));
+			//if (transform.localScale.x < 0)
+				transform.localScale = transform.localScale.x(Mathf.Abs(transform.localScale.x) * Mathf.Sign(transform.parent.localScale.x) );
+
+			print (transform.localScale.x);
 
 			if (GetCollisionHorizontal(right))
 				return;

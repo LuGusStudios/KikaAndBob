@@ -190,14 +190,23 @@ public class DanceHeroLevelDefault : IGameManager
 
 		ParseLevelFromXML(levelData);
 
-		LugusCoroutines.use.StartRoutine(LevelRoutine(GetTotalLevelDuration()));
+		LugusCoroutines.use.StartRoutine(LevelStartDelayRoutine());
+		Debug.Log("Setting up new level. It will repeat " + levelRepeatAmount + " times.");
+	}
 
+
+	protected IEnumerator LevelStartDelayRoutine()
+	{
+		yield return new WaitForEndOfFrame();	// just to make sure localization is done first
+
+		DanceHeroFeedback.use.LoadFeedback();
+
+		LugusCoroutines.use.StartRoutine(LevelRoutine(GetTotalLevelDuration()));
+		
 		if (onLevelStarted != null)
 		{
 			onLevelStarted();
 		}
-
-		Debug.Log("Finished setting up new level. It will repeat " + levelRepeatAmount + " times.");
 	}
 
 //	protected IEnumerator MusicBufferDelay()

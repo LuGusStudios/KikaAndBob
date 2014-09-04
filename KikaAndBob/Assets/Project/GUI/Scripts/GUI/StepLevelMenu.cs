@@ -228,9 +228,28 @@ public class StepLevelMenu : IMenuStep
 //		if (LugusConfig.use.User.GetBool(Application.loadedLevelName + ".1", false) == false)
 //			LugusConfig.use.User.SetBool(Application.loadedLevelName + ".1", true, true);
 
+
+		// always start on the page with the highest not-unlocked level
+		float highestUnlocked = 1.0f;
+
+		for (int i = levelLoader.levelIndices.Count - 1; i >= 1; i--) 
+		{
+			if 	(LugusConfig.use.User.GetBool(Application.loadedLevelName + "_level_" + levelIndices[i], false) == true)
+			{
+				if (i < levelIndices.Count - 1)
+					highestUnlocked = i + 1;
+				else
+					highestUnlocked = i;
+
+				break;
+			}
+		}
+	
+		pageCounter = Mathf.FloorToInt(highestUnlocked / 5.0f);
+
+
 		if( LoadSingleLevel() )
 			return;
-
 		
 		activated = true;
 		gameObject.SetActive(true);

@@ -270,6 +270,7 @@ public class PacmanGameManagerDefault : IGameManager {
 		{
 			PacmanGUIManager.use.UpdateLives(lives);
 			PacmanGUIManager.use.ShowGameOverMessage(timer);
+			PacmanSoundEffects.use.Stop();
 			Debug.Log("You lost the game!");
 		}
 	}
@@ -283,6 +284,8 @@ public class PacmanGameManagerDefault : IGameManager {
 	{
 		Debug.Log("You win!");
 		gameRunning = false;
+
+		PacmanSoundEffects.use.Stop();
 		
 		PacmanPlayerCharacter activePlayer = GetActivePlayer();
 		activePlayer.characterAnimator.PlayAnimation(activePlayer.characterAnimator.victory);

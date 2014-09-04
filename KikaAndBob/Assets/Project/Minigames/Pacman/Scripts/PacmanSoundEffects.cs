@@ -50,6 +50,16 @@ public class PacmanSoundEffects : LugusSingletonExisting<PacmanSoundEffects>
 			}
 		}
 	}
+
+	public void Stop()
+	{
+		enemyAudioClips.Clear();
+
+		if (enemiesTrack != null && enemiesTrack.Playing)
+			enemiesTrack.Stop();
+
+		closestEnemy = null;
+	}
 	
 	protected void Update () 
 	{
