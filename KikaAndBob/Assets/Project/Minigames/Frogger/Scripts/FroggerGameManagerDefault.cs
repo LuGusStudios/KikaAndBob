@@ -47,7 +47,7 @@ public class FroggerGameManagerDefault : IGameManager
 
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, FroggerCrossSceneInfo.use);
 
-		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.levelToLoad;
+		string saveKey = Application.loadedLevelName + "_level_" + FroggerCrossSceneInfo.use.GetLevelIndex();
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
 

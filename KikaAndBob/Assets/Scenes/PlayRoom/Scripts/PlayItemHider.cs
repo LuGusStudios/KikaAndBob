@@ -56,6 +56,11 @@ public class PlayItemHider : MonoBehaviour
 		{
 			coll.enabled = false;
 		}
+
+		foreach(Collider2D coll in GetComponentsInChildren<Collider2D>())
+		{
+			coll.enabled = false;
+		}
 	}
 
 	protected void Show()

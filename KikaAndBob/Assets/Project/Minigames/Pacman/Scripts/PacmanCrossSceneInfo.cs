@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class PacmanCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
 {
-	public int levelToLoad = -1;
 
 	public static PacmanCrossSceneInfo use	
 	{
@@ -28,14 +27,26 @@ public class PacmanCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo
 		GameObject.Destroy( this.gameObject );
 	}
 
+	protected int levelToLoad = -1;
+	protected string lastLoadedScene = "";
+	
+	
 	public void SetLevelIndex(int index)
 	{
+		lastLoadedScene = Application.loadedLevelName;
 		levelToLoad = index;
 	}
-
+	
 	public int GetLevelIndex()
 	{
+		if (Application.loadedLevelName != lastLoadedScene)
+		{
+			Debug.Log("PacmanCrossSceneInfo: Scene index was > 0, but we changed games.");
+			levelToLoad = -1;
+		}
+		
 		return levelToLoad;
 	}
+
 }
 

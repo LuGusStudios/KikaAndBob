@@ -55,14 +55,14 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 	{
 		//LugusResources.use.ChangeLanguage("nl");
 
-		//LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		//LoadLevel( DinnerDashCrossSceneInfo.use.GetLevelIndex() );
 	}
 
 	public override void LoadLevel(int index)
 	{
 		index = index - 1; // index passed by menu is 1-based. Here we want 0-based
 
-		Debug.LogError("LOAD LEVEL diner dash " + index + " // " + DinnerDashCrossSceneInfo.use.levelToLoad);
+		Debug.LogError("LOAD LEVEL diner dash " + index + " // " + DinnerDashCrossSceneInfo.use.GetLevelIndex());
 
 		if( index == 0 )
 			Level0 ();
@@ -251,7 +251,7 @@ public class DinnerDashConfig_02Argentina : IDinnerDashConfig
 		{
 			if (GUILayout.Button("Start Level " + i))
 			{
-				DinnerDashCrossSceneInfo.use.levelToLoad = (i + 1);
+				DinnerDashCrossSceneInfo.use.SetLevelIndex(i + 1);
 				LugusCoroutines.use.StopAllRoutines();
 
 				Resources.UnloadUnusedAssets();

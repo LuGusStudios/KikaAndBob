@@ -94,8 +94,9 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 			LugusAudio.use.Music().Play(background, true, new LugusAudioTrackSettings().Loop(true).Volume(0.5f));
 		}
 
+		Debug.Log("Cross scene index: " + DinnerDashCrossSceneInfo.use.GetLevelIndex());
 
-		if( DinnerDashCrossSceneInfo.use.levelToLoad < 0 )
+		if( DinnerDashCrossSceneInfo.use.GetLevelIndex() < 0 )
 		{
 			MenuManager.use.ActivateMenu(MenuManagerDefault.MenuTypes.GameMenu);
 		}
@@ -111,7 +112,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 	{
 		yield return null;	// allow localization to take effect first
 
-		DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.levelToLoad) + ".intro") );  
+		DialogueBox introBox = DialogueManager.use.CreateBox(KikaAndBob.ScreenAnchor.Center, LugusResources.use.Localized.GetText(Application.loadedLevelName + "." + (DinnerDashCrossSceneInfo.use.GetLevelIndex()) + ".intro") );  
 		introBox.boxType = DialogueBox.BoxType.Continue;
 		introBox.onContinueButtonClicked += OnStartButtonClicked;
 		introBox.Show(); 
@@ -145,7 +146,7 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		queue.Clear();
 
 		
-		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.levelToLoad );
+		IDinnerDashConfig.use.LoadLevel( DinnerDashCrossSceneInfo.use.GetLevelIndex() );
 		LugusCoroutines.use.StartRoutine( TimeoutRoutine() ); // timeout is possibly set by LoadLevel, so start the routine!
 
 		queueRoutineHandle = LugusCoroutines.use.StartRoutine( QueueRoutine() );
@@ -197,8 +198,8 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 		{
 			CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
 			
-			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad) );
-			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.levelToLoad, true, true );
+			Debug.Log ("DinnerDash : set level success : " + (Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.GetLevelIndex()) );
+			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + DinnerDashCrossSceneInfo.use.GetLevelIndex(), true, true );
 			LugusConfig.use.SaveProfiles();
 		}
 		
@@ -369,6 +370,12 @@ public class DinnerDashManagerDefault : IDinnerDashManager
 
 		GUILayout.BeginArea( new Rect(0, 0, 200, 400) );
 		GUILayout.BeginVertical();
+
+		if( GUILayout.Button("Win game") )
+		{
+			moneyScore = targetMoneyScore + 1;
+			StopGame();
+		}
 
 		if( GUILayout.Button("AutoProcessing : "+ debugAutoProcessing) )
 		{

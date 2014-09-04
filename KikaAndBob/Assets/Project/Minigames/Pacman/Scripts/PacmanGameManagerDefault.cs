@@ -299,8 +299,8 @@ public class PacmanGameManagerDefault : IGameManager {
 
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, PacmanCrossSceneInfo.use);
 
-		Debug.Log ("Pacman : set level success : " + (Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad) );
-		LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.levelToLoad, true, true );
+		Debug.Log ("Pacman : set level success : " + (Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.GetLevelIndex()) );
+		LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + PacmanCrossSceneInfo.use.GetLevelIndex(), true, true );
 		LugusConfig.use.SaveProfiles();
 
 

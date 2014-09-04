@@ -150,7 +150,7 @@ public class DartsLevelConfigurationDefault :  IGameManager
 		
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, DartsCrossSceneInfo.use);
 		
-		LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.levelToLoad, true, true);
+		LugusConfig.use.User.SetBool(Application.loadedLevelName + "_level_" + DartsCrossSceneInfo.use.GetLevelIndex(), true, true);
 		LugusConfig.use.SaveProfiles();
 	}
 	

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class DinnerDashCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo 
 {
-		
 	public static DinnerDashCrossSceneInfo use	
 	{
 		get
@@ -27,15 +26,24 @@ public class DinnerDashCrossSceneInfo : MonoBehaviour, IMinigameCrossSceneInfo
 		GameObject.Destroy( this.gameObject );
 	}
 	
-	public int levelToLoad = -1;
+	protected int levelToLoad = -1;
+	protected string lastLoadedScene = "";
+
 
 	public void SetLevelIndex(int index)
 	{
+		lastLoadedScene = Application.loadedLevelName;
 		levelToLoad = index;
 	}
 	
 	public int GetLevelIndex()
 	{
+		if (Application.loadedLevelName != lastLoadedScene)
+		{
+			Debug.Log("DinnerDashCrossSceneInfo: Scene index was > 0, but we changed games.");
+			levelToLoad = -1;
+		}
+
 		return levelToLoad;
 	}
 

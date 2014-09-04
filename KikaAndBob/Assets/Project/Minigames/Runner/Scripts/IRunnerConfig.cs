@@ -13,7 +13,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 	// but this is late in the project and all the runners have 3 levels right now...
 	public virtual bool IsLastLevel(int levelIndex)
 	{
-		return levelIndex >= 2;
+		return levelIndex >= 3;
 	}
 
 	public virtual void OnGameStopped()
@@ -303,7 +303,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 
 			LugusConfig.use.SaveProfiles();
 
-			RunnerCrossSceneInfo.use.levelToLoad = 667;
+			RunnerCrossSceneInfo.use.SetLevelIndex(667);
 			LugusCoroutines.use.StopAllRoutines();
 
 			Resources.UnloadUnusedAssets();
@@ -323,12 +323,12 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		ShowAdjustmentGUI();
 		
 		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
-		GUILayout.Label("Current level : " + (RunnerCrossSceneInfo.use.levelToLoad - 1));
+		GUILayout.Label("Current level : " + (RunnerCrossSceneInfo.use.GetLevelIndex() - 1));
 		for (int i = 0; i < 3; i++) 
 		{
 			if (GUILayout.Button("Start Level " + i ))
 			{
-				RunnerCrossSceneInfo.use.levelToLoad = i + 1;
+				RunnerCrossSceneInfo.use.SetLevelIndex(i + 1);
 				LugusCoroutines.use.StopAllRoutines();
 				Resources.UnloadUnusedAssets();
 				Application.LoadLevel( Application.loadedLevelName );
@@ -337,7 +337,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		
 		if (GUILayout.Button("Custom settings level"))
 		{
-			RunnerCrossSceneInfo.use.levelToLoad = 667;
+			RunnerCrossSceneInfo.use.SetLevelIndex(667);
 			LugusCoroutines.use.StopAllRoutines();
 			Resources.UnloadUnusedAssets();
 			Application.LoadLevel( Application.loadedLevelName );

@@ -116,6 +116,16 @@ public class MenuStepRegister : IMenuStep
 		}
 		else
 		{
+			PlayerAuthCrossSceneInfo.use.loggedIn = true;
+
+			LugusConfig.use.System.SetBool("KBPlayOffline", false, true);
+			
+			LugusConfig.use.System.SetString("KBUsername", usernameField.GetEnteredString(), true);
+			LugusConfig.use.System.SetString("KBPassword", passwordField.GetEnteredString(), true);
+
+
+			MainMenuManager.use.SetLoginMessage(usernameField.GetEnteredString());
+
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
 	}

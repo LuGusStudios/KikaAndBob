@@ -128,7 +128,7 @@ public class DanceHeroLevelDefault : IGameManager
 	{
 		CatchingMiceUnlockManager.use.CheckUnlock(levelLoader, DanceHeroCrossSceneInfo.use);
 
-		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.levelToLoad;
+		string saveKey = Application.loadedLevelName + "_level_" +  DanceHeroCrossSceneInfo.use.GetLevelIndex();
 		
 		LugusConfig.use.User.SetBool(saveKey, true, true); 
 		LugusConfig.use.SaveProfiles();

@@ -211,22 +211,40 @@ public class CatchingMiceGameManagerDefault : IGameManager
 	{
 		LugusCoroutines.use.StartRoutine(WinGameRoutine());
 	}
-
+	
 	protected IEnumerator WinGameRoutine()
 	{
 		gameRunning = false;
+
+		if (musicTrack != null && musicTrack.Playing)
+			musicTrack.FadeOut(0.5f, true);
 		
 		CatchingMiceLogVisualizer.use.Log("Starting end phase: won");
 		
 		string saveKey = Application.loadedLevelName + "_level_" + CatchingMiceCrossSceneInfo.use.GetLevelIndex();
+
+		if (LugusConfig.use.User.GetBool(saveKey, false) == false)	
+		{
+			Debug.Log("Unlocked new cat toy.");
+			HUDManager.use.LevelEndScreen.SetMessage(LugusResources.use.Localized.GetText("global.levelend.success.unlock"));
+		}
+		else
+		{
+			Debug.Log("Toy for this level already unlocked.");
+		}
+
+
 		LugusConfig.use.User.SetBool(saveKey, true, true);
 		LugusConfig.use.SaveProfiles();
+
 		
 		CatchingMiceTrapSelector.use.SetVisible(false);
 		
 		HUDManager.use.StopAll();
 		
 		HUDManager.use.LevelEndScreen.Show(true, 1f);
+
+
 
 		int cookieScore = 10;
 		
@@ -259,10 +277,7 @@ public class CatchingMiceGameManagerDefault : IGameManager
 
 
 
-
-
-
-
+	
 	public void LoseState()
 	{
 		gameRunning = false;
@@ -275,8 +290,11 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		CatchingMiceTrapSelector.use.SetVisible(false);
 
 		CatchingMiceInputManager.use.ClearAllPaths();
-	}
 
+		if (musicTrack != null && musicTrack.Playing)
+			musicTrack.FadeOut(0.5f, true);
+	}
+	
 	public int GetCheeseScore()
 	{
 		int score = 0;
@@ -295,7 +313,9 @@ public class CatchingMiceGameManagerDefault : IGameManager
 		
 		return score;
 	}
-	
+
+
+	protected ILugusAudioTrack musicTrack = null;
 	public override void StartGame()
 	{
 		collectedPickups = 0;
@@ -327,6 +347,11 @@ public class CatchingMiceGameManagerDefault : IGameManager
 				CatchingMiceGUI.use.ResetHUD();
 
 				CatchingMiceTrapSelector.use.CreateTrapList(PickupCount);
+
+				if (musicTrack != null && musicTrack.Playing)
+					musicTrack.Stop();
+
+				musicTrack = LugusAudio.use.Music().Play(LugusResources.use.Shared.GetAudio("MenuLoop01"), true, new LugusAudioTrackSettings().Loop(true));
 			}
 		}
 		else 
@@ -334,7 +359,7 @@ public class CatchingMiceGameManagerDefault : IGameManager
 			Debug.LogError("CatchingGameManager: Invalid level data!");
 		}
 	}
-
+	
 	public override void StopGame()
 	{
 		gameRunning = false;
@@ -382,8 +407,7 @@ public class CatchingMiceGameManagerDefault : IGameManager
 //			paused = false;
 //		}
 //	}
-
-
+	
 	void Start()
 	{
 		CatchingMiceLevelManager.use.ClearLevel();
@@ -415,7 +439,7 @@ public class CatchingMiceGameManagerDefault : IGameManager
 			WinState();
 		}
 	}
-
+	
 	protected void OnGUI()
 	{
 //		// Display available levels
@@ -430,6 +454,9 @@ public class CatchingMiceGameManagerDefault : IGameManager
 
 
 		GUILayout.BeginVertical();
+
+		if (GUILayout.Button("Win game"))
+			WinState();
 
 		foreach(int index in levelLoader.levelIndices)
 		{

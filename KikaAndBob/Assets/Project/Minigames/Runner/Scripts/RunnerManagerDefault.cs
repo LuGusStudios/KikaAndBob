@@ -293,12 +293,12 @@ public class RunnerManagerDefault : IGameManager
 		
 		// DEBUG: TODO: REMOVE THIS! just so we can directly play when starting in editor
 		#if UNITY_EDITOR
-		//if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
-		//	RunnerCrossSceneInfo.use.levelToLoad = 667;
+		//if( RunnerCrossSceneInfo.use.GetLevelIndex() < 0 )
+		//	RunnerCrossSceneInfo.use.GetLevelIndex() = 667;
 		#endif
 
 		
-		if( RunnerCrossSceneInfo.use.levelToLoad < 0 )
+		if( RunnerCrossSceneInfo.use.GetLevelIndex() < 0 )
 		{
 			MonoBehaviour cc = RunnerCharacterController.useBehaviour;
 			cc.gameObject.SetActive(false);
@@ -402,7 +402,7 @@ public class RunnerManagerDefault : IGameManager
 		}
 
 		_gameRunning = true;
-		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.levelToLoad );
+		IRunnerConfig.use.LoadLevel( RunnerCrossSceneInfo.use.GetLevelIndex() );
 
 
 		RunnerCharacterController.useBehaviour.enabled = true;
@@ -566,8 +566,8 @@ public class RunnerManagerDefault : IGameManager
 
 			//CatchingMiceUnlockManager.use.CheckUnlockDinnerDash(IDinnerDashConfig.use, DinnerDashCrossSceneInfo.use);
 			
-			Debug.Log ("Runner : set level success : " + (Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad) );
-			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.levelToLoad, true, true );
+			Debug.Log ("Runner : set level success : " + (Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.GetLevelIndex()) );
+			LugusConfig.use.User.SetBool( Application.loadedLevelName + "_level_" + RunnerCrossSceneInfo.use.GetLevelIndex(), true, true );
 			LugusConfig.use.SaveProfiles();
 		}
 		

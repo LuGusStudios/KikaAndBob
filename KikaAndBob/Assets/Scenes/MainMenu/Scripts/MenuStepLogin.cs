@@ -133,7 +133,10 @@ public class MenuStepLogin : IMenuStep
 		else if (exitButton.pressed)
 		{
 			if (string.IsNullOrEmpty(LugusConfig.use.System.GetString("KBUsername", "")))
+			{
 				LugusConfig.use.System.SetBool("KBPlayOffline", true, true);
+				MainMenuManager.use.SetLoginMessage(LugusResources.use.Localized.GetText("global.connection.offline"));
+			}
 
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
@@ -231,6 +234,9 @@ public class MenuStepLogin : IMenuStep
 
 			transform.FindChild("Title").gameObject.SetActive(true);
 			transform.FindChild("TitleLoggedIn").gameObject.SetActive(false);
+
+			usernameField.Reset();
+			passwordField.Reset();
 		}
 	}
 	

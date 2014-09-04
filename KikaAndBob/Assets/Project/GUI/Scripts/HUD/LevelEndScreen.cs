@@ -69,6 +69,12 @@ public class LevelEndScreen : MonoBehaviour
 		//transform.position = originalPosition; 
 	}
 
+	public void SetMessage(string message)
+	{
+		Message.SetText(message);
+	}
+
+
 	public void Hide(bool animate = false)
 	{
 		//this.gameObject.SetActive(false); 

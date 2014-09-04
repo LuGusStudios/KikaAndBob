@@ -36,6 +36,7 @@ public class PlayerLogin : MonoBehaviour
 	{				
 		if (PlayerAuthCrossSceneInfo.use.loggedIn == true)
 		{
+			yield return null;	// want to make sure MainMenu is properly initialized first
 			DisplayOnline();
 			Debug.Log("Already logged in.");
 			yield break;
