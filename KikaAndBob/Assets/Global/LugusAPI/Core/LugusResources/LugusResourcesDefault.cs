@@ -57,6 +57,14 @@ public class LugusResourcesDefault : MonoBehaviour
 	public TextAsset errorTextAsset = null;
 
 	protected string languageTemp = ""; 
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		LugusResources.Change(null);
+	}
 	
 	protected void LoadDefaultCollections()
 	{ 

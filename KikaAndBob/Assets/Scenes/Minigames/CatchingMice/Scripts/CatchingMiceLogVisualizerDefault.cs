@@ -22,7 +22,15 @@ public class CatchingMiceLogVisualizerDefault : MonoBehaviour {
 
 	protected int msgIndex = -1;
 	protected List<Pair<LogLevel, string>> messages = new List<Pair<LogLevel, string>>();
-	
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		CatchingMiceLogVisualizer.Change(null);
+	}
+
 	public void Log(string message, bool toConsole = true)
 	{
 		if (logLevel <= LogLevel.LOG)

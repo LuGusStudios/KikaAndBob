@@ -198,7 +198,15 @@ public class CatchingMiceLevelManagerDefault : MonoBehaviour
 	{
 		FindReferences();
 	}
-	
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		CatchingMiceLevelManager.Change(null);
+	}
+
 	void FindReferences()
 	{
 		// only do this once

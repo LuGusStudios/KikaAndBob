@@ -73,6 +73,14 @@ public class LugusSingletonExisting<T> : MonoBehaviour where T : MonoBehaviour
 		_instance = null;	
 	}
 	*/
+
+	protected void OnDestroy()
+	{
+		Debug.Log("Clearing " + typeof (T).Name);
+		
+		this.enabled = false;
+		_instance = null;
+	}
 }
 
 // use this for a singleton that can just be created through script if it's not set before runtime

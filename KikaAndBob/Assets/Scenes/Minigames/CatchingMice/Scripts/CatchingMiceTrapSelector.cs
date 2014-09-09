@@ -158,6 +158,11 @@ public class CatchingMiceTrapSelector : LugusSingletonExisting<CatchingMiceTrapS
 
 	public void CreateTrapList(int newAmount)
 	{
+		if (!CatchingMiceGameManager.use.GameRunning)
+		{
+			return;
+		}
+
 		foreach(TrapSelectorItem item in items)
 		{
 			Destroy(item.button.gameObject);

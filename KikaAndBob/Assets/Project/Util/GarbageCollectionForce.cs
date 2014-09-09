@@ -27,6 +27,7 @@ public class GarbageCollectionForce : MonoBehaviour {
 		Debug.Log("Clearing singletons ------------------------------------------------------");
 
 		LugusInput.Change(null);
+
 		LugusResources.Change(null);
 		LugusCoroutines.Change(null);
 		LugusAudio.Change(null);
@@ -43,5 +44,6 @@ public class GarbageCollectionForce : MonoBehaviour {
 		System.GC.Collect();
 
 	}
+
 
 }

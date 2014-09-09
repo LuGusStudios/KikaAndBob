@@ -82,6 +82,14 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 		FindReferences();
 	}
 
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		PacmanLevelManager.Change(null);
+	}
+
 	void FindReferences()
 	{
 		// only do this once
@@ -1157,5 +1165,6 @@ public class PacmanLevelManagerDefault : MonoBehaviour {
 	{
 		return levelRoot;
 	}
+
 }
 

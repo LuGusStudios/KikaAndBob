@@ -37,6 +37,14 @@ public class FroggerLevelManagerDefault : MonoBehaviour
 
 	}
 
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		FroggerLevelManager.Change(null);
+	}
+
 	public void LoadLevel(int levelIndex)
 	{
 		if (levelIndex < 0 || levelIndex >= levels.Length)

@@ -25,6 +25,14 @@ public class FroggerLaneManagerDefault: MonoBehaviour
 //		lanes = OrderLanes(new List<FroggerLane>(lanesInScene));
 //	}
 
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		FroggerLaneManager.Change(null);
+	}
+
 	public void SetLanes(List<FroggerLane> _lanes)
 	{
 		levelLengthLanePixels = -1;

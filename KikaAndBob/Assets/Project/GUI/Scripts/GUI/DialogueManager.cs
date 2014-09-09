@@ -376,4 +376,12 @@ public class DialogueManager : LugusSingletonExisting<DialogueManager>
 	{
 	
 	}
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		DialogueManager.Change(null);
+	}
 }

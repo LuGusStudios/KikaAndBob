@@ -102,7 +102,8 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 	{
 		foreach(BoneAnimation ba in GetComponentsInChildren<BoneAnimation>(true)) 
 		{
-			string currentAnimation = ba.animation.name;
+			string currentAnimation = ba.animation.name; 
+
 
 			foreach(SmoothMoves.AnimationClipSM_Lite clip in ba.mAnimationClips)
 			{
@@ -110,6 +111,8 @@ public class CatchingMiceCharacterAnimation : MonoBehaviour
 				{
 					ba.Play(clip.animationName);
 				}
+				//else
+					//print (currentAnimation + " " + clip.animationName);
 			}
 
 		}

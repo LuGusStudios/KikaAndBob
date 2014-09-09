@@ -199,4 +199,12 @@ public class MenuManagerDefault: MonoBehaviour
 		Debug.LogError("MenuManagerDefault: Could not find child menu: " + menuName);
 		return null;
 	}
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		MenuManager.Change(null);
+	}
 }

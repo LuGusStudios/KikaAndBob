@@ -225,4 +225,12 @@ public class LayerManagerDefault : MonoBehaviour
 			//NextTheme();
 		}
 	}
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		LayerManager.Change(null);
+	}
 }

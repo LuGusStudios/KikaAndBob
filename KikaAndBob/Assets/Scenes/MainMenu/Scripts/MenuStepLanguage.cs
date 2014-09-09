@@ -98,8 +98,6 @@ public class MenuStepLanguage : IMenuStep
 	
 	protected void BuildLanguageSelector()
 	{
-		print ("jpfjciojio");
-
 		foreach(KeyValuePair<Button, string> button in buttons)
 		{
 			Destroy(button.Key.gameObject);

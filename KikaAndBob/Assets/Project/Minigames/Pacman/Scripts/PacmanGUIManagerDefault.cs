@@ -13,6 +13,14 @@ public class PacmanGUIManagerDefault : MonoBehaviour
 	public delegate void OnWinLevel(float timer, PacmanGameManagerDefault manager);
 	public OnWinLevel onWinLevel = null;
 
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		PacmanGUIManager.Change(null);
+	}
+
 	public void SetupLocal()
 	{
 //		foreach(Transform t in keysParent)

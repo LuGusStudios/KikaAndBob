@@ -104,5 +104,12 @@ public class FroggerGUIManagerDefault : MonoBehaviour
 		FroggerGameManager.use.SetUpLevel();
 	}
 
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+		FroggerGUIManager.Change(null);
+	}
 
 }

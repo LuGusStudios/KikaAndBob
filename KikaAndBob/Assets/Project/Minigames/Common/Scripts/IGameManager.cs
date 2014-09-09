@@ -130,4 +130,20 @@ public abstract class IGameManager : MonoBehaviour
 
 
 	}
+
+	protected void OnDestroy()
+	{
+		//	Debug.Log("Clearing" + typeof (T).Name);
+		
+		this.enabled = false;
+
+		PacmanLevelManager.Change(null);
+		FroggerGameManager.Change(null);
+		DanceHeroLevel.Change(null);
+		DartsLevelConfiguration.Change(null);
+		DinnerDashManager.Change(null);
+		RunnerManager.Change(null);
+		CatchingMiceGameManager.Change(null);
+
+	}
 }

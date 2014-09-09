@@ -162,7 +162,11 @@ public class DebugByTaps : MonoBehaviour
 	{
 		GarbageCollectionForce gc = (GarbageCollectionForce) FindObjectOfType(typeof(GarbageCollectionForce));
 		
-		if (gc != null)
+		if (gc == null)
+		{
+			gc = new GameObject("GarbageCollector").AddComponent<GarbageCollectionForce>();
+		}
+
 			gc.ClearSingletons();
 	}
 
