@@ -2415,6 +2415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customLevelLoad: 0
+  levelsUnlockedElsewhere: 0
 --- !u!1 &140147938
 GameObject:
   m_ObjectHideFlags: 0
@@ -7626,6 +7627,7 @@ GameObject:
   - 4: {fileID: 559543219}
   - 23: {fileID: 559543221}
   - 102: {fileID: 559543220}
+  - 114: {fileID: 559543222}
   m_Layer: 20
   m_Name: Title
   m_TagString: Untagged
@@ -7688,6 +7690,20 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &559543222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400132, guid: 3683dd9ca71b94da4b8abb805cf9512e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1194689986}
+  m_GameObject: {fileID: 559543218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4410a72eeb60432ebb7ed7ef025311c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: global.pause.title
+  textMesh: {fileID: 0}
 --- !u!1 &561685745
 GameObject:
   m_ObjectHideFlags: 0

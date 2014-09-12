@@ -323,7 +323,7 @@ public class IRunnerConfig : LugusSingletonRuntime<IRunnerConfig>
 		ShowAdjustmentGUI();
 		
 		GUILayout.BeginArea( new Rect(0, Screen.height - 150, 200, 150) );
-		GUILayout.Label("Current level : " + (RunnerCrossSceneInfo.use.GetLevelIndex() - 1));
+	//	GUILayout.Label("Current level : " + (RunnerCrossSceneInfo.use.GetLevelIndex() - 1));
 		for (int i = 0; i < 3; i++) 
 		{
 			if (GUILayout.Button("Start Level " + i ))

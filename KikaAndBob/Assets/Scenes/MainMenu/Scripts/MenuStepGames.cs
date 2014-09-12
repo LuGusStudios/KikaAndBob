@@ -20,6 +20,7 @@ public class MenuStepGames : IMenuStep
 	protected Vector3 pictureStartPosition = new Vector3(-6.681557f, -4.6338f, -1f);
 	protected bool leavingMenu = false;
 	protected SpriteRenderer pictureContent = null;
+	protected string currentSelected = "";
 
 	public void SetupLocal()
 	{
@@ -90,11 +91,13 @@ public class MenuStepGames : IMenuStep
 				selectOptions.Add(t);
 			}
 		}
+
+		Debug.Log("SetupLocal");
 	}
 	
 	public void SetupGlobal()
 	{
-		UpdateMapSelection("", false);
+		UpdateMapSelection(currentSelected, false);
 	}
 	
 	protected void Awake()
@@ -112,6 +115,12 @@ public class MenuStepGames : IMenuStep
 		activated = true;
 		
 		this.gameObject.SetActive(true);
+
+		if (MainCrossSceneInfo.use.lastLoadedGameLevel != "" && MainCrossSceneInfo.use.lastLoadedGameLevel != "e00_catchingmice")
+		{
+			Debug.Log("Showing previous game selection: " + MainCrossSceneInfo.use.lastLoadedGameLevel);
+			currentSelected = MainCrossSceneInfo.use.lastLoadedGameLevel;
+		}
 		
 		//LugusDebug.debug = true;
 	}
@@ -132,6 +141,7 @@ public class MenuStepGames : IMenuStep
 
 		if (exitButton.pressed)
 		{
+			MainCrossSceneInfo.use.lastLoadedGameLevel = "";
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
 
@@ -234,6 +244,18 @@ public class MenuStepGames : IMenuStep
 		}
 		else
 		{
+			if (selected == null)
+			{
+				Transform child = locationParent.FindChild(key);
+
+				if (child != null)
+					selected = child;
+				else
+					Debug.LogError(key + " is not a valid game ID");
+			}
+
+
+
 			picture.gameObject.SetActive(true);
 
 			if (animate)

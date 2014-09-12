@@ -133,7 +133,9 @@ public abstract class ICatchingMiceCharacter : MonoBehaviour
 				yield return new WaitForSeconds(0.3f);
 			}
 
-			gameObject.MoveTo(movePosition).Time(tileTraversalTime).Execute();
+			gameObject.MoveTo(movePosition).Time( 0.5f * ( Vector2.Distance( transform.position.v2(), path[pathIndex].transform.position.v2() ) / tileTraversalTime ) ).Execute();
+
+//			gameObject.MoveTo(movePosition).Time(tileTraversalTime).Execute();
 
 			while (transform.position.v2() != path[pathIndex].transform.position.v2())
 			{

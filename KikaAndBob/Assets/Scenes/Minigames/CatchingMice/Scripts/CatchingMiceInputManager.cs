@@ -8,6 +8,7 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 	protected CatchingMicePathVisualization currentDrawingPath = null;
 	protected List<CatchingMicePathVisualization> pathVisualizations = new List<CatchingMicePathVisualization>();
 	protected ScalableLineRenderer pathRenderer = null;
+	protected CatchingMiceWaypoint dummyWaypoint = null;
 
 	protected class CatchingMicePathVisualization
 	{
@@ -29,6 +30,10 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 
 	public void SetupLocal()
 	{
+		if (dummyWaypoint == null)
+			dummyWaypoint = new GameObject("PlayerDummyWayPoint").AddComponent<CatchingMiceWaypoint>();
+
+			                     
 	}
 	
 	public void SetupGlobal()
@@ -144,12 +149,27 @@ public class CatchingMiceInputManager : LugusSingletonRuntime<CatchingMiceInputM
 					// this check is necessary - in rare cases the cursor might already be over a diagonally neighboring tile the first frame after the down event
 					// the neighbors list only contains direct (orthogonal) neighbors
 					// coincidentally, this also checks if it's not the cat's current tile
-					if (currentSelectedPlayer.currentTile.waypoint.neighbours.Contains(tile.waypoint))
+					if (currentSelectedPlayer.currentTile != tile && currentSelectedPlayer.currentTile.waypoint.neighbours.Contains(tile.waypoint))
 					{
-						currentDrawingPath.wayPoints.Add(currentSelectedPlayer.currentTile.waypoint);
+						//currentDrawingPath.wayPoints.Add(currentSelectedPlayer.currentTile.waypoint);
+
+						// This is the most hackish thing ever...
+						// All the movement code works with waypoints.
+						// This is nice, but doesn't make sense when your cat can be stopped midway between waypoints: it'll always first move to the nearest waypoint before moving in the actual selected direction
+						// To fix this, we use a dummy waypoint that's always the first point of the path.
+						dummyWaypoint.transform.position = currentSelectedPlayer.transform.position;
+						dummyWaypoint.parentTile = currentSelectedPlayer.currentTile;
+						dummyWaypoint.neighbours = currentSelectedPlayer.currentTile.waypoint.neighbours;
+
+						currentDrawingPath.wayPoints.Add(dummyWaypoint);
+
+
+
 
 						currentDrawingPath.wayPoints.Add(tile.waypoint);
 						currentDrawingPath.drawn = false;	// setting this false will redraw path 
+
+
 					}
 				}
 				else

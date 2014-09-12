@@ -93,7 +93,14 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 		else
 			Debug.LogError("MainMenuManager: Missing register menu!");
 
-		ShowMenu(MainMenuTypes.Main);
+
+		if (MainCrossSceneInfo.use.lastLoadedGameLevel != "" && MainCrossSceneInfo.use.lastLoadedGameLevel != "e00_catchingmice")
+		{
+			ShowMenu(MainMenuTypes.Games);
+		}
+		else
+			ShowMenu(MainMenuTypes.Main);
+			
 	}
 	
 	protected void Awake()

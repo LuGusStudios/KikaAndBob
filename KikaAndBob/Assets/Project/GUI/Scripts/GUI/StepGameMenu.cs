@@ -142,6 +142,8 @@ public class StepGameMenu : IMenuStep
 
 		Resources.UnloadUnusedAssets();
 
+		MainCrossSceneInfo.use.lastLoadedGameLevel = Application.loadedLevelName;
+
 		Application.LoadLevel("MainMenu");
 
 		yield break;
