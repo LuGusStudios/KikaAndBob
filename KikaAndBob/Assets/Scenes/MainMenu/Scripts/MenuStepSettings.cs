@@ -85,6 +85,8 @@ public class MenuStepSettings : IMenuStep
 	{
 		if (exitButton.pressed)
 		{
+			// save settings
+			LugusConfig.use.SaveProfiles();
 			MainMenuManager.use.ShowMenu(MainMenuManager.MainMenuTypes.Main);
 		}
 		else if (musicButton.pressed)
@@ -93,6 +95,8 @@ public class MenuStepSettings : IMenuStep
 			musicMute = !musicMute;
 			LugusConfig.use.System.SetBool("main.settings.musicmute", musicMute, true);
 
+			LugusConfig.use.System.Store();
+
 			SetMusicMute(musicMute);
 		}
 		else if (soundButton.pressed)
@@ -100,6 +104,8 @@ public class MenuStepSettings : IMenuStep
 			bool soundMute = LugusConfig.use.System.GetBool("main.settings.soundmute", false);
 			soundMute = !soundMute;
 			LugusConfig.use.System.SetBool("main.settings.soundmute", soundMute, true);
+
+			LugusConfig.use.System.Store();
 
 			SetSoundMute(soundMute);
 		}
@@ -134,21 +140,17 @@ public class MenuStepSettings : IMenuStep
 				break;
 			}
 		}
-
-
 	}
 	
 	public override void Deactivate (bool animate)
 	{
 		activated = false;
 		this.gameObject.SetActive(false);
-
-		// save settings
-		LugusConfig.use.SaveProfiles();
 	}
 
 	protected void SetMusicMute(bool mute)
 	{
+
 		float alpha = 1;
 		string textKey = "";
 
@@ -171,6 +173,7 @@ public class MenuStepSettings : IMenuStep
 
 	protected void SetSoundMute(bool mute)
 	{
+
 		float alpha = 1;
 		string textKey = "";
 

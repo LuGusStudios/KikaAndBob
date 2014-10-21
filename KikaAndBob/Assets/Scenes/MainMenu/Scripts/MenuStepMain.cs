@@ -78,7 +78,7 @@ public class MenuStepMain : IMenuStep
 	protected void LoadConfig()
 	{
 		// read if music and SFX need to be muted
-		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
+		if (LugusConfig.use.System.GetBool("main.settings.musicmute", false) == true)
 		{
 			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
 		}
@@ -87,7 +87,7 @@ public class MenuStepMain : IMenuStep
 			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
 		}
 		
-		if (LugusConfig.use.User.GetBool("main.settings.soundmute", false) == true)
+		if (LugusConfig.use.System.GetBool("main.settings.soundmute", false) == true)
 		{
 			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
 		}
@@ -98,7 +98,7 @@ public class MenuStepMain : IMenuStep
 
 		// load language
 
-		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+		string pickedLanguage = LugusConfig.use.System.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
 		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 

@@ -10,7 +10,7 @@ public class LoadLanguage : MonoBehaviour {
 
 	public void SetupGlobal()
 	{
-		string pickedLanguage = LugusConfig.use.User.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
+		string pickedLanguage = LugusConfig.use.System.GetString("main.settings.langID", LugusResources.use.GetSystemLanguageID());
 		LugusResources.use.ChangeLanguage(pickedLanguage);
 	}
 

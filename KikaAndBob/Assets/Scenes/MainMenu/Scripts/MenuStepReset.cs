@@ -49,6 +49,8 @@ public class MenuStepReset : IMenuStep
 		if (confirmButton.pressed)
 		{
 			LugusConfig.use.User.ClearAllData();
+			LugusConfig.use.User.Store();
+			Application.LoadLevel(Application.loadedLevelName);
 		}
 		else if (cancelButton.pressed)
 		{

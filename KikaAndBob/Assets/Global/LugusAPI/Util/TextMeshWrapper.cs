@@ -56,7 +56,9 @@ public class TextMeshWrapperHelper : LugusSingletonRuntime<TextMeshWrapperHelper
 [RequireComponent(typeof(TextMesh))] 
 public class TextMeshWrapper : MonoBehaviour 
 {
-	public float width = -1;
+	public float width = -1f;
+	public float height = -1f;
+
 	public bool autoUpdate = false;
 	public bool allowSmallerCharacterSize = true;
 	public bool allowSplit = true;
@@ -69,7 +71,7 @@ public class TextMeshWrapper : MonoBehaviour
 	void Awake()
 	{
 
-		if( width == -1 || width == 0 )
+		if( width <= 0 )
 		{
 			// derive width from boxcollider
 			BoxCollider collider = GetComponent<BoxCollider>();
@@ -87,6 +89,28 @@ public class TextMeshWrapper : MonoBehaviour
 				else
 				{
 					width = LugusUtil.UIWidth * 0.9f;
+				}
+			}
+		}
+
+		if( height <= 0 )
+		{
+			// derive width from boxcollider
+			BoxCollider collider = GetComponent<BoxCollider>();
+			if( collider != null )
+			{
+				height = collider.bounds.size.y;
+			}
+			else
+			{
+				BoxCollider2D collider2 = GetComponent<BoxCollider2D>();
+				if( collider2 != null )
+				{
+					height = collider2.size.y;
+				}
+				else
+				{
+					height = LugusUtil.UIHeight * 0.9f;
 				}
 			}
 		}
@@ -125,7 +149,13 @@ public class TextMeshWrapper : MonoBehaviour
 		bool proceed = true;
 		textMesh.characterSize = this.originalCharacterSize;
 		savedText = textMesh.text;
-		
+
+		if (width <= 0 || height <= 0)
+		{
+			Debug.LogError("TextMeshWrapper: Width or height was smaller than or equal to 0.");
+			return;
+		}
+
 		while( proceed )
 		{
 			textMesh.text = savedText;
@@ -134,7 +164,7 @@ public class TextMeshWrapper : MonoBehaviour
 			TextMeshWrapperHelper.use.WrapText(textMesh, width, allowSplit);
 
 			
-			if( textMesh.renderer.bounds.size.x > width )
+			if(textMesh.renderer.bounds.size.y > height || textMesh.renderer.bounds.size.x > width)
 			{
 				proceed = true;
 				textMesh.characterSize -= this.originalCharacterSize / 10.0f;
