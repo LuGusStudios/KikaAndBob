@@ -27,7 +27,7 @@ public class DebugByTaps : MonoBehaviour
 	{
 		// COMMENT THIS TO ENABLE DEBUG BY TAPS
 
-		//return;
+		return;
 
 		// Touchpoints are bottom left based...
 		// so top left is x = 0, y = max 

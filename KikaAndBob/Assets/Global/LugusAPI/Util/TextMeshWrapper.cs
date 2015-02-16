@@ -59,6 +59,9 @@ public class TextMeshWrapper : MonoBehaviour
 	public float width = -1f;
 	public float height = -1f;
 
+	public bool ignoreWidth = false;
+	public bool ignoreHeight = false;
+
 	public bool autoUpdate = false;
 	public bool allowSmallerCharacterSize = true;
 	public bool allowSplit = true;
@@ -164,7 +167,7 @@ public class TextMeshWrapper : MonoBehaviour
 			TextMeshWrapperHelper.use.WrapText(textMesh, width, allowSplit);
 
 			
-			if(textMesh.renderer.bounds.size.y > height || textMesh.renderer.bounds.size.x > width)
+			if( (!ignoreHeight && textMesh.renderer.bounds.size.y > height) || (!ignoreWidth && textMesh.renderer.bounds.size.x > width) )
 			{
 				proceed = true;
 				textMesh.characterSize -= this.originalCharacterSize / 10.0f;
