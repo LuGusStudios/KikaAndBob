@@ -66,7 +66,7 @@ public class StepGameMenu : IMenuStep
 		}
 		if (leaveButton == null)
 		{
-			Debug.Log("StepHelpMenu: Missing leave button.");
+			Debug.Log("StepGameMenu: Missing leave button.");
 		}
 
 		originalPosition = transform.position;
@@ -74,29 +74,7 @@ public class StepGameMenu : IMenuStep
 
 		musicTrackSettings = new LugusAudioTrackSettings().Loop(true);
 
-		LoadConfig();
-	}
-
-	protected void LoadConfig()
-	{
-		// read if music and SFX need to be muted
-		if (LugusConfig.use.User.GetBool("main.settings.musicmute", false) == true)
-		{
-			LugusAudio.use.Music().UpdateVolumeFromOriginal(0);
-		}
-		else
-		{
-			LugusAudio.use.Music().UpdateVolumeFromOriginal(1);
-		}
-		
-		if (LugusConfig.use.User.GetBool("main.settings.soundmute", false) == true)
-		{
-			LugusAudio.use.SFX().UpdateVolumeFromOriginal(0);
-		}
-		else
-		{
-			LugusAudio.use.SFX().UpdateVolumeFromOriginal(1);
-		}
+		//LoadConfig();
 	}
 	
 	public void SetupGlobal()
@@ -141,6 +119,8 @@ public class StepGameMenu : IMenuStep
 		yield return new WaitForSeconds(0.5f);
 
 		Resources.UnloadUnusedAssets();
+
+		MainCrossSceneInfo.use.lastLoadedGameLevel = Application.loadedLevelName;
 
 		Application.LoadLevel("MainMenu");
 

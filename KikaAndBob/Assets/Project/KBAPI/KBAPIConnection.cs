@@ -482,11 +482,7 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 			Ping pingKikaAndBob = new Ping("46.51.206.135");	//http://kikabob2.submarine.nl/
 			
 			Debug.Log("Checking internet connection. Pinging IP: "+ pingKikaAndBob.ip);
-			
-			connectionScreen.gameObject.SetActive(true);
-			
-			// sometimes the text mesh wrapper doesn't update immediately
-			connectionScreen.GetComponentInChildren<TextMeshWrapper>().UpdateWrapping();
+
 			
 			float startTime = Time.time;
 
@@ -494,7 +490,17 @@ public class KBAPIConnection : LugusSingletonRuntime<KBAPIConnection>
 
 			while (!pingKikaAndBob.isDone && Time.time < startTime + 5.0f) 
 			{
-				checkingConnectionIcon.Rotate(new Vector3(0, 0, -360 * Time.deltaTime));
+				if (Time.time - startTime > 0.5f)
+				{
+					if (connectionScreen.gameObject.activeSelf == false)
+					{
+						connectionScreen.gameObject.SetActive(true);
+						connectionScreen.GetComponentInChildren<TextMeshWrapper>().UpdateWrapping();
+					}
+					
+					checkingConnectionIcon.Rotate(new Vector3(0, 0, -360 * Time.deltaTime));
+				}
+
 				yield return new WaitForEndOfFrame();
 			}
 

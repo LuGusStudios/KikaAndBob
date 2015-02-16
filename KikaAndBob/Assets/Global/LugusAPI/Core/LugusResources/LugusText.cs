@@ -5,6 +5,7 @@ public class LugusText : MonoBehaviour
 {
 	public string key = "";
 	public TextMesh textMesh = null;
+	public bool updateOnStart = true;
 	
 	public void FindReferences()
 	{
@@ -36,8 +37,9 @@ public class LugusText : MonoBehaviour
 		AssignKey();
 		
 		LugusResources.use.Localized.onResourcesReloaded += UpdateText;
-		
-		UpdateText();
+
+		if (updateOnStart)
+			UpdateText();
 	}
 	
 	protected void UpdateText()
@@ -47,8 +49,5 @@ public class LugusText : MonoBehaviour
 		textMesh.text = LugusResources.use.GetText(key);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

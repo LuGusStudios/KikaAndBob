@@ -162,7 +162,7 @@ public class CatchingMiceWaypoint : MonoBehaviour
 	        colors[4] = Color.white;
 	        colors[5] = Color.cyan;
 	        colors[6] = Color.magenta;
-	        colors[7] = Color.yellow;
+	        colors[7] = Color.yellow; 
 
 	        DataRange zRange = new DataRange(500, -500);
 	        DataRange colorIndexRange = new DataRange(0, 7);
@@ -195,4 +195,18 @@ public class CatchingMiceWaypoint : MonoBehaviour
 			Gizmos.DrawLine( this.transform.position, neighbour.transform.position );
 		}
 	}
+
+
+//	public void AssignNeighboursForced()
+//	{
+//		CatchingMiceTile[] neighborTiles = CatchingMiceLevelManager.use.GetTileAround(parentTile);
+//
+//		foreach(CatchingMiceTile tile in neighborTiles)
+//		{
+//			if (tile.gridIndices.x == this.parentTile.gridIndices.x || tile.gridIndices.y == this.parentTile.gridIndices.y)
+//				neighbors.Add(tile.waypoint);
+//		}
+//
+//
+//	}
 }

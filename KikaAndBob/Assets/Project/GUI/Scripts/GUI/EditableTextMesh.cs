@@ -149,7 +149,10 @@ public class EditableTextMesh : MonoBehaviour {
 				if (keyBoard.wasCanceled || keyBoard.done || (LugusInput.use.down == true && LugusInput.use.RayCastFromMouseDown(LugusCamera.ui) != transform) )
 				{
 					editing = false;
-					AlterTransparency();	
+					AlterTransparency();
+
+					keyBoard.active = false;
+					keyBoard = null;
 
 					if (string.IsNullOrEmpty(editedString))
 						Reset();

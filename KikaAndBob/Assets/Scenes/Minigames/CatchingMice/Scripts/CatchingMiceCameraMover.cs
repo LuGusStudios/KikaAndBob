@@ -10,6 +10,7 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 	protected Vector2 levelBoundsMin = Vector2.zero;
 	protected Vector2 levelBoundsMax = Vector2.zero;
 	protected bool movingToPlayer = false;
+	protected bool smallLevel = false;
 
 	public void SetupLocal()
 	{
@@ -86,6 +87,9 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 
 	protected void CheckScrollingArrows()
 	{
+		if (smallLevel)
+			return;
+
 		Vector3 movement = Vector3.zero;
 
 		if (LugusInput.use.Key(KeyCode.LeftArrow))
@@ -122,6 +126,9 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 
 	protected void CheckScrollingTouch()
 	{
+		if (smallLevel)
+			return;
+
 		if (LugusInput.use.down && !CatchingMiceTrapSelector.use.dragging)
 		{
 			validSwipe = false;
@@ -234,6 +241,9 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 
 	protected void ClampPosition()
 	{
+		if (smallLevel)
+			return;
+
 		if (transform.position.x < levelBoundsMin.x || transform.position.y < levelBoundsMin.y 
 		    || transform.position.x > levelBoundsMax.x || transform.position.y > levelBoundsMax.y)
 		{
@@ -274,6 +284,31 @@ public class CatchingMiceCameraMover : LugusSingletonExisting<CatchingMiceCamera
 		else
 		{
 			levelBoundsMax = end.location.v2();
-		}		
+		}
+
+
+	
+
+
+		if (CatchingMiceLevelManager.use.Width <= 7 && CatchingMiceLevelManager.use.Height <= 8 )	// width also has to account for trap menu
+			smallLevel = true;
+		else
+			smallLevel = false;
+
+
+
+		if (smallLevel)
+		{
+			float scale = CatchingMiceLevelManager.use.scale;
+
+			transform.position = new Vector3( 
+				( (float) CatchingMiceLevelManager.use.Width * 0.5f) * scale - (scale * 0.5f),
+			    ( (float) CatchingMiceLevelManager.use.Height * 0.5f) * scale - (scale * 0.5f),
+			    transform.position.z);
+
+			Debug.Log("Centering small level.");
+		}
+
+
 	}
 }

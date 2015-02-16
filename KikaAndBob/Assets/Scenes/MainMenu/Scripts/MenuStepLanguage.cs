@@ -71,7 +71,7 @@ public class MenuStepLanguage : IMenuStep
 			{
 				LugusResources.use.ChangeLanguage(button.Value);
 
-				LugusConfig.use.User.SetString("main.settings.langID", button.Value, true);
+				LugusConfig.use.System.SetString("main.settings.langID", button.Value, true);
 
 				BuildLanguageSelector();
 				break;
