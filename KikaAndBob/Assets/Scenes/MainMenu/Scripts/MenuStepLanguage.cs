@@ -114,7 +114,10 @@ public class MenuStepLanguage : IMenuStep
 			string name = LugusResources.use.Shared.GetText(nameKey);
 
 			if (name == "[" + nameKey + "]")
+			{
+				Debug.Log("MenuStepLanguage: Found last language index.");
 				return;
+			}
 
 			Transform newButton = (Transform) Instantiate(buttonPrefab);
 

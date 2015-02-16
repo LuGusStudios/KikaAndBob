@@ -129,10 +129,11 @@ public class MainMenuManager : LugusSingletonExisting<MainMenuManager>
 			DeactivateAll();
 			_currentMenu = type;
 			menus[type].Activate();
+			Debug.Log("MainMenuManager: Turned on menu: " + type.ToString());
 		}
 		else
 		{
-			Debug.LogError("MainMenuManager: Turned on menu: " + type.ToString());
+			Debug.LogError("MainMenuManager: Menu type " + type.ToString() + " does not exist.");
 		}
 
 	}
